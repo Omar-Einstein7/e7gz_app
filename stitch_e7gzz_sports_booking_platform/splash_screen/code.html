@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error-container": "#93000a",
+                        "surface": "#0b1326",
+                        "primary-fixed": "#6bff8f",
+                        "on-secondary-container": "#aeb9d0",
+                        "outline-variant": "#3d4a3d",
+                        "primary-container": "#22c55e",
+                        "primary-fixed-dim": "#4ae176",
+                        "on-tertiary": "#60130d",
+                        "on-secondary": "#263143",
+                        "on-primary-container": "#004b1e",
+                        "surface-tint": "#4ae176",
+                        "on-primary-fixed": "#002109",
+                        "surface-container-lowest": "#060e20",
+                        "surface-variant": "#2d3449",
+                        "secondary-fixed": "#d8e3fb",
+                        "secondary-fixed-dim": "#bcc7de",
+                        "on-primary-fixed-variant": "#005321",
+                        "tertiary-fixed": "#ffdad5",
+                        "tertiary": "#ffb5ab",
+                        "on-tertiary-container": "#76231b",
+                        "surface-container-highest": "#2d3449",
+                        "error": "#ffb4ab",
+                        "surface-container": "#171f33",
+                        "surface-container-high": "#222a3d",
+                        "tertiary-container": "#ff8b7c",
+                        "secondary": "#bcc7de",
+                        "background": "#0b1326",
+                        "on-surface": "#dae2fd",
+                        "on-tertiary-fixed": "#410001",
+                        "outline": "#869585",
+                        "on-error-container": "#ffdad6",
+                        "on-tertiary-fixed-variant": "#7f2a21",
+                        "surface-container-low": "#131b2e",
+                        "on-primary": "#003915",
+                        "on-secondary-fixed": "#111c2d",
+                        "surface-dim": "#0b1326",
+                        "on-surface-variant": "#bccbb9",
+                        "secondary-container": "#3e495d",
+                        "inverse-surface": "#dae2fd",
+                        "surface-bright": "#31394d",
+                        "inverse-on-surface": "#283044",
+                        "on-background": "#dae2fd",
+                        "on-error": "#690005",
+                        "tertiary-fixed-dim": "#ffb4a9",
+                        "on-secondary-fixed-variant": "#3c475a",
+                        "inverse-primary": "#006e2f",
+                        "primary": "#4be277"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-glow {
+            background: radial-gradient(circle at center, rgba(75, 226, 119, 0.15) 0%, rgba(11, 19, 38, 0) 70%);
+        }
+        .shimmer {
+            background: linear-gradient(90deg, transparent, rgba(75, 226, 119, 0.2), transparent);
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite;
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        .loader-ring {
+            border: 2px solid transparent;
+            border-top-color: #4be277;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body text-on-surface overflow-hidden">
+<!-- Main Splash Container -->
+<main class="relative flex min-h-screen w-full flex-col items-center justify-center overflow-hidden">
+<!-- Ambient Background Depth -->
+<div class="absolute inset-0 z-0">
+<div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-primary/10 blur-[120px]"></div>
+<div class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-primary-container/5 blur-[120px]"></div>
+</div>
+<!-- Glass Content Shell -->
+<div class="relative z-10 flex flex-col items-center justify-center px-6">
+<!-- Logo Container with Glassmorphism -->
+<div class="relative group">
+<!-- Outer Glow -->
+<div class="absolute -inset-8 glass-glow opacity-50 group-hover:opacity-100 transition-opacity duration-1000"></div>
+<!-- Main Logo Box -->
+<div class="relative bg-surface-container-highest/40 backdrop-blur-2xl rounded-xl p-12 border border-outline-variant/10 shadow-2xl flex flex-col items-center">
+<!-- Brand Anchor Logo -->
+<h1 class="font-headline text-7xl font-black tracking-tighter text-primary">
+                        e7gzz
+                    </h1>
+<!-- Premium Descriptor -->
+<p class="mt-4 font-label text-[10px] uppercase tracking-[0.3em] text-on-secondary-container/60">
+                        The Digital Curator
+                    </p>
+</div>
+</div>
+<!-- Focus Element: Loading Indicator -->
+<div class="mt-20 flex flex-col items-center gap-6">
+<!-- Minimal Loader -->
+<div class="loader-ring"></div>
+<!-- Status Text -->
+<div class="flex flex-col items-center">
+<span class="text-xs font-medium text-on-surface/40 tracking-widest uppercase">
+                        Preparing your pitch
+                    </span>
+<!-- Progress Bar (Subtle) -->
+<div class="mt-4 h-[1px] w-48 bg-surface-container-highest overflow-hidden rounded-full">
+<div class="shimmer h-full w-full"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Branding Details -->
+<div class="absolute bottom-12 flex flex-col items-center gap-2">
+<div class="flex items-center gap-3">
+<span class="w-8 h-[1px] bg-outline-variant/30"></span>
+<span class="text-[10px] font-bold text-on-secondary-container/40 uppercase tracking-[0.2em]">Cairo • Dubai • Riyadh</span>
+<span class="w-8 h-[1px] bg-outline-variant/30"></span>
+</div>
+</div>
+<!-- Abstract Decorative Layers -->
+<div class="absolute inset-0 pointer-events-none opacity-20">
+<div class="absolute top-1/4 -right-20 w-96 h-96 border border-primary/10 rounded-full"></div>
+<div class="absolute -bottom-20 -left-20 w-80 h-80 border border-primary-container/10 rounded-full"></div>
+</div>
+</main>
+<!-- Visual Hint of the Arena Background (Very faint) -->
+<div class="fixed inset-0 z-[-1] overflow-hidden">
+<img class="w-full h-full object-cover opacity-[0.03] scale-110 grayscale brightness-50" data-alt="cinematic wide shot of a futuristic football stadium at night with dramatic neon green lighting and atmospheric mist" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCe43EqqFmcQ1zdPsAgZ1N7Gvh0BVcM093y8ZHU7KkdlGCDWl4RzXg7JGFFSfM2dqRBHmmHJMyEFoZ_fpwYH0TZTnHEhWrdTx633Jun7_XDsbP1Wn9K3crPhMVNd3tG7cDvkF_UcATvgvjp-LzVp434JofweWKaS6ah2suDz8BhU6EJH1X4zWj12-tScbDabUSUbC9foYOhYs2466JlJYMzDT4fJRMHU5A2dWF6O5VsZWSDTRIZ_zY420LKpcJuasb55S5crDBvKA"/>
+</div>
+</body></html>

@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;family=Inter:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "error-container": "#93000a",
+                    "surface": "#0b1326",
+                    "primary-fixed": "#6bff8f",
+                    "on-secondary-container": "#aeb9d0",
+                    "outline-variant": "#3d4a3d",
+                    "primary-container": "#22c55e",
+                    "primary-fixed-dim": "#4ae176",
+                    "on-tertiary": "#60130d",
+                    "on-secondary": "#263143",
+                    "on-primary-container": "#004b1e",
+                    "surface-tint": "#4ae176",
+                    "on-primary-fixed": "#002109",
+                    "surface-container-lowest": "#060e20",
+                    "surface-variant": "#2d3449",
+                    "secondary-fixed": "#d8e3fb",
+                    "secondary-fixed-dim": "#bcc7de",
+                    "on-primary-fixed-variant": "#005321",
+                    "tertiary-fixed": "#ffdad5",
+                    "tertiary": "#ffb5ab",
+                    "on-tertiary-container": "#76231b",
+                    "surface-container-highest": "#2d3449",
+                    "error": "#ffb4ab",
+                    "surface-container": "#171f33",
+                    "surface-container-high": "#222a3d",
+                    "tertiary-container": "#ff8b7c",
+                    "secondary": "#bcc7de",
+                    "background": "#0b1326",
+                    "on-surface": "#dae2fd",
+                    "on-tertiary-fixed": "#410001",
+                    "outline": "#869585",
+                    "on-error-container": "#ffdad6",
+                    "on-tertiary-fixed-variant": "#7f2a21",
+                    "surface-container-low": "#131b2e",
+                    "on-primary": "#003915",
+                    "on-secondary-fixed": "#111c2d",
+                    "surface-dim": "#0b1326",
+                    "on-surface-variant": "#bccbb9",
+                    "secondary-container": "#3e495d",
+                    "inverse-surface": "#dae2fd",
+                    "surface-bright": "#31394d",
+                    "inverse-on-surface": "#283044",
+                    "on-background": "#dae2fd",
+                    "on-error": "#690005",
+                    "tertiary-fixed-dim": "#ffb4a9",
+                    "on-secondary-fixed-variant": "#3c475a",
+                    "inverse-primary": "#006e2f",
+                    "primary": "#4be277"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Manrope"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      body {
+        background-color: #0b1326;
+        color: #dae2fd;
+        font-family: 'Inter', sans-serif;
+      }
+      .font-manrope { font-family: 'Manrope', sans-serif; }
+      .glass-card {
+        background: rgba(45, 52, 73, 0.4);
+        backdrop-filter: blur(20px);
+      }
+      .cta-gradient {
+        background: linear-gradient(135deg, #4be277 0%, #22c55e 100%);
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-[#0b1326]/80 backdrop-blur-xl flex justify-between items-center px-6 h-16 w-full">
+<div class="flex items-center gap-4">
+<button class="text-[#4be277] hover:bg-[#2d3449]/50 transition-colors p-2 rounded-full active:scale-95">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="text-2xl font-black tracking-tighter text-[#4be277] font-manrope">e7gzz</h1>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-slate-400 font-label text-xs uppercase tracking-widest hidden md:block">Admin Panel</span>
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-[#4be277]">
+<img class="w-full h-full object-cover" data-alt="professional portrait of a middle-eastern man in a sharp suit with dark hair and confident expression" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXvsC6Sie2ogR3zTFiBJhUNytfAtXrO3q7_p47yoj4PGIRB-LsJOTznegkZBsaecwGAz25TdxqqHOIWSSULb812fEjOkuVmA7cRkZyHAZFN9ASkP0eyWAP-Q18C-WKIqjvETDQJS3dWbYJK7tjtKCLG9NitISMdzqhZj3AGiRg_GezRntHlKO797iYKg2lUgRqsLcy4Ke9cx33EWlIvzZX-IaaXowMNn97i42T8g83WPsGI2b_Zbn5fH1dOeiU66WJwQjV2TqRIg"/>
+</div>
+</div>
+</header>
+<main class="pt-24 px-6 space-y-8 max-w-lg mx-auto">
+<!-- Dashboard Header -->
+<section>
+<h2 class="text-4xl font-extrabold font-manrope tracking-tight text-on-surface">Operations Hub</h2>
+<p class="text-slate-400 mt-2">Real-time performance of the pitch network.</p>
+</section>
+<!-- Bento Grid Stats -->
+<div class="grid grid-cols-2 gap-4">
+<div class="col-span-2 glass-card rounded-xl p-6 flex flex-col justify-between h-40">
+<span class="text-slate-400 text-sm font-label uppercase tracking-widest">Total Revenue</span>
+<div class="flex items-baseline gap-2">
+<span class="text-4xl font-manrope font-bold text-primary">124,500</span>
+<span class="text-primary font-label text-sm">EGP</span>
+</div>
+<div class="flex items-center gap-1 text-primary text-xs font-bold">
+<span class="material-symbols-outlined text-xs">trending_up</span>
+<span>+12.5% vs last week</span>
+</div>
+</div>
+<div class="bg-surface-container rounded-xl p-5 flex flex-col gap-2">
+<span class="material-symbols-outlined text-primary">sports_soccer</span>
+<span class="text-2xl font-bold font-manrope">48</span>
+<span class="text-slate-400 text-xs uppercase font-label">Active Pitches</span>
+</div>
+<div class="bg-surface-container rounded-xl p-5 flex flex-col gap-2">
+<span class="material-symbols-outlined text-primary">group</span>
+<span class="text-2xl font-bold font-manrope">1.2k</span>
+<span class="text-slate-400 text-xs uppercase font-label">Verified Users</span>
+</div>
+</div>
+<!-- Commission Settings Section -->
+<section class="space-y-4">
+<div class="flex justify-between items-end">
+<h3 class="text-xl font-bold font-manrope">Revenue Logic</h3>
+<span class="text-primary text-sm font-bold uppercase">System-wide</span>
+</div>
+<div class="bg-surface-container-low rounded-xl p-6 space-y-6">
+<div class="flex justify-between items-center">
+<div>
+<p class="font-bold text-on-surface">Booking Commission</p>
+<p class="text-xs text-slate-400">Flat fee per pitch reservation</p>
+</div>
+<div class="flex items-center bg-surface-container-highest rounded-full px-4 py-2 border border-outline-variant/20">
+<span class="text-primary font-bold text-lg">+10</span>
+<span class="ml-1 text-xs text-slate-400">EGP</span>
+</div>
+</div>
+<div class="h-[2px] bg-surface-variant/30 rounded-full"></div>
+<div class="flex items-center justify-between">
+<span class="text-sm font-medium">InstaPay Integration</span>
+<div class="w-12 h-6 bg-primary rounded-full relative flex items-center px-1">
+<div class="w-4 h-4 bg-on-primary rounded-full ml-auto"></div>
+</div>
+</div>
+<button class="w-full py-4 cta-gradient text-on-primary-container font-bold rounded-full transition-transform active:scale-95 shadow-lg">
+                    Update Commission Rates
+                </button>
+</div>
+</section>
+<!-- Managed Pitches (Asymmetric Layout) -->
+<section class="space-y-4">
+<div class="flex justify-between items-center">
+<h3 class="text-xl font-bold font-manrope text-on-surface">Verified Pitches</h3>
+<button class="text-primary text-sm font-bold">View All</button>
+</div>
+<div class="flex flex-col gap-4">
+<!-- Pitch Card 1 -->
+<div class="bg-surface-container rounded-xl overflow-hidden flex h-32 group">
+<div class="w-1/3 h-full overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="professional night-time football pitch with bright stadium floodlights and vibrant green artificial turf" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKPgZ5TfPs6TamI-W8bbIa05vZ2ivnygGa8pB-NGD0AAIlIx8cTrSKT4vQr2giJbcek9j4YLnIyvlUT_d4jdZnrkMfZtqzHb6jP6GgFogOO3KdV8Ar_NnDC69es7u0uH6cLoNX1GRod8rxOc_P3-pNfdww-tQ0lV1RPBOHriALcW_b7rwm3Bv8SaIlRxxt0rrAzWdM-auBTbsUR5Am4b7kT6ypTfnefCmNAAInhqMJQjaPdIarHYiUM3Dp4wisVDNkKzUo6A9Raw"/>
+</div>
+<div class="w-2/3 p-4 flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start">
+<h4 class="font-bold text-on-surface truncate">Cairo 5 Stadium</h4>
+<span class="bg-primary/20 text-primary px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider">Premium</span>
+</div>
+<p class="text-xs text-slate-400">Maadi, Cairo</p>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-sm font-bold text-primary">550 EGP<span class="text-[10px] text-slate-500 font-normal">/hr</span></span>
+<span class="material-symbols-outlined text-slate-500 text-sm">more_vert</span>
+</div>
+</div>
+</div>
+<!-- Pitch Card 2 -->
+<div class="bg-surface-container rounded-xl overflow-hidden flex h-32 group">
+<div class="w-1/3 h-full overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="modern indoor futsal court with polished wooden floor and bright overhead lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBWDj9oemRFPYwpyfq5GepwGDi1XeXOaX8NQQbMMRSvdkBahUCbstYegX-TkR7GUW5bB05jsqRkQSGpcFVPUXUfNdmPQ86dZPBBHbW0qbWupyc3iB116_r8D4wM8348wEYv6jpuFpPrBAZYY6Qg9qeZrba_-GPBEcLGi-j_OdqavPaKHo9ODGcer17W2-C2c_vq0cIrzRbW12ToeaVYDis-Pkgk85w9agLQZ3oSacYsNbIZmSCluC5WLzwt2_Lln-FR1ISf6m0MpQ"/>
+</div>
+<div class="w-2/3 p-4 flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start">
+<h4 class="font-bold text-on-surface truncate">The Arena</h4>
+<span class="bg-slate-700 text-slate-300 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider">Standard</span>
+</div>
+<p class="text-xs text-slate-400">New Cairo</p>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-sm font-bold text-primary">400 EGP<span class="text-[10px] text-slate-500 font-normal">/hr</span></span>
+<span class="material-symbols-outlined text-slate-500 text-sm">more_vert</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Managed Users List -->
+<section class="space-y-4">
+<h3 class="text-xl font-bold font-manrope text-on-surface">Recent User Activity</h3>
+<div class="bg-surface-container-low rounded-xl overflow-hidden">
+<!-- User Item 1 -->
+<div class="p-4 flex items-center justify-between hover:bg-[#2d3449]/30 transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="close-up portrait of a young athletic man with short hair and friendly smile" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAkezrTN9buWN5tH6jGYTKCWZ8ou7CytIC0clg99DsmZ6r6qny8fFhbJN4FBI1jOumkQ3e9r_kC9tS8K8xPjoRcb-ffsvJUQnuKmfoD6vBAX0EZry4nnXnB8bvJJeXmLkYbuutmoMf2ony8ZIpMWV4OdxAs0BKG6_KezsBjCoGYKdFSKbbmuAT4MBZ-ws9HO-_CllP78IUgcdsaq1FtXaUnEeosGHguTMz1ovfrr3cykEHRaAtikPslcOJSRNnrbjMaZD3mcMKDUQ"/>
+</div>
+<div>
+<p class="text-sm font-bold">Ahmed Khaled</p>
+<p class="text-[10px] text-slate-500 uppercase tracking-widest font-label">Gold Tier Member</p>
+</div>
+</div>
+<span class="text-xs font-bold text-primary">+450 EGP</span>
+</div>
+<div class="px-4"><div class="h-[1px] bg-surface-variant/20"></div></div>
+<!-- User Item 2 -->
+<div class="p-4 flex items-center justify-between hover:bg-[#2d3449]/30 transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="portrait of a young woman wearing a sports headband and activewear looking focused" src="https://lh3.googleusercontent.com/aida-public/AB6AXuABoO3v2S1W71d3TeggxEUVgUXHFvwPkCD5AH5l2vjAjRgUUP9t_P2gmj8Cj3MxxgheKNbvEGEDM7qHYogJyYxf3D3VButTzBgPoGCQftWuR4jsVVfpZBGW_491-xyMIX7HZ9zZvudFBYoUUdC0LQwqLbUf9SX-kcqAZEwiPy0qB_OD4CVj4KkCbzUfgLrSVgPxS_aLbu_4pdGS1sTK0MkozcZV5YcFXg_5rmYz0-kuh8mxl9_j2LYkOhVklsqPV_laVwnbXa34mQ"/>
+</div>
+<div>
+<p class="text-sm font-bold">Sarah Hassan</p>
+<p class="text-[10px] text-slate-500 uppercase tracking-widest font-label">New Member</p>
+</div>
+</div>
+<span class="text-xs font-bold text-primary">+220 EGP</span>
+</div>
+</div>
+</section>
+<!-- Placeholder for FAB -->
+<div class="h-24"></div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-end px-4 h-24 bg-[#0b1326]/60 backdrop-blur-lg shadow-[0px_-10px_40px_rgba(0,0,0,0.3)] rounded-t-[3rem] pb-safe">
+<a class="flex flex-col items-center justify-center bg-gradient-to-br from-[#4be277] to-[#22c55e] text-[#0b1326] rounded-full p-3 mb-2 scale-110 shadow-lg" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-inter text-[10px] font-bold uppercase tracking-widest mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 p-2 hover:text-[#4be277] transition-all" href="#">
+<span class="material-symbols-outlined">search</span>
+<span class="font-inter text-[10px] font-bold uppercase tracking-widest mt-1">Search</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 p-2 hover:text-[#4be277] transition-all" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-inter text-[10px] font-bold uppercase tracking-widest mt-1">Matches</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 p-2 hover:text-[#4be277] transition-all" href="#">
+<span class="material-symbols-outlined">event_available</span>
+<span class="font-inter text-[10px] font-bold uppercase tracking-widest mt-1">Bookings</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 p-2 hover:text-[#4be277] transition-all" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-inter text-[10px] font-bold uppercase tracking-widest mt-1">Profile</span>
+</a>
+</nav>
+<!-- Contextual FAB for quick additions -->
+<button class="fixed bottom-28 right-6 w-14 h-14 cta-gradient text-on-primary-container rounded-full shadow-2xl flex items-center justify-center active:scale-95 transition-transform z-40">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">add</span>
+</button>
+</body></html>

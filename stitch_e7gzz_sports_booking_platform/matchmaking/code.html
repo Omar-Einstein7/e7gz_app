@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error-container": "#93000a",
+                        "surface": "#0b1326",
+                        "primary-fixed": "#6bff8f",
+                        "on-secondary-container": "#aeb9d0",
+                        "outline-variant": "#3d4a3d",
+                        "primary-container": "#22c55e",
+                        "primary-fixed-dim": "#4ae176",
+                        "on-tertiary": "#60130d",
+                        "on-secondary": "#263143",
+                        "on-primary-container": "#004b1e",
+                        "surface-tint": "#4ae176",
+                        "on-primary-fixed": "#002109",
+                        "surface-container-lowest": "#060e20",
+                        "surface-variant": "#2d3449",
+                        "secondary-fixed": "#d8e3fb",
+                        "secondary-fixed-dim": "#bcc7de",
+                        "on-primary-fixed-variant": "#005321",
+                        "tertiary-fixed": "#ffdad5",
+                        "tertiary": "#ffb5ab",
+                        "on-tertiary-container": "#76231b",
+                        "surface-container-highest": "#2d3449",
+                        "error": "#ffb4ab",
+                        "surface-container": "#171f33",
+                        "surface-container-high": "#222a3d",
+                        "tertiary-container": "#ff8b7c",
+                        "secondary": "#bcc7de",
+                        "background": "#0b1326",
+                        "on-surface": "#dae2fd",
+                        "on-tertiary-fixed": "#410001",
+                        "outline": "#869585",
+                        "on-error-container": "#ffdad6",
+                        "on-tertiary-fixed-variant": "#7f2a21",
+                        "surface-container-low": "#131b2e",
+                        "on-primary": "#003915",
+                        "on-secondary-fixed": "#111c2d",
+                        "surface-dim": "#0b1326",
+                        "on-surface-variant": "#bccbb9",
+                        "secondary-container": "#3e495d",
+                        "inverse-surface": "#dae2fd",
+                        "surface-bright": "#31394d",
+                        "inverse-on-surface": "#283044",
+                        "on-background": "#dae2fd",
+                        "on-error": "#690005",
+                        "tertiary-fixed-dim": "#ffb4a9",
+                        "on-secondary-fixed-variant": "#3c475a",
+                        "inverse-primary": "#006e2f",
+                        "primary": "#4be277"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .bg-glass {
+            background: rgba(45, 52, 73, 0.4);
+            backdrop-filter: blur(20px);
+        }
+        .text-gradient {
+            background: linear-gradient(135deg, #4be277 0%, #22c55e 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary selection:text-on-primary">
+<header class="bg-[#0b1326]/80 backdrop-blur-xl fixed top-0 w-full z-50 flex justify-between items-center px-6 h-16 w-full">
+<div class="flex items-center gap-4">
+<button class="text-[#4be277] hover:bg-[#2d3449]/50 transition-colors p-2 rounded-full active:scale-95 active:duration-150">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="text-2xl font-black tracking-tighter text-[#4be277]">e7gzz</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-slate-400 hover:bg-[#2d3449]/50 transition-colors p-2 rounded-full">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<img alt="User profile avatar" class="w-8 h-8 rounded-full border-2 border-primary/20 object-cover" data-alt="portrait of a confident middle-eastern man in athletic wear against a soft blurred stadium background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB1X5CUciz4H5OGHLGlBQqK5TF5gxc6VwG7XgSYd0D4gDt9bJ03Ec1U37u4bGcG4JcuNwcydffaEg-zrYT99OQqwWhxaEfJCfudkVQClVMk33-NkSDX3P_YoAFg7J34RvZsPRz8tRa2BMbsCir6B9oZEJKBckrxDHcemfFVwUT3gxHgvUAI1j01BeqMQFtIR2HE4TiEXk-avkbpBwqFyvxieQlMjNsr-lys_YC2hDNWARh2Uaot_RtPfkHZHAiJKH0PEYQB54-tfg"/>
+</div>
+</header>
+<main class="pt-24 pb-32 px-6 max-w-7xl mx-auto min-h-screen">
+<section class="mb-12 relative overflow-hidden rounded-xl p-8 bg-surface-container-low">
+<div class="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-[100px] -mr-32 -mt-32"></div>
+<div class="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<h2 class="font-headline text-4xl md:text-6xl font-extrabold tracking-tight mb-2">Find Team</h2>
+<p class="text-on-secondary-container text-lg max-w-md">Join open matches across Cairo's premium pitches. The field is waiting for its next star.</p>
+</div>
+<div class="flex items-center bg-surface-container-highest/40 backdrop-blur-md px-6 py-4 rounded-full">
+<span class="font-label text-xs font-bold uppercase tracking-widest mr-4 text-slate-400">Public Matches</span>
+<button class="relative inline-flex h-6 w-11 items-center rounded-full bg-primary shadow-inner">
+<span class="translate-x-6 inline-block h-4 w-4 transform rounded-full bg-surface-container-lowest transition duration-200 ease-in-out"></span>
+</button>
+</div>
+</div>
+</section>
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<div class="group relative bg-glass rounded-xl overflow-hidden shadow-2xl transition-all hover:scale-[1.02] active:scale-[0.98]">
+<div class="h-48 overflow-hidden relative">
+<img alt="Stadium night match" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="high angle wide shot of a professional green football pitch under bright stadium floodlights at night with dramatic shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCaYHFEuCua1TA87f8P4YuPYjjjpEHNGSKO3FhSuYMxI3DwZR3EZiHlPhU-upeEZe0pmCIaCyvLpQfbzcXcJf3cIKGT8l9wM9I5zG6kojqBfYykK4JOhCLrq84-Jvee6IqR_4GO2VU_Yev3QiZolQG6I3y9aJQTgzGfJCx3HMWIzuK8CqsIWv5hokujxNTyadM8DOezveM4P9_xKP2GsqlELeDAaOKPHrQznH_s6VvYx4CybFcX-tM3DGNHuRuKDWhjjCW_IESag"/>
+<div class="absolute top-4 right-4 bg-primary px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter text-on-primary-container">
+                        2 Slots Left
+                    </div>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h3 class="font-headline text-xl font-bold text-on-surface">Camp Nou Cairo</h3>
+<p class="text-sm text-slate-400 flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-sm">location_on</span> Maadi, Cairo
+                            </p>
+</div>
+<div class="text-right">
+<span class="text-2xl font-bold text-primary">150</span>
+<span class="text-[10px] block text-slate-400 uppercase tracking-widest">EGP / Player</span>
+</div>
+</div>
+<div class="flex items-center gap-4 mb-6">
+<div class="flex -space-x-3 overflow-hidden">
+<img alt="" class="inline-block h-10 w-10 rounded-full ring-4 ring-[#171f33] object-cover" data-alt="close-up portrait of a young male football player with athletic features" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGqMNhd7TawPDbjLK4Ns4h_7MiYy68AAb8vwXXWTnMJIbOXA9ipik_Yg7s2m_v7Lo8R3RPFaPxm-w6QqBpGhxIsVmE49fNkfwe6PSQyLm0UPEFW5JNR5o7jxdABMbW3NDeu0uq6ha-F-zWXQhpdZVPYZGLK22g31aM3UC1BxlwGlMoF6GHGRta9RhaCRQpdX3p7JHLrvpz3qUxDgu09eeVV8fK-TT6rUDqVMAK--ILBLRt2UCbRzJZua61ljchlRB7YMfz0Htj_w"/>
+<img alt="" class="inline-block h-10 w-10 rounded-full ring-4 ring-[#171f33] object-cover" data-alt="smiling athletic woman in high-performance sportswear" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBc9TFUfgz1gh4vSqpk1-itZ7QiRYAXWScENsNlKQuPycVCLdKZn769e-Yl7FggqmIWKBU-xsw6AEvZJ0_K6tPat4oBFG727yYGq6LwANnUFbBJDPx2DkjEL18I7RXPkl1tt5p-70t0othWezB6IvFNJ_KACjk5xpzGtLrB_cwu1QsaIu1QOITMCJTQfDHehcep7aN-7HkMgeHOP4MIaZ3cViBraOX7dKz8AhynB-AH1uEpaJpgNDMb6YIlIAHZOoTx2-zQjV97Fg"/>
+<img alt="" class="inline-block h-10 w-10 rounded-full ring-4 ring-[#171f33] object-cover" data-alt="professional male soccer player profile shot with modern haircut" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDMIlU2MqMUYP3cHshQl6YWj5gvx1zWWPaoO2XdRQXGegk4mtM1fPTR59yVV60GUN8KpwZel7Jw7mDN9pXdaVSmaEuOyCDjSEN_Tb_9LDhN0UvGJn5CCxTnPoDi2WJOQjH2cmfCAAJ9SZzjfZlU_91GtlkGxUF39AxoQACl6uKVkdcMi-5Vs2XCQVYCTUYpRmQrCRtIVeXSl6Jt9qluuhTM4OgOizUXmBXG3mI-LXs1jv_nJ5N1U4CEIt1lhZi4TlqDU7-GnJtydA"/>
+<div class="flex items-center justify-center h-10 w-10 rounded-full ring-4 ring-[#171f33] bg-surface-container text-xs font-bold text-slate-300">
+                                +8
+                            </div>
+</div>
+<div class="h-10 w-px bg-outline-variant/20"></div>
+<div class="flex flex-col">
+<span class="text-[10px] text-slate-400 uppercase font-bold tracking-widest">Kickoff</span>
+<span class="text-sm font-semibold">21:00 Today</span>
+</div>
+</div>
+<button class="w-full py-4 bg-gradient-to-br from-[#4be277] to-[#22c55e] text-[#0b1326] font-bold rounded-full transition-transform active:scale-95 shadow-lg flex items-center justify-center gap-2">
+<span>Join Match</span>
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="group relative bg-glass rounded-xl overflow-hidden shadow-2xl transition-all hover:scale-[1.02] active:scale-[0.98]">
+<div class="h-48 overflow-hidden relative">
+<img alt="Indoor Arena" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="cinematic shot of an indoor futsal court with bright polished floor and blue and green highlights" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDc9aKyDc17vXWoU5Nic6UqiIlRtEFF-LHyrHSkQEzs6LRkLnsrTJ1RZAII4fHkMgujqdCYDfm7S6MYmdNlIrnZQWvQt2KoADkBlzS4cOob9FQg--TrpUFLLbkTEKMVEKlygH_yBMaJk4Q_NHsZNlN8Bxw3wJm63zL7k0DCOefRrZti2cXguZH0nqoHFwd7RbWA9-iLifjUfhourCH9toJWWcDfjbLSXdRzOirrVfxwCgKKPuX-Ndhvut60S_EVoHas92180ldB0w"/>
+<div class="absolute top-4 right-4 bg-primary px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter text-on-primary-container">
+                        4 Slots Left
+                    </div>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h3 class="font-headline text-xl font-bold text-on-surface">The Arena Futsal</h3>
+<p class="text-sm text-slate-400 flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-sm">location_on</span> New Cairo
+                            </p>
+</div>
+<div class="text-right">
+<span class="text-2xl font-bold text-primary">200</span>
+<span class="text-[10px] block text-slate-400 uppercase tracking-widest">EGP / Player</span>
+</div>
+</div>
+<div class="flex items-center gap-4 mb-6">
+<div class="flex -space-x-3 overflow-hidden">
+<img alt="" class="inline-block h-10 w-10 rounded-full ring-4 ring-[#171f33] object-cover" data-alt="professional athletic trainer portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2XpSvCzbh8jiGQGaEt_14UkmxB0e-qRrqj-SJlclULW_NOHmHjRVqNYDEjJDCfs7uDZmYff991hb6tdrg9XWIBWyZV1USHnI-4LyiuSwKWFG4uhx5HY-IapOgDCXwCUP3r5zpUoK3iaKTaYpoGXTTM01fEC8FAN-2yHP5oE5P9RiVK_SizFkKuA2QLbPJjW8_Cu0j4uxORguBoIgytp_QX5LVq2dz_5_u9eoFIhfoQd7zwLYxiJ9sSF10Cji1nO2MgvP_VmZajA"/>
+<img alt="" class="inline-block h-10 w-10 rounded-full ring-4 ring-[#171f33] object-cover" data-alt="athletic male player portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6Fj3XBkMsYb9j8AxFuJZ1dmSGSj_5Zl7tebb6C5FRwblguo-ZqGpgSgh2OyEeoT6Z-f5aDIr5O_mLwD_rEZkmOknB2ze7mwMndVzmfV7IZ8HS4WvvL49a9cINPLfJ8z57GYKOifq3CzUywAPxyJdyQzuBY6Mk7vyDDutI5r_2JPOQNO9UtYA2wtP7f2RFzEonwwMmjNlHjwtT-8VMi7567jq2ubRptwGSn5xJ3WzjZf7ZlFUyUydvAjPtzYlSc9XFI2XQE8Gcnw"/>
+<div class="flex items-center justify-center h-10 w-10 rounded-full ring-4 ring-[#171f33] bg-surface-container text-xs font-bold text-slate-300">
+                                +6
+                            </div>
+</div>
+<div class="h-10 w-px bg-outline-variant/20"></div>
+<div class="flex flex-col">
+<span class="text-[10px] text-slate-400 uppercase font-bold tracking-widest">Kickoff</span>
+<span class="text-sm font-semibold">22:30 Today</span>
+</div>
+</div>
+<button class="w-full py-4 bg-gradient-to-br from-[#4be277] to-[#22c55e] text-[#0b1326] font-bold rounded-full transition-transform active:scale-95 shadow-lg flex items-center justify-center gap-2">
+<span>Join Match</span>
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="group relative bg-glass rounded-xl overflow-hidden shadow-2xl transition-all hover:scale-[1.02] active:scale-[0.98]">
+<div class="h-48 overflow-hidden relative">
+<img alt="Night Arena" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="atmospheric shot of a neighborhood soccer field at dusk with cool blue tones and warm street light glow" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCcw_VuwRK4Wc9G0ISRuIsiUHy1jIOu88lFu8L-Ld3rUq_teS2Vahq-eVy2yaBmPOERDveFXV3KB3-aF13ji_OkOIJ2hsh8ckefU0o0H55Z8tw7jD5PwW9hty_iDmMKWMkPAskEpz2Ck8Af8Lcb0tqf_U13vZ_y-nyutGR0WKKwxAZgIN75jxn7JIl0L6nSOVIVCC9p9EKDsd0XpfPI80GK-BmzoH3M1cjFwJll6Vywqqd0JCLFBAI-Cu2Ot3d-wP99VnxSbHE1rw"/>
+<div class="absolute top-4 right-4 bg-error-container px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter text-on-error-container">
+                        Full
+                    </div>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h3 class="font-headline text-xl font-bold text-on-surface">Zayed Stars</h3>
+<p class="text-sm text-slate-400 flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-sm">location_on</span> Sheikh Zayed
+                            </p>
+</div>
+<div class="text-right">
+<span class="text-2xl font-bold text-primary">180</span>
+<span class="text-[10px] block text-slate-400 uppercase tracking-widest">EGP / Player</span>
+</div>
+</div>
+<div class="flex items-center gap-4 mb-6 opacity-60">
+<div class="flex -space-x-3 overflow-hidden">
+<img alt="" class="inline-block h-10 w-10 rounded-full ring-4 ring-[#171f33] object-cover" data-alt="fitness athlete portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtYwj6utOGtCu-0jnpmlBwqZIXa13npscxr3iIFaYZnxtFXSgKvB7fwCA5ufclu5ESQj-urVgCM_HgznjaAvuK-O5Y8Av7JDxFY5zTlYz-EaO6vP10kQ2DrmF3zTlgCLru8q3Qtaa4sPiWTAzMP44EZw8Nko73vdPubbhI1j6P1nEkPPwigiNwdJBmjQgRLgEs6f6zIWnVocRlBPjxxCfIRMrOUSlth-N8ARSKEOmHFLVhe6qO5EKc34Xz_chvhYn_J2VT8WN6Vg"/>
+<div class="flex items-center justify-center h-10 w-10 rounded-full ring-4 ring-[#171f33] bg-surface-container text-xs font-bold text-slate-300">
+                                +11
+                            </div>
+</div>
+<div class="h-10 w-px bg-outline-variant/20"></div>
+<div class="flex flex-col">
+<span class="text-[10px] text-slate-400 uppercase font-bold tracking-widest">Kickoff</span>
+<span class="text-sm font-semibold">20:00 Tomorrow</span>
+</div>
+</div>
+<button class="w-full py-4 bg-surface-container-highest text-on-secondary cursor-not-allowed font-bold rounded-full transition-transform flex items-center justify-center gap-2">
+<span>Waiting List</span>
+<span class="material-symbols-outlined">hourglass_empty</span>
+</button>
+</div>
+</div>
+</section>
+<section class="mt-16 mb-8 flex flex-col md:flex-row items-center justify-between gap-6">
+<div class="flex flex-col gap-1">
+<h3 class="font-headline text-2xl font-extrabold">Weekly Leaderboard</h3>
+<p class="text-slate-400">Top individual match contributors</p>
+</div>
+<button class="text-primary font-bold uppercase text-xs tracking-widest hover:underline flex items-center gap-2">
+                View All Rankings <span class="material-symbols-outlined text-sm">open_in_new</span>
+</button>
+</section>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="bg-surface-container p-4 rounded-lg flex items-center gap-4 hover:bg-surface-container-high transition-colors">
+<span class="text-2xl font-black text-slate-600 w-8 text-center italic">01</span>
+<img alt="" class="w-12 h-12 rounded-full object-cover ring-2 ring-primary" data-alt="close-up of a high-performance female athlete" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBhEabX5tYrNc0vAS0CwiIiLz81eKN4M4aRKAcpuAgbn5GNj04PzfAuUIFoRLyAH1QO62cTpWu3sm64bVCJLuYYYjcdfM_mjZ3JB0sQX2H-P84Owp2yH0oANeel4ZdfgKHPoKFcuZ5jkIN2mIBn9qZ9F-buU6SlEJSMFWKBhTKjDc1bVHdaUpiJXqJdVtYb9fwVOAariH4ttiAEwyuNJ7mK3B1-fdFthfxIZHa0Xa8EdhtWainXdX23SQ14T-_EP0bY6yaouXDosA"/>
+<div class="flex-1">
+<h4 class="font-bold text-on-surface">Amira Khaled</h4>
+<p class="text-xs text-slate-400">12 Matches Won</p>
+</div>
+<div class="bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-bold">
+                    MVP
+                </div>
+</div>
+<div class="bg-surface-container p-4 rounded-lg flex items-center gap-4 hover:bg-surface-container-high transition-colors">
+<span class="text-2xl font-black text-slate-600 w-8 text-center italic">02</span>
+<img alt="" class="w-12 h-12 rounded-full object-cover" data-alt="professional male athlete close-up portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDWH90tY4hR6XqPqRYai2jOnXygOTwTEbBI0xN4DXJo4Wv852fT0xkYBbvY-47mUUMA_2DnLnO_6XeyqW9TKQDtLDi_8qrlzW28S2S8LNsjyD3d2NHv9SoWOIMjZcYqLEjvKmOu512peLd_vUnmQPl7RzsOE0pzmSsZDTjwx4_eLV5hyRW6JUGBkaA_cxdsBQKBO4m3-GmplCAxKWn46GmVfdkCwHDEjUdU0awoBZlyVB71Hpn77GHf68nqp4dbUz6CziTeGO1U1Q"/>
+<div class="flex-1">
+<h4 class="font-bold text-on-surface">Youssef Tarek</h4>
+<p class="text-xs text-slate-400">10 Matches Won</p>
+</div>
+<div class="bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-bold">
+                    PRO
+                </div>
+</div>
+</div>
+</main>
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-end px-4 h-24 bg-[#0b1326]/60 backdrop-blur-lg shadow-[0px_-10px_40px_rgba(0,0,0,0.3)] rounded-t-[3rem] pb-safe">
+<a class="flex flex-col items-center justify-center text-slate-500 p-2 hover:text-[#4be277] transition-all tap-highlight-transparent" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-inter text-[10px] font-bold uppercase tracking-widest mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 p-2 hover:text-[#4be277] transition-all tap-highlight-transparent" href="#">
+<span class="material-symbols-outlined">search</span>
+<span class="font-inter text-[10px] font-bold uppercase tracking-widest mt-1">Search</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-gradient-to-br from-[#4be277] to-[#22c55e] text-[#0b1326] rounded-full p-3 mb-2 scale-110 shadow-lg animate-pulse-subtle" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">group</span>
+<span class="font-inter text-[10px] font-bold uppercase tracking-widest mt-1">Matches</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 p-2 hover:text-[#4be277] transition-all tap-highlight-transparent" href="#">
+<span class="material-symbols-outlined">event_available</span>
+<span class="font-inter text-[10px] font-bold uppercase tracking-widest mt-1">Bookings</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 p-2 hover:text-[#4be277] transition-all tap-highlight-transparent" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-inter text-[10px] font-bold uppercase tracking-widest mt-1">Profile</span>
+</a>
+</nav>
+<button class="fixed bottom-32 right-6 w-14 h-14 rounded-full bg-primary-container text-on-primary-container shadow-2xl flex items-center justify-center hover:scale-110 transition-transform active:scale-95 z-40">
+<span class="material-symbols-outlined text-3xl">add</span>
+</button>
+</body></html>

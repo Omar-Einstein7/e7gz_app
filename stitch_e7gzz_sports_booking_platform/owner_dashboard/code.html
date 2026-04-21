@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error-container": "#93000a",
+                        "surface": "#0b1326",
+                        "primary-fixed": "#6bff8f",
+                        "on-secondary-container": "#aeb9d0",
+                        "outline-variant": "#3d4a3d",
+                        "primary-container": "#22c55e",
+                        "primary-fixed-dim": "#4ae176",
+                        "on-tertiary": "#60130d",
+                        "on-secondary": "#263143",
+                        "on-primary-container": "#004b1e",
+                        "surface-tint": "#4ae176",
+                        "on-primary-fixed": "#002109",
+                        "surface-container-lowest": "#060e20",
+                        "surface-variant": "#2d3449",
+                        "secondary-fixed": "#d8e3fb",
+                        "secondary-fixed-dim": "#bcc7de",
+                        "on-primary-fixed-variant": "#005321",
+                        "tertiary-fixed": "#ffdad5",
+                        "tertiary": "#ffb5ab",
+                        "on-tertiary-container": "#76231b",
+                        "surface-container-highest": "#2d3449",
+                        "error": "#ffb4ab",
+                        "surface-container": "#171f33",
+                        "surface-container-high": "#222a3d",
+                        "tertiary-container": "#ff8b7c",
+                        "secondary": "#bcc7de",
+                        "background": "#0b1326",
+                        "on-surface": "#dae2fd",
+                        "on-tertiary-fixed": "#410001",
+                        "outline": "#869585",
+                        "on-error-container": "#ffdad6",
+                        "on-tertiary-fixed-variant": "#7f2a21",
+                        "surface-container-low": "#131b2e",
+                        "on-primary": "#003915",
+                        "on-secondary-fixed": "#111c2d",
+                        "surface-dim": "#0b1326",
+                        "on-surface-variant": "#bccbb9",
+                        "secondary-container": "#3e495d",
+                        "inverse-surface": "#dae2fd",
+                        "surface-bright": "#31394d",
+                        "inverse-on-surface": "#283044",
+                        "on-background": "#dae2fd",
+                        "on-error": "#690005",
+                        "tertiary-fixed-dim": "#ffb4a9",
+                        "on-secondary-fixed-variant": "#3c475a",
+                        "inverse-primary": "#006e2f",
+                        "primary": "#4be277"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(45, 52, 73, 0.4);
+            backdrop-filter: blur(20px);
+        }
+        body {
+            background-color: #0b1326;
+            color: #dae2fd;
+            font-family: 'Inter', sans-serif;
+        }
+        h1, h2, h3 {
+            font-family: 'Manrope', sans-serif;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="flex min-h-screen bg-surface">
+<!-- NavigationDrawer -->
+<aside class="hidden md:flex flex-col h-screen w-80 bg-[#131b2e] rounded-r-[3rem] shadow-2xl p-8 fixed left-0 top-0 z-50">
+<div class="flex items-center gap-3 mb-10">
+<div class="text-xl font-bold text-[#4be277] font-headline">e7gzz</div>
+</div>
+<div class="flex items-center gap-4 mb-12">
+<img alt="Ahmed Hassan" class="w-14 h-14 rounded-full object-cover" data-alt="Close up portrait of a confident middle-aged Egyptian man with short hair and a friendly expression in professional attire" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjE3ARzr827PTm0sLk4RNv9csjNIJ1PkoWlRuQcUjFDuji6LxNv_sAcHXtQZskveHHaeFWuEqZsRchl1ApjNQiQjHFX4WnBkZpYT4Iih4cgxVVAB4hYGKXHTaW-BzmJXJ8LCBMI_Lr2PMwMRwJTiQ7OA5yA8JeTL0oarsw5OrcS94E4Te47Y153C685ha_n6FyR5FJjvz2A2wlVRXX62GHtBF_OrxfrfFnmpp6gidDtyf208LgGL67Q6wzOwlGVGVACpsvm2Bylw"/>
+<div>
+<div class="font-headline font-bold text-on-surface">Ahmed Hassan</div>
+<div class="text-sm text-slate-400 font-body">Pitch Owner</div>
+<div class="text-[10px] uppercase tracking-widest text-[#4be277] font-bold">Premium Member</div>
+</div>
+</div>
+<nav class="flex-1 space-y-2">
+<a class="flex items-center gap-4 px-6 py-4 rounded-xl bg-[#171f33] text-[#4be277] font-bold border-l-4 border-[#4be277] transition-all" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body">Dashboard</span>
+</a>
+<a class="flex items-center gap-4 px-6 py-4 rounded-xl text-slate-400 hover:text-white hover:bg-[#2d3449] transition-all" href="#">
+<span class="material-symbols-outlined">sports_soccer</span>
+<span class="font-body">My Pitches</span>
+</a>
+<a class="flex items-center gap-4 px-6 py-4 rounded-xl text-slate-400 hover:text-white hover:bg-[#2d3449] transition-all" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-body">Revenue</span>
+</a>
+<a class="flex items-center gap-4 px-6 py-4 rounded-xl text-slate-400 hover:text-white hover:bg-[#2d3449] transition-all" href="#">
+<span class="material-symbols-outlined">military_tech</span>
+<span class="font-body">Loyalty Program</span>
+</a>
+<a class="flex items-center gap-4 px-6 py-4 rounded-xl text-slate-400 hover:text-white hover:bg-[#2d3449] transition-all" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body">Settings</span>
+</a>
+</nav>
+<a class="flex items-center gap-4 px-6 py-4 mt-auto rounded-xl text-slate-400 hover:text-error transition-all" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-body">Logout</span>
+</a>
+</aside>
+<!-- Main Canvas -->
+<main class="flex-1 md:ml-80 pb-24 md:pb-8">
+<!-- TopAppBar -->
+<header class="fixed top-0 right-0 left-0 md:left-80 z-40 bg-[#0b1326]/80 backdrop-blur-xl h-16 px-6 flex justify-between items-center w-full">
+<div class="md:hidden text-2xl font-black tracking-tighter text-[#4be277]">e7gzz</div>
+<div class="hidden md:block">
+<h1 class="text-xl font-headline font-bold text-on-surface">Owner Dashboard</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container-highest hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-on-surface">notifications</span>
+</button>
+<img alt="User Profile" class="w-10 h-10 rounded-full border-2 border-primary/20" data-alt="User profile avatar of a middle-aged man in high quality resolution" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4xnxu2-tSMQ7L9nr8C-FPenyTwuMQhCMVEsNBnj8sE7OYMBzwm8n5vBGMMJHsep_041fNQkNmtwQxI_N8IVcU75TrT9OzN5DureqvDJ5PWUP4LPksuxs6Tp29MfSdY_aMRbu_5qXeBGoXw1ajiDQ2GXFp35TXqMrPDuhjrjXicWCS4F1v0qrRmID7Q_iIzCKNmGmK3YH9RHjuyPyog_Xd4-72PVrg8jPiTvIVHh_jOsvSFtpZmWarqnPEeYHMwSa3HlKR4BZ4cw"/>
+</div>
+</header>
+<!-- Content Area -->
+<div class="pt-24 px-6 max-w-7xl mx-auto space-y-8">
+<!-- Hero Stats Row (Bento Style) -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+<!-- Revenue Card -->
+<div class="md:col-span-2 glass-panel p-8 rounded-xl border border-white/5 relative overflow-hidden group">
+<div class="absolute top-0 right-0 -mt-4 -mr-4 w-32 h-32 bg-primary/10 rounded-full blur-3xl group-hover:bg-primary/20 transition-all"></div>
+<div class="relative z-10">
+<div class="flex justify-between items-start mb-4">
+<span class="text-slate-400 font-label text-sm uppercase tracking-wider">Total Revenue (Monthly)</span>
+<span class="text-primary-fixed-dim bg-primary/10 px-3 py-1 rounded-full text-xs font-bold">+12.5%</span>
+</div>
+<div class="flex items-baseline gap-2 mb-6">
+<span class="text-4xl font-headline font-extrabold text-on-surface">24,500</span>
+<span class="text-lg font-headline font-medium text-slate-500">EGP</span>
+</div>
+<!-- Simple Sparkline -->
+<div class="flex items-end gap-1 h-12 w-full">
+<div class="bg-primary/20 w-full h-[40%] rounded-t-sm"></div>
+<div class="bg-primary/20 w-full h-[60%] rounded-t-sm"></div>
+<div class="bg-primary/20 w-full h-[30%] rounded-t-sm"></div>
+<div class="bg-primary/20 w-full h-[80%] rounded-t-sm"></div>
+<div class="bg-primary/40 w-full h-[55%] rounded-t-sm"></div>
+<div class="bg-primary/60 w-full h-[90%] rounded-t-sm"></div>
+<div class="bg-primary w-full h-[75%] rounded-t-sm"></div>
+</div>
+</div>
+</div>
+<!-- Bookings Summary -->
+<div class="glass-panel p-8 rounded-xl border border-white/5">
+<div class="text-slate-400 font-label text-sm uppercase tracking-wider mb-6">Active Bookings</div>
+<div class="text-5xl font-headline font-extrabold text-on-surface mb-2">42</div>
+<p class="text-slate-500 text-sm">Next booking in 15 mins</p>
+<div class="mt-6 flex -space-x-3">
+<img alt="user" class="w-8 h-8 rounded-full border-2 border-surface" data-alt="close up headshot of a person" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB1_81k69re497Q2-tBkD3ZxZZ45gDlxFjYCfs0SZbCkzDSFwV8ej9khC4gup74f88QkYVPfpaSwcRjRAkw8QowfHYvVrHwiuTnx9kP1tV-8dpbGOBGH53Qrzj4weXdnPovuXgwsR0yFpNXz8vDuUpEHaEyRNJFmw-HDywsxOhKaG8-4zM6xJx1pov5LjFOa7gEOZeNFdkgAtvkQUTvEPjmBGTPE9IaOdLUA2D-IVCTWHvCPcQLb6CVp_4bah4L1QCu9tT5mCni0Q"/>
+<img alt="user" class="w-8 h-8 rounded-full border-2 border-surface" data-alt="close up headshot of a person" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAi8DQVmU6pmdHEU5BwCcnOKrumIizGHdPoqfApqBzVaENztyWQ8hBDtfQmpgjgpcuUZY89pI4bGFQxiD6uOvLe6ELGFizki94fXRFDZJzK9KglrQ2l-b3fv_LVXvPJUc18DG4YOSFUqm2bf5PZP7eL8yPA91-1sucIRYYyJCkjX-b88WQLv5gg_fdAjOJWpT6tWley9HJyR-hJ_hgb2VA4dXDupb_5r0etLE7M0xKETw8uOGxIBxtNrCYVf_pCPeKSnG_Dd2BBcQ"/>
+<img alt="user" class="w-8 h-8 rounded-full border-2 border-surface" data-alt="close up headshot of a person" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQ5GXft0XIpsa0hV95fQ9fMM-hMTFg4Ftg0ygt5o5Vxc6DBOxvR_OXWJ9b-vmjUG_raanr1PFsbq_5FS1cJFMh4ik8MvCni_ezcqh-DOhWdC--2P7DkyJ34cOFBF8QKLWmKPGnhMGCXUXFKaqTFpstmWWSZJd6WPsEnuVkyys7LOEwJwALHI45QWP8tqyn2R-g3vUc2TNO0GDghdb9-YDYWIzW30O64q8VWY9wDcFxjaJ5VYhAbkROiqhU-vc3tdvcjHnjxRdqNw"/>
+<div class="w-8 h-8 rounded-full border-2 border-surface bg-surface-container-highest flex items-center justify-center text-[10px] font-bold text-primary">+8</div>
+</div>
+</div>
+<!-- Capacity Card -->
+<div class="glass-panel p-8 rounded-xl border border-white/5">
+<div class="text-slate-400 font-label text-sm uppercase tracking-wider mb-6">Avg. Capacity</div>
+<div class="text-5xl font-headline font-extrabold text-on-surface mb-2">88%</div>
+<div class="w-full bg-surface-container-highest h-2 rounded-full mt-4 overflow-hidden">
+<div class="bg-gradient-to-r from-primary to-primary-container h-full w-[88%]"></div>
+</div>
+</div>
+</div>
+<!-- Pitch List Section -->
+<section class="space-y-6">
+<div class="flex justify-between items-end">
+<div>
+<h2 class="text-2xl font-headline font-bold text-on-surface">My Pitches</h2>
+<p class="text-slate-500 font-body">Manage your facilities and pricing</p>
+</div>
+<button class="bg-gradient-to-br from-[#4be277] to-[#22c55e] text-[#0b1326] px-6 py-3 rounded-full font-bold flex items-center gap-2 shadow-lg hover:scale-105 active:scale-95 transition-all">
+<span class="material-symbols-outlined">add</span>
+                        Add New Pitch
+                    </button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Pitch Card 1 -->
+<div class="bg-surface-container-low rounded-xl overflow-hidden group hover:bg-surface-container transition-all">
+<div class="relative h-48 overflow-hidden">
+<img alt="Pitch One" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Lush green high-quality artificial turf football pitch with stadium floodlights and white boundary lines at dusk" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdgPHHUa0egUZMIT0_mtuYJOkYSsQ6yZ5J7wBB9AqLUVHAX42m9fGTJdKtJxgIXcOOYTOpsySf2g4xjS_53PAWIoktMw_rNCtq50M5HtTHOi0x8vNFBZXb9dFCn48bwLKjVqNi2J-LhkoW_hoKkoaOhPUCiQgX6G1C6f4hKDAgj6FwmBWk1j7SSc171NDOtklSl6V-PGeB85NR-PmrnOBpcjxQsQsGZ5hbHGT5bdxJ3miPgKrWRCIhhswlraEySMYTiUsXofrP-g"/>
+<div class="absolute top-4 right-4 px-3 py-1 bg-primary-fixed-dim text-on-primary-fixed text-xs font-bold rounded-full">Available</div>
+</div>
+<div class="p-6">
+<h3 class="text-xl font-headline font-bold text-on-surface mb-1">Old Trafford Giza</h3>
+<p class="text-sm text-slate-500 font-body mb-4">6x6 • Artificial Turf • Floodlights</p>
+<div class="flex items-center justify-between mt-auto">
+<div class="flex items-baseline gap-1">
+<span class="text-xl font-bold text-primary">450</span>
+<span class="text-xs text-slate-400">EGP/hr</span>
+</div>
+<div class="flex gap-2">
+<button class="p-2 rounded-full bg-surface-container-highest hover:text-primary transition-colors">
+<span class="material-symbols-outlined">edit</span>
+</button>
+<button class="p-2 rounded-full bg-surface-container-highest hover:text-error transition-colors">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Pitch Card 2 -->
+<div class="bg-surface-container-low rounded-xl overflow-hidden group hover:bg-surface-container transition-all">
+<div class="relative h-48 overflow-hidden">
+<img alt="Pitch Two" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Modern indoor football arena with high ceiling and bright LED lighting, professional grade synthetic grass" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmxCbIm3QqrWDxkMHR3yNIgUMHUgONW1VVy2kZWlyvcS7TwmnfIolVR7cbYxUWp1cr6aUiZyBwHYv72b_R4vwXlxYEAcpGf6Igsslmr9WfAYZVux3AwilDZIhVovhn_20BJoxhLBnFslXfYxnRZ61qXKtfp0d84msWoTRUEblUXziHHFhjLMMmsBDfUGyzvP4e3ceyg6BW6vMMU3FhjZJ7O_AgOPODZZTXbvbYwrK2elejZxqPCWj9jTmOupxiCxDOs06xmtDpFQ"/>
+<div class="absolute top-4 right-4 px-3 py-1 bg-tertiary-container text-on-tertiary-container text-xs font-bold rounded-full">Fully Booked</div>
+</div>
+<div class="p-6">
+<h3 class="text-xl font-headline font-bold text-on-surface mb-1">Stadium Arena 5</h3>
+<p class="text-sm text-slate-500 font-body mb-4">5x5 • Natural Grass • Indoor</p>
+<div class="flex items-center justify-between mt-auto">
+<div class="flex items-baseline gap-1">
+<span class="text-xl font-bold text-primary">380</span>
+<span class="text-xs text-slate-400">EGP/hr</span>
+</div>
+<div class="flex gap-2">
+<button class="p-2 rounded-full bg-surface-container-highest hover:text-primary transition-colors">
+<span class="material-symbols-outlined">edit</span>
+</button>
+<button class="p-2 rounded-full bg-surface-container-highest hover:text-error transition-colors">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Add Pitch Placeholder -->
+<div class="border-2 border-dashed border-outline-variant/30 rounded-xl flex flex-col items-center justify-center p-8 group hover:border-primary/40 transition-all cursor-pointer">
+<div class="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-3xl text-slate-500 group-hover:text-primary">add_circle</span>
+</div>
+<span class="font-headline font-bold text-slate-500 group-hover:text-on-surface">Add another facility</span>
+</div>
+</div>
+</section>
+<!-- Revenue Ledger & Calendar Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Digital Ledger -->
+<div class="lg:col-span-2 glass-panel rounded-xl overflow-hidden border border-white/5">
+<div class="p-8 border-b border-white/5 flex justify-between items-center">
+<h2 class="text-xl font-headline font-bold text-on-surface">Digital Ledger</h2>
+<button class="text-primary text-sm font-bold flex items-center gap-1 hover:underline">
+                            View All Transactions
+                            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-surface-container-highest/50">
+<tr>
+<th class="px-8 py-4 text-xs font-bold uppercase tracking-widest text-slate-400">Date</th>
+<th class="px-8 py-4 text-xs font-bold uppercase tracking-widest text-slate-400">Payer</th>
+<th class="px-8 py-4 text-xs font-bold uppercase tracking-widest text-slate-400">Method</th>
+<th class="px-8 py-4 text-xs font-bold uppercase tracking-widest text-slate-400">Amount</th>
+<th class="px-8 py-4 text-xs font-bold uppercase tracking-widest text-slate-400 text-right">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-white/5">
+<tr class="hover:bg-white/5 transition-colors">
+<td class="px-8 py-4 font-body text-sm text-slate-300">Oct 24, 18:30</td>
+<td class="px-8 py-4 font-body text-sm text-on-surface">Mohamed S.</td>
+<td class="px-8 py-4">
+<span class="px-2 py-1 bg-[#171f33] text-[10px] font-bold rounded-md text-primary uppercase">Vodafone Cash</span>
+</td>
+<td class="px-8 py-4 font-body text-sm text-on-surface font-bold">450 EGP</td>
+<td class="px-8 py-4 text-right">
+<span class="w-2 h-2 rounded-full bg-primary inline-block"></span>
+</td>
+</tr>
+<tr class="hover:bg-white/5 transition-colors">
+<td class="px-8 py-4 font-body text-sm text-slate-300">Oct 24, 16:00</td>
+<td class="px-8 py-4 font-body text-sm text-on-surface">Youssef A.</td>
+<td class="px-8 py-4">
+<span class="px-2 py-1 bg-[#171f33] text-[10px] font-bold rounded-md text-secondary uppercase">InstaPay</span>
+</td>
+<td class="px-8 py-4 font-body text-sm text-on-surface font-bold">380 EGP</td>
+<td class="px-8 py-4 text-right">
+<span class="w-2 h-2 rounded-full bg-primary inline-block"></span>
+</td>
+</tr>
+<tr class="hover:bg-white/5 transition-colors">
+<td class="px-8 py-4 font-body text-sm text-slate-300">Oct 23, 21:00</td>
+<td class="px-8 py-4 font-body text-sm text-on-surface">Sherif K.</td>
+<td class="px-8 py-4">
+<span class="px-2 py-1 bg-[#171f33] text-[10px] font-bold rounded-md text-slate-400 uppercase">Offline</span>
+</td>
+<td class="px-8 py-4 font-body text-sm text-on-surface font-bold">450 EGP</td>
+<td class="px-8 py-4 text-right">
+<span class="w-2 h-2 rounded-full bg-primary inline-block"></span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Booking Calendar Mini -->
+<div class="glass-panel p-8 rounded-xl border border-white/5">
+<div class="flex justify-between items-center mb-8">
+<h2 class="text-xl font-headline font-bold text-on-surface">Schedule</h2>
+<div class="flex gap-2">
+<button class="p-1 rounded bg-surface-container hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-sm">chevron_left</span>
+</button>
+<button class="p-1 rounded bg-surface-container hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-7 gap-2 mb-4">
+<div class="text-center text-[10px] font-bold text-slate-500 uppercase">S</div>
+<div class="text-center text-[10px] font-bold text-slate-500 uppercase">M</div>
+<div class="text-center text-[10px] font-bold text-slate-500 uppercase">T</div>
+<div class="text-center text-[10px] font-bold text-slate-500 uppercase">W</div>
+<div class="text-center text-[10px] font-bold text-slate-500 uppercase">T</div>
+<div class="text-center text-[10px] font-bold text-slate-500 uppercase">F</div>
+<div class="text-center text-[10px] font-bold text-slate-500 uppercase">S</div>
+</div>
+<div class="grid grid-cols-7 gap-2">
+<!-- Days -->
+<div class="h-10 flex items-center justify-center text-sm text-slate-600">20</div>
+<div class="h-10 flex items-center justify-center text-sm text-slate-600">21</div>
+<div class="h-10 flex items-center justify-center text-sm text-slate-600">22</div>
+<div class="h-10 flex items-center justify-center text-sm text-slate-600">23</div>
+<div class="h-10 flex items-center justify-center text-sm text-on-surface bg-primary/20 rounded-lg font-bold border border-primary/50">24</div>
+<div class="h-10 flex items-center justify-center text-sm text-slate-300">25</div>
+<div class="h-10 flex items-center justify-center text-sm text-slate-300">26</div>
+<!-- ... more days -->
+</div>
+<div class="mt-8 space-y-4">
+<div class="flex items-center gap-4 p-3 bg-surface-container rounded-xl">
+<div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">19:00</div>
+<div class="flex-1 min-w-0">
+<div class="text-sm font-bold text-on-surface truncate">Omar's Match</div>
+<div class="text-[10px] text-slate-500">Old Trafford Giza</div>
+</div>
+</div>
+<div class="flex items-center gap-4 p-3 bg-surface-container rounded-xl">
+<div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center text-slate-400 font-bold text-xs">21:30</div>
+<div class="flex-1 min-w-0">
+<div class="text-sm font-bold text-on-surface truncate">Corporate Cup</div>
+<div class="text-[10px] text-slate-500">Stadium Arena 5</div>
+</div>
+</div>
+</div>
+<button class="w-full mt-6 py-3 rounded-full border border-primary/30 text-primary font-bold text-sm hover:bg-primary/5 transition-all">
+                        Manage Offline Bookings
+                    </button>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-end px-4 h-24 bg-[#0b1326]/60 backdrop-blur-lg rounded-t-[3rem] shadow-[0px_-10px_40px_rgba(0,0,0,0.3)]">
+<a class="flex flex-col items-center justify-center bg-gradient-to-br from-[#4be277] to-[#22c55e] text-[#0b1326] rounded-full p-3 mb-2 scale-110 shadow-lg transition-all" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-inter text-[10px] font-bold uppercase tracking-widest mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 p-2 hover:text-[#4be277] transition-all" href="#">
+<span class="material-symbols-outlined">search</span>
+<span class="font-inter text-[10px] font-bold uppercase tracking-widest mt-1">Search</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 p-2 hover:text-[#4be277] transition-all" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-inter text-[10px] font-bold uppercase tracking-widest mt-1">Matches</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 p-2 hover:text-[#4be277] transition-all" href="#">
+<span class="material-symbols-outlined">event_available</span>
+<span class="font-inter text-[10px] font-bold uppercase tracking-widest mt-1">Bookings</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 p-2 hover:text-[#4be277] transition-all" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-inter text-[10px] font-bold uppercase tracking-widest mt-1">Profile</span>
+</a>
+</nav>
+</body></html>
