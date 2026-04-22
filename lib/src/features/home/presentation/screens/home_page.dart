@@ -9,7 +9,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _bottomNavIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -151,7 +150,7 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: cs.primary,
         child: const Icon(Icons.add, color: Color(0xFF003915), size: 32),
       ),
-      bottomNavigationBar: customBottomNav(cs),
+      
     );
   }
 
@@ -411,59 +410,4 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget customBottomNav(ColorScheme cs) {
-    return Container(
-      height: 90.h,
-      decoration: BoxDecoration(
-        color: const Color(0xFF0B1326),
-        border: Border(top: BorderSide(color: Colors.white.withValues(alpha: 0.05))),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          navItem(0, 'HOME', IconsaxPlusBold.home, true, cs, () {}),
-          navItem(1, 'SEARCH', IconsaxPlusLinear.search_normal_1, false, cs, () => context.push(AppRoutes.search)),
-          navItem(2, 'MATCHES', IconsaxPlusLinear.user_octagon, false, cs, () => context.push(AppRoutes.matchmaking)),
-          navItem(3, 'BOOKINGS', IconsaxPlusLinear.calendar_1, false, cs, () => context.push(AppRoutes.myBookings)),
-          navItem(4, 'PROFILE', IconsaxPlusLinear.user, false, cs, () => context.push(AppRoutes.profile)),
-        ],
-      ),
-    );
-  }
-
-  Widget navItem(int index, String label, IconData icon, bool isSelected, ColorScheme cs, VoidCallback onTap) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (isSelected)
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-              decoration: BoxDecoration(
-                color: cs.primary,
-                borderRadius: BorderRadius.circular(100.r),
-              ),
-              child: Row(
-                children: [
-                  Icon(icon, color: const Color(0xFF003915), size: 20),
-                  SizedBox(width: 8.w),
-                  Text(
-                    label,
-                    style: TextStyle(
-                      color: const Color(0xFF003915),
-                      fontWeight: FontWeight.w900,
-                      fontSize: 10.sp,
-                      letterSpacing: 1,
-                    ),
-                  ),
-                ],
-              ),
-            )
-          else
-            Icon(icon, color: const Color(0xFFBCC7DE), size: 24),
-        ],
-      ),
-    );
-  }
 }

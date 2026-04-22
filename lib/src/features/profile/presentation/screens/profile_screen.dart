@@ -172,7 +172,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: customBottomNav(cs),
+      
     );
   }
 
@@ -234,39 +234,4 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget customBottomNav(ColorScheme cs) {
-    return Container(
-      height: 90.h,
-      decoration: BoxDecoration(
-        color: const Color(0xFF0B1326),
-        border: Border(top: BorderSide(color: Colors.white.withValues(alpha: 0.05))),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          navItem(0, 'HOME', IconsaxPlusLinear.home, false, cs),
-          navItem(1, 'SEARCH', IconsaxPlusLinear.search_normal_1, false, cs),
-          navItem(2, 'MATCHES', IconsaxPlusLinear.user_octagon, false, cs),
-          navItem(3, 'BOOKINGS', IconsaxPlusLinear.calendar_1, false, cs),
-          navItem(4, 'PROFILE', IconsaxPlusBold.user, true, cs),
-        ],
-      ),
-    );
-  }
-
-  Widget navItem(int index, String label, IconData icon, bool isSelected, ColorScheme cs) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        if (isSelected)
-          Container(
-            padding: EdgeInsets.all(12.w),
-            decoration: BoxDecoration(color: cs.primary, shape: BoxShape.circle),
-            child: Icon(icon, color: const Color(0xFF003915), size: 24),
-          )
-        else
-          Icon(icon, color: const Color(0xFFBCC7DE), size: 24),
-      ],
-    );
-  }
 }

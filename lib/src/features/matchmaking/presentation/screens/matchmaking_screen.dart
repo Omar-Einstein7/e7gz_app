@@ -173,7 +173,7 @@ class _MatchmakingScreenState extends State<MatchmakingScreen> {
         backgroundColor: cs.primary,
         child: const Icon(Icons.add, color: Color(0xFF003915), size: 32),
       ),
-      bottomNavigationBar: customBottomNav(cs),
+      
     );
   }
 
@@ -347,39 +347,4 @@ class _MatchmakingScreenState extends State<MatchmakingScreen> {
     );
   }
 
-  Widget customBottomNav(ColorScheme cs) {
-    return Container(
-      height: 90.h,
-      decoration: BoxDecoration(
-        color: const Color(0xFF0B1326),
-        border: Border(top: BorderSide(color: Colors.white.withValues(alpha: 0.05))),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          navItem(0, 'HOME', IconsaxPlusLinear.home, false, cs),
-          navItem(1, 'SEARCH', IconsaxPlusLinear.search_normal_1, false, cs),
-          navItem(2, 'MATCHES', IconsaxPlusBold.user_octagon, true, cs),
-          navItem(3, 'BOOKINGS', IconsaxPlusLinear.calendar_1, false, cs),
-          navItem(4, 'PROFILE', IconsaxPlusLinear.user, false, cs),
-        ],
-      ),
-    );
-  }
-
-  Widget navItem(int index, String label, IconData icon, bool isSelected, ColorScheme cs) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        if (isSelected)
-          Container(
-            padding: EdgeInsets.all(12.w),
-            decoration: BoxDecoration(color: cs.primary, shape: BoxShape.circle),
-            child: Icon(icon, color: const Color(0xFF003915), size: 24),
-          )
-        else
-          Icon(icon, color: const Color(0xFFBCC7DE), size: 24),
-      ],
-    );
-  }
 }
