@@ -90,7 +90,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                       children: [
                         // Image Section - Bleed effect
                         SizedBox(
-                          height: 500.h,
+                          height: 450.h,
                           width: double.infinity,
                           child: Stack(
                             children: [
@@ -136,7 +136,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                                 style: textTheme.displayMedium?.copyWith(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w900,
-                                  fontSize: 36.sp,
+                                  fontSize: 28.sp,
                                   height: 1.1,
                                 ),
                               ).animate()
@@ -149,7 +149,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                                 item['subtitle'] as String,
                                 style: textTheme.bodyLarge?.copyWith(
                                   color: const Color(0xFFBCC7DE).withValues(alpha: 0.8),
-                                  fontSize: 16.sp,
+                                  fontSize: 15.sp,
                                   height: 1.5,
                                 ),
                               ).animate()

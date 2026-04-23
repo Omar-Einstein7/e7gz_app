@@ -1,6 +1,8 @@
 import 'dart:ui';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
+import '../widgets/amenity_item.dart';
+import '../widgets/shift_card.dart';
 
 class PitchDetailsScreen extends StatefulWidget {
   const PitchDetailsScreen({super.key});
@@ -12,8 +14,8 @@ class PitchDetailsScreen extends StatefulWidget {
 class _PitchDetailsScreenState extends State<PitchDetailsScreen> {
   @override
   Widget build(BuildContext context) {
-    final cs = context.theme.colorScheme;
-    final tt = context.theme.textTheme;
+    final colors = context.colors;
+    final typography = context.typography;
 
     return Scaffold(
       backgroundColor: const Color(0xFF0B1326),
@@ -27,7 +29,7 @@ class _PitchDetailsScreenState extends State<PitchDetailsScreen> {
             pinned: true,
             leading: IconButton(
               icon: const Icon(Icons.arrow_back, color: Colors.white),
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => context.pop(),
             ),
             actions: [
               IconButton(
@@ -99,7 +101,7 @@ class _PitchDetailsScreenState extends State<PitchDetailsScreen> {
                               SizedBox(height: 12.h),
                               Text(
                                 'Al-Maadi International Center',
-                                style: tt.headlineMedium?.copyWith(
+                                style: typography.headlineMedium?.copyWith(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w900,
                                   fontSize: 28.sp,
@@ -127,7 +129,11 @@ class _PitchDetailsScreenState extends State<PitchDetailsScreen> {
                                         SizedBox(width: 4.w),
                                         Text(
                                           '4.9',
-                                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12.sp),
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 12.sp,
+                                          ),
                                         ),
                                         Text(
                                           ' (120+)',
@@ -158,38 +164,37 @@ class _PitchDetailsScreenState extends State<PitchDetailsScreen> {
                 children: [
                   Text(
                     'VENUE AMENITIES',
-                    style: tt.labelSmall?.copyWith(
+                    style: typography.labelSmall?.copyWith(
                       color: const Color(0xFFBCC7DE),
                       fontWeight: FontWeight.w900,
                       letterSpacing: 2,
                     ),
                   ),
                   SizedBox(height: 20.h),
-                  Row(
+                  const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      amenityItem('Showers', Icons.shower),
-                      amenityItem('Parking', Icons.local_parking),
-                      amenityItem('Free WiFi', Icons.wifi),
-                      amenityItem('Cafeteria', Icons.coffee),
+                      AmenityItem(label: 'Showers', icon: Icons.shower),
+                      AmenityItem(label: 'Parking', icon: Icons.local_parking),
+                      AmenityItem(label: 'Free WiFi', icon: Icons.wifi),
+                      AmenityItem(label: 'Cafeteria', icon: Icons.coffee),
                     ],
                   ),
-                  
+
                   SizedBox(height: 48.h),
-                  
+
                   // Shifts
-                  shiftCard(
+                  const ShiftCard(
                     title: 'Sunlight Play',
                     subtitle: 'MORNING SHIFT',
                     price: '350',
                     timeRange: '08:00 AM - 04:00 PM',
                     icon: Icons.wb_sunny_outlined,
-                    isSelected: false,
                   ),
-                  
+
                   SizedBox(height: 16.h),
-                  
-                  shiftCard(
+
+                  const ShiftCard(
                     title: 'Under the Lights',
                     subtitle: 'EVENING SHIFT',
                     price: '550',
@@ -197,18 +202,24 @@ class _PitchDetailsScreenState extends State<PitchDetailsScreen> {
                     icon: Icons.nightlight_round,
                     isSelected: true,
                   ),
-                  
+
                   SizedBox(height: 48.h),
-                  
+
                   // Map section
                   Text(
                     'Location & Map',
-                    style: tt.titleLarge?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+                    style: typography.titleLarge?.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   SizedBox(height: 12.h),
                   Text(
                     'Street 250, behind the Grand Mall, Maadi, Cairo. Easy access via Metro and private parking available.',
-                    style: tt.bodyMedium?.copyWith(color: const Color(0xFFBCC7DE), height: 1.5),
+                    style: typography.bodyMedium?.copyWith(
+                      color: const Color(0xFFBCC7DE),
+                      height: 1.5,
+                    ),
                   ),
                   SizedBox(height: 24.h),
                   Container(
@@ -217,7 +228,9 @@ class _PitchDetailsScreenState extends State<PitchDetailsScreen> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(32.r),
                       image: const DecorationImage(
-                        image: NetworkImage('https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80'),
+                        image: NetworkImage(
+                          'https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80',
+                        ),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -225,27 +238,33 @@ class _PitchDetailsScreenState extends State<PitchDetailsScreen> {
                       child: Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: cs.primary,
+                          color: colors.primary,
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(Icons.location_on, color: Color(0xFF003915), size: 30),
                       ),
                     ),
                   ),
-                  
+
                   SizedBox(height: 48.h),
-                  
+
                   // About
                   Text(
                     'About this pitch',
-                    style: tt.titleLarge?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+                    style: typography.titleLarge?.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   SizedBox(height: 16.h),
                   Text(
                     "Featuring high-grade FIFA certified artificial turf, Al-Maadi International Center offers a premium playing surface that reduces injury risk and ensures optimal ball roll. Our 5-a-side and 7-a-side pitches are equipped with professional-grade LED floodlights for perfect visibility during night matches. We provide clean locker rooms, fresh water, and a viewing area for spectators.",
-                    style: tt.bodyMedium?.copyWith(color: const Color(0xFFBCC7DE).withValues(alpha: 0.8), height: 1.6),
+                    style: typography.bodyMedium?.copyWith(
+                      color: const Color(0xFFBCC7DE).withValues(alpha: 0.8),
+                      height: 1.6,
+                    ),
                   ),
-                  
+
                   SizedBox(height: 120.h),
                 ],
               ),
@@ -269,16 +288,25 @@ class _PitchDetailsScreenState extends State<PitchDetailsScreen> {
               children: [
                 Text(
                   'TOTAL PRICE',
-                  style: tt.labelSmall?.copyWith(color: const Color(0xFFBCC7DE), fontWeight: FontWeight.bold),
+                  style: typography.labelSmall?.copyWith(
+                    color: const Color(0xFFBCC7DE),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 RichText(
                   text: TextSpan(
                     text: '550 ',
-                    style: tt.headlineSmall?.copyWith(color: Colors.white, fontWeight: FontWeight.w900),
+                    style: typography.headlineSmall?.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w900,
+                    ),
                     children: [
                       TextSpan(
                         text: 'EGP',
-                        style: tt.titleSmall?.copyWith(color: cs.primary, fontWeight: FontWeight.bold),
+                        style: typography.titleSmall?.copyWith(
+                          color: colors.primary,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ],
                   ),
@@ -296,94 +324,5 @@ class _PitchDetailsScreenState extends State<PitchDetailsScreen> {
       ),
     );
   }
-
-  Widget amenityItem(String label, IconData icon) {
-    return Column(
-      children: [
-        Container(
-          width: 64.w,
-          height: 64.w,
-          decoration: BoxDecoration(
-            color: const Color(0xFF171F33),
-            shape: BoxShape.circle,
-          ),
-          child: Icon(icon, color: const Color(0xFF4BE277), size: 24),
-        ),
-        SizedBox(height: 8.h),
-        Text(
-          label,
-          style: TextStyle(color: const Color(0xFFBCC7DE), fontSize: 10.sp, fontWeight: FontWeight.w600),
-        ),
-      ],
-    );
-  }
-
-  Widget shiftCard({
-    required String title,
-    required String subtitle,
-    required String price,
-    required String timeRange,
-    required IconData icon,
-    required bool isSelected,
-  }) {
-    return Container(
-      padding: EdgeInsets.all(24.w),
-      decoration: BoxDecoration(
-        color: const Color(0xFF131B2E),
-        borderRadius: BorderRadius.circular(32.r),
-        border: isSelected ? Border.all(color: const Color(0xFF4BE277), width: 1.5) : null,
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  subtitle,
-                  style: context.theme.textTheme.labelSmall?.copyWith(
-                    color: isSelected ? const Color(0xFF4BE277) : const Color(0xFFBCC7DE),
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: 1,
-                  ),
-                ),
-                Text(
-                  title,
-                  style: context.theme.textTheme.titleLarge?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: 12.h),
-                Text(
-                  timeRange,
-                  style: TextStyle(color: const Color(0xFFBCC7DE).withValues(alpha: 0.5), fontSize: 12.sp),
-                ),
-              ],
-            ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              RichText(
-                text: TextSpan(
-                  text: '$price ',
-                  style: context.theme.textTheme.headlineSmall?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w900,
-                  ),
-                  children: [
-                    TextSpan(
-                      text: 'EGP / HOUR',
-                      style: TextStyle(color: const Color(0xFFBCC7DE), fontSize: 10.sp, fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
 }
+

@@ -1,6 +1,8 @@
 import 'dart:ui';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
+import '../widgets/brand_header.dart';
+import '../widgets/social_login_button.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -24,8 +26,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final cs = context.theme.colorScheme;
-    final tt = context.theme.textTheme;
+    final colors = context.colors;
+    final typography = context.typography;
 
     return Scaffold(
       backgroundColor: const Color(0xFF0B1326),
@@ -39,7 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
               width: 600.w,
               height: 600.h,
               decoration: BoxDecoration(
-                color: cs.primary.withValues(alpha: 0.1),
+                color: colors.primary.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: BackdropFilter(
@@ -48,7 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
           ),
-          
+
           Positioned(
             bottom: -40,
             left: -40,
@@ -56,7 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
               width: 400.w,
               height: 400.h,
               decoration: BoxDecoration(
-                color: cs.primaryContainer.withValues(alpha: 0.1),
+                color: colors.primaryContainer.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: BackdropFilter(
@@ -74,10 +76,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     // Brand Identity
-                    brandHeader(tt, cs),
-                    
+                    const BrandHeader(),
+
                     SizedBox(height: 48.h),
-                    
+
                     // Login Container
                     Container(
                       padding: EdgeInsets.all(32.w),
@@ -98,7 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           // Section Header
                           Text(
                             'Welcome Back',
-                            style: tt.headlineSmall?.copyWith(
+                            style: typography.headlineSmall?.copyWith(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
                               fontSize: 24.sp,
@@ -107,41 +109,44 @@ class _LoginScreenState extends State<LoginScreen> {
                           SizedBox(height: 8.h),
                           Text(
                             'Securely log in to manage your bookings.',
-                            style: tt.bodySmall?.copyWith(
+                            style: typography.bodySmall?.copyWith(
                               color: const Color(0xFFBCC7DE),
                               fontSize: 14.sp,
                             ),
                           ),
-                          
+
                           SizedBox(height: 32.h),
-                          
+
                           // Form
                           Form(
                             key: _formKey,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                inputLabel('EMAIL ADDRESS'),
+                                _inputLabel(context, 'EMAIL ADDRESS'),
                                 AppTextField(
                                   controller: _emailController,
                                   hint: 'name@example.com',
                                   keyboardType: TextInputType.emailAddress,
                                   prefixIcon: const Icon(IconsaxPlusBold.sms),
                                 ),
-                                
+
                                 SizedBox(height: 24.h),
-                                
+
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    inputLabel('PASSWORD'),
+                                    _inputLabel(context, 'PASSWORD'),
                                     TextButton(
                                       onPressed: () => context.push(AppRoutes.forgotPassword),
-                                      style: TextButton.styleFrom(padding: EdgeInsets.zero, minimumSize: Size.zero),
+                                      style: TextButton.styleFrom(
+                                        padding: EdgeInsets.zero,
+                                        minimumSize: Size.zero,
+                                      ),
                                       child: Text(
                                         'Forgot Password?',
-                                        style: tt.labelSmall?.copyWith(
-                                          color: cs.primary,
+                                        style: typography.labelSmall?.copyWith(
+                                          color: colors.primary,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
@@ -161,9 +166,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                     onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
                                   ),
                                 ),
-                                
+
                                 SizedBox(height: 32.h),
-                                
+
                                 AppButton(
                                   label: 'Login to Account',
                                   isFullWidth: true,
@@ -178,7 +183,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               ],
                             ),
                           ),
-                          
+
                           // Divider
                           SizedBox(height: 32.h),
                           Row(
@@ -188,7 +193,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 padding: EdgeInsets.symmetric(horizontal: 16.w),
                                 child: Text(
                                   'OR CONTINUE WITH',
-                                  style: tt.labelSmall?.copyWith(
+                                  style: typography.labelSmall?.copyWith(
                                     color: const Color(0xFFBCC7DE).withValues(alpha: 0.5),
                                     fontWeight: FontWeight.w900,
                                     letterSpacing: 1.5,
@@ -199,12 +204,12 @@ class _LoginScreenState extends State<LoginScreen> {
                             ],
                           ),
                           SizedBox(height: 32.h),
-                          
+
                           // Social Logins
                           Row(
                             children: [
                               Expanded(
-                                child: socialButton(
+                                child: SocialLoginButton(
                                   label: 'Google',
                                   iconPath: AppAssets.googleIcon,
                                   onPressed: () {},
@@ -212,7 +217,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                               SizedBox(width: 16.w),
                               Expanded(
-                                child: socialButton(
+                                child: SocialLoginButton(
                                   label: 'Facebook',
                                   iconPath: AppAssets.facebookIcon,
                                   onPressed: () {},
@@ -220,9 +225,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ],
                           ),
-                          
+
                           SizedBox(height: 32.h),
-                          
+
                           // Footer Action
                           Center(
                             child: TextButton(
@@ -231,12 +236,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                 textAlign: TextAlign.center,
                                 text: TextSpan(
                                   text: 'New to the pitch? ',
-                                  style: tt.bodySmall?.copyWith(color: const Color(0xFFBCC7DE)),
+                                  style: typography.bodySmall?.copyWith(color: const Color(0xFFBCC7DE)),
                                   children: [
                                     TextSpan(
                                       text: 'Create an account',
                                       style: TextStyle(
-                                        color: cs.primary,
+                                        color: colors.primary,
                                         fontWeight: FontWeight.bold,
                                         decoration: TextDecoration.underline,
                                       ),
@@ -249,18 +254,18 @@ class _LoginScreenState extends State<LoginScreen> {
                         ],
                       ),
                     ),
-                    
+
                     SizedBox(height: 48.h),
-                    
+
                     // Legal/Footer
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        legalLink('PRIVACY POLICY'),
-                        SizedBox(width: 24.w),
-                        legalLink('TERMS OF SERVICE'),
-                        SizedBox(width: 24.w),
-                        legalLink('SUPPORT'),
+                        _legalLink(context, 'PRIVACY POLICY'),
+                        SizedBox(width: 10.w),
+                        _legalLink(context, 'TERMS OF SERVICE'),
+                        SizedBox(width: 10.w),
+                        _legalLink(context, 'SUPPORT'),
                       ],
                     ),
                     SizedBox(height: 24.h),
@@ -274,36 +279,12 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget brandHeader(TextTheme tt, ColorScheme cs) {
-    return Column(
-      children: [
-        Text(
-          'e7gzz',
-          style: tt.displayLarge?.copyWith(
-            color: cs.primary,
-            fontWeight: FontWeight.w900,
-            fontSize: 48.sp,
-            letterSpacing: -3,
-          ),
-        ),
-        Text(
-          'THE STADIUM IS CALLING',
-          style: tt.labelSmall?.copyWith(
-            color: const Color(0xFFBCC7DE).withValues(alpha: 0.7),
-            fontWeight: FontWeight.bold,
-            letterSpacing: 4,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget inputLabel(String text) {
+  Widget _inputLabel(BuildContext context, String text) {
     return Padding(
       padding: EdgeInsets.only(left: 4.w, bottom: 8.h),
       child: Text(
         text,
-        style: context.theme.textTheme.labelSmall?.copyWith(
+        style: context.typography.labelSmall?.copyWith(
           color: const Color(0xFFBCC7DE).withValues(alpha: 0.6),
           fontWeight: FontWeight.w900,
           letterSpacing: 1.2,
@@ -312,42 +293,10 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget socialButton({
-    required String label,
-    required String iconPath,
-    required VoidCallback onPressed,
-  }) {
-    return Container(
-      height: 56.h,
-      decoration: BoxDecoration(
-        color: const Color(0xFF171F33),
-        borderRadius: BorderRadius.circular(16.r),
-      ),
-      child: InkWell(
-        onTap: onPressed,
-        borderRadius: BorderRadius.circular(16.r),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SvgPicture.asset(iconPath, width: 22.w),
-            SizedBox(width: 12.w),
-            Text(
-              label,
-              style: context.theme.textTheme.labelMedium?.copyWith(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget legalLink(String text) {
+  Widget _legalLink(BuildContext context, String text) {
     return Text(
       text,
-      style: context.theme.textTheme.labelSmall?.copyWith(
+      style: context.typography.labelSmall?.copyWith(
         color: const Color(0xFFBCC7DE).withValues(alpha: 0.4),
         fontSize: 10.sp,
         fontWeight: FontWeight.w900,
@@ -356,3 +305,4 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
+
