@@ -63,7 +63,6 @@ class _MainWrapperState extends State<MainWrapper> {
 
   @override
   Widget build(BuildContext context) {
-    final cs = context.theme.colorScheme;
     
     return Scaffold(
       backgroundColor: const Color(0xFF0B1326),
