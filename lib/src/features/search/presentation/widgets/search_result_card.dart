@@ -1,36 +1,19 @@
 import 'package:e7gz/src/imports/imports.dart';
+import 'package:e7gz/src/features/pitches/domain/entities/pitch.dart';
+
 class SearchResultCard extends StatelessWidget {
-  final int index;
+  final Pitch pitch;
   final VoidCallback onTap;
 
   const SearchResultCard({
     super.key,
-    required this.index,
+    required this.pitch,
     required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     final typography = context.typography;
-    
-    final images = [
-      'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1556056504-5c7696c4c28d?auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1518605336397-90db31631e84?auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1431324155629-1a6eda1eed2d?auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1529900948632-58674ba193CB?auto=format&fit=crop&q=80',
-    ];
-
-    final titles = [
-      'Anfield Arena',
-      'Camp Nou Cairo',
-      'The Arena Futsal',
-      'Zayed Stars',
-      'Katameya fields'
-    ];
-    
-    final locations = ['New Cairo', 'Maadi', 'Dokki', 'Sheikh Zayed', 'Katameya'];
-    final prices = ['450', '500', '350', '600', '400'];
 
     return GestureDetector(
       onTap: onTap,
@@ -54,7 +37,7 @@ class SearchResultCard extends StatelessWidget {
                 ClipRRect(
                   borderRadius: BorderRadius.vertical(top: Radius.circular(40.r)),
                   child: Image.network(
-                    images[index % 5],
+                    pitch.imageUrl,
                     height: 200.h,
                     width: double.infinity,
                     fit: BoxFit.cover,
@@ -119,7 +102,7 @@ class SearchResultCard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              titles[index % 5],
+                              pitch.name,
                               style: typography.titleLarge?.copyWith(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -135,7 +118,7 @@ class SearchResultCard extends StatelessWidget {
                                 ),
                                 SizedBox(width: 4.w),
                                 Text(
-                                  '${locations[index % 5]} • 1.2 km',
+                                  '${pitch.location} • 1.2 km',
                                   style: TextStyle(
                                     color: const Color(0xFFBCC7DE),
                                     fontSize: 12.sp,
@@ -157,7 +140,7 @@ class SearchResultCard extends StatelessWidget {
                             const Icon(Icons.star, color: Color(0xFF4BE277), size: 14),
                             SizedBox(width: 4.w),
                             Text(
-                              '4.8',
+                              pitch.rating.toString(),
                               style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -188,7 +171,7 @@ class SearchResultCard extends StatelessWidget {
                           ),
                           RichText(
                             text: TextSpan(
-                              text: prices[index % 5],
+                              text: pitch.pricePerHour.toInt().toString(),
                               style: typography.headlineSmall?.copyWith(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w900,

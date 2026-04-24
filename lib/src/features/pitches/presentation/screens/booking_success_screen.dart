@@ -24,7 +24,10 @@ class BookingSuccessScreen extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: const Color(0xFF4BE277).withValues(alpha: 0.1),
                   shape: BoxShape.circle,
-                  border: Border.all(color: const Color(0xFF4BE277).withValues(alpha: 0.3), width: 2),
+                  border: Border.all(
+                    color: const Color(0xFF4BE277).withValues(alpha: 0.3),
+                    width: 2,
+                  ),
                 ),
                 child: Center(
                   child: Container(
@@ -34,13 +37,17 @@ class BookingSuccessScreen extends StatelessWidget {
                       color: Color(0xFF4BE277),
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(Icons.check, color: Color(0xFF003915), size: 48),
+                    child: const Icon(
+                      Icons.check,
+                      color: Color(0xFF003915),
+                      size: 48,
+                    ),
                   ),
                 ),
               ).animate().scale(duration: 600.ms, curve: Curves.easeOutBack),
-              
+
               SizedBox(height: 48.h),
-              
+
               Text(
                 'Pitch Ready!',
                 style: tt.displaySmall?.copyWith(
@@ -49,9 +56,9 @@ class BookingSuccessScreen extends StatelessWidget {
                   fontSize: 36.sp,
                 ),
               ).animate().fadeIn(delay: 400.ms).slideY(begin: 0.2),
-              
-              SizedBox(height: 16.h),
-              
+
+              SizedBox(height: 14.h),
+
               Text(
                 'Your booking has been confirmed.\nThe stadium is waiting for you.',
                 textAlign: TextAlign.center,
@@ -60,16 +67,18 @@ class BookingSuccessScreen extends StatelessWidget {
                   height: 1.5,
                 ),
               ).animate().fadeIn(delay: 600.ms),
-              
-              SizedBox(height: 56.h),
-              
+
+              SizedBox(height: 50.h),
+
               // Booking Details Card (Glass)
               Container(
                 padding: EdgeInsets.all(32.w),
                 decoration: BoxDecoration(
                   color: const Color(0xFF131B2E),
                   borderRadius: BorderRadius.circular(40.r),
-                  border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
+                  border: Border.all(
+                    color: Colors.white.withValues(alpha: 0.05),
+                  ),
                 ),
                 child: Column(
                   children: [
@@ -86,9 +95,9 @@ class BookingSuccessScreen extends StatelessWidget {
                   ],
                 ),
               ).animate().fadeIn(delay: 800.ms).slideY(begin: 0.1),
-              
-              SizedBox(height: 64.h),
-              
+
+              SizedBox(height: 50.h),
+
               AppButton(
                 label: 'DOWNLOAD TICKET',
                 isFullWidth: true,
@@ -96,9 +105,9 @@ class BookingSuccessScreen extends StatelessWidget {
                 onPressed: () {},
                 suffixIcon: const Icon(Icons.download),
               ),
-              
-              SizedBox(height: 16.h),
-              
+
+              SizedBox(height: 10.h),
+
               TextButton(
                 onPressed: () => context.go(AppRoutes.home),
                 child: Text(
@@ -117,7 +126,12 @@ class BookingSuccessScreen extends StatelessWidget {
     );
   }
 
-  Widget detailRow(String label, String value, TextTheme tt, {bool isPrimary = false}) {
+  Widget detailRow(
+    String label,
+    String value,
+    TextTheme tt, {
+    bool isPrimary = false,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

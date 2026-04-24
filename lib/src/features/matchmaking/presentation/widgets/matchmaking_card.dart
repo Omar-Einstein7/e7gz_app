@@ -1,5 +1,6 @@
 import 'package:e7gz/src/imports/imports.dart';
 class MatchmakingCard extends StatelessWidget {
+  final String id;
   final String title;
   final String location;
   final String price;
@@ -8,9 +9,11 @@ class MatchmakingCard extends StatelessWidget {
   final String image;
   final int participantsCount;
   final bool isFull;
+  final VoidCallback? onTap;
 
   const MatchmakingCard({
     super.key,
+    required this.id,
     required this.title,
     required this.location,
     required this.price,
@@ -19,6 +22,7 @@ class MatchmakingCard extends StatelessWidget {
     required this.image,
     required this.participantsCount,
     this.isFull = false,
+    this.onTap,
   });
 
   @override
@@ -26,19 +30,21 @@ class MatchmakingCard extends StatelessWidget {
     final colors = context.colors;
     final typography = context.typography;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color(0xFF131B2E),
-        borderRadius: BorderRadius.circular(40.r),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.2),
-            blurRadius: 20,
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          color: const Color(0xFF131B2E),
+          borderRadius: BorderRadius.circular(40.r),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.2),
+              blurRadius: 20,
+            ),
+          ],
+        ),
+        child: Column(
+          children: [
           // Image
           Stack(
             children: [
@@ -216,7 +222,7 @@ class MatchmakingCard extends StatelessWidget {
             ),
           ),
         ],
-      ),
+      )),
     );
   }
 }

@@ -1,43 +1,33 @@
+import 'dart:async';
 import '../utils/utils.dart';
 import '../config/app_config.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:dio/dio.dart';
 
 class AuthService {
   AuthService._();
   static final AuthService instance = AuthService._();
 
-  FirebaseAuth get _firebaseAuth => AppConfig.firebaseAuth;
+  Dio get _dio => AppConfig.dio;
+
+  // Custom Backend doesn't have a built-in auth state stream, so we manage our own
+  final StreamController<Map<String, dynamic>?> _authStateController =
+      StreamController<Map<String, dynamic>?>.broadcast();
 
   /// Stream of auth state changes. Emits the current user map or null.
-  Stream<Map<String, dynamic>?> get authStateChanges {
-    return _firebaseAuth.authStateChanges().map((User? user) {
-      if (user == null) return null;
-      return {
-        'id': user.uid,
-        'email': user.email ?? '',
-        'name': user.displayName ?? '',
-        'photoUrl': user.photoURL,
-      };
-    });
-  }
+  Stream<Map<String, dynamic>?> get authStateChanges => _authStateController.stream;
 
   FutureEither<Map<String, dynamic>?> login({
     required String email,
     required String password,
   }) async {
     return runTask(() async {
-      final credentials = await _firebaseAuth.signInWithEmailAndPassword(
-        email: email, 
-        password: password
-      );
-      final user = credentials.user;
-      if (user == null) return null;
-      return {
-        'id': user.uid,
-        'email': user.email ?? '',
-        'name': user.displayName ?? '',
-        'photoUrl': user.photoURL,
-      };
+      final response = await _dio.post('/auth/login', data: {
+        'email': email,
+        'password': password,
+      });
+      final data = response.data as Map<String, dynamic>;
+      _authStateController.add(data);
+      return data;
     }, requiresNetwork: true);
   }
 
@@ -47,48 +37,38 @@ class AuthService {
     required String password,
   }) async {
     return runTask(() async {
-      final credentials = await _firebaseAuth.createUserWithEmailAndPassword(
-        email: email, 
-        password: password
-      );
-      final user = credentials.user;
-      if (user == null) return null;
-      await user.updateDisplayName(name);
-      return {
-        'id': user.uid,
-        'email': user.email ?? '',
+      final response = await _dio.post('/auth/signup', data: {
         'name': name,
-        'photoUrl': user.photoURL,
-      };
+        'email': email,
+        'password': password,
+      });
+      final data = response.data as Map<String, dynamic>;
+      _authStateController.add(data);
+      return data;
     }, requiresNetwork: true);
   }
 
   FutureEither<void> forgotPassword({required String email}) async {
     return runTask(() async {
-      await _firebaseAuth.sendPasswordResetEmail(email: email);
+      await _dio.post('/auth/forgot-password', data: {'email': email});
     }, requiresNetwork: true);
   }
 
   FutureEither<void> logout() async {
     return runTask(() async {
-      await _firebaseAuth.signOut();
+      await _dio.post('/auth/logout');
+      _authStateController.add(null);
     }, requiresNetwork: true);
   }
 
   FutureEither<Map<String, dynamic>?> getCurrentUser() async {
     return runTask(() async {
-      final user = _firebaseAuth.currentUser;
-      if (user == null) return null;
-      return {
-        'id': user.uid,
-        'email': user.email ?? '',
-        'name': user.displayName ?? '',
-        'photoUrl': user.photoURL,
-      };
+      final response = await _dio.get('/auth/me');
+      return response.data as Map<String, dynamic>;
     });
   }
 
   void dispose() {
-    // Firebase manages its own streams
+    _authStateController.close();
   }
 }

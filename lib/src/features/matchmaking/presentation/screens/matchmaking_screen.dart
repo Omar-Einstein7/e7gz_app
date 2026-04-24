@@ -2,6 +2,7 @@ import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
 import '../widgets/matchmaking_card.dart';
 import '../widgets/leaderboard_tile.dart';
+import 'package:e7gz/src/shared/data/mock_data.dart';
 
 class MatchmakingScreen extends StatefulWidget {
   const MatchmakingScreen({super.key});
@@ -17,6 +18,7 @@ class _MatchmakingScreenState extends State<MatchmakingScreen> {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final typography = context.typography;
+    final matches = MockData.matches;
 
     return Scaffold(
       backgroundColor: const Color(0xFF0B1326),
@@ -105,40 +107,25 @@ class _MatchmakingScreenState extends State<MatchmakingScreen> {
             SizedBox(height: 40.h),
 
             // Matches
-            const MatchmakingCard(
-              title: 'Camp Nou Cairo',
-              location: 'Maadi, Cairo',
-              price: '150',
-              slotsLeft: 2,
-              kickoff: '21:00 Today',
-              image: 'https://images.unsplash.com/photo-1556056504-5c7696c4c28d?auto=format&fit=crop&q=80',
-              participantsCount: 8,
-            ),
-
-            SizedBox(height: 16.h),
-
-            const MatchmakingCard(
-              title: 'The Arena Futsal',
-              location: 'New Cairo',
-              price: '200',
-              slotsLeft: 4,
-              kickoff: '22:30 Today',
-              image: 'https://images.unsplash.com/photo-1518605336397-90db31631e84?auto=format&fit=crop&q=80',
-              participantsCount: 6,
-            ),
-
-            SizedBox(height: 16.h),
-
-            const MatchmakingCard(
-              title: 'Zayed Stars',
-              location: 'Sheikh Zayed',
-              price: '180',
-              slotsLeft: 0,
-              kickoff: '20:00 Tomorrow',
-              image: 'https://images.unsplash.com/photo-1431324155629-1a6eda1eed2d?auto=format&fit=crop&q=80',
-              participantsCount: 11,
-              isFull: true,
-            ),
+            ...matches.map((match) {
+              return Padding(
+                padding: EdgeInsets.only(bottom: 16.h),
+                child: MatchmakingCard(
+                  id: match.id,
+                  title: match.title,
+                  location: match.location,
+                  price: match.pricePerPlayer.toInt().toString(),
+                  slotsLeft: match.availableSlots,
+                  kickoff: '${match.kickoffTime.hour}:${match.kickoffTime.minute} Today',
+                  image: match.imageUrl,
+                  participantsCount: match.participantIds.length,
+                  isFull: match.isFull,
+                  onTap: () => context.push(
+                    AppRoutes.matchDetails.replaceFirst(':id', match.id),
+                  ),
+                ),
+              );
+            }),
 
             SizedBox(height: 48.h),
 

@@ -3,9 +3,11 @@ import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
 import '../widgets/amenity_item.dart';
 import '../widgets/shift_card.dart';
+import 'package:e7gz/src/shared/data/mock_data.dart';
 
 class PitchDetailsScreen extends StatefulWidget {
-  const PitchDetailsScreen({super.key});
+  final String pitchId;
+  const PitchDetailsScreen({super.key, required this.pitchId});
 
   @override
   State<PitchDetailsScreen> createState() => _PitchDetailsScreenState();
@@ -14,6 +16,10 @@ class PitchDetailsScreen extends StatefulWidget {
 class _PitchDetailsScreenState extends State<PitchDetailsScreen> {
   @override
   Widget build(BuildContext context) {
+    final pitch = MockData.pitches.firstWhere(
+      (p) => p.id == widget.pitchId,
+      orElse: () => MockData.pitches.first,
+    );
     final colors = context.colors;
     final typography = context.typography;
 
@@ -48,7 +54,7 @@ class _PitchDetailsScreenState extends State<PitchDetailsScreen> {
                 children: [
                   // Image
                   Image.network(
-                    'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80',
+                    pitch.imageUrl,
                     fit: BoxFit.cover,
                   ),
                   // Overlay
@@ -100,7 +106,7 @@ class _PitchDetailsScreenState extends State<PitchDetailsScreen> {
                               ),
                               SizedBox(height: 12.h),
                               Text(
-                                'Al-Maadi International Center',
+                                pitch.name,
                                 style: typography.headlineMedium?.copyWith(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w900,
@@ -113,7 +119,7 @@ class _PitchDetailsScreenState extends State<PitchDetailsScreen> {
                                   const Icon(Icons.location_on, color: Color(0xFFBCC7DE), size: 16),
                                   SizedBox(width: 4.w),
                                   Text(
-                                    'Maadi, Cairo',
+                                    pitch.location,
                                     style: TextStyle(color: const Color(0xFFBCC7DE), fontSize: 14.sp),
                                   ),
                                   const Spacer(),
@@ -128,7 +134,7 @@ class _PitchDetailsScreenState extends State<PitchDetailsScreen> {
                                         const Icon(Icons.star, color: Color(0xFF4BE277), size: 14),
                                         SizedBox(width: 4.w),
                                         Text(
-                                          '4.9',
+                                          pitch.rating.toString(),
                                           style: TextStyle(
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold,
@@ -136,7 +142,7 @@ class _PitchDetailsScreenState extends State<PitchDetailsScreen> {
                                           ),
                                         ),
                                         Text(
-                                          ' (120+)',
+                                          ' (${pitch.reviewsCount}+)',
                                           style: TextStyle(color: const Color(0xFFBCC7DE), fontSize: 10.sp),
                                         ),
                                       ],
@@ -295,7 +301,7 @@ class _PitchDetailsScreenState extends State<PitchDetailsScreen> {
                 ),
                 RichText(
                   text: TextSpan(
-                    text: '550 ',
+                    text: '${pitch.pricePerHour.toInt()} ',
                     style: typography.headlineSmall?.copyWith(
                       color: Colors.white,
                       fontWeight: FontWeight.w900,
@@ -316,7 +322,14 @@ class _PitchDetailsScreenState extends State<PitchDetailsScreen> {
             AppButton(
               label: 'BOOK NOW',
               width: ButtonSize.large,
-              onPressed: () => context.push(AppRoutes.bookingSlots),
+              onPressed: () => context.push(
+                AppRoutes.bookingSummary,
+                extra: {
+                  'pitchId': pitch.id,
+                  'date': 'Oct 24, 2026',
+                  'time': '21:00 - 22:00',
+                },
+              ),
               suffixIcon: const Icon(Icons.calendar_month),
             ),
           ],

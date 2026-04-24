@@ -2,6 +2,7 @@ import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
 import '../widgets/search_filter_chip.dart';
 import '../widgets/search_result_card.dart';
+import 'package:e7gz/src/shared/data/mock_data.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -18,6 +19,7 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final typography = context.typography;
+    final pitches = MockData.pitches;
 
     return Scaffold(
       backgroundColor: const Color(0xFF0B1326),
@@ -113,11 +115,14 @@ class _SearchScreenState extends State<SearchScreen> {
           Expanded(
             child: ListView.builder(
               padding: EdgeInsets.all(24.w),
-              itemCount: 5,
+              itemCount: pitches.length,
               itemBuilder: (context, index) {
+                final pitch = pitches[index];
                 return SearchResultCard(
-                  index: index,
-                  onTap: () => context.push(AppRoutes.pitchDetails),
+                  pitch: pitch,
+                  onTap: () => context.push(
+                    AppRoutes.pitchDetails.replaceFirst(':id', pitch.id),
+                  ),
                 );
               },
             ),
