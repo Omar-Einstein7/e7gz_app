@@ -5,17 +5,21 @@ import 'package:e7gz/src/features/auth/domain/entities/user.dart';
 import 'package:e7gz/src/features/auth/domain/repositories/auth_repository.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
-  final AuthService _authService = AuthService.instance;
+  final AuthService _authService;
+
+  AuthRepositoryImpl({AuthService? authService}) 
+      : _authService = authService ?? AuthService.instance;
 
   @override
   Stream<AppUser?> get onAuthStateChanged {
     return _authService.authStateChanges.map((userData) {
       if (userData == null) return null;
       return AppUser(
-        id: userData['id'] ?? '',
+        id: userData['id']?.toString() ?? userData['_id']?.toString() ?? '',
         email: userData['email'] ?? '',
         name: userData['name'],
         photoUrl: userData['photoUrl'],
+        loyaltyPoints: (userData['loyaltyPoints'] as num?)?.toInt() ?? 0,
       );
     });
   }
@@ -34,9 +38,11 @@ class AuthRepositoryImpl implements AuthRepository {
 
       final data = userData['user'] ?? userData;
       final user = AppUser(
-        id: data['id'].toString(), 
+        id: data['id']?.toString() ?? data['_id']?.toString() ?? '', 
         email: data['email'] ?? email, 
         name: data['name'],
+        photoUrl: data['photoUrl'],
+        loyaltyPoints: (data['loyaltyPoints'] as num?)?.toInt() ?? 0,
       );
       
       return right(user);
@@ -48,11 +54,13 @@ class AuthRepositoryImpl implements AuthRepository {
     required String name, 
     required String email, 
     required String password,
+    String? role,
   }) async {
     final result = await _authService.signUp(
       name: name,
       email: email,
       password: password,
+      role: role,
     );
 
     return result.flatMap((userData) {
@@ -89,10 +97,11 @@ class AuthRepositoryImpl implements AuthRepository {
       if (userData == null) return null;
 
       return AppUser(
-        id: userData['id'], 
+        id: userData['id'] ?? userData['_id'] ?? '', 
         email: userData['email'] ?? '', 
         name: userData['name'],
         photoUrl: userData['photoUrl'],
+        loyaltyPoints: (userData['loyaltyPoints'] as num?)?.toInt() ?? 0,
       );
     });
   }

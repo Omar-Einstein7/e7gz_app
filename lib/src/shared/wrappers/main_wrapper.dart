@@ -88,7 +88,7 @@ class _MainWrapperState extends State<MainWrapper> {
 
 class CustomBottomNavBar extends StatelessWidget {
   final int currentIndex;
-  final Function(int) onTap;
+  final void Function(int) onTap;
 
   const CustomBottomNavBar({
     super.key,
@@ -98,7 +98,6 @@ class CustomBottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cs = context.theme.colorScheme;
     final bottomPadding = MediaQuery.paddingOf(context).bottom;
     
     return Container(

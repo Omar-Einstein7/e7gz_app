@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:e7gz/src/features/auth/presentation/providers/auth_bloc.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
 import '../widgets/brand_header.dart';
@@ -124,62 +125,89 @@ class _LoginScreenState extends State<LoginScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 _inputLabel(context, 'EMAIL ADDRESS'),
-                                AppTextField(
-                                  controller: _emailController,
-                                  hint: 'name@example.com',
-                                  keyboardType: TextInputType.emailAddress,
-                                  prefixIcon: const Icon(IconsaxPlusBold.sms),
-                                ),
+                                  AppTextField(
+                                    controller: _emailController,
+                                    hint: 'name@example.com',
+                                    keyboardType: TextInputType.emailAddress,
+                                    prefixIcon: const Icon(IconsaxPlusBold.sms),
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Email is required';
+                                      }
+                                      if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                                        return 'Enter a valid email';
+                                      }
+                                      return null;
+                                    },
+                                  ),
 
-                                SizedBox(height: 24.h),
+                                  SizedBox(height: 24.h),
 
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    _inputLabel(context, 'PASSWORD'),
-                                    TextButton(
-                                      onPressed: () => context.push(AppRoutes.forgotPassword),
-                                      style: TextButton.styleFrom(
-                                        padding: EdgeInsets.zero,
-                                        minimumSize: Size.zero,
-                                      ),
-                                      child: Text(
-                                        'Forgot Password?',
-                                        style: typography.labelSmall?.copyWith(
-                                          color: colors.primary,
-                                          fontWeight: FontWeight.bold,
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      _inputLabel(context, 'PASSWORD'),
+                                      TextButton(
+                                        onPressed: () => context.push(AppRoutes.forgotPassword),
+                                        style: TextButton.styleFrom(
+                                          padding: EdgeInsets.zero,
+                                          minimumSize: Size.zero,
+                                        ),
+                                        child: Text(
+                                          'Forgot Password?',
+                                          style: typography.labelSmall?.copyWith(
+                                            color: colors.primary,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                                AppTextField(
-                                  controller: _passwordController,
-                                  hint: '••••••••',
-                                  obscureText: _obscurePassword,
-                                  prefixIcon: const Icon(IconsaxPlusBold.lock),
-                                  suffixIcon: IconButton(
-                                    icon: Icon(
-                                      _obscurePassword ? IconsaxPlusBold.eye_slash : IconsaxPlusBold.eye,
-                                      size: 20,
-                                    ),
-                                    onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                                    ],
                                   ),
-                                ),
+                                  AppTextField(
+                                    controller: _passwordController,
+                                    hint: '••••••••',
+                                    obscureText: _obscurePassword,
+                                    prefixIcon: const Icon(IconsaxPlusBold.lock),
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Password is required';
+                                      }
+                                      if (value.length < 6) {
+                                        return 'Password must be at least 6 characters';
+                                      }
+                                      return null;
+                                    },
+                                    suffixIcon: IconButton(
+                                      icon: Icon(
+                                        _obscurePassword ? IconsaxPlusBold.eye_slash : IconsaxPlusBold.eye,
+                                        size: 20,
+                                      ),
+                                      onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                                    ),
+                                  ),
 
-                                SizedBox(height: 32.h),
+                                  SizedBox(height: 32.h),
 
-                                AppButton(
-                                  label: 'Login to Account',
-                                  isFullWidth: true,
-                                  height: ButtonSize.large,
-                                  onPressed: () {
-                                    if (_formKey.currentState?.validate() ?? false) {
-                                      // Handle logic
-                                      context.go(AppRoutes.home);
-                                    }
-                                  },
-                                ),
+                                  BlocBuilder<AuthBloc, AuthState>(
+                                    builder: (context, state) {
+                                      return AppButton(
+                                        label: 'Login to Account',
+                                        isFullWidth: true,
+                                        height: ButtonSize.large,
+                                        isLoading: state.isLoading,
+                                        onPressed: () {
+                                          if (_formKey.currentState?.validate() ?? false) {
+                                            context.read<AuthBloc>().add(
+                                              LoginRequested(
+                                                email: _emailController.text.trim(),
+                                                password: _passwordController.text,
+                                              ),
+                                            );
+                                          }
+                                        },
+                                      );
+                                    },
+                                  ),
                               ],
                             ),
                           ),

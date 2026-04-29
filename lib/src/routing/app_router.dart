@@ -2,6 +2,7 @@ import 'package:e7gz/src/features/matchmaking/presentation/screens/match_details
 import 'package:e7gz/src/features/bookings/presentation/screens/booking_summary_screen.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/shared/wrappers/main_wrapper.dart';
+import 'package:e7gz/src/features/owner/presentation/screens/add_pitch_screen.dart';
 import 'package:go_router/go_router.dart';
 
 final GoRouter appRouter = GoRouter(
@@ -108,12 +109,26 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: AppRoutes.bookingSlots,
       name: 'bookingSlots',
-      builder: (context, state) => const BookingSlotsScreen(),
+      builder: (context, state) {
+        final id = state.pathParameters['id'] ?? '';
+        final extra = state.extra; // Optional pitch object
+        return BookingSlotsScreen(pitchId: id, extraPitch: extra);
+      },
     ),
     GoRoute(
       path: AppRoutes.paymentCheckout,
       name: 'paymentCheckout',
-      builder: (context, state) => const PaymentCheckoutScreen(),
+      builder: (context, state) {
+        final extra = state.extra as Map<String, dynamic>?;
+        return PaymentCheckoutScreen(
+          bookingId: extra?['bookingId'],
+          matchId: extra?['matchId'],
+          amount: extra?['amount'] ?? 0.0,
+          pitchName: extra?['pitchName'] ?? 'Premium Pitch',
+          pitchImage: extra?['pitchImage'],
+          bookingDetails: extra?['bookingDetails'] ?? '',
+        );
+      },
     ),
     GoRoute(
       path: AppRoutes.bookingSummary,
@@ -146,6 +161,11 @@ final GoRouter appRouter = GoRouter(
       path: AppRoutes.ownerDashboard,
       name: 'ownerDashboard',
       builder: (context, state) => const OwnerDashboardScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.addPitch,
+      name: 'addPitch',
+      builder: (context, state) => const AddPitchScreen(),
     ),
   ],
 );

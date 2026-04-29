@@ -1,5 +1,8 @@
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
+import 'package:e7gz/src/features/bookings/presentation/cubit/booking_cubit.dart';
+import 'package:e7gz/src/features/bookings/presentation/cubit/booking_state.dart';
+import 'package:e7gz/src/features/bookings/domain/entities/booking.dart';
 
 class MyBookingsScreen extends StatefulWidget {
   const MyBookingsScreen({super.key});
@@ -15,6 +18,9 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> with SingleTickerPr
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<BookingsCubit>().loadBookings();
+    });
   }
 
   @override
@@ -34,8 +40,8 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> with SingleTickerPr
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(IconsaxPlusLinear.menu_1, color: Colors.white),
-          onPressed: () {},
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => context.pop(),
         ),
         title: Text(
           'My Bookings',
@@ -56,27 +62,63 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> with SingleTickerPr
           ],
         ),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          bookingsList(isUpcoming: true, cs: cs, tt: tt),
-          bookingsList(isUpcoming: false, cs: cs, tt: tt),
-        ],
+      body: BlocBuilder<BookingsCubit, BookingsState>(
+        builder: (context, state) {
+          if (state.status == BookingsStatus.loading || state.status == BookingsStatus.initial) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (state.status == BookingsStatus.failure) {
+            return Center(
+              child: Text(
+                state.errorMessage ?? 'Failed to load bookings',
+                style: TextStyle(color: Colors.redAccent, fontSize: 14.sp),
+              ),
+            );
+          }
+
+          final now = DateTime.now();
+          final upcomingBookings = state.bookings.where((b) {
+            final date = DateTime.tryParse(b.date);
+            return date != null && date.isAfter(now.subtract(const Duration(days: 1))) && b.status != BookingStatus.cancelled;
+          }).toList();
+          
+          final pastBookings = state.bookings.where((b) {
+            final date = DateTime.tryParse(b.date);
+            return (date != null && date.isBefore(now)) || b.status == BookingStatus.cancelled;
+          }).toList();
+
+          return TabBarView(
+            controller: _tabController,
+            children: [
+              bookingsList(bookings: upcomingBookings, isUpcoming: true, cs: cs, tt: tt),
+              bookingsList(bookings: pastBookings, isUpcoming: false, cs: cs, tt: tt),
+            ],
+          );
+        },
       ),
     );
   }
 
-  Widget bookingsList({required bool isUpcoming, required ColorScheme cs, required TextTheme tt}) {
+  Widget bookingsList({required List<Booking> bookings, required bool isUpcoming, required ColorScheme cs, required TextTheme tt}) {
+    if (bookings.isEmpty) {
+      return Center(
+        child: Text(
+          isUpcoming ? 'No upcoming bookings' : 'No past bookings',
+          style: TextStyle(color: const Color(0xFFBCC7DE), fontSize: 14.sp),
+        ),
+      );
+    }
     return ListView.builder(
       padding: EdgeInsets.all(24.w),
-      itemCount: isUpcoming ? 2 : 5,
+      itemCount: bookings.length,
       itemBuilder: (context, index) {
-        return bookingCard(index: index, isUpcoming: isUpcoming, cs: cs, tt: tt);
+        return bookingCard(booking: bookings[index], isUpcoming: isUpcoming, cs: cs, tt: tt);
       },
     );
   }
 
-  Widget bookingCard({required int index, required bool isUpcoming, required ColorScheme cs, required TextTheme tt}) {
+  Widget bookingCard({required Booking booking, required bool isUpcoming, required ColorScheme cs, required TextTheme tt}) {
+    final bool isCancelled = booking.status == BookingStatus.cancelled;
     return Container(
       margin: EdgeInsets.only(bottom: 20.h),
       padding: EdgeInsets.all(24.w),
@@ -94,8 +136,12 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> with SingleTickerPr
                 height: 64.w,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20.r),
-                  image: const DecorationImage(
-                    image: NetworkImage('https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80'),
+                  image: DecorationImage(
+                    image: NetworkImage(
+                      booking.pitchImage != null && booking.pitchImage!.isNotEmpty 
+                          ? booking.pitchImage! 
+                          : 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80'
+                    ),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -106,12 +152,16 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> with SingleTickerPr
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Anfield Arena Cairo',
+                      booking.pitchName.isNotEmpty ? booking.pitchName : 'Pitch Details',
                       style: tt.titleMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     Text(
-                      'Field A • 5-a-side',
+                      booking.pitchAddress.isNotEmpty ? booking.pitchAddress : 'Unknown Location',
                       style: TextStyle(color: const Color(0xFFBCC7DE), fontSize: 12.sp),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),
@@ -119,13 +169,17 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> with SingleTickerPr
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
                 decoration: BoxDecoration(
-                  color: isUpcoming ? const Color(0xFF4BE277).withValues(alpha: 0.1) : const Color(0xFF2D3449),
+                  color: isCancelled 
+                      ? Colors.red.withValues(alpha: 0.1) 
+                      : (isUpcoming ? const Color(0xFF4BE277).withValues(alpha: 0.1) : const Color(0xFF2D3449)),
                   borderRadius: BorderRadius.circular(100.r),
                 ),
                 child: Text(
-                  isUpcoming ? 'UPCOMING' : 'COMPLETED',
+                  isCancelled ? 'CANCELLED' : (isUpcoming ? 'UPCOMING' : 'COMPLETED'),
                   style: TextStyle(
-                    color: isUpcoming ? const Color(0xFF4BE277) : const Color(0xFFBCC7DE),
+                    color: isCancelled 
+                        ? Colors.redAccent 
+                        : (isUpcoming ? const Color(0xFF4BE277) : const Color(0xFFBCC7DE)),
                     fontSize: 8.sp,
                     fontWeight: FontWeight.bold,
                   ),
@@ -137,20 +191,22 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> with SingleTickerPr
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              detailItem('DATE', 'Oct 23, 2023'),
-              detailItem('TIME', '21:00 - 22:00'),
-              detailItem('PRICE', '500 EGP', highlight: true),
+              detailItem('DATE', booking.date),
+              detailItem('TIME', '${booking.startTime} - ${booking.endTime}'),
+              detailItem('PRICE', '${booking.totalPrice.toInt()} EGP', highlight: true),
             ],
           ),
-          if (isUpcoming) ...[
+          if (isUpcoming && !isCancelled) ...[
             SizedBox(height: 24.h),
             Row(
               children: [
                 Expanded(
                   child: AppButton(
-                    label: 'VIEW TICKET',
+                    label: 'CANCEL',
                     height: ButtonSize.small,
-                    onPressed: () {},
+                    color: Colors.redAccent.withValues(alpha: 0.1),
+                    textColor: Colors.redAccent,
+                    onPressed: () => _showCancelDialog(context, booking.id),
                   ),
                 ),
                 SizedBox(width: 12.w),
@@ -168,6 +224,34 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> with SingleTickerPr
               ],
             ),
           ],
+        ],
+      ),
+    );
+  }
+
+  void _showCancelDialog(BuildContext context, String bookingId) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color(0xFF131B2E),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32.r)),
+        title: const Text('Cancel Booking?', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        content: const Text(
+          'Are you sure you want to cancel this booking? This action cannot be undone.',
+          style: TextStyle(color: Color(0xFFBCC7DE)),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => context.pop(),
+            child: const Text('NO, KEEP IT', style: TextStyle(color: Color(0xFFBCC7DE))),
+          ),
+          TextButton(
+            onPressed: () {
+              context.read<BookingsCubit>().cancelBooking(bookingId);
+              context.pop();
+            },
+            child: const Text('YES, CANCEL', style: TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold)),
+          ),
         ],
       ),
     );

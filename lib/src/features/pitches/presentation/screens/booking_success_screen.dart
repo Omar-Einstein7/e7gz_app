@@ -6,7 +6,6 @@ class BookingSuccessScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cs = context.theme.colorScheme;
     final tt = context.theme.textTheme;
 
     return Scaffold(

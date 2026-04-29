@@ -1,8 +1,9 @@
+import 'package:e7gz/src/features/search/presentation/cubit/search_cubit.dart';
+import 'package:e7gz/src/features/search/presentation/cubit/search_state.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
 import '../widgets/search_filter_chip.dart';
 import '../widgets/search_result_card.dart';
-import 'package:e7gz/src/shared/data/mock_data.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -13,13 +14,32 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController _searchController = TextEditingController();
-  final String _selectedSport = 'Football';
+  String _selectedSport = 'Football';
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController.addListener(_onSearchChanged);
+  }
+
+  @override
+  void dispose() {
+    _searchController.removeListener(_onSearchChanged);
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _onSearchChanged() {
+    context.read<SearchCubit>().search(
+      query: _searchController.text,
+      sportType: _selectedSport,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
     final typography = context.typography;
-    final pitches = MockData.pitches;
 
     return Scaffold(
       backgroundColor: const Color(0xFF0B1326),
@@ -86,11 +106,19 @@ class _SearchScreenState extends State<SearchScreen> {
                       SearchFilterChip(
                         label: 'Football',
                         isSelected: _selectedSport == 'Football',
+                        onTap: () => setState(() {
+                          _selectedSport = 'Football';
+                          _onSearchChanged();
+                        }),
                       ),
                       SizedBox(width: 12.w),
                       SearchFilterChip(
                         label: 'Padel',
                         isSelected: _selectedSport == 'Padel',
+                        onTap: () => setState(() {
+                          _selectedSport = 'Padel';
+                          _onSearchChanged();
+                        }),
                       ),
                       SizedBox(width: 12.w),
                       const SearchFilterChip(label: 'Basketball'),
@@ -113,16 +141,44 @@ class _SearchScreenState extends State<SearchScreen> {
 
           // Results
           Expanded(
-            child: ListView.builder(
-              padding: EdgeInsets.all(24.w),
-              itemCount: pitches.length,
-              itemBuilder: (context, index) {
-                final pitch = pitches[index];
-                return SearchResultCard(
-                  pitch: pitch,
-                  onTap: () => context.push(
-                    AppRoutes.pitchDetails.replaceFirst(':id', pitch.id),
-                  ),
+            child: BlocBuilder<SearchCubit, SearchState>(
+              builder: (context, state) {
+                if (state.status == SearchStatus.loading && state.results.isEmpty) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                if (state.status == SearchStatus.failure) {
+                  return Center(
+                    child: Text(
+                      state.errorMessage ?? 'An error occurred',
+                      style: const TextStyle(color: Colors.redAccent),
+                    ),
+                  );
+                }
+
+                final results = state.results;
+
+                if (results.isEmpty) {
+                  return const Center(
+                    child: Text(
+                      'No stadiums found',
+                      style: TextStyle(color: Color(0xFFBCC7DE)),
+                    ),
+                  );
+                }
+
+                return ListView.builder(
+                  padding: EdgeInsets.all(24.w),
+                  itemCount: results.length,
+                  itemBuilder: (context, index) {
+                    final pitch = results[index];
+                    return SearchResultCard(
+                      pitch: pitch,
+                      onTap: () => context.push(
+                        AppRoutes.pitchDetails.replaceFirst(':id', pitch.id),
+                      ),
+                    );
+                  },
                 );
               },
             ),

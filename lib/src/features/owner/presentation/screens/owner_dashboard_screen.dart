@@ -1,8 +1,24 @@
+import 'package:e7gz/src/features/owner/presentation/cubit/owner_cubit.dart';
+import 'package:e7gz/src/features/owner/presentation/cubit/owner_state.dart';
+import 'package:e7gz/src/features/pitches/domain/entities/pitch.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
 
-class OwnerDashboardScreen extends StatelessWidget {
+class OwnerDashboardScreen extends StatefulWidget {
   const OwnerDashboardScreen({super.key});
+
+  @override
+  State<OwnerDashboardScreen> createState() => _OwnerDashboardScreenState();
+}
+
+class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<OwnerCubit>().loadDashboardData();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -12,30 +28,54 @@ class OwnerDashboardScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: const Color(0xFF0B1326),
-      body: Row(
-        children: [
-          if (isDesktop) _buildSidebar(cs, tt),
-          Expanded(
-            child: CustomScrollView(
-              slivers: [
-                _buildHeader(cs, tt, isDesktop, context),
-                SliverPadding(
-                  padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 32.h),
-                  sliver: SliverList(
-                    delegate: SliverChildListDelegate([
-                      _buildStatsGrid(tt, cs, isDesktop),
-                      SizedBox(height: 48.h),
-                      _buildPitchesSection(tt, cs, context),
-                      SizedBox(height: 48.h),
-                      _buildLedgerSection(tt, cs),
-                      SizedBox(height: 100.h),
-                    ]),
+      body: BlocBuilder<OwnerCubit, OwnerState>(
+        builder: (context, state) {
+          if (state.status == OwnerStatus.loading && state.stats.isEmpty) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (state.status == OwnerStatus.failure && state.stats.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(state.errorMessage ?? 'Error loading dashboard', style: const TextStyle(color: Colors.white)),
+                  SizedBox(height: 16.h),
+                  AppButton(
+                    label: 'RETRY',
+                    onPressed: () => context.read<OwnerCubit>().loadDashboardData(),
                   ),
+                ],
+              ),
+            );
+          }
+
+          return Row(
+            children: [
+              if (isDesktop) _buildSidebar(cs, tt),
+              Expanded(
+                child: CustomScrollView(
+                  slivers: [
+                    _buildHeader(cs, tt, isDesktop, context),
+                    SliverPadding(
+                      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 32.h),
+                      sliver: SliverList(
+                        delegate: SliverChildListDelegate([
+                          _buildStatsGrid(tt, cs, isDesktop, state.stats),
+                          SizedBox(height: 48.h),
+                          _buildPitchesSection(tt, cs, context, state.myPitches),
+                          SizedBox(height: 48.h),
+                          _buildLedgerSection(tt, cs),
+                          SizedBox(height: 100.h),
+                        ]),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-        ],
+              ),
+            ],
+          );
+        },
       ),
       bottomNavigationBar: isDesktop ? null : _buildMobileNav(cs),
     );
@@ -118,7 +158,7 @@ class OwnerDashboardScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildStatsGrid(TextTheme tt, ColorScheme cs, bool isDesktop) {
+  Widget _buildStatsGrid(TextTheme tt, ColorScheme cs, bool isDesktop, Map<String, dynamic> stats) {
     return GridView.count(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -127,10 +167,10 @@ class OwnerDashboardScreen extends StatelessWidget {
       crossAxisSpacing: 20.w,
       childAspectRatio: isDesktop ? 1.5 : 2.5,
       children: [
-        _statCard('Monthly Revenue', '24,500', 'EGP', '+12.5%', cs, tt),
-        _statCard('Active Bookings', '42', '', 'Today', cs, tt),
-        _statCard('Avg. Capacity', '88%', '', 'High', cs, tt),
-        _statCard('Loyalty Points', '12K', 'PTS', 'Gold', cs, tt),
+        _statCard('Total Revenue', (stats['totalRevenue'] ?? 0).toString(), 'EGP', 'Lifetime', cs, tt),
+        _statCard('Commission (10%)', (stats['platformCommission'] ?? 0).toString(), 'EGP', 'Platform Fee', cs, tt),
+        _statCard('Net Earnings', (stats['netEarnings'] ?? 0).toString(), 'EGP', 'Payable', cs, tt),
+        _statCard('Active Bookings', (stats['activeBookingsCount'] ?? 0).toString(), '', 'Upcoming', cs, tt),
       ],
     );
   }
@@ -174,7 +214,7 @@ class OwnerDashboardScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildPitchesSection(TextTheme tt, ColorScheme cs, BuildContext context) {
+  Widget _buildPitchesSection(TextTheme tt, ColorScheme cs, BuildContext context, List<Pitch> pitches) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -191,20 +231,24 @@ class OwnerDashboardScreen extends StatelessWidget {
             AppButton(
               label: 'ADD NEW',
               height: ButtonSize.small,
-              onPressed: () {},
+              onPressed: () => context.push(AppRoutes.addPitch),
               prefixIcon: const Icon(Icons.add, size: 16),
             ),
           ],
         ),
         SizedBox(height: 24.h),
-        _pitchOwnerCard('Old Trafford Giza', '6x6 • Artificial Turf', '450', cs, tt),
-        SizedBox(height: 16.h),
-        _pitchOwnerCard('Stadium Arena 5', '5x5 • Natural Grass', '380', cs, tt),
+        if (pitches.isEmpty)
+          const Center(child: Text('You have no pitches yet', style: TextStyle(color: Color(0xFFBCC7DE))))
+        else
+          ...pitches.map((pitch) => Padding(
+            padding: EdgeInsets.only(bottom: 16.h),
+            child: _pitchOwnerCard(pitch, cs, tt),
+          )),
       ],
     );
   }
 
-  Widget _pitchOwnerCard(String title, String type, String price, ColorScheme cs, TextTheme tt) {
+  Widget _pitchOwnerCard(Pitch pitch, ColorScheme cs, TextTheme tt) {
     return Container(
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
@@ -216,7 +260,7 @@ class OwnerDashboardScreen extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(20.r),
             child: Image.network(
-              'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80',
+              pitch.imageUrl.isNotEmpty ? pitch.imageUrl : 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80',
               width: 80.w,
               height: 80.w,
               fit: BoxFit.cover,
@@ -227,10 +271,10 @@ class OwnerDashboardScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                Text(type, style: const TextStyle(color: Color(0xFFBCC7DE), fontSize: 12)),
+                Text(pitch.name, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                Text(pitch.sportType, style: const TextStyle(color: Color(0xFFBCC7DE), fontSize: 12)),
                 SizedBox(height: 8.h),
-                Text('$price EGP/hr', style: TextStyle(color: cs.primary, fontWeight: FontWeight.bold)),
+                Text('${pitch.pricePerHour.toInt()} EGP/hr', style: TextStyle(color: cs.primary, fontWeight: FontWeight.bold)),
               ],
             ),
           ),

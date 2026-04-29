@@ -9,6 +9,7 @@ Future<void> main() async {
   await EasyLocalization.ensureInitialized();
   await dotenv.load(fileName: '.env');
   await AppConfig.init();
+  await AuthService.instance.loadSavedToken();
 
   runApp(
     const LocalizationWrapper(

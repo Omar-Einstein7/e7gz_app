@@ -1,6 +1,11 @@
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/imports.dart';
-import 'package:e7gz/src/shared/data/mock_data.dart';
+import 'package:e7gz/src/features/pitches/domain/entities/pitch.dart';
+import 'package:e7gz/src/features/pitches/presentation/cubit/pitches_cubit.dart';
+import 'package:e7gz/src/features/pitches/presentation/cubit/pitches_state.dart';
+import 'package:e7gz/src/features/pitches/domain/usecases/pitch_usecases.dart';
+import 'package:e7gz/src/features/pitches/data/repositories/pitch_repository_impl.dart';
+import 'package:e7gz/src/features/pitches/data/datasources/pitch_remote_datasource.dart';
 
 class BookingSummaryScreen extends StatelessWidget {
   final String pitchId;
@@ -16,7 +21,23 @@ class BookingSummaryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final pitch = MockData.pitches.firstWhere((p) => p.id == pitchId);
+    return BlocProvider(
+      create: (context) => PitchDetailCubit(
+        GetPitchDetailsUseCase(PitchRepositoryImpl(PitchRemoteDataSource())),
+      )..loadPitch(pitchId),
+      child: _BookingSummaryView(date: date, time: time),
+    );
+  }
+}
+
+class _BookingSummaryView extends StatelessWidget {
+  final String date;
+  final String time;
+
+  const _BookingSummaryView({required this.date, required this.time});
+
+  @override
+  Widget build(BuildContext context) {
     final typography = context.typography;
     final colors = context.colors;
 
@@ -31,45 +52,69 @@ class BookingSummaryScreen extends StatelessWidget {
           onPressed: () => context.pop(),
         ),
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(24.w),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildPitchCard(pitch, typography),
-            SizedBox(height: 32.h),
-            _buildSectionTitle('Booking Details', typography),
-            SizedBox(height: 16.h),
-            _buildDetailTile('Date', date, Icons.calendar_today, colors),
-            _buildDetailTile('Time', time, Icons.access_time, colors),
-            _buildDetailTile('Duration', '60 Minutes', Icons.timer, colors),
-            SizedBox(height: 32.h),
-            _buildSectionTitle('Payment Summary', typography),
-            SizedBox(height: 16.h),
-            _buildPriceRow('Court Price', '${pitch.pricePerHour} EGP', typography),
-            _buildPriceRow('Service Fee', '20 EGP', typography),
-            const Divider(color: Colors.white10),
-            _buildPriceRow('Total Amount', '${pitch.pricePerHour + 20} EGP', typography, isTotal: true),
-            SizedBox(height: 100.h),
-          ],
-        ),
+      body: BlocBuilder<PitchDetailCubit, PitchDetailState>(
+        builder: (context, state) {
+          if (state.status == PitchDetailStatus.loading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (state.status == PitchDetailStatus.failure) {
+            return Center(child: Text(state.errorMessage ?? 'Error', style: const TextStyle(color: Colors.redAccent)));
+          }
+          
+          final pitch = state.pitch;
+          if (pitch == null) return const Center(child: Text('Pitch not found', style: TextStyle(color: Colors.white)));
+
+          return SingleChildScrollView(
+            padding: EdgeInsets.all(24.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildPitchCard(pitch, typography),
+                SizedBox(height: 32.h),
+                _buildSectionTitle('Booking Details', typography),
+                SizedBox(height: 16.h),
+                _buildDetailTile('Date', date, Icons.calendar_today, colors),
+                _buildDetailTile('Time', time, Icons.access_time, colors),
+                _buildDetailTile('Duration', '60 Minutes', Icons.timer, colors),
+                SizedBox(height: 32.h),
+                _buildSectionTitle('Payment Summary', typography),
+                SizedBox(height: 16.h),
+                _buildPriceRow('Court Price', '${pitch.pricePerHour} EGP', typography),
+                _buildPriceRow('Service Fee', '20 EGP', typography),
+                const Divider(color: Colors.white10),
+                _buildPriceRow('Total Amount', '${pitch.pricePerHour + 20} EGP', typography, isTotal: true),
+                SizedBox(height: 100.h),
+              ],
+            ),
+          );
+        },
       ),
-      bottomNavigationBar: Container(
-        padding: EdgeInsets.all(24.w),
-        decoration: BoxDecoration(
-          color: const Color(0xFF131B2E),
-          border: Border(top: BorderSide(color: Colors.white.withValues(alpha: 0.1))),
-        ),
-        child: AppButton(
-          label: 'Proceed to Payment',
-          onPressed: () => context.push(AppRoutes.paymentCheckout),
-          isFullWidth: true,
-        ),
+      bottomNavigationBar: BlocBuilder<PitchDetailCubit, PitchDetailState>(
+        builder: (context, state) {
+          if (state.pitch == null) return const SizedBox.shrink();
+          return Container(
+            padding: EdgeInsets.all(24.w),
+            decoration: BoxDecoration(
+              color: const Color(0xFF131B2E),
+              border: Border(top: BorderSide(color: Colors.white.withValues(alpha: 0.1))),
+            ),
+            child: AppButton(
+              label: 'Proceed to Payment',
+              onPressed: () => context.push(AppRoutes.paymentCheckout, extra: {
+                'pitchName': state.pitch!.name,
+                'pitchImage': state.pitch!.imageUrl,
+                'amount': state.pitch!.pricePerHour + 20,
+                'bookingDetails': '$date at $time',
+              }),
+              isFullWidth: true,
+            ),
+          );
+        },
       ),
     );
   }
 
-  Widget _buildPitchCard(pitch, typography) {
+  Widget _buildPitchCard(Pitch pitch, typography) {
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
@@ -80,7 +125,12 @@ class BookingSummaryScreen extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(16.r),
-            child: Image.network(pitch.imageUrl, width: 80.w, height: 80.w, fit: BoxFit.cover),
+            child: Image.network(
+              pitch.imageUrl.isNotEmpty ? pitch.imageUrl : 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80',
+              width: 80.w,
+              height: 80.w,
+              fit: BoxFit.cover,
+            ),
           ),
           SizedBox(width: 16.w),
           Expanded(
@@ -88,7 +138,7 @@ class BookingSummaryScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(pitch.name, style: typography.titleMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.bold)),
-                Text(pitch.location, style: const TextStyle(color: Color(0xFFBCC7DE))),
+                Text(pitch.location.city, style: const TextStyle(color: Color(0xFFBCC7DE))),
               ],
             ),
           ),

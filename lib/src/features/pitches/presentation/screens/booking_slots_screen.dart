@@ -1,232 +1,309 @@
+import 'package:e7gz/src/features/bookings/domain/entities/booking.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
+import 'package:e7gz/src/features/pitches/domain/entities/pitch.dart';
+import 'package:e7gz/src/features/bookings/presentation/cubit/booking_cubit.dart';
+import 'package:e7gz/src/features/bookings/presentation/cubit/booking_state.dart';
+import 'package:e7gz/src/features/bookings/domain/usecases/booking_usecases.dart';
+import 'package:e7gz/src/features/bookings/data/repositories/booking_repository_impl.dart';
+import 'package:e7gz/src/features/bookings/data/datasources/booking_remote_datasource.dart';
 
 class BookingSlotsScreen extends StatefulWidget {
-  const BookingSlotsScreen({super.key});
+  final String pitchId;
+  final dynamic extraPitch;
+
+  const BookingSlotsScreen({
+    super.key,
+    required this.pitchId,
+    this.extraPitch,
+  });
 
   @override
   State<BookingSlotsScreen> createState() => _BookingSlotsScreenState();
 }
 
 class _BookingSlotsScreenState extends State<BookingSlotsScreen> {
-  int _selectedDateIndex = 1;
-  int _selectedSlotIndex = 1;
+  int _selectedDateIndex = 0;
   bool _isFullPayment = true;
+  late List<DateTime> _weekDates;
+  late SlotsCubit _slotsCubit;
+
+  @override
+  void initState() {
+    super.initState();
+    _weekDates = List.generate(7, (index) => DateTime.now().add(Duration(days: index)));
+    _slotsCubit = SlotsCubit(
+      getAvailableSlots: GetAvailableSlotsUseCase(BookingRepositoryImpl(BookingRemoteDataSource())),
+      pitchId: widget.pitchId,
+    );
+    _loadSlotsForDate(_weekDates[_selectedDateIndex]);
+  }
+
+  void _loadSlotsForDate(DateTime date) {
+    final dateString = "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+    _slotsCubit.loadSlots(dateString);
+  }
+
+  @override
+  void dispose() {
+    _slotsCubit.close();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final cs = context.theme.colorScheme;
     final tt = context.theme.textTheme;
 
-    return Scaffold(
-      backgroundColor: const Color(0xFF0B1326),
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: Builder(
-          builder: (context) => IconButton(
-            icon: const Icon(IconsaxPlusLinear.menu_1, color: Colors.white),
-            onPressed: () {},
-          ),
-        ),
-        title: Text(
-          'e7gzz',
-          style: tt.headlineSmall?.copyWith(
-            color: cs.primary,
-            fontWeight: FontWeight.w900,
-          ),
-        ),
-        centerTitle: true,
-        actions: [
-          Padding(
-            padding: EdgeInsets.only(right: 16.w),
-            child: CircleAvatar(
-              radius: 18.r,
-              backgroundColor: const Color(0xFF2D3449),
-              child: const Icon(IconsaxPlusBold.user, size: 20, color: Colors.white),
+    return BlocProvider.value(
+      value: _slotsCubit,
+      child: Scaffold(
+        backgroundColor: const Color(0xFF0B1326),
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: Builder(
+            builder: (context) => IconButton(
+              icon: const Icon(Icons.arrow_back, color: Colors.white),
+              onPressed: () => context.pop(),
             ),
           ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Pitch Mini-Hero
-            Container(
-              height: 180.h,
-              margin: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(40.r),
-                image: const DecorationImage(
-                  image: NetworkImage('https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80'),
-                  fit: BoxFit.cover,
-                ),
-              ),
-              child: Stack(
-                children: [
-                   Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(40.r),
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [Colors.transparent, Colors.black.withValues(alpha: 0.6)],
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(24.w),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF22C55E).withValues(alpha: 0.8),
-                            borderRadius: BorderRadius.circular(8.r),
-                          ),
-                          child: Text(
-                            'PREMIUM TURF',
-                            style: TextStyle(color: Colors.white, fontSize: 10.sp, fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        SizedBox(height: 8.h),
-                        Text(
-                          'Anfield Arena Cairo',
-                          style: tt.headlineSmall?.copyWith(color: Colors.white, fontWeight: FontWeight.w900),
-                        ),
-                        Row(
-                          children: [
-                            const Icon(Icons.location_on, color: Color(0xFFBCC7DE), size: 14),
-                            SizedBox(width: 4.w),
-                            Text(
-                              'New Cairo, District 5',
-                              style: TextStyle(color: const Color(0xFFBCC7DE), fontSize: 13.sp),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+          title: Text(
+            'e7gzz',
+            style: tt.headlineSmall?.copyWith(
+              color: cs.primary,
+              fontWeight: FontWeight.w900,
             ),
-            
-            SizedBox(height: 16.h),
-            
-            // Select Date
+          ),
+          centerTitle: true,
+          actions: [
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24.w),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Select Date',
-                    style: tt.headlineSmall?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    'October 2023',
-                    style: TextStyle(color: cs.primary, fontWeight: FontWeight.bold),
-                  ),
-                ],
+              padding: EdgeInsets.only(right: 16.w),
+              child: CircleAvatar(
+                radius: 18.r,
+                backgroundColor: const Color(0xFF2D3449),
+                child: const Icon(IconsaxPlusBold.user, size: 20, color: Colors.white),
               ),
             ),
-            
-            SizedBox(height: 20.h),
-            
-            SizedBox(
-              height: 100.h,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                padding: EdgeInsets.symmetric(horizontal: 24.w),
-                itemCount: 7,
-                itemBuilder: (context, index) {
-                  final isSelected = index == _selectedDateIndex;
-                  return GestureDetector(
-                    onTap: () => setState(() => _selectedDateIndex = index),
-                    child: Container(
-                      width: 76.w,
-                      margin: EdgeInsets.only(right: 12.w),
+          ],
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Pitch Mini-Hero
+              Container(
+                height: 180.h,
+                margin: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(40.r),
+                  image: DecorationImage(
+                    image: NetworkImage(
+                      widget.extraPitch is Pitch && (widget.extraPitch as Pitch).imageUrl.isNotEmpty
+                          ? (widget.extraPitch as Pitch).imageUrl
+                          : 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80',
+                    ),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                child: Stack(
+                  children: [
+                     Container(
                       decoration: BoxDecoration(
-                        color: isSelected ? cs.primary : const Color(0xFF171F33),
-                        borderRadius: BorderRadius.circular(24.r),
-                        boxShadow: isSelected ? [
-                          BoxShadow(color: cs.primary.withValues(alpha: 0.3), blurRadius: 15, spreadRadius: 2)
-                        ] : [],
+                        borderRadius: BorderRadius.circular(40.r),
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [Colors.transparent, Colors.black.withValues(alpha: 0.6)],
+                        ),
                       ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(24.w),
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'][index],
-                            style: TextStyle(
-                              color: isSelected ? const Color(0xFF003915) : const Color(0xFFBCC7DE),
-                              fontWeight: FontWeight.bold,
-                              fontSize: 12.sp,
+                          Container(
+                            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF22C55E).withValues(alpha: 0.8),
+                              borderRadius: BorderRadius.circular(8.r),
+                            ),
+                            child: Text(
+                              'PREMIUM TURF',
+                              style: TextStyle(color: Colors.white, fontSize: 10.sp, fontWeight: FontWeight.bold),
                             ),
                           ),
-                          SizedBox(height: 4.h),
+                          SizedBox(height: 8.h),
                           Text(
-                            '${23 + index}',
-                            style: TextStyle(
-                              color: isSelected ? const Color(0xFF003915) : Colors.white,
-                              fontWeight: FontWeight.w900,
-                              fontSize: 24.sp,
-                            ),
+                            widget.extraPitch is Pitch ? (widget.extraPitch as Pitch).name : 'Pitch Details',
+                            style: tt.headlineSmall?.copyWith(color: Colors.white, fontWeight: FontWeight.w900),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          Row(
+                            children: [
+                              const Icon(Icons.location_on, color: Color(0xFFBCC7DE), size: 14),
+                              SizedBox(width: 4.w),
+                              Expanded(
+                                child: Text(
+                                  widget.extraPitch is Pitch ? (widget.extraPitch as Pitch).location.city : '',
+                                  style: TextStyle(color: const Color(0xFFBCC7DE), fontSize: 13.sp),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
                     ),
+                  ],
+                ),
+              ),
+              
+              SizedBox(height: 16.h),
+              
+              // Select Date
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24.w),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Select Date',
+                      style: tt.headlineSmall?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      DateFormat('MMMM yyyy').format(_weekDates[_selectedDateIndex]),
+                      style: TextStyle(color: cs.primary, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
+              
+              SizedBox(height: 20.h),
+              
+              SizedBox(
+                height: 100.h,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  padding: EdgeInsets.symmetric(horizontal: 24.w),
+                  itemCount: 7,
+                  itemBuilder: (context, index) {
+                    final date = _weekDates[index];
+                    final isSelected = index == _selectedDateIndex;
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() => _selectedDateIndex = index);
+                        _loadSlotsForDate(date);
+                      },
+                      child: Container(
+                        width: 76.w,
+                        margin: EdgeInsets.only(right: 12.w),
+                        decoration: BoxDecoration(
+                          color: isSelected ? cs.primary : const Color(0xFF171F33),
+                          borderRadius: BorderRadius.circular(24.r),
+                          boxShadow: isSelected ? [
+                            BoxShadow(color: cs.primary.withValues(alpha: 0.3), blurRadius: 15, spreadRadius: 2)
+                          ] : [],
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              DateFormat('EEE').format(date).toUpperCase(),
+                              style: TextStyle(
+                                color: isSelected ? const Color(0xFF003915) : const Color(0xFFBCC7DE),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12.sp,
+                              ),
+                            ),
+                            SizedBox(height: 4.h),
+                            Text(
+                              '${date.day}',
+                              style: TextStyle(
+                                color: isSelected ? const Color(0xFF003915) : Colors.white,
+                                fontWeight: FontWeight.w900,
+                                fontSize: 24.sp,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              
+              SizedBox(height: 40.h),
+              
+              // Available Slots
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24.w),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Available Slots',
+                      style: tt.headlineSmall?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                    Row(
+                      children: [
+                         indicatorChip('AVAILABLE', cs.primary),
+                         SizedBox(width: 12.w),
+                         indicatorChip('BOOKED', const Color(0xFF3E495D)),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              
+              SizedBox(height: 24.h),
+              
+              // Slots Grid
+              BlocBuilder<SlotsCubit, SlotsState>(
+                builder: (context, state) {
+                  if (state.status == SlotsStatus.loading) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  if (state.status == SlotsStatus.failure) {
+                    return Center(
+                      child: Text(
+                        state.errorMessage ?? 'Error loading slots',
+                        style: TextStyle(color: Colors.redAccent, fontSize: 14.sp),
+                      ),
+                    );
+                  }
+                  if (state.slots.isEmpty) {
+                    return Center(
+                      child: Text(
+                        'No slots available on this date',
+                        style: TextStyle(color: const Color(0xFFBCC7DE), fontSize: 14.sp),
+                      ),
+                    );
+                  }
+                  
+                  return GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    padding: EdgeInsets.symmetric(horizontal: 24.w),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 16.w,
+                      mainAxisSpacing: 16.h,
+                      childAspectRatio: 2.2,
+                    ),
+                    itemCount: state.slots.length,
+                    itemBuilder: (context, index) {
+                      final slot = state.slots[index];
+                      final isSelected = state.selectedSlot == slot;
+                      return slotBox(slot, isSelected, cs, context);
+                    },
                   );
                 },
               ),
-            ),
-            
-            SizedBox(height: 40.h),
-            
-            // Available Slots
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24.w),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Available Slots',
-                    style: tt.headlineSmall?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
-                  ),
-                  Row(
-                    children: [
-                       indicatorChip('AVAILABLE', cs.primary),
-                       SizedBox(width: 12.w),
-                       indicatorChip('BOOKED', const Color(0xFF3E495D)),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            
-            SizedBox(height: 24.h),
-            
-            // Slots Grid
-            GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              padding: EdgeInsets.symmetric(horizontal: 24.w),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 16.w,
-                mainAxisSpacing: 16.h,
-                childAspectRatio: 2.2,
-              ),
-              itemCount: 8,
-              itemBuilder: (context, index) {
-                final isBooked = index == 2 || index == 5;
-                final isSelected = index == _selectedSlotIndex;
-                return slotBox(index, isBooked, isSelected, cs);
-              },
-            ),
             
             SizedBox(height: 48.h),
             
@@ -316,11 +393,52 @@ class _BookingSlotsScreenState extends State<BookingSlotsScreen> {
                     ],
                   ),
                   SizedBox(height: 24.h),
-                  AppButton(
-                    label: 'Confirm Booking',
-                    isFullWidth: true,
-                    height: ButtonSize.large,
-                    onPressed: () => context.push(AppRoutes.paymentCheckout),
+                  BlocListener<CreateBookingCubit, CreateBookingState>(
+                    listener: (context, state) {
+                      if (state.status == CreateBookingStatus.success && state.createdBooking != null) {
+                        final booking = state.createdBooking!;
+                        context.push(
+                          AppRoutes.paymentCheckout,
+                          extra: {
+                            'bookingId': booking.id,
+                            'amount': booking.totalPrice,
+                            'pitchName': widget.extraPitch is Pitch ? (widget.extraPitch as Pitch).name : 'Premium Pitch',
+                            'pitchImage': widget.extraPitch is Pitch ? (widget.extraPitch as Pitch).imageUrl : null,
+                            'bookingDetails': '${booking.date} at ${booking.startTime}',
+                          },
+                        );
+                      } else if (state.status == CreateBookingStatus.failure) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(state.errorMessage ?? 'Failed to create booking')),
+                        );
+                      }
+                    },
+                    child: BlocBuilder<CreateBookingCubit, CreateBookingState>(
+                      builder: (context, state) {
+                        return AppButton(
+                          label: state.status == CreateBookingStatus.loading ? 'Creating...' : 'Confirm Booking',
+                          isFullWidth: true,
+                          isLoading: state.status == CreateBookingStatus.loading,
+                          height: ButtonSize.large,
+                          onPressed: () {
+                            final selectedSlot = _slotsCubit.state.selectedSlot;
+                            if (selectedSlot == null) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Please select a time slot')),
+                              );
+                              return;
+                            }
+
+                            context.read<CreateBookingCubit>().createBooking(
+                                  pitchId: widget.pitchId,
+                                  date: _slotsCubit.state.selectedDate ?? '',
+                                  startTime: selectedSlot.startTime,
+                                  endTime: selectedSlot.endTime,
+                                );
+                          },
+                        );
+                      },
+                    ),
                   ),
                 ],
               ),
@@ -331,7 +449,8 @@ class _BookingSlotsScreenState extends State<BookingSlotsScreen> {
         ),
       ),
       bottomNavigationBar: customBottomNav(cs),
-    );
+    ))
+    ;
   }
 
   Widget indicatorChip(String label, Color color) {
@@ -351,9 +470,10 @@ class _BookingSlotsScreenState extends State<BookingSlotsScreen> {
     );
   }
 
-  Widget slotBox(int index, bool isBooked, bool isSelected, ColorScheme cs) {
+  Widget slotBox(TimeSlot slot, bool isSelected, ColorScheme cs, BuildContext context) {
+    final isBooked = !slot.isAvailable;
     return GestureDetector(
-      onTap: isBooked ? null : () => setState(() => _selectedSlotIndex = index),
+      onTap: isBooked ? null : () => context.read<SlotsCubit>().selectSlot(slot),
       child: Container(
         decoration: BoxDecoration(
           color: isBooked 
@@ -368,7 +488,7 @@ class _BookingSlotsScreenState extends State<BookingSlotsScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              ['EVENING', 'EVENING', 'NIGHT', 'NIGHT', 'NIGHT', 'MIDNIGHT', 'MIDNIGHT', 'MIDNIGHT'][index],
+              'SLOT',
               style: TextStyle(
                 color: isBooked 
                     ? const Color(0xFFBCC7DE).withValues(alpha: 0.3)
@@ -378,7 +498,7 @@ class _BookingSlotsScreenState extends State<BookingSlotsScreen> {
               ),
             ),
             Text(
-              '${18 + index}:00',
+              slot.startTime,
               style: TextStyle(
                 color: isBooked 
                     ? const Color(0xFFBCC7DE).withValues(alpha: 0.5)
@@ -388,7 +508,7 @@ class _BookingSlotsScreenState extends State<BookingSlotsScreen> {
               ),
             ),
             Text(
-              isBooked ? 'Booked' : '500 EGP',
+              isBooked ? 'Booked' : '${slot.price.toInt()} EGP',
               style: TextStyle(
                 color: isBooked 
                     ? const Color(0xFFBCC7DE).withValues(alpha: 0.3)

@@ -23,8 +23,21 @@ class AppConfig {
 
     dio.interceptors.add(
       InterceptorsWrapper(
-        onRequest: (options, handler) {
+        onRequest: (options, handler) async {
           AppLogger.info('🌐 [DIO] REQUEST[${options.method}] => PATH: ${options.path}');
+          
+          // Inject Token from Secure Storage
+          final tokenResult = await SecureStorageService.instance.read('jwt_token');
+          tokenResult.fold(
+            (_) {},
+            (token) {
+              if (token != null && token.isNotEmpty) {
+                options.headers['Authorization'] = 'Bearer $token';
+              }
+            },
+          );
+
+          AppLogger.info('🔑 HEADERS: ${options.headers}');
           return handler.next(options);
         },
         onResponse: (response, handler) {
@@ -41,6 +54,6 @@ class AppConfig {
   }
 
   static String _getBaseUrl() {
-    return dotenv.get('API_BASE_URL', fallback: 'https://localhost:3000');
+    return dotenv.get('API_BASE_URL', fallback: 'http://192.168.1.7:3000/api');
   }
 }

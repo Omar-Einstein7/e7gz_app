@@ -1,5 +1,7 @@
+import 'package:e7gz/src/features/notifications/presentation/cubit/notifications_state.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
+import '../cubit/notifications_cubit.dart';
 
 class NotificationsScreen extends StatelessWidget {
   const NotificationsScreen({super.key});
@@ -25,7 +27,7 @@ class NotificationsScreen extends StatelessWidget {
         centerTitle: true,
         actions: [
           TextButton(
-            onPressed: () {},
+            onPressed: () => context.read<NotificationsCubit>().markAllRead(),
             child: Text(
               'Mark as read', 
               style: TextStyle(color: cs.primary, fontSize: 12.sp, fontWeight: FontWeight.bold)
@@ -34,63 +36,67 @@ class NotificationsScreen extends StatelessWidget {
           SizedBox(width: 12.w),
         ],
       ),
-      body: ListView(
-        padding: EdgeInsets.all(24.w),
-        children: [
-          sectionHeader('NEW'),
-          SizedBox(height: 16.h),
-          notificationTile(
-            title: 'Booking Confirmed!',
-            body: 'Your match at Anfield Arena is set for tonight at 21:00.',
-            time: '2m ago',
-            icon: IconsaxPlusBold.calendar_1,
-            isUnread: true,
-            cs: cs,
-          ),
-          SizedBox(height: 16.h),
-          notificationTile(
-            title: 'New Match in Maadi',
-            body: 'Amira Khaled invited you to a public match today.',
-            time: '15m ago',
-            icon: IconsaxPlusBold.user_octagon,
-            isUnread: true,
-            cs: cs,
-          ),
-          
-          SizedBox(height: 48.h),
-          
-          sectionHeader('EARLIER'),
-          SizedBox(height: 16.h),
-          notificationTile(
-            title: 'Points Earned!',
-            body: 'You earned 150 PTS from your last match win.',
-            time: 'Yesterday',
-            icon: IconsaxPlusBold.medal_star,
-            isUnread: false,
-            cs: cs,
-          ),
-          SizedBox(height: 16.h),
-          notificationTile(
-            title: 'System Update',
-            body: 'New pitches added in Sheikh Zayed! Check them out.',
-            time: '2 days ago',
-            icon: IconsaxPlusBold.info_circle,
-            isUnread: false,
-            cs: cs,
-          ),
-          SizedBox(height: 16.h),
-          notificationTile(
-            title: 'Verification Success',
-            body: 'Your profile has been verified as an Elite Player.',
-            time: '4 days ago',
-            icon: IconsaxPlusBold.verify,
-            isUnread: false,
-            cs: cs,
-          ),
-        ],
+      body: BlocBuilder<NotificationsCubit, NotificationsState>(
+        builder: (context, state) {
+          if (state.status == NotificationsStatus.loading && state.notifications.isEmpty) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (state.notifications.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(IconsaxPlusLinear.notification, color: Color(0xFFBCC7DE), size: 64),
+                  SizedBox(height: 16.h),
+                  Text('No notifications yet', style: TextStyle(color: const Color(0xFFBCC7DE), fontSize: 14.sp)),
+                ],
+              ),
+            );
+          }
+
+          return RefreshIndicator(
+            onRefresh: () => context.read<NotificationsCubit>().loadNotifications(),
+            child: ListView.builder(
+              padding: EdgeInsets.all(24.w),
+              itemCount: state.notifications.length,
+              itemBuilder: (context, index) {
+                final n = state.notifications[index];
+                return Padding(
+                  padding: EdgeInsets.only(bottom: 16.h),
+                  child: notificationTile(
+                    title: n.title,
+                    body: n.body,
+                    time: _formatTime(n.createdAt),
+                    icon: _getIconForType(n.type),
+                    isUnread: !n.isRead,
+                    cs: cs,
+                  ),
+                );
+              },
+            ),
+          );
+        },
       ),
     );
   }
+
+  String _formatTime(DateTime date) {
+    final diff = DateTime.now().difference(date);
+    if (diff.inMinutes < 60) return '${diff.inMinutes}m ago';
+    if (diff.inHours < 24) return '${diff.inHours}h ago';
+    return '${diff.inDays}d ago';
+  }
+
+  IconData _getIconForType(String type) {
+    switch (type) {
+      case 'booking': return IconsaxPlusBold.calendar_1;
+      case 'match': return IconsaxPlusBold.user_octagon;
+      case 'loyalty': return IconsaxPlusBold.medal_star;
+      default: return IconsaxPlusBold.info_circle;
+    }
+  }
+
 
   Widget sectionHeader(String title) {
     return Text(

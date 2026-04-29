@@ -1,9 +1,4 @@
 import 'package:e7gz/src/imports/core_imports.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-
-import 'text_theme.dart';
-import 'color_schemes.dart';
 
 Color _colorFromHex(String hex) {
   final cleaned = hex.replaceFirst('#', '');
@@ -188,11 +183,11 @@ ThemeData _buildTheme(ColorScheme colorScheme, AppColorsExtension customColors) 
       fillColor: colorScheme.brightness == Brightness.dark 
           ? const Color(0xFF171F33) 
           : colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
-      border: OutlineInputBorder(
+      border: const OutlineInputBorder(
         borderRadius: AppBorders.full,
         borderSide: BorderSide.none,
       ),
-      enabledBorder: OutlineInputBorder(
+      enabledBorder: const OutlineInputBorder(
         borderRadius: AppBorders.full,
         borderSide: BorderSide.none,
       ),

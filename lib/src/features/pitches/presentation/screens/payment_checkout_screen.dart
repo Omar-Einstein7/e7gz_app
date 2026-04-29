@@ -3,7 +3,22 @@ import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
 
 class PaymentCheckoutScreen extends StatefulWidget {
-  const PaymentCheckoutScreen({super.key});
+  final String? bookingId;
+  final String? matchId;
+  final double amount;
+  final String pitchName;
+  final String? pitchImage;
+  final String bookingDetails;
+
+  const PaymentCheckoutScreen({
+    super.key,
+    this.bookingId,
+    this.matchId,
+    required this.amount,
+    required this.pitchName,
+    this.pitchImage,
+    required this.bookingDetails,
+  });
 
   @override
   State<PaymentCheckoutScreen> createState() => _PaymentCheckoutScreenState();
@@ -13,6 +28,7 @@ enum PaymentMethod { instapay, wallet, card }
 
 class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
   PaymentMethod _selectedMethod = PaymentMethod.instapay;
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -147,7 +163,7 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
                       ClipRRect(
                         borderRadius: BorderRadius.circular(16.r),
                         child: Image.network(
-                          'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80',
+                          widget.pitchImage ?? 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80',
                           width: 80.w,
                           height: 80.w,
                           fit: BoxFit.cover,
@@ -158,15 +174,11 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Al-Ahly City Club',
+                            widget.pitchName,
                             style: tt.titleMedium?.copyWith(color: const Color(0xFF4BE277), fontWeight: FontWeight.bold),
                           ),
                           Text(
-                            'Pitch 4 • 5×5 Grass',
-                            style: tt.bodySmall?.copyWith(color: const Color(0xFFBCC7DE)),
-                          ),
-                          Text(
-                            'Friday, Oct 27',
+                            widget.bookingDetails,
                             style: tt.bodySmall?.copyWith(color: const Color(0xFFBCC7DE)),
                           ),
                         ],
@@ -174,11 +186,11 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
                     ],
                   ),
                   SizedBox(height: 32.h),
-                  summaryRow('Pitch Rental (2 Hours)', '800 EGP', tt),
+                  summaryRow('Subtotal', '${widget.amount.toInt()} EGP', tt),
                   SizedBox(height: 12.h),
-                  summaryRow('Service Fee', '25 EGP', tt),
+                  summaryRow('Service Fee', '0 EGP', tt),
                   SizedBox(height: 12.h),
-                  summaryRow('Equipment Deposit', '100 EGP', tt),
+                  summaryRow('Discount', '0 EGP', tt),
                   SizedBox(height: 32.h),
                   Divider(color: Colors.white.withValues(alpha: 0.05)),
                   SizedBox(height: 32.h),
@@ -194,7 +206,7 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
                           ),
                           RichText(
                             text: TextSpan(
-                              text: '925 ',
+                              text: '${widget.amount.toInt()} ',
                               style: tt.displaySmall?.copyWith(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 32.sp),
                               children: [
                                 TextSpan(text: 'EGP', style: TextStyle(color: cs.primary, fontSize: 16.sp, fontWeight: FontWeight.bold)),
@@ -220,11 +232,12 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
                   SizedBox(height: 32.h),
                   
                   AppButton(
-                    label: 'Confirm & Pay',
+                    label: _isLoading ? 'Processing...' : 'Confirm & Pay',
                     isFullWidth: true,
+                    isLoading: _isLoading,
                     height: ButtonSize.large,
-                    suffixIcon: const Icon(Icons.arrow_forward),
-                    onPressed: () => context.push(AppRoutes.bookingSuccess),
+                    suffixIcon: _isLoading ? null : const Icon(Icons.arrow_forward),
+                    onPressed: _isLoading ? null : _handlePayment,
                   ),
                   
                   SizedBox(height: 16.h),
@@ -325,6 +338,43 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
         Text(value, style: tt.titleMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.bold)),
       ],
     );
+  }
+
+  Future<void> _handlePayment() async {
+    setState(() => _isLoading = true);
+    
+    try {
+      final response = await DioService.instance.post(
+        '/payments/checkout',
+        data: {
+          'bookingId': widget.bookingId,
+          'matchId': widget.matchId,
+          'amount': widget.amount,
+          'paymentMethod': _selectedMethod.name,
+        },
+      );
+
+      response.fold(
+        (failure) {
+          if (!mounted) return;
+          setState(() => _isLoading = false);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(failure.message), backgroundColor: Colors.redAccent),
+          );
+        },
+        (success) {
+          if (!mounted) return;
+          setState(() => _isLoading = false);
+          _showSuccessDialog();
+        },
+      );
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _isLoading = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Payment failed. Please try again.'), backgroundColor: Colors.redAccent),
+      );
+    }
   }
 
   void _showSuccessDialog() {

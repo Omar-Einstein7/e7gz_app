@@ -23,13 +23,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     result.fold(
       (failure) {
         emit(state.copyWith(isLoading: false));
-        showToast(event.context, message: failure.message, status: 'error');
+        showGlobalToast(message: failure.message, status: 'error');
       },
       (user) {
         emit(state.copyWith(isLoading: false));
-        if (event.context.mounted) {
-          event.context.go(AppRoutes.home);
-        }
       },
     );
   }
@@ -40,18 +37,20 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     emit(state.copyWith(isLoading: true));
     
-    final result = await _repository.signUp(name: event.name, email: event.email, password: event.password);
+    final result = await _repository.signUp(
+      name: event.name, 
+      email: event.email, 
+      password: event.password,
+      role: event.role,
+    );
     
     result.fold(
       (failure) {
         emit(state.copyWith(isLoading: false));
-        showToast(event.context, message: failure.message, status: 'error');
+        showGlobalToast(message: failure.message, status: 'error');
       },
       (user) {
         emit(state.copyWith(isLoading: false));
-        if (event.context.mounted) {
-          event.context.go(AppRoutes.home);
-        }
       },
     );
   }
@@ -67,14 +66,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     result.fold(
       (failure) {
         emit(state.copyWith(isLoading: false));
-        showToast(event.context, message: failure.message, status: 'error');
+        showGlobalToast(message: failure.message, status: 'error');
       },
       (success) {
         emit(state.copyWith(isLoading: false));
-        showToast(event.context, message: 'Password reset link sent successfully', status: 'success');
-        if (event.context.mounted) {
-          event.context.go(AppRoutes.login);
-        }
+        showGlobalToast(message: 'Password reset link sent successfully', status: 'success');
       },
     );
   }
@@ -87,24 +83,27 @@ abstract class AuthEvent extends Equatable {
 }
 
 class LoginRequested extends AuthEvent {
-  final BuildContext context;
   final String email;
   final String password;
-  const LoginRequested({required this.context, required this.email, required this.password});
+  const LoginRequested({required this.email, required this.password});
 }
 
 class SignUpRequested extends AuthEvent {
-  final BuildContext context;
   final String name;
   final String email;
   final String password;
-  const SignUpRequested({required this.context, required this.name, required this.email, required this.password});
+  final String role;
+  const SignUpRequested({
+    required this.name, 
+    required this.email, 
+    required this.password,
+    required this.role,
+  });
 }
 
 class ForgotPasswordRequested extends AuthEvent {
-  final BuildContext context;
   final String email;
-  const ForgotPasswordRequested({required this.context, required this.email});
+  const ForgotPasswordRequested({required this.email});
 }
 
 class AuthState extends Equatable {

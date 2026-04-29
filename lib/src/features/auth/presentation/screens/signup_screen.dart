@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:e7gz/src/features/auth/presentation/providers/auth_bloc.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
 
@@ -125,6 +126,10 @@ class _SignupScreenState extends State<SignupScreen> {
                                 controller: _nameController,
                                 hint: "Mohamed Ahmed",
                                 prefixIcon: const Icon(IconsaxPlusBold.profile),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) return 'Name is required';
+                                  return null;
+                                },
                               ),
                               SizedBox(height: 24.h),
                               
@@ -134,6 +139,13 @@ class _SignupScreenState extends State<SignupScreen> {
                                 hint: "mohamed@example.com",
                                 keyboardType: TextInputType.emailAddress,
                                 prefixIcon: const Icon(IconsaxPlusBold.sms),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) return 'Email is required';
+                                  if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                                    return 'Enter a valid email';
+                                  }
+                                  return null;
+                                },
                               ),
                               SizedBox(height: 24.h),
                               
@@ -144,6 +156,11 @@ class _SignupScreenState extends State<SignupScreen> {
                                 keyboardType: TextInputType.phone,
                                 prefixIcon: const Icon(IconsaxPlusBold.call),
                                 suffixIcon: walletReadyChip(),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) return 'Phone is required';
+                                  if (value.length < 11) return 'Enter a valid phone number';
+                                  return null;
+                                },
                               ),
                               SizedBox(height: 24.h),
                               
@@ -153,6 +170,11 @@ class _SignupScreenState extends State<SignupScreen> {
                                 hint: "••••••••",
                                 obscureText: _obscurePassword,
                                 prefixIcon: const Icon(IconsaxPlusBold.lock),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) return 'Password is required';
+                                  if (value.length < 6) return 'Password must be at least 6 characters';
+                                  return null;
+                                },
                                 suffixIcon: IconButton(
                                   icon: Icon(
                                     _obscurePassword ? IconsaxPlusBold.eye_slash : IconsaxPlusBold.eye,
@@ -164,15 +186,27 @@ class _SignupScreenState extends State<SignupScreen> {
                               
                               SizedBox(height: 32.h),
                               
-                              AppButton(
-                                label: 'Create Account',
-                                isFullWidth: true,
-                                height: ButtonSize.large,
-                                suffixIcon: const Icon(Icons.arrow_forward),
-                                onPressed: () {
-                                  if (_formKey.currentState?.validate() ?? false) {
-                                    // Handle signup
-                                  }
+                              BlocBuilder<AuthBloc, AuthState>(
+                                builder: (context, state) {
+                                  return AppButton(
+                                    label: 'Create Account',
+                                    isFullWidth: true,
+                                    height: ButtonSize.large,
+                                    isLoading: state.isLoading,
+                                    suffixIcon: const Icon(Icons.arrow_forward),
+                                    onPressed: () {
+                                      if (_formKey.currentState?.validate() ?? false) {
+                                        context.read<AuthBloc>().add(
+                                            SignUpRequested(
+                                              name: _nameController.text.trim(),
+                                              email: _emailController.text.trim(),
+                                              password: _passwordController.text,
+                                              role: _selectedRole.name,
+                                            ),
+                                        );
+                                      }
+                                    },
+                                  );
                                 },
                               ),
                               
