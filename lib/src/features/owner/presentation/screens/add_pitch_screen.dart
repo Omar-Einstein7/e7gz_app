@@ -1,5 +1,6 @@
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
+import 'package:e7gz/src/features/admin/data/datasources/admin_remote_datasource.dart';
 import '../cubit/owner_cubit.dart';
 
 class AddPitchScreen extends StatefulWidget {
@@ -175,11 +176,39 @@ class _AddPitchScreenState extends State<AddPitchScreen> {
     );
   }
 
-  void _submit() {
+  Future<void> _submit() async {
     if (_formKey.currentState!.validate()) {
-      // In a real app, we'd use a dedicated CreatePitchCubit
-      // For now, let's assume we call a method in OwnerCubit or similar
-      context.pop();
+      final scaffold = ScaffoldMessenger.of(context);
+      
+      try {
+        final dataSource = AdminRemoteDataSource();
+        final success = await dataSource.createPitch({
+          "name": _nameController.text,
+          "description": _descriptionController.text,
+          "sportType": _sportType,
+          "location": {
+            "address": _addressController.text,
+            "city": _cityController.text,
+            "coordinates": {
+              "type": "Point",
+              "coordinates": [31.2357, 30.0444] // Default to Cairo center for now
+            }
+          },
+          "pricePerHour": int.tryParse(_priceController.text) ?? 350,
+          "openingTime": "08:00",
+          "closingTime": "23:00",
+          "amenities": ["Parking", "Showers", "Lights"]
+        });
+
+        if (success) {
+          scaffold.showSnackBar(const SnackBar(content: Text('Pitch created successfully!')));
+          if (mounted) context.pop();
+        } else {
+          scaffold.showSnackBar(const SnackBar(content: Text('Failed to create pitch. Please try again.')));
+        }
+      } catch (e) {
+        scaffold.showSnackBar(SnackBar(content: Text('Error: $e')));
+      }
     }
   }
 }

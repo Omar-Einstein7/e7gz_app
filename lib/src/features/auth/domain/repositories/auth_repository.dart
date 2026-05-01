@@ -16,8 +16,10 @@ abstract class AuthRepository {
     required String name,
     required String email,
     required String password,
+    required String phone,
     String? role,
   });
+
 
   /// Send a password reset email
   FutureEither<void> forgotPassword({

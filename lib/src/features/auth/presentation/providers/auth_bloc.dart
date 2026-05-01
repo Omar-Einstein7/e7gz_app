@@ -42,6 +42,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       email: event.email, 
       password: event.password,
       role: event.role,
+      phone: event.phone,
     );
     
     result.fold(
@@ -93,11 +94,13 @@ class SignUpRequested extends AuthEvent {
   final String email;
   final String password;
   final String role;
+  final String phone;
   const SignUpRequested({
     required this.name, 
     required this.email, 
     required this.password,
     required this.role,
+    required this.phone,
   });
 }
 
@@ -116,4 +119,3 @@ class AuthState extends Equatable {
   @override
   List<Object?> get props => [isLoading];
 }
-

@@ -197,12 +197,13 @@ class _SignupScreenState extends State<SignupScreen> {
                                     onPressed: () {
                                       if (_formKey.currentState?.validate() ?? false) {
                                         context.read<AuthBloc>().add(
-                                            SignUpRequested(
-                                              name: _nameController.text.trim(),
-                                              email: _emailController.text.trim(),
-                                              password: _passwordController.text,
-                                              role: _selectedRole.name,
-                                            ),
+                                        SignUpRequested(
+                                          name: _nameController.text.trim(),
+                                          email: _emailController.text.trim(),
+                                          password: _passwordController.text,
+                                          role: _selectedRole.name,
+                                          phone: _phoneController.text,
+                                        ),
                                         );
                                       }
                                     },

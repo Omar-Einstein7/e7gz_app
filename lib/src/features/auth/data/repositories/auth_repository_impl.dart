@@ -12,16 +12,26 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Stream<AppUser?> get onAuthStateChanged {
-    return _authService.authStateChanges.map((userData) {
-      if (userData == null) return null;
-      return AppUser(
-        id: userData['id']?.toString() ?? userData['_id']?.toString() ?? '',
-        email: userData['email'] ?? '',
-        name: userData['name'],
-        photoUrl: userData['photoUrl'],
-        loyaltyPoints: (userData['loyaltyPoints'] as num?)?.toInt() ?? 0,
-      );
-    });
+    return _authService.authStateChanges.map(_mapUserDataToAppUser);
+  }
+
+  AppUser? _mapUserDataToAppUser(Map<String, dynamic>? userData) {
+    if (userData == null) return null;
+    
+    // Normalize user data: handle cases where it's nested under 'user' or 'data'
+    // or returned directly (common in auth/me vs auth/login)
+    final userMap = userData['user'] as Map<String, dynamic>? ?? 
+                   userData['data'] as Map<String, dynamic>? ?? 
+                   userData;
+                   
+    return AppUser(
+      id: userMap['id']?.toString() ?? userMap['_id']?.toString() ?? '',
+      email: userMap['email'] ?? '',
+      name: userMap['name'],
+      photoUrl: userMap['photoUrl'],
+      role: userMap['role']?.toString() ?? 'player',
+      loyaltyPoints: (userMap['loyaltyPoints'] as num?)?.toInt() ?? 0,
+    );
   }
 
   @override
@@ -32,19 +42,10 @@ class AuthRepositoryImpl implements AuthRepository {
     final result = await _authService.login(email: email, password: password);
     
     return result.flatMap((userData) {
-      if (userData == null) {
+      final user = _mapUserDataToAppUser(userData);
+      if (user == null) {
         return left(const ServerFailure('Login failed: User record not found'));
       }
-
-      final data = userData['user'] ?? userData;
-      final user = AppUser(
-        id: data['id']?.toString() ?? data['_id']?.toString() ?? '', 
-        email: data['email'] ?? email, 
-        name: data['name'],
-        photoUrl: data['photoUrl'],
-        loyaltyPoints: (data['loyaltyPoints'] as num?)?.toInt() ?? 0,
-      );
-      
       return right(user);
     });
   }
@@ -54,27 +55,22 @@ class AuthRepositoryImpl implements AuthRepository {
     required String name, 
     required String email, 
     required String password,
+    required String phone,
     String? role,
   }) async {
     final result = await _authService.signUp(
       name: name,
       email: email,
       password: password,
+      phone: phone,
       role: role,
     );
 
     return result.flatMap((userData) {
-      if (userData == null) {
+      final user = _mapUserDataToAppUser(userData);
+      if (user == null) {
         return left(const ServerFailure('Sign up failed: User record corrupted'));
       }
-
-      final data = userData['user'] ?? userData;
-      final user = AppUser(
-        id: data['id'].toString(), 
-        email: data['email'] ?? email, 
-        name: name,
-      );
-      
       return right(user);
     });
   }
@@ -93,16 +89,6 @@ class AuthRepositoryImpl implements AuthRepository {
   FutureEither<AppUser?> checkAuthState() async {
     final result = await _authService.getCurrentUser();
     
-    return result.map((userData) {
-      if (userData == null) return null;
-
-      return AppUser(
-        id: userData['id'] ?? userData['_id'] ?? '', 
-        email: userData['email'] ?? '', 
-        name: userData['name'],
-        photoUrl: userData['photoUrl'],
-        loyaltyPoints: (userData['loyaltyPoints'] as num?)?.toInt() ?? 0,
-      );
-    });
+    return result.map(_mapUserDataToAppUser);
   }
 }

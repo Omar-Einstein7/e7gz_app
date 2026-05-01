@@ -5,6 +5,7 @@ class AppUser extends Equatable {
   final String email;
   final String? name;
   final String? photoUrl;
+  final String role;
   final int loyaltyPoints;
 
   const AppUser({
@@ -12,6 +13,7 @@ class AppUser extends Equatable {
     required this.email,
     this.name,
     this.photoUrl,
+    this.role = 'player',
     this.loyaltyPoints = 0,
   });
 
@@ -20,6 +22,9 @@ class AppUser extends Equatable {
   bool get isEmpty => id.isEmpty;
   bool get isNotEmpty => id.isNotEmpty;
 
+  bool get isOwner => role == 'owner';
+  bool get isAdmin => role == 'admin';
+
   @override
-  List<Object?> get props => [id, email, name, photoUrl, loyaltyPoints];
+  List<Object?> get props => [id, email, name, photoUrl, role, loyaltyPoints];
 }

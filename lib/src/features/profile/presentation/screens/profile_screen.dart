@@ -206,6 +206,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   icon: IconsaxPlusBold.element_3,
                   onTap: () => context.push(AppRoutes.ownerDashboard),
                 ),
+                if ((user?.isAdmin ?? false) || (user?.isOwner ?? false)) ...[
+                  SizedBox(height: 16.h),
+                  ProfileTile(
+                    title: 'Admin Panel',
+                    subtitle: 'Full system management and reports',
+                    icon: IconsaxPlusBold.shield_tick,
+                    onTap: () => context.push(AppRoutes.admin),
+                  ),
+                ],
+
                 SizedBox(height: 16.h),
                 const ProfileTile(
                   title: 'Settings',

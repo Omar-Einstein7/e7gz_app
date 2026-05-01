@@ -26,4 +26,5 @@ abstract final class AppRoutes {
   static const String matchmaking = '/matchmaking';
   static const String ownerDashboard = '/owner-dashboard';
   static const String addPitch = '/owner/add-pitch';
+  static const String admin = '/admin';
 }

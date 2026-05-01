@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:e7gz/src/features/auth/presentation/providers/session_bloc.dart';
+import 'package:e7gz/src/routing/app_router.dart';
 import 'package:e7gz/src/routing/app_routes.dart';
 
 class SessionListenerWrapper extends StatelessWidget {
@@ -17,9 +17,22 @@ class SessionListenerWrapper extends StatelessWidget {
         if (state.status != SessionStatus.unknown) {
           FlutterNativeSplash.remove();
           if (state.status == SessionStatus.authenticated) {
-            context.go(AppRoutes.home);
+            final user = state.user;
+            if (user != null) {
+              if (user.isAdmin) {
+                // Use appRouter directly — context here is above MaterialApp.router
+                // so context.go() would throw "No GoRouter found in context"
+                appRouter.go(AppRoutes.admin);
+              } else if (user.isOwner) {
+                appRouter.go(AppRoutes.ownerDashboard);
+              } else {
+                appRouter.go(AppRoutes.home);
+              }
+            } else {
+              appRouter.go(AppRoutes.home);
+            }
           } else if (state.status == SessionStatus.unauthenticated) {
-            context.go(AppRoutes.onboarding);
+            appRouter.go(AppRoutes.onboarding);
           }
         }
       },
