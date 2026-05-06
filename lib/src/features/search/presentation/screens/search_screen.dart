@@ -14,7 +14,7 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController _searchController = TextEditingController();
-  String _selectedSport = 'Football';
+  String _selectedSport = 'football';
 
   @override
   void initState() {
@@ -79,7 +79,9 @@ class _SearchScreenState extends State<SearchScreen> {
                   decoration: BoxDecoration(
                     color: const Color(0xFF131B2E),
                     borderRadius: BorderRadius.circular(100.r),
-                    border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
+                    border: Border.all(
+                      color: Colors.white.withValues(alpha: 0.05),
+                    ),
                   ),
                   child: TextField(
                     controller: _searchController,
@@ -89,7 +91,10 @@ class _SearchScreenState extends State<SearchScreen> {
                       hintStyle: TextStyle(
                         color: const Color(0xFFBCC7DE).withValues(alpha: 0.5),
                       ),
-                      icon: const Icon(IconsaxPlusLinear.search_normal_1, color: Color(0xFF4BE277)),
+                      icon: const Icon(
+                        IconsaxPlusLinear.search_normal_1,
+                        color: Color(0xFF4BE277),
+                      ),
                       border: InputBorder.none,
                       enabledBorder: InputBorder.none,
                       focusedBorder: InputBorder.none,
@@ -105,18 +110,18 @@ class _SearchScreenState extends State<SearchScreen> {
                     children: [
                       SearchFilterChip(
                         label: 'Football',
-                        isSelected: _selectedSport == 'Football',
+                        isSelected: _selectedSport == 'football',
                         onTap: () => setState(() {
-                          _selectedSport = 'Football';
+                          _selectedSport = 'football';
                           _onSearchChanged();
                         }),
                       ),
                       SizedBox(width: 12.w),
                       SearchFilterChip(
                         label: 'Padel',
-                        isSelected: _selectedSport == 'Padel',
+                        isSelected: _selectedSport == 'padel',
                         onTap: () => setState(() {
-                          _selectedSport = 'Padel';
+                          _selectedSport = 'padel';
                           _onSearchChanged();
                         }),
                       ),
@@ -143,7 +148,8 @@ class _SearchScreenState extends State<SearchScreen> {
           Expanded(
             child: BlocBuilder<SearchCubit, SearchState>(
               builder: (context, state) {
-                if (state.status == SearchStatus.loading && state.results.isEmpty) {
+                if (state.status == SearchStatus.loading &&
+                    state.results.isEmpty) {
                   return const Center(child: CircularProgressIndicator());
                 }
 
@@ -188,4 +194,3 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 }
-

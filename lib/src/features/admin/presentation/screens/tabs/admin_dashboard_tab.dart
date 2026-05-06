@@ -1,7 +1,9 @@
+import 'package:e7gz/src/features/admin/presentation/layout/admin_layout.dart';
+import 'package:e7gz/src/features/admin/presentation/widgets/chart_placeholder.dart';
+import 'package:e7gz/src/features/admin/presentation/widgets/stat_card.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:e7gz/src/features/admin/data/datasources/admin_remote_datasource.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
+import 'package:e7gz/src/features/admin/data/datasources/admin_remote_datasource.dart';
 
 class AdminDashboardTab extends StatelessWidget {
   final AdminRemoteDataSource dataSource;
@@ -13,233 +15,259 @@ class AdminDashboardTab extends StatelessWidget {
     return FutureBuilder<Map<String, dynamic>>(
       future: dataSource.getDashboardStats(),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator(color: Color(0xFF4BE277)));
-        }
-        
         final stats = snapshot.data?['data'] ?? snapshot.data ?? {};
-        
-        return LayoutBuilder(
-          builder: (context, constraints) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                  // Stat Grid
-                  GridView.count(
+        final loading = snapshot.connectionState == ConnectionState.waiting;
+
+        return SingleChildScrollView(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // ── Stat Cards ────────────────────────────────────────
+              LayoutBuilder(
+                builder: (context, c) {
+                  final cols = c.maxWidth > 900
+                      ? 4
+                      : (c.maxWidth > 560 ? 2 : 1);
+                  return GridView.count(
+                    crossAxisCount: cols,
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    crossAxisCount: constraints.maxWidth > 1500 ? 8 : (constraints.maxWidth > 900 ? 5 : 3),
-                    crossAxisSpacing: 12.w,
-                    mainAxisSpacing: 15.h,
-                    childAspectRatio:  constraints.maxWidth > 1200 ? 1.8 : 2.5,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
+                    childAspectRatio: cols == 4 ? 2.4 : (cols == 2 ? 2.8 : 3.6),
                     children: [
-                      _StatCard(
-                        title: 'Revenue',
-                        value: 'EGP ${stats['totalRevenue'] ?? "42.8k"}',
+                      StatCard(
+                        title: 'Total Revenue',
+                        value: loading
+                            ? '—'
+                            : 'EGP ${stats['totalRevenue'] ?? '42.8k'}',
+                        subtitle: '+12% this month',
                         icon: IconsaxPlusBold.wallet_3,
-                        color: const Color(0xFF4BE277),
+                        color: AdminColors.accent,
                       ),
-                      _StatCard(
+                      StatCard(
                         title: 'Bookings',
-                        value: '${stats['totalBookings'] ?? "156"}',
+                        value: loading
+                            ? '—'
+                            : '${stats['totalBookings'] ?? '156'}',
+                        subtitle: '+8 today',
                         icon: IconsaxPlusBold.calendar_tick,
-                        color: const Color(0xFF3B82F6),
+                        color: AdminColors.accentBlue,
                       ),
-                      _StatCard(
+                      StatCard(
                         title: 'Pitches',
-                        value: '${stats['pitchCount'] ?? "12"}',
+                        value: loading ? '—' : '${stats['pitchCount'] ?? '12'}',
+                        subtitle: '2 pending review',
                         icon: IconsaxPlusBold.location,
-                        color: const Color(0xFFF59E0B),
+                        color: AdminColors.accentAmber,
                       ),
-                      _StatCard(
-                        title: 'Users',
-                        value: '${stats['userCount'] ?? "1.2k"}',
+                      StatCard(
+                        title: 'Total Users',
+                        value: loading
+                            ? '—'
+                            : '${stats['userCount'] ?? '1.2k'}',
+                        subtitle: '+24 this week',
                         icon: IconsaxPlusBold.user_square,
-                        color: const Color(0xFF8B5CF6),
+                        color: AdminColors.accentPurple,
                       ),
                     ],
-                  ),
-                  SizedBox(height: 20.h),
-                  
-                  Expanded(
-                    child: constraints.maxWidth > 900
-                      ? Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(flex: 2, child: _buildActivitySection()),
-                            SizedBox(width: 10.w),
-                            Expanded(flex: 1, child: _buildPerformanceSection()),
-                          ],
-                        )
-                      : Column(
-                          children: [
-                            Expanded(child: _buildActivitySection()),
-                            SizedBox(height: 16.h),
-                            Expanded(child: _buildPerformanceSection()),
-                          ],
+                  );
+                },
+              ),
+              const SizedBox(height: 24),
+
+              // ── Middle row: Chart + Activity ─────────────────────
+              LayoutBuilder(
+                builder: (context, c) {
+                  if (c.maxWidth > 900) {
+                    return Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          flex: 3,
+                          child: const ChartPlaceholder(
+                            title: 'Bookings Overview',
+                          ),
                         ),
-                  ),
-                ],
-              );
-          },
+                        const SizedBox(width: 16),
+                        Expanded(flex: 2, child: _TopVenuesCard()),
+                      ],
+                    );
+                  }
+                  return Column(
+                    children: [
+                      const ChartPlaceholder(title: 'Bookings Overview'),
+                      const SizedBox(height: 16),
+                      _TopVenuesCard(),
+                    ],
+                  );
+                },
+              ),
+              const SizedBox(height: 24),
+
+              // ── Recent Activity ───────────────────────────────────
+              _RecentActivityCard(),
+            ],
+          ),
         );
       },
     );
   }
-
-  Widget _buildActivitySection() {
-    return _DashboardCard(
-      title: 'Recent Activity',
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            _activityRow('New Pitch: Champions Arena', '2m ago', IconsaxPlusBold.location, Colors.green),
-            _activityRow('Booking: Ali Hassan', '15m ago', IconsaxPlusBold.ticket, Colors.blue),
-            _activityRow('Payment: EGP 350', '1h ago', IconsaxPlusBold.card, Colors.orange),
-            _activityRow('Match: 5v5 Football', '3h ago', IconsaxPlusBold.user_octagon, Colors.purple),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPerformanceSection() {
-    return _DashboardCard(
-      title: 'Top Venues',
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            _performanceRow('Wembley Field', '92%'),
-            _performanceRow('Champions Arena', '85%'),
-            _performanceRow('Elite Turf', '78%'),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _activityRow(String title, String time, IconData icon, Color color) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 4.h),
-      child: Row(
-        children: [
-          Icon(icon, color: color, size: 6.sp),
-          SizedBox(width: 4.w),
-          Expanded(child: Text(title, style: TextStyle(color: Colors.white, fontSize: 5.sp))),
-          Text(time, style: TextStyle(color: Colors.white24, fontSize: 4.sp)),
-        ],
-      ),
-    );
-  }
-
-  Widget _performanceRow(String name, String value) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 4.h),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(name, style: TextStyle(color: Colors.white70, fontSize: 6.sp)),
-          Text(value, style: TextStyle(color: const Color(0xFF4BE277), fontWeight: FontWeight.bold, fontSize: 6.sp)),
-        ],
-      ),
-    );
-  }
 }
 
-class _StatCard extends StatelessWidget {
-  final String title;
-  final String value;
-  final IconData icon;
-  final Color color;
+// ── Top Venues ─────────────────────────────────────────────────────────────
 
-  const _StatCard({required this.title, required this.value, required this.icon, required this.color});
+class _TopVenuesCard extends StatelessWidget {
+  static const _venues = [
+    ('Wembley Field', '92%', 0.92),
+    ('Champions Arena', '85%', 0.85),
+    ('Elite Turf', '78%', 0.78),
+    ('Star Ground', '61%', 0.61),
+  ];
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(2.w),
-      decoration: BoxDecoration(
-        color: const Color(0xFF1E293B),
-        borderRadius: BorderRadius.circular(8.r),
-        border: Border.all(color: Colors.white.withOpacity(0.05)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-       
-        children: [
-          Container(
-            padding: EdgeInsets.all(4.w),
-            decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(6.r),
-            ),
-            child: Icon(icon, color: color, size: 4.sp),
-          ),
-          SizedBox(width: 5.w),
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                FittedBox(
-                  child: Text(
-                    value, 
-                    style: TextStyle(
-                      color: Colors.white, 
-                      fontSize: 4.sp, 
-                      fontWeight: FontWeight.bold,
-                      
-                    ),
-                  ),
-                ),
-                Text(
-                  title, 
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.4), 
-                    fontSize: 4.sp,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _DashboardCard extends StatelessWidget {
-  final String title;
-  final Widget child;
-
-  const _DashboardCard({required this.title, required this.child});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      
-      padding: EdgeInsets.all(8.w),
-      decoration: BoxDecoration(
-        color: const Color(0xFF1E293B),
-        borderRadius: BorderRadius.circular(6.r),
-        border: Border.all(color: Colors.white.withOpacity(0.05)),
-      ),
+    return AdminCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title, 
-            style: TextStyle(color: Colors.white, fontSize: 6.sp, fontWeight: FontWeight.bold),
+          const Text('Top Venues', style: AdminTextStyles.sectionTitle),
+          const SizedBox(height: 4),
+          const Text('By occupancy rate', style: AdminTextStyles.label),
+          const SizedBox(height: 20),
+          ..._venues.map(
+            (v) => Padding(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        v.$1,
+                        style: const TextStyle(
+                          color: AdminColors.textPrimary,
+                          fontSize: 13,
+                        ),
+                      ),
+                      Text(
+                        v.$2,
+                        style: const TextStyle(
+                          color: AdminColors.accent,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 6),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(99),
+                    child: TweenAnimationBuilder<double>(
+                      tween: Tween(begin: 0, end: v.$3),
+                      duration: const Duration(milliseconds: 800),
+                      curve: Curves.easeOut,
+                      builder: (_, val, __) => LinearProgressIndicator(
+                        value: val,
+                        backgroundColor: AdminColors.surfaceHigh,
+                        valueColor: const AlwaysStoppedAnimation(
+                          AdminColors.accent,
+                        ),
+                        minHeight: 5,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
-          SizedBox(height: 6.h),
-          child,
+        ],
+      ),
+    );
+  }
+}
+
+// ── Recent Activity ─────────────────────────────────────────────────────────
+
+class _RecentActivityCard extends StatelessWidget {
+  static const _activities = [
+    (
+      IconsaxPlusBold.location,
+      AdminColors.accent,
+      'New Pitch: Champions Arena',
+      '2 min ago',
+    ),
+    (
+      IconsaxPlusBold.ticket,
+      AdminColors.accentBlue,
+      'Booking: Ali Hassan — Wembley Field',
+      '15 min ago',
+    ),
+    (
+      IconsaxPlusBold.card,
+      AdminColors.accentAmber,
+      'Payment received: EGP 350',
+      '1 hr ago',
+    ),
+    (
+      IconsaxPlusBold.user_octagon,
+      AdminColors.accentPurple,
+      'New Match: 5v5 Football',
+      '3 hr ago',
+    ),
+    (
+      IconsaxPlusBold.user_add,
+      AdminColors.accentBlue,
+      'New user joined: Sara M.',
+      '5 hr ago',
+    ),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return AdminCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('Recent Activity', style: AdminTextStyles.sectionTitle),
+          const SizedBox(height: 16),
+          ..._activities.map(
+            (a) => Padding(
+              padding: const EdgeInsets.only(bottom: 14),
+              child: Row(
+                children: [
+                  Container(
+                    width: 36,
+                    height: 36,
+                    decoration: BoxDecoration(
+                      color: a.$2.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Icon(a.$1, color: a.$2, size: 16),
+                  ),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Text(
+                      a.$3,
+                      style: const TextStyle(
+                        color: AdminColors.textPrimary,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ),
+                  Text(
+                    a.$4,
+                    style: const TextStyle(
+                      color: AdminColors.textMuted,
+                      fontSize: 11,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );

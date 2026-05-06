@@ -1,12 +1,12 @@
 import 'package:e7gz/src/features/admin/data/datasources/admin_remote_datasource.dart';
 import 'package:flutter/material.dart';
+import '../layout/admin_layout.dart';
 import 'tabs/admin_dashboard_tab.dart';
 import 'tabs/admin_pitches_tab.dart';
 import 'tabs/admin_bookings_tab.dart';
 import 'tabs/admin_matches_tab.dart';
 import 'tabs/admin_notifications_tab.dart';
 import 'tabs/admin_profile_tab.dart';
-import '../widgets/admin_web_layout.dart';
 
 class AdminDashboardScreen extends StatefulWidget {
   const AdminDashboardScreen({super.key});
@@ -21,17 +21,17 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   final PageController _pageController = PageController();
 
   @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return AdminWebLayout(
+    return AdminLayout(
       selectedIndex: _selectedIndex,
       onIndexChanged: (index) {
-        if (index == 6) {
-          // Handle logout
-          return;
-        }
-        setState(() {
-          _selectedIndex = index;
-        });
+        setState(() => _selectedIndex = index);
         _pageController.jumpToPage(index);
       },
       child: PageView(

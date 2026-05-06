@@ -1,6 +1,8 @@
 import 'dart:ui';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 import '../widgets/amenity_item.dart';
 import '../widgets/shift_card.dart';
 import 'package:e7gz/src/features/pitches/presentation/cubit/pitches_cubit.dart';
@@ -36,7 +38,8 @@ class _PitchDetailsView extends StatelessWidget {
       backgroundColor: const Color(0xFF0B1326),
       body: BlocBuilder<PitchDetailCubit, PitchDetailState>(
         builder: (context, state) {
-          if (state.status == PitchDetailStatus.loading || state.status == PitchDetailStatus.initial) {
+          if (state.status == PitchDetailStatus.loading ||
+              state.status == PitchDetailStatus.initial) {
             return const Center(child: CircularProgressIndicator());
           }
 
@@ -73,11 +76,17 @@ class _PitchDetailsView extends StatelessWidget {
                 ),
                 actions: [
                   IconButton(
-                    icon: const Icon(IconsaxPlusLinear.share, color: Colors.white),
+                    icon: const Icon(
+                      IconsaxPlusLinear.share,
+                      color: Colors.white,
+                    ),
                     onPressed: () {},
                   ),
                   IconButton(
-                    icon: const Icon(IconsaxPlusLinear.heart, color: Colors.white),
+                    icon: const Icon(
+                      IconsaxPlusLinear.heart,
+                      color: Colors.white,
+                    ),
                     onPressed: () {},
                   ),
                   SizedBox(width: 8.w),
@@ -88,7 +97,9 @@ class _PitchDetailsView extends StatelessWidget {
                     children: [
                       // Image
                       Image.network(
-                        pitch.imageUrl.isNotEmpty ? pitch.imageUrl : 'https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80',
+                        pitch.imageUrl.isNotEmpty
+                            ? pitch.imageUrl
+                            : 'https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80',
                         fit: BoxFit.cover,
                       ),
                       // Overlay
@@ -112,9 +123,13 @@ class _PitchDetailsView extends StatelessWidget {
                         child: Container(
                           padding: EdgeInsets.all(24.w),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF2D3449).withValues(alpha: 0.6),
+                            color: const Color(
+                              0xFF2D3449,
+                            ).withValues(alpha: 0.6),
                             borderRadius: BorderRadius.circular(32.r),
-                            border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
+                            border: Border.all(
+                              color: Colors.white.withValues(alpha: 0.05),
+                            ),
                           ),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(32.r),
@@ -124,10 +139,17 @@ class _PitchDetailsView extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Container(
-                                    padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 10.w,
+                                      vertical: 4.h,
+                                    ),
                                     decoration: BoxDecoration(
-                                      color: const Color(0xFF4BE277).withValues(alpha: 0.8),
-                                      borderRadius: BorderRadius.circular(100.r),
+                                      color: const Color(
+                                        0xFF4BE277,
+                                      ).withValues(alpha: 0.8),
+                                      borderRadius: BorderRadius.circular(
+                                        100.r,
+                                      ),
                                     ),
                                     child: Text(
                                       'PREMIUM ARENA',
@@ -150,26 +172,44 @@ class _PitchDetailsView extends StatelessWidget {
                                   SizedBox(height: 8.h),
                                   Row(
                                     children: [
-                                      const Icon(Icons.location_on, color: Color(0xFFBCC7DE), size: 16),
+                                      const Icon(
+                                        Icons.location_on,
+                                        color: Color(0xFFBCC7DE),
+                                        size: 16,
+                                      ),
                                       SizedBox(width: 4.w),
                                       Expanded(
                                         child: Text(
                                           pitch.location.city,
-                                          style: TextStyle(color: const Color(0xFFBCC7DE), fontSize: 14.sp),
+                                          style: TextStyle(
+                                            color: const Color(0xFFBCC7DE),
+                                            fontSize: 14.sp,
+                                          ),
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
                                       SizedBox(width: 8.w),
                                       Container(
-                                        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 8.w,
+                                          vertical: 4.h,
+                                        ),
                                         decoration: BoxDecoration(
-                                          color: const Color(0xFF131B2E).withValues(alpha: 0.8),
-                                          borderRadius: BorderRadius.circular(12.r),
+                                          color: const Color(
+                                            0xFF131B2E,
+                                          ).withValues(alpha: 0.8),
+                                          borderRadius: BorderRadius.circular(
+                                            12.r,
+                                          ),
                                         ),
                                         child: Row(
                                           children: [
-                                            const Icon(Icons.star, color: Color(0xFF4BE277), size: 14),
+                                            const Icon(
+                                              Icons.star,
+                                              color: Color(0xFF4BE277),
+                                              size: 14,
+                                            ),
                                             SizedBox(width: 4.w),
                                             Text(
                                               pitch.rating.toString(),
@@ -181,7 +221,10 @@ class _PitchDetailsView extends StatelessWidget {
                                             ),
                                             Text(
                                               ' (${pitch.reviewsCount}+)',
-                                              style: TextStyle(color: const Color(0xFFBCC7DE), fontSize: 10.sp),
+                                              style: TextStyle(
+                                                color: const Color(0xFFBCC7DE),
+                                                fontSize: 10.sp,
+                                              ),
                                             ),
                                           ],
                                         ),
@@ -219,10 +262,14 @@ class _PitchDetailsView extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: pitch.amenities.map((amenity) {
                           IconData iconData = Icons.star;
-                          if (amenity.toLowerCase().contains('shower')) iconData = Icons.shower;
-                          if (amenity.toLowerCase().contains('parking')) iconData = Icons.local_parking;
-                          if (amenity.toLowerCase().contains('wifi')) iconData = Icons.wifi;
-                          if (amenity.toLowerCase().contains('cafe')) iconData = Icons.coffee;
+                          if (amenity.toLowerCase().contains('shower'))
+                            iconData = Icons.shower;
+                          if (amenity.toLowerCase().contains('parking'))
+                            iconData = Icons.local_parking;
+                          if (amenity.toLowerCase().contains('wifi'))
+                            iconData = Icons.wifi;
+                          if (amenity.toLowerCase().contains('cafe'))
+                            iconData = Icons.coffee;
                           return AmenityItem(label: amenity, icon: iconData);
                         }).toList(),
                       ),
@@ -268,26 +315,43 @@ class _PitchDetailsView extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: 24.h),
-                      Container(
-                        height: 180.h,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(32.r),
-                          image: const DecorationImage(
-                            image: NetworkImage(
-                              'https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80',
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(32.r),
+                        child: SizedBox(
+                          height: 250.h,
+                          width: double.infinity,
+                          child: FlutterMap(
+                            options: MapOptions(
+                              initialCenter: LatLng(
+                                pitch.location.latitude,
+                                pitch.location.longitude,
+                              ),
+                              initialZoom: 14.0,
                             ),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        child: Center(
-                          child: Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: colors.primary,
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(Icons.location_on, color: Color(0xFF003915), size: 30),
+                            children: [
+                              TileLayer(
+                                urlTemplate:
+                                    'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                                userAgentPackageName: 'com.e7gz.app',
+                              ),
+                              MarkerLayer(
+                                markers: [
+                                  Marker(
+                                    point: LatLng(
+                                      pitch.location.latitude,
+                                      pitch.location.longitude,
+                                    ),
+                                    width: 40,
+                                    height: 40,
+                                    child: Icon(
+                                      IconsaxPlusBold.location,
+                                      color: colors.primary,
+                                      size: 30,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
                         ),
                       ),
@@ -304,7 +368,9 @@ class _PitchDetailsView extends StatelessWidget {
                       ),
                       SizedBox(height: 16.h),
                       Text(
-                        pitch.description.isNotEmpty ? pitch.description : "Featuring high-grade FIFA certified artificial turf, this pitch offers a premium playing surface that reduces injury risk and ensures optimal ball roll.",
+                        pitch.description.isNotEmpty
+                            ? pitch.description
+                            : "Featuring high-grade FIFA certified artificial turf, this pitch offers a premium playing surface that reduces injury risk and ensures optimal ball roll.",
                         style: typography.bodyMedium?.copyWith(
                           color: const Color(0xFFBCC7DE).withValues(alpha: 0.8),
                           height: 1.6,
@@ -330,7 +396,9 @@ class _PitchDetailsView extends StatelessWidget {
             decoration: BoxDecoration(
               color: const Color(0xFF131B2E),
               borderRadius: BorderRadius.vertical(top: Radius.circular(32.r)),
-              border: Border(top: BorderSide(color: Colors.white.withValues(alpha: 0.05))),
+              border: Border(
+                top: BorderSide(color: Colors.white.withValues(alpha: 0.05)),
+              ),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -383,4 +451,3 @@ class _PitchDetailsView extends StatelessWidget {
     );
   }
 }
-

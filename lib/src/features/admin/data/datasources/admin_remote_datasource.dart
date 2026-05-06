@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:dio/dio.dart';
 import '../../../../config/app_config.dart';
 import '../../../../utils/logger.dart';
@@ -120,12 +121,55 @@ class AdminRemoteDataSource {
   }
 
   /// POST /api/pitches
-  Future<bool> createPitch(Map<String, dynamic> pitchData) async {
+  Future<bool> createPitch(
+    Map<String, dynamic> pitchData, {
+    List<int>? imageBytes,
+    String? fileName,
+  }) async {
     try {
-      final response = await _dio.post('pitches', data: pitchData);
+      dynamic data;
+
+      if (imageBytes != null) {
+        final Map<String, dynamic> mappedData = Map.from(pitchData);
+
+        // Stringify nested objects for multipart compatibility
+        if (mappedData['location'] != null) {
+          mappedData['location'] = jsonEncode(mappedData['location']);
+        }
+        if (mappedData['amenities'] != null) {
+          mappedData['amenities'] = jsonEncode(mappedData['amenities']);
+        }
+        // Ensure primitive numbers are strings in FormData
+        if (mappedData['pricePerHour'] != null) {
+          mappedData['pricePerHour'] = mappedData['pricePerHour'].toString();
+        }
+
+        data = FormData.fromMap({
+          ...mappedData,
+          'images': MultipartFile.fromBytes(
+            imageBytes,
+            filename: fileName ?? 'pitch.jpg',
+          ),
+        });
+        AppLogger.info('Sending pitch with images (Multipart)');
+      } else {
+        data = pitchData;
+        AppLogger.info('Sending pitch (JSON)');
+      }
+
+      // IMPORTANT: When sending FormData, do NOT manually set the Content-Type header.
+      // Dio will automatically set 'multipart/form-data' along with the required boundary.
+      final response = await _dio.post('pitches', data: data);
+
       return response.statusCode == 201 || response.statusCode == 200;
     } catch (e) {
-      AppLogger.error('Failed to create pitch: $e');
+      if (e is DioException) {
+        AppLogger.error(
+          'Failed to create pitch: ${e.response?.data ?? e.message}',
+        );
+      } else {
+        AppLogger.error('Failed to create pitch: $e');
+      }
       return false;
     }
   }

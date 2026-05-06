@@ -1,7 +1,10 @@
+import 'package:e7gz/src/features/admin/presentation/layout/admin_layout.dart';
+import 'package:e7gz/src/features/admin/presentation/widgets/admin_data_table.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:e7gz/src/features/admin/data/datasources/admin_remote_datasource.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 
 class AdminBookingsTab extends StatelessWidget {
   final AdminRemoteDataSource dataSource;
@@ -10,75 +13,167 @@ class AdminBookingsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Bookings',
-          style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
-        ),
-        SizedBox(height: 24.h),
-        Expanded(
-          child: Container(
-            decoration: BoxDecoration(
-              color: const Color(0xFF1E293B),
-              borderRadius: BorderRadius.circular(16.r),
-            ),
-            child: FutureBuilder<List<dynamic>>(
-              future: dataSource.getMyBookings(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator(color: Color(0xFF4BE277)));
-                }
-                
-                final bookings = snapshot.data ?? [];
-                
-                return SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: ConstrainedBox(
-                      constraints: BoxConstraints(minWidth: MediaQuery.of(context).size.width - 350.w),
-                      child: DataTable(
-                        headingTextStyle: const TextStyle(color: Colors.white38, fontWeight: FontWeight.bold),
-                        dataTextStyle: const TextStyle(color: Colors.white70),
-                        columns: const [
-                          DataColumn(label: Text('CUSTOMER')),
-                          DataColumn(label: Text('PITCH')),
-                          DataColumn(label: Text('DATE')),
-                          DataColumn(label: Text('TIME')),
-                          DataColumn(label: Text('STATUS')),
-                        ],
-                        rows: bookings.map((booking) {
-                          return DataRow(cells: [
-                            DataCell(Text(booking['user']?['name'] ?? 'Guest')),
-                            DataCell(Text(booking['pitch']?['name'] ?? 'Premium')),
-                            DataCell(Text(booking['date'] ?? 'May 12')),
-                            DataCell(Text('${booking['startTime']} - ${booking['endTime']}')),
-                            DataCell(
-                              Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFF4BE277).withOpacity(0.1),
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                                child: Text(
-                                  (booking['status'] ?? 'Confirmed').toString().toUpperCase(),
-                                  style: const TextStyle(color: Color(0xFF4BE277), fontSize: 10, fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            ),
-                          ]);
-                        }).toList(),
-                      ),
-                    ),
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('Bookings', style: AdminTextStyles.pageTitle),
+          const SizedBox(height: 4),
+          const Text('Track all reservations', style: AdminTextStyles.label),
+          const SizedBox(height: 24),
+          FutureBuilder<List<dynamic>>(
+            future: dataSource.getMyBookings(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(
+                    color: AdminColors.accent,
+                    strokeWidth: 2,
                   ),
                 );
-              },
-            ),
+              }
+              final bookings = snapshot.data ?? [];
+              return AdminDataTable(
+                title: 'All Bookings',
+                columns: const [
+                  DataColumn(label: Text('CUSTOMER')),
+                  DataColumn(label: Text('PITCH')),
+                  DataColumn(label: Text('DATE')),
+                  DataColumn(label: Text('TIME')),
+                  DataColumn(label: Text('STATUS')),
+                  DataColumn(label: Text('ACTIONS')),
+                ],
+                rows: bookings.map((b) {
+                  final status = (b['status'] ?? 'CONFIRMED')
+                      .toString()
+                      .toUpperCase();
+                  final statusColor = status == 'CANCELLED'
+                      ? const Color(0xFFEF4444)
+                      : status == 'PENDING'
+                      ? AdminColors.accentAmber
+                      : AdminColors.accent;
+
+                  return DataRow(
+                    cells: [
+                      DataCell(
+                        Text(
+                          b['user']?['name'] ?? 'Guest',
+                          style: const TextStyle(
+                            color: AdminColors.textPrimary,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      DataCell(Text(b['pitch']?['name'] ?? '—')),
+                      DataCell(Text(b['date'] ?? '—')),
+                      DataCell(
+                        Text(
+                          '${b['startTime'] ?? '—'} – ${b['endTime'] ?? '—'}',
+                        ),
+                      ),
+                      DataCell(StatusChip(label: status, color: statusColor)),
+                      DataCell(
+                        IconButton(
+                          icon: const Icon(
+                            IconsaxPlusLinear.location,
+                            color: AdminColors.accent,
+                            size: 20,
+                          ),
+                          onPressed: () => _viewLocation(context, b['pitch']),
+                          tooltip: 'View Pitch Location',
+                        ),
+                      ),
+                    ],
+                  );
+                }).toList(),
+              );
+            },
           ),
+        ],
+      ),
+    );
+  }
+
+  void _viewLocation(BuildContext context, dynamic pitch) {
+    if (pitch == null || pitch['location'] == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No location found for this pitch')),
+      );
+      return;
+    }
+
+    final coords = pitch['location']['coordinates']['coordinates'];
+    if (coords == null || coords.length < 2) return;
+
+    final latLng = LatLng(coords[1].toDouble(), coords[0].toDouble());
+
+    showDialog<void>(
+      context: context,
+      builder: (context) => Dialog(
+        backgroundColor: AdminColors.surface,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Row(
+                children: [
+                  const Icon(
+                    IconsaxPlusBold.location,
+                    color: AdminColors.accent,
+                    size: 24,
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    pitch['name'] ?? 'Pitch Location',
+                    style: AdminTextStyles.pageTitle.copyWith(fontSize: 18),
+                  ),
+                  const Spacer(),
+                  IconButton(
+                    onPressed: () => Navigator.pop(context),
+                    icon: const Icon(Icons.close),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 350,
+              width: double.infinity,
+              child: ClipRRect(
+                borderRadius: const BorderRadius.vertical(
+                  bottom: Radius.circular(20),
+                ),
+                child: FlutterMap(
+                  options: MapOptions(initialCenter: latLng, initialZoom: 15),
+                  children: [
+                    TileLayer(
+                      urlTemplate:
+                          'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                      userAgentPackageName: 'com.e7gz.app',
+                    ),
+                    MarkerLayer(
+                      markers: [
+                        Marker(
+                          point: latLng,
+                          width: 40,
+                          height: 40,
+                          child: const Icon(
+                            Icons.location_on,
+                            color: Colors.red,
+                            size: 30,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }

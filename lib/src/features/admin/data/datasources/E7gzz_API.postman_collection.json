@@ -435,6 +435,70 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Add Pitch (with Images & Cloudinary)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "images",
+									"type": "file",
+									"src": []
+								},
+								{
+									"key": "name",
+									"value": "Luxury Grass Pitch",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Full size professional pitch with Cloudinary images",
+									"type": "text"
+								},
+								{
+									"key": "sportType",
+									"value": "football",
+									"type": "text"
+								},
+								{
+									"key": "pricePerHour",
+									"value": "450",
+									"type": "text"
+								},
+								{
+									"key": "location",
+									"value": "{\n    \"address\": \"Zamalek SC Area\",\n    \"city\": \"Cairo\",\n    \"coordinates\": {\n        \"type\": \"Point\",\n        \"coordinates\": [31.22, 30.05]\n    }\n}",
+									"type": "text"
+								},
+								{
+									"key": "amenities",
+									"value": "[\"Vip Room\", \"Buffet\", \"HD Camera\"]",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/pitches",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"pitches"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},

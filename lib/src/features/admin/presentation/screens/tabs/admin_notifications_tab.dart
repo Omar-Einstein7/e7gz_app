@@ -1,7 +1,7 @@
+import 'package:e7gz/src/features/admin/presentation/layout/admin_layout.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:e7gz/src/features/admin/data/datasources/admin_remote_datasource.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
+import 'package:e7gz/src/features/admin/data/datasources/admin_remote_datasource.dart';
 
 class AdminNotificationsTab extends StatelessWidget {
   final AdminRemoteDataSource dataSource;
@@ -10,125 +10,182 @@ class AdminNotificationsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Notifications Center',
-              style: TextStyle(color: Colors.white, fontSize: 18.sp, fontWeight: FontWeight.bold),
-            ),
-            TextButton.icon(
-              onPressed: () => dataSource.markNotificationsAsRead(),
-              icon: const Icon(IconsaxPlusBold.tick_square, color: Color(0xFF4BE277)),
-              label: const Text('Mark all as read', style: TextStyle(color: Color(0xFF4BE277))),
-            ),
-          ],
-        ),
-        SizedBox(height: 30.h),
-        Expanded(
-          child: Container(
-            decoration: BoxDecoration(
-              color: const Color(0xFF131B2E),
-              borderRadius: BorderRadius.circular(20.r),
-              border: Border.all(color: Colors.white.withOpacity(0.05)),
-            ),
-            child: FutureBuilder<List<dynamic>>(
-              future: dataSource.getNotifications(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator(color: Color(0xFF4BE277)));
-                }
-                if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}', style: const TextStyle(color: Colors.red)));
-                }
-
-                final notifications = snapshot.data ?? [];
-                
-                if (notifications.isEmpty) {
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(IconsaxPlusBold.notification_status, color: Colors.white.withOpacity(0.2), size: 64.sp),
-                        SizedBox(height: 16.h),
-                        const Text('All caught up!', style: TextStyle(color: Colors.white70)),
-                      ],
-                    ),
-                  );
-                }
-
-                return ListView.separated(
-                  physics: const BouncingScrollPhysics(),
-                  itemCount: notifications.length,
-                  separatorBuilder: (context, index) => Divider(color: Colors.white.withOpacity(0.05), height: 1),
-                  itemBuilder: (context, index) {
-                    final notification = notifications[index];
-                    final isRead = notification['read'] ?? false;
-                    
-                    return ListTile(
-                      contentPadding: EdgeInsets.all(24.w),
-                      leading: Container(
-                        padding: EdgeInsets.all(10.w),
-                        decoration: BoxDecoration(
-                          color: (isRead ? Colors.grey : const Color(0xFF4BE277)).withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(12.r),
-                        ),
-                        child: Icon(
-                          isRead ? IconsaxPlusBold.notification_status : IconsaxPlusBold.notification_bing,
-                          color: isRead ? Colors.grey : const Color(0xFF4BE277),
-                          size: 24.sp,
-                        ),
-                      ),
-                      title: Text(
-                        notification['title'] ?? 'System Update',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: isRead ? FontWeight.normal : FontWeight.bold,
-                          fontSize: 16.sp,
-                        ),
-                      ),
-                      subtitle: Padding(
-                        padding: EdgeInsets.only(top: 8.h),
-                        child: Text(
-                          notification['message'] ?? '',
-                          style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 14.sp),
-                        ),
-                      ),
-                      trailing: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            _formatDate(notification['createdAt']),
-                            style: TextStyle(color: Colors.white.withOpacity(0.3), fontSize: 12.sp),
-                          ),
-                          if (!isRead) ...[
-                            SizedBox(height: 8.h),
-                            Container(
-                              width: 8.w,
-                              height: 8.w,
-                              decoration: const BoxDecoration(color: Color(0xFF4BE277), shape: BoxShape.circle),
-                            ),
-                          ],
-                        ],
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // ── Header ───────────────────────────────────────────
+          Row(
+            children: [
+              const Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Notifications', style: AdminTextStyles.pageTitle),
+                  SizedBox(height: 2),
+                  Text('System & user alerts', style: AdminTextStyles.label),
+                ],
+              ),
+              const Spacer(),
+              TextButton.icon(
+                onPressed: () => dataSource.markNotificationsAsRead(),
+                icon: const Icon(
+                  IconsaxPlusBold.tick_square,
+                  color: AdminColors.accent,
+                  size: 16,
+                ),
+                label: const Text(
+                  'Mark all read',
+                  style: TextStyle(color: AdminColors.accent, fontSize: 13),
+                ),
+              ),
+            ],
           ),
-        ),
-      ],
+          const SizedBox(height: 20),
+          // ── List ─────────────────────────────────────────────
+          FutureBuilder<List<dynamic>>(
+            future: dataSource.getNotifications(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(
+                    color: AdminColors.accent,
+                    strokeWidth: 2,
+                  ),
+                );
+              }
+              final notifications = snapshot.data ?? [];
+              if (notifications.isEmpty) {
+                return _EmptyNotifications();
+              }
+              return AdminCard(
+                padding: EdgeInsets.zero,
+                child: Column(
+                  children: [
+                    ...List.generate(notifications.length, (i) {
+                      final n = notifications[i];
+                      final isRead = n['read'] ?? false;
+                      final isLast = i == notifications.length - 1;
+                      return Column(
+                        children: [
+                          _NotificationTile(notification: n, isRead: isRead),
+                          if (!isLast)
+                            const Divider(color: AdminColors.border, height: 1),
+                        ],
+                      );
+                    }),
+                  ],
+                ),
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
+}
 
-  String _formatDate(dynamic date) {
-    if (date == null) return 'Today';
-    // Simple mock formatting
-    return '2h ago';
+class _NotificationTile extends StatelessWidget {
+  final Map<String, dynamic> notification;
+  final bool isRead;
+
+  const _NotificationTile({required this.notification, required this.isRead});
+
+  @override
+  Widget build(BuildContext context) {
+    final color = isRead ? AdminColors.textMuted : AdminColors.accent;
+
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(
+              isRead
+                  ? IconsaxPlusBold.notification_status
+                  : IconsaxPlusBold.notification_bing,
+              color: color,
+              size: 18,
+            ),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  notification['title'] ?? 'System Update',
+                  style: TextStyle(
+                    color: AdminColors.textPrimary,
+                    fontWeight: isRead ? FontWeight.w400 : FontWeight.w600,
+                    fontSize: 13,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  notification['message'] ?? '',
+                  style: const TextStyle(
+                    color: AdminColors.textSecondary,
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 12),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              const Text(
+                '2h ago',
+                style: TextStyle(color: AdminColors.textMuted, fontSize: 11),
+              ),
+              if (!isRead) ...[
+                const SizedBox(height: 6),
+                Container(
+                  width: 8,
+                  height: 8,
+                  decoration: const BoxDecoration(
+                    color: AdminColors.accent,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _EmptyNotifications extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return AdminCard(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: const [
+          SizedBox(height: 48),
+          Icon(
+            IconsaxPlusBold.notification_status,
+            color: AdminColors.textMuted,
+            size: 48,
+          ),
+          SizedBox(height: 16),
+          Text('All caught up!', style: AdminTextStyles.sectionTitle),
+          SizedBox(height: 4),
+          Text('No new notifications', style: AdminTextStyles.label),
+          SizedBox(height: 48),
+        ],
+      ),
+    );
   }
 }

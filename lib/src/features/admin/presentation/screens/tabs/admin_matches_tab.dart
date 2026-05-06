@@ -1,7 +1,7 @@
+import 'package:e7gz/src/features/admin/presentation/layout/admin_layout.dart';
+import 'package:e7gz/src/features/admin/presentation/widgets/admin_data_table.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:e7gz/src/features/admin/data/datasources/admin_remote_datasource.dart';
-import 'package:iconsax_plus/iconsax_plus.dart';
 
 class AdminMatchesTab extends StatelessWidget {
   final AdminRemoteDataSource dataSource;
@@ -10,61 +10,79 @@ class AdminMatchesTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Matches',
-          style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
-        ),
-        SizedBox(height: 24.h),
-        Expanded(
-          child: Container(
-            decoration: BoxDecoration(
-              color: const Color(0xFF1E293B),
-              borderRadius: BorderRadius.circular(16.r),
-            ),
-            child: FutureBuilder<List<dynamic>>(
-              future: dataSource.getAllMatches(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator(color: Color(0xFF4BE277)));
-                }
-                
-                final matches = snapshot.data ?? [];
-                
-                return SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: ConstrainedBox(
-                      constraints: BoxConstraints(minWidth: MediaQuery.of(context).size.width - 350.w),
-                      child: DataTable(
-                        headingTextStyle: const TextStyle(color: Colors.white38, fontWeight: FontWeight.bold),
-                        dataTextStyle: const TextStyle(color: Colors.white70),
-                        columns: const [
-                          DataColumn(label: Text('TITLE')),
-                          DataColumn(label: Text('PLAYERS')),
-                          DataColumn(label: Text('SPORT')),
-                          DataColumn(label: Text('FEE')),
-                        ],
-                        rows: matches.map((match) {
-                          return DataRow(cells: [
-                            DataCell(Text(match['title'] ?? 'Friendly Match')),
-                            DataCell(Text('${match['players']?.length ?? 0}/${match['maxPlayers'] ?? 10}')),
-                            DataCell(Text(match['sportType']?.toString().toUpperCase() ?? 'FOOTBALL')),
-                            DataCell(Text('EGP ${match['pricePerPlayer'] ?? 0}')),
-                          ]);
-                        }).toList(),
-                      ),
-                    ),
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('Matches', style: AdminTextStyles.pageTitle),
+          const SizedBox(height: 4),
+          const Text(
+            'All open & completed matches',
+            style: AdminTextStyles.label,
+          ),
+          const SizedBox(height: 24),
+          FutureBuilder<List<dynamic>>(
+            future: dataSource.getAllMatches(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(
+                    color: AdminColors.accent,
+                    strokeWidth: 2,
                   ),
                 );
-              },
-            ),
+              }
+              final matches = snapshot.data ?? [];
+              return AdminDataTable(
+                title: 'All Matches',
+                columns: const [
+                  DataColumn(label: Text('TITLE')),
+                  DataColumn(label: Text('SPORT')),
+                  DataColumn(label: Text('PLAYERS')),
+                  DataColumn(label: Text('FEE / PLAYER')),
+                  DataColumn(label: Text('STATUS')),
+                ],
+                rows: matches.map((m) {
+                  final players = m['players']?.length ?? 0;
+                  final max = m['maxPlayers'] ?? 10;
+                  final isFull = players >= max;
+                  return DataRow(
+                    cells: [
+                      DataCell(
+                        Text(
+                          m['title'] ?? 'Friendly Match',
+                          style: const TextStyle(
+                            color: AdminColors.textPrimary,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        Text(
+                          (m['sportType'] ?? 'Football')
+                              .toString()
+                              .toUpperCase(),
+                        ),
+                      ),
+                      DataCell(Text('$players / $max')),
+                      DataCell(Text('EGP ${m['pricePerPlayer'] ?? '0'}')),
+                      DataCell(
+                        StatusChip(
+                          label: isFull ? 'FULL' : 'OPEN',
+                          color: isFull
+                              ? AdminColors.accentAmber
+                              : AdminColors.accent,
+                        ),
+                      ),
+                    ],
+                  );
+                }).toList(),
+              );
+            },
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

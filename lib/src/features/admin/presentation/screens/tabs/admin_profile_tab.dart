@@ -1,8 +1,8 @@
+import 'package:e7gz/src/features/admin/presentation/layout/admin_layout.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:e7gz/src/features/admin/data/datasources/admin_remote_datasource.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:go_router/go_router.dart';
+import 'package:e7gz/src/features/admin/data/datasources/admin_remote_datasource.dart';
 
 class AdminProfileTab extends StatelessWidget {
   final AdminRemoteDataSource dataSource;
@@ -11,128 +11,218 @@ class AdminProfileTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Map<String, dynamic>>(
-      future: dataSource.getProfile(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator(color: Color(0xFF4BE277)));
-        }
-        if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}', style: const TextStyle(color: Colors.red)));
-        }
-
-        final profile = snapshot.data ?? {};
-        
-        return Center(
-          child: Container(
-            width: 200.w,
-            padding: EdgeInsets.all(7.w),
-            decoration: BoxDecoration(
-              color: const Color(0xFF131B2E),
-              borderRadius: BorderRadius.circular(12.r),
-              border: Border.all(color: Colors.white.withOpacity(0.05)),
-            ),
-            child: Column(
-          
-              children: [
-                Stack(
-                  children: [
-                    Container(
-                      width: 15.w,
-                      height: 15.w,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF4BE277).withOpacity(0.1),
-                        shape: BoxShape.circle,
-                        border: Border.all(color: const Color(0xFF4BE277), width: 1),
-                      ),
-                      child: Center(
-                        child: Icon(IconsaxPlusBold.user, size: 10.sp, color: const Color(0xFF4BE277)),
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: Container(
-                        padding: EdgeInsets.all(2.w),
-                        decoration: const BoxDecoration(color: Color(0xFF3B82F6), shape: BoxShape.circle),
-                        child: Icon(IconsaxPlusBold.edit_2, color: Colors.white, size: 5.sp),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 8.h),
-                Text(
-                  profile['name'] ?? 'Admin User',
-                  style: TextStyle(color: Colors.white, fontSize: 8.sp, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  profile['email'] ?? 'admin@e7gz.com',
-                  style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 5.sp),
-                ),
-                SizedBox(height: 10.h),
-                
-                _profileItem(IconsaxPlusBold.mobile, 'Phone Number', profile['phone'] ?? '+20 123 456 7890'),
-                _profileItem(IconsaxPlusBold.verify, 'Account Type', profile['role']?.toString().toUpperCase() ?? 'ADMINISTRATOR'),
-                _profileItem(IconsaxPlusBold.calendar_circle, 'Member Since', 'January 2024'),
-                
-                SizedBox(height: 5.h),
-                Divider(color: Colors.white.withOpacity(0.05)),
-                SizedBox(height: 5.h),
-                
-                Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: () => context.go('/'),
-                        style: OutlinedButton.styleFrom(
-                          side: const BorderSide(color: Color(0xFF4BE277), width: 0.5),
-                          padding: EdgeInsets.symmetric(vertical: 5.h),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6.r)),
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(24),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 600),
+          child: FutureBuilder<Map<String, dynamic>>(
+            future: dataSource.getProfile(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(
+                    color: AdminColors.accent,
+                    strokeWidth: 2,
+                  ),
+                );
+              }
+              final profile = snapshot.data ?? {};
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('Profile', style: AdminTextStyles.pageTitle),
+                  const SizedBox(height: 4),
+                  const Text(
+                    'Account details & settings',
+                    style: AdminTextStyles.label,
+                  ),
+                  const SizedBox(height: 24),
+                  // ── Profile card ──────────────────────────────
+                  AdminCard(
+                    child: Column(
+                      children: [
+                        // Avatar
+                        Container(
+                          width: 80,
+                          height: 80,
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [AdminColors.accent, Color(0xFF22D3A0)],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: AdminColors.accent.withOpacity(0.3),
+                                blurRadius: 20,
+                                offset: const Offset(0, 6),
+                              ),
+                            ],
+                          ),
+                          child: const Icon(
+                            IconsaxPlusBold.user,
+                            color: Colors.white,
+                            size: 36,
+                          ),
                         ),
-                        child: Text('Switch View', style: TextStyle(color: Colors.white, fontSize: 6.sp)),
-                      ),
-                    ),
-                    SizedBox(width: 6.w),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white.withOpacity(0.05),
-                          padding: EdgeInsets.symmetric(vertical: 5.h),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6.r)),
+                        const SizedBox(height: 16),
+                        Text(
+                          profile['name'] ?? 'Admin User',
+                          style: AdminTextStyles.pageTitle,
                         ),
-                        child: Text('Settings', style: TextStyle(color: Colors.white, fontSize: 5.sp)),
-                      ),
+                        const SizedBox(height: 4),
+                        Text(
+                          profile['email'] ?? 'admin@e7gz.com',
+                          style: AdminTextStyles.label,
+                        ),
+                        const SizedBox(height: 4),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AdminColors.accentPurple.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                              color: AdminColors.accentPurple.withOpacity(0.3),
+                            ),
+                          ),
+                          child: Text(
+                            (profile['role'] ?? 'ADMINISTRATOR')
+                                .toString()
+                                .toUpperCase(),
+                            style: const TextStyle(
+                              color: AdminColors.accentPurple,
+                              fontSize: 11,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: 0.8,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        const Divider(color: AdminColors.border, height: 1),
+                        const SizedBox(height: 20),
+                        // Info rows
+                        _InfoRow(
+                          icon: IconsaxPlusBold.mobile,
+                          label: 'Phone',
+                          value: profile['phone'] ?? '+20 123 456 7890',
+                        ),
+                        _InfoRow(
+                          icon: IconsaxPlusBold.verify,
+                          label: 'Account Type',
+                          value: (profile['role'] ?? 'Administrator')
+                              .toString()
+                              .toUpperCase(),
+                        ),
+                        _InfoRow(
+                          icon: IconsaxPlusBold.calendar_circle,
+                          label: 'Member Since',
+                          value: 'January 2024',
+                        ),
+                        const SizedBox(height: 20),
+                        // Actions
+                        Row(
+                          children: [
+                            Expanded(
+                              child: OutlinedButton(
+                                onPressed: () => context.go('/'),
+                                style: OutlinedButton.styleFrom(
+                                  side: const BorderSide(
+                                    color: AdminColors.accent,
+                                  ),
+                                  foregroundColor: AdminColors.accent,
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 14,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                                child: const Text(
+                                  'Switch View',
+                                  style: TextStyle(fontWeight: FontWeight.w600),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: FilledButton(
+                                onPressed: () {},
+                                style: FilledButton.styleFrom(
+                                  backgroundColor: AdminColors.surfaceHigh,
+                                  foregroundColor: AdminColors.textPrimary,
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 14,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                                child: const Text(
+                                  'Settings',
+                                  style: TextStyle(fontWeight: FontWeight.w600),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                ],
+              );
+            },
           ),
-        );
-      },
+        ),
+      ),
     );
   }
+}
 
-  Widget _profileItem(IconData icon, String label, String value) {
+class _InfoRow extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String value;
+
+  const _InfoRow({
+    required this.icon,
+    required this.label,
+    required this.value,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 10.h),
+      padding: const EdgeInsets.only(bottom: 16),
       child: Row(
         children: [
           Container(
-            padding: EdgeInsets.all(5.w),
+            width: 40,
+            height: 40,
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.03),
-              borderRadius: BorderRadius.circular(8.r),
+              color: AdminColors.surfaceHigh,
+              borderRadius: BorderRadius.circular(10),
             ),
-            child: Icon(icon, color: Colors.white.withOpacity(0.5), size: 5.sp),
+            child: Icon(icon, color: AdminColors.textSecondary, size: 18),
           ),
-          SizedBox(width: 10.w),
+          const SizedBox(width: 14),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(label, style: TextStyle(color: Colors.white.withOpacity(0.3), fontSize: 4.sp)),
-              Text(value, style: TextStyle(color: Colors.white, fontSize: 4.sp, fontWeight: FontWeight.w600)),
+              Text(label, style: AdminTextStyles.label),
+              const SizedBox(height: 2),
+              Text(
+                value,
+                style: const TextStyle(
+                  color: AdminColors.textPrimary,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
             ],
           ),
         ],
@@ -140,4 +230,3 @@ class AdminProfileTab extends StatelessWidget {
     );
   }
 }
-

@@ -24,16 +24,25 @@ class SearchRemoteDataSourceImpl implements SearchRemoteDataSource {
     double? maxPrice,
     double? rating,
   }) async {
-    final response = await dio.get('/pitches/search', queryParameters: {
-      if (query != null) 'q': query,
-      if (sportType != null) 'sportType': sportType,
+    final params = {
+      if (query != null && query.isNotEmpty) 'search': query,
+      if (query != null && query.isNotEmpty) 'city': query,
+      if (sportType != null && sportType.isNotEmpty) 'sportType': sportType,
       if (minPrice != null) 'minPrice': minPrice,
       if (maxPrice != null) 'maxPrice': maxPrice,
       if (rating != null) 'rating': rating,
-    });
-    
+      'limit': 20,
+    };
+
+    final response = await dio.get('pitches', queryParameters: params);
+
     final data = response.data as Map<String, dynamic>;
-    final List<dynamic> list = data['data']['pitches'] ?? data['data'] ?? [];
+    // Robust extraction: handle { data: { pitches: [] } } or { data: [] }
+    final dynamic pitchesData = data['data'];
+    final List<dynamic> list = (pitchesData is Map)
+        ? (pitchesData['pitches'] ?? [])
+        : (pitchesData is List ? pitchesData : []);
+
     return list.map((e) => PitchModel.fromJson(e)).toList();
   }
 }
