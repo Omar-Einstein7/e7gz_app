@@ -2,12 +2,10 @@ import 'package:e7gz/src/features/matchmaking/presentation/screens/match_details
 import 'package:e7gz/src/features/bookings/presentation/screens/booking_summary_screen.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/shared/wrappers/main_wrapper.dart';
-import 'package:e7gz/src/features/owner/presentation/screens/add_pitch_screen.dart';
+import 'package:e7gz/src/features/admin/presentation/screens/add_pitch_screen.dart';
 import 'package:e7gz/src/features/admin/presentation/screens/admin_dashboard_screen.dart';
 
 import 'package:go_router/go_router.dart';
-
-
 
 final GoRouter appRouter = GoRouter(
   navigatorKey: rootNavigatorKey,
@@ -169,7 +167,7 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: AppRoutes.addPitch,
       name: 'addPitch',
-      builder: (context, state) => const AddPitchScreen(),
+      builder: (context, state) => const AdminAddPitchScreen(),
     ),
     GoRoute(
       path: AppRoutes.admin,
@@ -178,4 +176,3 @@ final GoRouter appRouter = GoRouter(
     ),
   ],
 );
-

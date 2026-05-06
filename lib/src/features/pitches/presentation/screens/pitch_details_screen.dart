@@ -1,10 +1,10 @@
-import 'dart:ui';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import '../widgets/amenity_item.dart';
 import '../widgets/shift_card.dart';
+import 'dart:ui';
 import 'package:e7gz/src/features/pitches/presentation/cubit/pitches_cubit.dart';
 import 'package:e7gz/src/features/pitches/presentation/cubit/pitches_state.dart';
 import 'package:e7gz/src/features/pitches/domain/usecases/pitch_usecases.dart';
@@ -80,14 +80,20 @@ class _PitchDetailsView extends StatelessWidget {
                       IconsaxPlusLinear.share,
                       color: Colors.white,
                     ),
-                    onPressed: () {},
+                    onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Share functionality coming soon!'),
+                      ),
+                    ),
                   ),
                   IconButton(
                     icon: const Icon(
                       IconsaxPlusLinear.heart,
                       color: Colors.white,
                     ),
-                    onPressed: () {},
+                    onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Added to favorites!')),
+                    ),
                   ),
                   SizedBox(width: 8.w),
                 ],

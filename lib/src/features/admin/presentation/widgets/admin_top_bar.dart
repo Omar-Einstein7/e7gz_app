@@ -11,7 +11,7 @@ const _titles = [
   'Profile',
 ];
 
-class AdminTopBar extends StatelessWidget {
+class AdminTopBar extends StatefulWidget {
   final int selectedIndex;
   final bool isDesktop;
 
@@ -22,8 +22,27 @@ class AdminTopBar extends StatelessWidget {
   });
 
   @override
+  State<AdminTopBar> createState() => _AdminTopBarState();
+}
+
+class _AdminTopBarState extends State<AdminTopBar> {
+  late final TextEditingController _searchController;
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final title = _titles.elementAtOrNull(selectedIndex) ?? 'Admin';
+    final title = _titles.elementAtOrNull(widget.selectedIndex) ?? 'Admin';
 
     return Container(
       height: 64,
@@ -35,7 +54,7 @@ class AdminTopBar extends StatelessWidget {
       child: Row(
         children: [
           // ── Hamburger (mobile) ──────────────────────────────────
-          if (!isDesktop) ...[
+          if (!widget.isDesktop) ...[
             IconButton(
               icon: const Icon(
                 Icons.menu_rounded,
@@ -58,7 +77,7 @@ class AdminTopBar extends StatelessWidget {
           ),
           const Spacer(),
           // ── Search ─────────────────────────────────────────────
-          if (isDesktop)
+          if (widget.isDesktop)
             Container(
               width: 220,
               height: 36,
@@ -67,22 +86,23 @@ class AdminTopBar extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(color: AdminColors.border),
               ),
-              child: const Row(
+              child: Row(
                 children: [
-                  SizedBox(width: 12),
-                  Icon(
+                  const SizedBox(width: 12),
+                  const Icon(
                     IconsaxPlusBold.search_normal,
                     color: AdminColors.textMuted,
                     size: 16,
                   ),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                   Expanded(
                     child: TextField(
-                      style: TextStyle(
+                      controller: _searchController,
+                      style: const TextStyle(
                         color: AdminColors.textPrimary,
                         fontSize: 13,
                       ),
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         hintText: 'Search...',
                         hintStyle: TextStyle(
                           color: AdminColors.textMuted,
@@ -92,68 +112,83 @@ class AdminTopBar extends StatelessWidget {
                         isDense: true,
                         contentPadding: EdgeInsets.zero,
                       ),
+                      onSubmitted: (val) {
+                        // Implement global search if needed
+                      },
                     ),
                   ),
-                  SizedBox(width: 12),
+                  const SizedBox(width: 12),
                 ],
               ),
             ),
           const SizedBox(width: 16),
           // ── Notifications ──────────────────────────────────────
-          Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Container(
-                width: 38,
-                height: 38,
-                decoration: BoxDecoration(
-                  color: AdminColors.surfaceHigh,
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: AdminColors.border),
+          InkWell(
+            onTap: () {
+              // Open notifications logic
+            },
+            borderRadius: BorderRadius.circular(10),
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Container(
+                  width: 38,
+                  height: 38,
+                  decoration: BoxDecoration(
+                    color: AdminColors.surfaceHigh,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: AdminColors.border),
+                  ),
+                  child: const Icon(
+                    IconsaxPlusBold.notification,
+                    color: AdminColors.textSecondary,
+                    size: 18,
+                  ),
                 ),
-                child: const Icon(
-                  IconsaxPlusBold.notification,
-                  color: AdminColors.textSecondary,
-                  size: 18,
-                ),
-              ),
-              Positioned(
-                top: -2,
-                right: -2,
-                child: Container(
-                  width: 10,
-                  height: 10,
-                  decoration: const BoxDecoration(
-                    color: AdminColors.accent,
-                    shape: BoxShape.circle,
-                    border: Border.fromBorderSide(
-                      BorderSide(color: AdminColors.surface, width: 1.5),
+                Positioned(
+                  top: -2,
+                  right: -2,
+                  child: Container(
+                    width: 10,
+                    height: 10,
+                    decoration: const BoxDecoration(
+                      color: AdminColors.accent,
+                      shape: BoxShape.circle,
+                      border: Border.fromBorderSide(
+                        BorderSide(color: AdminColors.surface, width: 1.5),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           const SizedBox(width: 12),
           // ── Avatar ─────────────────────────────────────────────
-          Container(
-            width: 38,
-            height: 38,
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [AdminColors.accent, Color(0xFF22D3A0)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
+          InkWell(
+            onTap: () {
+              // Open profile settings
+            },
+            borderRadius: BorderRadius.circular(10),
+            child: Container(
+              width: 38,
+              height: 38,
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [AdminColors.accent, Color(0xFF22D3A0)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(10),
               ),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: const Center(
-              child: Text(
-                'A',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 14,
+              child: const Center(
+                child: Text(
+                  'A',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 14,
+                  ),
                 ),
               ),
             ),

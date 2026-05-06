@@ -23,7 +23,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         final name = user?.name ?? 'Guest';
         final email = user?.email ?? '';
         final points = user?.loyaltyPoints ?? 0;
-        final photoUrl = user?.photoUrl ?? 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80';
+        final photoUrl =
+            user?.photoUrl ??
+            'https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80';
 
         return Scaffold(
           backgroundColor: const Color(0xFF0B1326),
@@ -32,7 +34,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             elevation: 0,
             leading: IconButton(
               icon: const Icon(IconsaxPlusLinear.menu_1, color: Colors.white),
-              onPressed: () {},
+              onPressed: () => Scaffold.of(context).openDrawer(),
             ),
             title: Text(
               'e7gzz',
@@ -176,7 +178,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                           ),
                           SizedBox(height: 24.h),
-                          AppButton(label: 'Redeem Rewards', onPressed: () {}),
+                          AppButton(
+                            label: 'Redeem Rewards',
+                            onPressed: () => context.push(AppRoutes.loyalty),
+                          ),
                         ],
                       ),
                     ],
@@ -228,7 +233,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   subtitle: 'Sign out of your account',
                   icon: IconsaxPlusBold.logout,
                   isLogout: true,
-                  onTap: () => context.read<SessionBloc>().add(const SessionLogoutRequested()),
+                  onTap: () => context.read<SessionBloc>().add(
+                    const SessionLogoutRequested(),
+                  ),
                 ),
 
                 SizedBox(height: 48.h),

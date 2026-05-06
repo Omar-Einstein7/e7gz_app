@@ -28,7 +28,11 @@ class SearchRepositoryImpl implements SearchRepository {
       );
       return right(results);
     } catch (e) {
-      return left(ServerFailure(e.toString()));
+      return left(
+        ServerFailure(
+          'Unable to fetch pitches at this time. Please try again later. ($e)',
+        ),
+      );
     }
   }
 }

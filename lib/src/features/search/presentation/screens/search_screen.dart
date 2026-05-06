@@ -61,7 +61,7 @@ class _SearchScreenState extends State<SearchScreen> {
         actions: [
           IconButton(
             icon: const Icon(IconsaxPlusLinear.map, color: Colors.white),
-            onPressed: () {},
+            onPressed: () => context.push(AppRoutes.search),
           ),
           SizedBox(width: 8.w),
         ],

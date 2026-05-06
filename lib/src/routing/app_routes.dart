@@ -15,7 +15,7 @@ abstract final class AppRoutes {
   static const String search = '/search';
   static const String pitchDetails = '/pitch-details/:id';
   static const String matchDetails = '/match-details/:id';
-  static const String bookingSlots = '/booking-slots';
+  static const String bookingSlots = '/booking-slots/:id';
   static const String paymentCheckout = '/payment-checkout';
   static const String bookingSuccess = '/booking-success';
   static const String bookingSummary = '/booking-summary';
