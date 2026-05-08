@@ -1,3 +1,4 @@
+import 'package:e7gz/src/features/matchmaking/presentation/screens/create_match_screen.dart';
 import 'package:e7gz/src/features/matchmaking/presentation/screens/match_details_screen.dart';
 import 'package:e7gz/src/features/bookings/presentation/screens/booking_summary_screen.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
@@ -168,6 +169,11 @@ final GoRouter appRouter = GoRouter(
       path: AppRoutes.addPitch,
       name: 'addPitch',
       builder: (context, state) => const AdminAddPitchScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.createMatch,
+      name: 'createMatch',
+      builder: (context, state) => const CreateMatchScreen(),
     ),
     GoRoute(
       path: AppRoutes.admin,

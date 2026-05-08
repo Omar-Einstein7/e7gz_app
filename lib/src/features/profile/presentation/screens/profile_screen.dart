@@ -205,13 +205,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   onTap: () => context.push(AppRoutes.loyalty),
                 ),
                 SizedBox(height: 16.h),
-                ProfileTile(
-                  title: 'Owner Dashboard',
-                  subtitle: 'Manage your stadiums and revenue',
-                  icon: IconsaxPlusBold.element_3,
-                  onTap: () => context.push(AppRoutes.ownerDashboard),
-                ),
                 if ((user?.isAdmin ?? false) || (user?.isOwner ?? false)) ...[
+                  SizedBox(height: 16.h),
+                  ProfileTile(
+                    title: 'Owner Dashboard',
+                    subtitle: 'Manage your stadiums and revenue',
+                    icon: IconsaxPlusBold.element_3,
+                    onTap: () => context.push(AppRoutes.ownerDashboard),
+                  ),
                   SizedBox(height: 16.h),
                   ProfileTile(
                     title: 'Admin Panel',

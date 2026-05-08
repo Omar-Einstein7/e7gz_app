@@ -27,78 +27,98 @@ class AppConfig {
     );
 
     // ── Clean Auth Client (no token injection, no retry) ─────────────────────
-    authDio = Dio(BaseOptions(
-      baseUrl: _getBaseUrl(),
-      connectTimeout: const Duration(seconds: 30),
-      receiveTimeout: const Duration(seconds: 30),
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-    ));
+    authDio = Dio(
+      BaseOptions(
+        baseUrl: _getBaseUrl(),
+        connectTimeout: const Duration(seconds: 30),
+        receiveTimeout: const Duration(seconds: 30),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      ),
+    );
     authDio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) {
-          AppLogger.info('🌐 [AUTH] REQUEST[${options.method}] => PATH: ${options.path}');
+          AppLogger.info(
+            '🌐 [AUTH] REQUEST[${options.method}] => PATH: ${options.path}',
+          );
           return handler.next(options);
         },
         onResponse: (response, handler) {
-          AppLogger.info('✅ [AUTH] RESPONSE[${response.statusCode}] => PATH: ${response.requestOptions.path}');
+          AppLogger.info(
+            '✅ [AUTH] RESPONSE[${response.statusCode}] => PATH: ${response.requestOptions.path}',
+          );
           return handler.next(response);
         },
         onError: (e, handler) {
-          AppLogger.error('❌ [AUTH] ERROR[${e.response?.statusCode}] => PATH: ${e.requestOptions.path}');
+          AppLogger.error(
+            '❌ [AUTH] ERROR[${e.response?.statusCode}] => PATH: ${e.requestOptions.path}',
+          );
           return handler.next(e);
         },
       ),
     );
 
     // ── Protected Client (token injection + auto-refresh on 401) ─────────────
-    dio = Dio(BaseOptions(
-      baseUrl: _getBaseUrl(),
-      connectTimeout: const Duration(seconds: 30),
-      receiveTimeout: const Duration(seconds: 30),
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-    ));
+    dio = Dio(
+      BaseOptions(
+        baseUrl: _getBaseUrl(),
+        connectTimeout: const Duration(seconds: 30),
+        receiveTimeout: const Duration(seconds: 30),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      ),
+    );
     dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
-          AppLogger.info('🌐 [DIO] REQUEST[${options.method}] => PATH: ${options.path}');
+          AppLogger.info(
+            '🌐 [DIO] REQUEST[${options.method}] => PATH: ${options.path}',
+          );
 
           // Always inject token — this client is only used for protected routes
-          final tokenResult = await SecureStorageService.instance.read('jwt_token');
-          tokenResult.fold(
-            (_) {},
-            (token) {
-              if (token != null && token.isNotEmpty) {
-                options.headers['Authorization'] = 'Bearer $token';
-              }
-            },
+          final tokenResult = await SecureStorageService.instance.read(
+            'jwt_token',
           );
+          tokenResult.fold((_) {}, (token) {
+            if (token != null && token.isNotEmpty) {
+              options.headers['Authorization'] = 'Bearer $token';
+            }
+          });
 
           AppLogger.info('🔑 HEADERS: ${options.headers}');
           return handler.next(options);
         },
         onResponse: (response, handler) {
-          AppLogger.info('✅ [DIO] RESPONSE[${response.statusCode}] => PATH: ${response.requestOptions.path}');
+          AppLogger.info(
+            '✅ [DIO] RESPONSE[${response.statusCode}] => PATH: ${response.requestOptions.path}',
+          );
           return handler.next(response);
         },
         onError: (DioException e, handler) async {
-          AppLogger.error('❌ [DIO] ERROR[${e.response?.statusCode}] => PATH: ${e.requestOptions.path}');
+          final errorBody = e.response?.data;
+          AppLogger.error(
+            '❌ [DIO] ERROR[${e.response?.statusCode}] => PATH: ${e.requestOptions.path} => BODY: $errorBody',
+          );
 
           if (e.response?.statusCode == 401) {
             try {
-              final isRefreshed = await AuthService.instance.refreshAccessToken();
+              final isRefreshed = await AuthService.instance
+                  .refreshAccessToken();
               if (isRefreshed) {
-                final tokenResult = await SecureStorageService.instance.read('jwt_token');
+                final tokenResult = await SecureStorageService.instance.read(
+                  'jwt_token',
+                );
                 String? newToken;
                 tokenResult.fold((_) => null, (v) => newToken = v);
 
                 if (newToken != null && newToken!.isNotEmpty) {
-                  e.requestOptions.headers['Authorization'] = 'Bearer $newToken';
+                  e.requestOptions.headers['Authorization'] =
+                      'Bearer $newToken';
                   try {
                     final response = await dio.request<dynamic>(
                       e.requestOptions.path,
@@ -126,7 +146,10 @@ class AppConfig {
   }
 
   static String _getBaseUrl() {
-    String url = dotenv.get('API_BASE_URL', fallback: 'https://e7gz-backend.onrender.com/api');
+    String url = dotenv.get(
+      'API_BASE_URL',
+      fallback: 'https://e7gz-backend.onrender.com/api',
+    );
 
     if (url.endsWith('/')) {
       url = url.substring(0, url.length - 1);

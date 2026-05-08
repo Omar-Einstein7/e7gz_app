@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:e7gz/src/imports/core_imports.dart';
+import 'package:e7gz/src/imports/packages_imports.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
@@ -57,6 +59,29 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
       final newPos = LatLng(locationData.latitude!, locationData.longitude!);
       setState(() => _selectedLocation = newPos);
       _mapController.move(newPos, 15);
+    }
+  }
+
+  Future<void> _searchLocation(String query) async {
+    if (query.isEmpty) return;
+    final url = Uri.parse(
+      'https://nominatim.openstreetmap.org/search?q=$query&format=json&limit=1',
+    );
+    try {
+      final response = await Dio().get<dynamic>(url.toString());
+      final List results = response.data;
+      if (results.isNotEmpty) {
+        final lat = double.parse(results[0]['lat']);
+        final lon = double.parse(results[0]['lon']);
+        final newPos = LatLng(lat, lon);
+        setState(() {
+          _selectedLocation = newPos;
+          _addressController.text = results[0]['display_name'];
+        });
+        _mapController.move(newPos, 15);
+      }
+    } catch (e) {
+      AppLogger.error('Location search failed: $e');
     }
   }
 
@@ -268,6 +293,15 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
                       'ADDRESS',
                       _addressController,
                       'Nasr City, Cairo',
+                      suffixIcon: IconButton(
+                        icon: const Icon(
+                          IconsaxPlusLinear.search_normal_1,
+                          color: AdminColors.accent,
+                          size: 18,
+                        ),
+                        onPressed: () =>
+                            _searchLocation(_addressController.text),
+                      ),
                     ),
                   ),
                 ],
@@ -387,6 +421,7 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
     String hint, {
     TextInputType? keyboardType,
     int maxLines = 1,
+    Widget? suffixIcon,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -397,12 +432,19 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
           controller: controller,
           keyboardType: keyboardType,
           maxLines: maxLines,
+          onFieldSubmitted: (value) {
+            final icon = suffixIcon;
+            if (icon is IconButton) {
+              icon.onPressed?.call();
+            }
+          },
           style: const TextStyle(color: AdminColors.textPrimary, fontSize: 14),
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: const TextStyle(color: AdminColors.textMuted),
             filled: true,
             fillColor: AdminColors.surface,
+            suffixIcon: suffixIcon,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide.none,

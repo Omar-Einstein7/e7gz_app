@@ -23,7 +23,10 @@ class LoyaltyRewardsScreen extends StatelessWidget {
         ),
         title: Text(
           'Loyalty Program',
-          style: tt.headlineSmall?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+          style: tt.headlineSmall?.copyWith(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         centerTitle: true,
       ),
@@ -46,7 +49,9 @@ class LoyaltyRewardsScreen extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: const Color(0xFF131B2E),
                     borderRadius: BorderRadius.circular(40.r),
-                    border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
+                    border: Border.all(
+                      color: Colors.white.withValues(alpha: 0.05),
+                    ),
                   ),
                   child: Stack(
                     children: [
@@ -77,9 +82,13 @@ class LoyaltyRewardsScreen extends StatelessWidget {
                             children: [
                               BlocBuilder<SessionBloc, SessionState>(
                                 builder: (context, sessionState) {
-                                  final points = sessionState.user?.loyaltyPoints ?? 0;
+                                  final points =
+                                      sessionState.user?.loyaltyPoints ?? 0;
                                   return Text(
-                                    points.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},'),
+                                    points.toString().replaceAllMapped(
+                                      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+                                      (Match m) => '${m[1]},',
+                                    ),
                                     style: tt.displayMedium?.copyWith(
                                       color: cs.primary,
                                       fontWeight: FontWeight.w900,
@@ -88,10 +97,17 @@ class LoyaltyRewardsScreen extends StatelessWidget {
                                 },
                               ),
                               Padding(
-                                padding: EdgeInsets.only(bottom: 12.h, left: 8.w),
+                                padding: EdgeInsets.only(
+                                  bottom: 12.h,
+                                  left: 8.w,
+                                ),
                                 child: Text(
                                   'PTS',
-                                  style: TextStyle(color: cs.primary, fontWeight: FontWeight.bold, fontSize: 16.sp),
+                                  style: TextStyle(
+                                    color: cs.primary,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16.sp,
+                                  ),
                                 ),
                               ),
                             ],
@@ -107,9 +123,9 @@ class LoyaltyRewardsScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                
+
                 SizedBox(height: 32.h),
-                
+
                 // Tier Section
                 Container(
                   padding: EdgeInsets.all(24.w),
@@ -126,7 +142,11 @@ class LoyaltyRewardsScreen extends StatelessWidget {
                           color: const Color(0xFFFFD700).withValues(alpha: 0.1),
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(Icons.star, color: Color(0xFFFFD700), size: 28),
+                        child: const Icon(
+                          Icons.star,
+                          color: Color(0xFFFFD700),
+                          size: 28,
+                        ),
                       ),
                       SizedBox(width: 16.w),
                       Expanded(
@@ -135,11 +155,18 @@ class LoyaltyRewardsScreen extends StatelessWidget {
                           children: [
                             Text(
                               tier['currentTier'] ?? 'Gold Tier Status',
-                              style: tt.titleMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+                              style: tt.titleMedium?.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                             Text(
-                              tier['nextTierInfo'] ?? 'You are 550 points away from Platinum',
-                              style: TextStyle(color: const Color(0xFFBCC7DE), fontSize: 12.sp),
+                              tier['nextTierInfo'] ??
+                                  'You are 550 points away from Platinum',
+                              style: TextStyle(
+                                color: const Color(0xFFBCC7DE),
+                                fontSize: 12.sp,
+                              ),
                             ),
                           ],
                         ),
@@ -147,9 +174,9 @@ class LoyaltyRewardsScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                
+
                 SizedBox(height: 48.h),
-                
+
                 // Available Rewards Header
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -165,26 +192,86 @@ class LoyaltyRewardsScreen extends StatelessWidget {
                     ),
                     Text(
                       'View All',
-                      style: TextStyle(color: const Color(0xFF4BE277), fontSize: 12.sp, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        color: const Color(0xFF4BE277),
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ],
                 ),
                 SizedBox(height: 20.h),
-                
-                if (state.rewards.isEmpty) 
-                  const Center(child: Text('No rewards available at the moment', style: TextStyle(color: Color(0xFFBCC7DE)))),
 
-                ...state.rewards.map((reward) => Padding(
-                  padding: EdgeInsets.only(bottom: 16.h),
-                  child: rewardItem(
-                    reward.title, 
-                    reward.description, 
-                    '${reward.pointsCost} PTS', 
-                    Icons.confirmation_number,
-                    onTap: () => context.read<ProfileCubit>().redeemReward(reward.id),
+                if (state.rewards.isEmpty)
+                  const Center(
+                    child: Text(
+                      'No rewards available at the moment',
+                      style: TextStyle(color: Color(0xFFBCC7DE)),
+                    ),
                   ),
-                )).toList(),
-                
+
+                ...state.rewards
+                    .map(
+                      (reward) => Padding(
+                        padding: EdgeInsets.only(bottom: 16.h),
+                        child: rewardItem(
+                          reward.title,
+                          reward.description,
+                          '${reward.pointsCost} PTS',
+                          Icons.confirmation_number,
+                          onTap: () {
+                            showDialog<void>(
+                              context: context,
+                              builder: (ctx) => AlertDialog(
+                                backgroundColor: const Color(0xFF131B2E),
+                                title: Text(
+                                  'Redeem Reward',
+                                  style: tt.titleLarge?.copyWith(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                content: Text(
+                                  'Are you sure you want to redeem "${reward.title}" for ${reward.pointsCost} points?',
+                                  style: const TextStyle(
+                                    color: Color(0xFFBCC7DE),
+                                  ),
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(ctx),
+                                    child: const Text(
+                                      'Cancel',
+                                      style: TextStyle(color: Colors.white54),
+                                    ),
+                                  ),
+                                  AppButton(
+                                    label: 'Redeem',
+                                    height: ButtonSize.small,
+                                    onPressed: () {
+                                      Navigator.pop(ctx);
+                                      context.read<ProfileCubit>().redeemReward(
+                                        reward.id,
+                                      );
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            'Successfully redeemed ${reward.title}!',
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    )
+                    .toList(),
+
                 SizedBox(height: 100.h),
               ],
             ),
@@ -194,7 +281,13 @@ class LoyaltyRewardsScreen extends StatelessWidget {
     );
   }
 
-  Widget rewardItem(String title, String subtitle, String cost, IconData icon, {VoidCallback? onTap}) {
+  Widget rewardItem(
+    String title,
+    String subtitle,
+    String cost,
+    IconData icon, {
+    VoidCallback? onTap,
+  }) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -220,14 +313,30 @@ class LoyaltyRewardsScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                  Text(subtitle, style: const TextStyle(color: Color(0xFFBCC7DE), fontSize: 10)),
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    subtitle,
+                    style: const TextStyle(
+                      color: Color(0xFFBCC7DE),
+                      fontSize: 10,
+                    ),
+                  ),
                 ],
               ),
             ),
             Text(
               cost,
-              style: const TextStyle(color: Color(0xFF4BE277), fontWeight: FontWeight.w900, fontSize: 12),
+              style: const TextStyle(
+                color: Color(0xFF4BE277),
+                fontWeight: FontWeight.w900,
+                fontSize: 12,
+              ),
             ),
           ],
         ),

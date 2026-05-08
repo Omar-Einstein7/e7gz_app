@@ -125,3 +125,4 @@ GoogleService-Info.plist
 *.keystore
 *.jks
 key.properties
+.vercel

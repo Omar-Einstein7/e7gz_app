@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 import '../layout/admin_layout.dart';
+import 'admin_notifications_overlay.dart';
 
 const _titles = [
   'Dashboard',
@@ -10,6 +11,7 @@ const _titles = [
   'Notifications',
   'Profile',
 ];
+
 
 class AdminTopBar extends StatefulWidget {
   final int selectedIndex;
@@ -27,6 +29,8 @@ class AdminTopBar extends StatefulWidget {
 
 class _AdminTopBarState extends State<AdminTopBar> {
   late final TextEditingController _searchController;
+  final LayerLink _notificationLink = LayerLink();
+  OverlayEntry? _notificationOverlay;
 
   @override
   void initState() {
@@ -37,7 +41,53 @@ class _AdminTopBarState extends State<AdminTopBar> {
   @override
   void dispose() {
     _searchController.dispose();
+    _hideNotificationOverlay();
     super.dispose();
+  }
+
+  void _toggleNotificationOverlay() {
+    if (_notificationOverlay == null) {
+      _showNotificationOverlay();
+    } else {
+      _hideNotificationOverlay();
+    }
+  }
+
+  void _showNotificationOverlay() {
+    _notificationOverlay = OverlayEntry(
+      builder: (context) => Stack(
+        children: [
+          Positioned.fill(
+            child: GestureDetector(
+              onTap: _hideNotificationOverlay,
+              behavior: HitTestBehavior.translucent,
+              child: Container(color: Colors.transparent),
+            ),
+          ),
+          Positioned(
+            width: 320,
+            child: CompositedTransformFollower(
+              link: _notificationLink,
+              showWhenUnlinked: false,
+              offset: const Offset(-282, 48),
+              child: const Material(
+                color: Colors.transparent,
+                child: AdminNotificationsOverlay(),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    Overlay.of(context).insert(_notificationOverlay!);
+    setState(() {});
+  }
+
+  void _hideNotificationOverlay() {
+    _notificationOverlay?.remove();
+    _notificationOverlay = null;
+    if (mounted) setState(() {});
   }
 
   @override
@@ -123,44 +173,48 @@ class _AdminTopBarState extends State<AdminTopBar> {
             ),
           const SizedBox(width: 16),
           // ── Notifications ──────────────────────────────────────
-          InkWell(
-            onTap: () {
-              // Open notifications logic
-            },
-            borderRadius: BorderRadius.circular(10),
-            child: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                Container(
-                  width: 38,
-                  height: 38,
-                  decoration: BoxDecoration(
-                    color: AdminColors.surfaceHigh,
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: AdminColors.border),
-                  ),
-                  child: const Icon(
-                    IconsaxPlusBold.notification,
-                    color: AdminColors.textSecondary,
-                    size: 18,
-                  ),
-                ),
-                Positioned(
-                  top: -2,
-                  right: -2,
-                  child: Container(
-                    width: 10,
-                    height: 10,
-                    decoration: const BoxDecoration(
-                      color: AdminColors.accent,
-                      shape: BoxShape.circle,
-                      border: Border.fromBorderSide(
-                        BorderSide(color: AdminColors.surface, width: 1.5),
+          CompositedTransformTarget(
+            link: _notificationLink,
+            child: InkWell(
+              onTap: _toggleNotificationOverlay,
+              borderRadius: BorderRadius.circular(10),
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Container(
+                    width: 38,
+                    height: 38,
+                    decoration: BoxDecoration(
+                      color: _notificationOverlay != null ? AdminColors.surfaceHigh : Colors.transparent,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: _notificationOverlay != null ? AdminColors.accent : AdminColors.border,
                       ),
                     ),
+                    child: Icon(
+                      _notificationOverlay != null ? IconsaxPlusBold.notification_status : IconsaxPlusBold.notification,
+                      color: _notificationOverlay != null ? AdminColors.accent : AdminColors.textSecondary,
+                      size: 18,
+                    ),
                   ),
-                ),
-              ],
+                  if (_notificationOverlay == null)
+                    Positioned(
+                      top: -2,
+                      right: -2,
+                      child: Container(
+                        width: 10,
+                        height: 10,
+                        decoration: const BoxDecoration(
+                          color: AdminColors.accent,
+                          shape: BoxShape.circle,
+                          border: Border.fromBorderSide(
+                            BorderSide(color: AdminColors.surface, width: 1.5),
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
             ),
           ),
           const SizedBox(width: 12),

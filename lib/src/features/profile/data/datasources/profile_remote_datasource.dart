@@ -14,7 +14,7 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
 
   @override
   Future<List<RewardModel>> getAvailableRewards() async {
-    final response = await dio.get('/profile/rewards');
+    final response = await dio.get('profile/rewards');
     final data = response.data as Map<String, dynamic>;
     final List<dynamic> list = data['data']['rewards'] ?? data['data'] ?? [];
     return list.map((e) => RewardModel.fromJson(e)).toList();
@@ -22,12 +22,12 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
 
   @override
   Future<void> redeemReward(String rewardId) async {
-    await dio.post('/profile/rewards/redeem', data: {'rewardId': rewardId});
+    await dio.post('profile/rewards/redeem', data: {'rewardId': rewardId});
   }
 
   @override
   Future<Map<String, dynamic>> getTierStatus() async {
-    final response = await dio.get('/profile/tier-status');
+    final response = await dio.get('profile/tier-status');
     final data = response.data as Map<String, dynamic>;
     return data['data'] ?? data;
   }

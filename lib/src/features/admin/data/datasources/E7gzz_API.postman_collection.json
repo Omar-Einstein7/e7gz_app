@@ -660,6 +660,44 @@
 			"name": "Matchmaking",
 			"item": [
 				{
+					"name": "Create Match",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Friday Night Football\",\n    \"pitchId\": \"PITCH_ID_HERE\",\n    \"date\": \"2026-05-10\",\n    \"startTime\": \"20:00\",\n    \"endTime\": \"21:00\",\n    \"maxPlayers\": 10,\n    \"skillLevel\": \"intermediate\",\n    \"pricePerPlayer\": 50\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/matches",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"matches"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "List Matches",
 					"request": {
 						"method": "GET",

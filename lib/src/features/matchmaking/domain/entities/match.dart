@@ -1,3 +1,11 @@
+class Participant {
+  final String id;
+  final String name;
+  final String? photoUrl;
+
+  const Participant({required this.id, required this.name, this.photoUrl});
+}
+
 class MatchmakingMatch {
   final String id;
   final String title;
@@ -8,6 +16,7 @@ class MatchmakingMatch {
   final String endTime;
   final int maxPlayers;
   final List<String> participantIds;
+  final List<Participant> participants; // Added this
   final double pricePerPlayer;
   final String skillLevel;
   final String status;
@@ -24,6 +33,7 @@ class MatchmakingMatch {
     required this.endTime,
     required this.maxPlayers,
     required this.participantIds,
+    this.participants = const [], // Added this
     required this.pricePerPlayer,
     required this.skillLevel,
     required this.status,

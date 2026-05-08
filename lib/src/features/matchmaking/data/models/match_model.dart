@@ -11,6 +11,7 @@ class MatchModel extends MatchmakingMatch {
     required super.endTime,
     required super.maxPlayers,
     required super.participantIds,
+    required super.participants,
     required super.pricePerPlayer,
     required super.skillLevel,
     required super.status,
@@ -19,27 +20,49 @@ class MatchModel extends MatchmakingMatch {
   });
 
   factory MatchModel.fromJson(Map<String, dynamic> json) {
-    final pitch = json['pitchId'] as Map<String, dynamic>?;
-    
+    final dynamic pitchData = json['pitchId'];
+    final Map<String, dynamic>? pitch = pitchData is Map<String, dynamic>
+        ? pitchData
+        : null;
+
+    final participantList = (json['participantIds'] as List<dynamic>?) ?? [];
+    final List<Participant> participants = [];
+    final List<String> participantIds = [];
+
+    for (final p in participantList) {
+      if (p is Map<String, dynamic>) {
+        participants.add(
+          Participant(
+            id: p['_id']?.toString() ?? '',
+            name: p['name']?.toString() ?? 'Player',
+            photoUrl: p['photoUrl']?.toString(),
+          ),
+        );
+        participantIds.add(p['_id']?.toString() ?? '');
+      } else if (p is String) {
+        participantIds.add(p);
+      }
+    }
+
     return MatchModel(
       id: json['_id'] ?? json['id'] ?? '',
       title: json['title'] ?? '',
-      pitchId: pitch != null ? (pitch['_id'] ?? '') : (json['pitchId'] ?? ''),
+      pitchId: pitch != null
+          ? (pitch['_id'] ?? '')
+          : (pitchData?.toString() ?? ''),
       creatorId: _extractUserId(json['creatorId']),
       date: json['date'] ?? '',
       startTime: json['startTime'] ?? '',
       endTime: json['endTime'] ?? '',
       maxPlayers: (json['maxPlayers'] as num?)?.toInt() ?? 0,
-      participantIds: (json['participantIds'] as List<dynamic>?)
-              ?.map((p) => _extractUserId(p))
-              .toList() ??
-          [],
+      participantIds: participantIds,
+      participants: participants,
       pricePerPlayer: (json['pricePerPlayer'] as num?)?.toDouble() ?? 0.0,
       skillLevel: json['skillLevel'] ?? 'all',
       status: json['status'] ?? 'open',
       pitchName: pitch?['name'],
-      pitchImage: (pitch?['images'] as List<dynamic>?)?.isNotEmpty == true 
-          ? pitch!['images'][0] 
+      pitchImage: (pitch?['images'] as List<dynamic>?)?.isNotEmpty == true
+          ? pitch!['images'][0]
           : null,
     );
   }
@@ -52,12 +75,13 @@ class MatchModel extends MatchmakingMatch {
   }
 
   Map<String, dynamic> toJson() => {
-        'title': title,
-        'pitchId': pitchId,
-        'date': date,
-        'startTime': startTime,
-        'endTime': endTime,
-        'maxPlayers': maxPlayers,
-        'skillLevel': skillLevel,
-      };
+    'title': title,
+    'pitchId': pitchId,
+    'date': date,
+    'startTime': startTime,
+    'endTime': endTime,
+    'maxPlayers': maxPlayers,
+    'skillLevel': skillLevel,
+    'pricePerPlayer': pricePerPlayer,
+  };
 }

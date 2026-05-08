@@ -25,7 +25,7 @@ class PitchRemoteDataSource {
       if (maxPrice != null) 'maxPrice': maxPrice,
     };
 
-    final result = await _dio.get('/pitches', queryParameters: params);
+    final result = await _dio.get('pitches', queryParameters: params);
     return result.fold(
       (failure) => throw Exception(failure.message),
       (response) => response.data as Map<String, dynamic>,
@@ -37,48 +37,43 @@ class PitchRemoteDataSource {
     required double lng,
     double radiusMeters = 5000,
   }) async {
-    final result = await _dio.get('/pitches/nearby', queryParameters: {
-      'lat': lat,
-      'lng': lng,
-      'radius': radiusMeters,
-    });
-
-    return result.fold(
-      (failure) => throw Exception(failure.message),
-      (response) {
-        final data = response.data as Map<String, dynamic>;
-        final pitches = data['data']['pitches'] as List<dynamic>;
-        return pitches
-            .map((p) => PitchModel.fromJson(p as Map<String, dynamic>))
-            .toList();
-      },
+    final result = await _dio.get(
+      'pitches/nearby',
+      queryParameters: {'lat': lat, 'lng': lng, 'radius': radiusMeters},
     );
+
+    return result.fold((failure) => throw Exception(failure.message), (
+      response,
+    ) {
+      final data = response.data as Map<String, dynamic>;
+      final pitches = data['data']['pitches'] as List<dynamic>;
+      return pitches
+          .map((p) => PitchModel.fromJson(p as Map<String, dynamic>))
+          .toList();
+    });
   }
 
   Future<PitchModel> getPitchById(String id) async {
-    final result = await _dio.get('/pitches/$id');
-    return result.fold(
-      (failure) => throw Exception(failure.message),
-      (response) {
-        final data = response.data as Map<String, dynamic>;
-        return PitchModel.fromJson(
-            data['data']['pitch'] as Map<String, dynamic>);
-      },
-    );
+    final result = await _dio.get('pitches/$id');
+    return result.fold((failure) => throw Exception(failure.message), (
+      response,
+    ) {
+      final data = response.data as Map<String, dynamic>;
+      return PitchModel.fromJson(data['data']['pitch'] as Map<String, dynamic>);
+    });
   }
 
   Future<List<Review>> getPitchReviews(String pitchId) async {
-    final result = await _dio.get('/pitches/$pitchId/reviews');
-    return result.fold(
-      (failure) => throw Exception(failure.message),
-      (response) {
-        final data = response.data as Map<String, dynamic>;
-        final reviews = data['data']['reviews'] as List<dynamic>;
-        return reviews
-            .map((r) => Review.fromJson(r as Map<String, dynamic>))
-            .toList();
-      },
-    );
+    final result = await _dio.get('pitches/$pitchId/reviews');
+    return result.fold((failure) => throw Exception(failure.message), (
+      response,
+    ) {
+      final data = response.data as Map<String, dynamic>;
+      final reviews = data['data']['reviews'] as List<dynamic>;
+      return reviews
+          .map((r) => Review.fromJson(r as Map<String, dynamic>))
+          .toList();
+    });
   }
 
   Future<Review> createReview({
@@ -86,18 +81,15 @@ class PitchRemoteDataSource {
     required double rating,
     required String comment,
   }) async {
-    final result = await _dio.post('/reviews', data: {
-      'pitchId': pitchId,
-      'rating': rating,
-      'comment': comment,
-    });
-    return result.fold(
-      (failure) => throw Exception(failure.message),
-      (response) {
-        final data = response.data as Map<String, dynamic>;
-        return Review.fromJson(data['data']['review'] as Map<String, dynamic>);
-      },
+    final result = await _dio.post(
+      'reviews',
+      data: {'pitchId': pitchId, 'rating': rating, 'comment': comment},
     );
+    return result.fold((failure) => throw Exception(failure.message), (
+      response,
+    ) {
+      final data = response.data as Map<String, dynamic>;
+      return Review.fromJson(data['data']['review'] as Map<String, dynamic>);
+    });
   }
 }
-

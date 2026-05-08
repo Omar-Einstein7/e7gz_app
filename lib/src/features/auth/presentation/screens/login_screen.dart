@@ -125,89 +125,102 @@ class _LoginScreenState extends State<LoginScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 _inputLabel(context, 'EMAIL ADDRESS'),
-                                  AppTextField(
-                                    controller: _emailController,
-                                    hint: 'name@example.com',
-                                    keyboardType: TextInputType.emailAddress,
-                                    prefixIcon: const Icon(IconsaxPlusBold.sms),
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Email is required';
-                                      }
-                                      if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-                                        return 'Enter a valid email';
-                                      }
-                                      return null;
-                                    },
-                                  ),
+                                AppTextField(
+                                  controller: _emailController,
+                                  hint: 'name@example.com',
+                                  keyboardType: TextInputType.emailAddress,
+                                  prefixIcon: const Icon(IconsaxPlusBold.sms),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Email is required';
+                                    }
+                                    if (!RegExp(
+                                      r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                                    ).hasMatch(value)) {
+                                      return 'Enter a valid email';
+                                    }
+                                    return null;
+                                  },
+                                ),
 
-                                  SizedBox(height: 24.h),
+                                SizedBox(height: 24.h),
 
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      _inputLabel(context, 'PASSWORD'),
-                                      TextButton(
-                                        onPressed: () => context.push(AppRoutes.forgotPassword),
-                                        style: TextButton.styleFrom(
-                                          padding: EdgeInsets.zero,
-                                          minimumSize: Size.zero,
-                                        ),
-                                        child: Text(
-                                          'Forgot Password?',
-                                          style: typography.labelSmall?.copyWith(
-                                            color: colors.primary,
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    _inputLabel(context, 'PASSWORD'),
+                                    TextButton(
+                                      onPressed: () => context.push(
+                                        AppRoutes.forgotPassword,
+                                      ),
+                                      style: TextButton.styleFrom(
+                                        padding: EdgeInsets.zero,
+                                        minimumSize: Size.zero,
+                                      ),
+                                      child: Text(
+                                        'Forgot Password?',
+                                        style: typography.labelSmall?.copyWith(
+                                          color: colors.primary,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                  AppTextField(
-                                    controller: _passwordController,
-                                    hint: '••••••••',
-                                    obscureText: _obscurePassword,
-                                    prefixIcon: const Icon(IconsaxPlusBold.lock),
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Password is required';
-                                      }
-                                      if (value.length < 6) {
-                                        return 'Password must be at least 6 characters';
-                                      }
-                                      return null;
-                                    },
-                                    suffixIcon: IconButton(
-                                      icon: Icon(
-                                        _obscurePassword ? IconsaxPlusBold.eye_slash : IconsaxPlusBold.eye,
-                                        size: 20,
-                                      ),
-                                      onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                                    ),
+                                  ],
+                                ),
+                                AppTextField(
+                                  controller: _passwordController,
+                                  hint: '••••••••',
+                                  obscureText: _obscurePassword,
+                                  prefixIcon: const Icon(IconsaxPlusBold.lock),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Password is required';
+                                    }
+                                    if (value.length < 6) {
+                                      return 'Password must be at least 6 characters';
+                                    }
+                                    return null;
+                                  },
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      _obscurePassword
+                                          ? IconsaxPlusBold.eye_slash
+                                          : IconsaxPlusBold.eye,
+                                      size: 20,
+                                    ),
+                                    onPressed: () => setState(
+                                      () =>
+                                          _obscurePassword = !_obscurePassword,
                                     ),
                                   ),
+                                ),
 
-                                  SizedBox(height: 32.h),
+                                SizedBox(height: 32.h),
 
-                                  BlocBuilder<AuthBloc, AuthState>(
-                                    builder: (context, state) {
-                                      return AppButton(
-                                        label: 'Login to Account',
-                                        isFullWidth: true,
-                                        height: ButtonSize.large,
-                                        isLoading: state.isLoading,
-                                        onPressed: () {
-                                          if (_formKey.currentState?.validate() ?? false) {
-                                            context.read<AuthBloc>().add(
-                                              LoginRequested(
-                                                email: _emailController.text.trim(),
-                                                password: _passwordController.text,
-                                              ),
-                                            );
-                                          }
-                                        },
-                                      );
-                                    },
-                                  ),
+                                BlocBuilder<AuthBloc, AuthState>(
+                                  builder: (context, state) {
+                                    return AppButton(
+                                      label: 'Login to Account',
+                                      isFullWidth: true,
+                                      height: ButtonSize.large,
+                                      isLoading: state.isLoading,
+                                      onPressed: () {
+                                        if (_formKey.currentState?.validate() ??
+                                            false) {
+                                          context.read<AuthBloc>().add(
+                                            LoginRequested(
+                                              email: _emailController.text
+                                                  .trim(),
+                                              password:
+                                                  _passwordController.text,
+                                            ),
+                                          );
+                                        }
+                                      },
+                                    );
+                                  },
+                                ),
                               ],
                             ),
                           ),
@@ -216,19 +229,29 @@ class _LoginScreenState extends State<LoginScreen> {
                           SizedBox(height: 32.h),
                           Row(
                             children: [
-                              Expanded(child: Divider(color: Colors.white.withValues(alpha: 0.1))),
+                              Expanded(
+                                child: Divider(
+                                  color: Colors.white.withValues(alpha: 0.1),
+                                ),
+                              ),
                               Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 16.w),
                                 child: Text(
                                   'OR CONTINUE WITH',
                                   style: typography.labelSmall?.copyWith(
-                                    color: const Color(0xFFBCC7DE).withValues(alpha: 0.5),
+                                    color: const Color(
+                                      0xFFBCC7DE,
+                                    ).withValues(alpha: 0.5),
                                     fontWeight: FontWeight.w900,
                                     letterSpacing: 1.5,
                                   ),
                                 ),
                               ),
-                              Expanded(child: Divider(color: Colors.white.withValues(alpha: 0.1))),
+                              Expanded(
+                                child: Divider(
+                                  color: Colors.white.withValues(alpha: 0.1),
+                                ),
+                              ),
                             ],
                           ),
                           SizedBox(height: 32.h),
@@ -240,7 +263,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                 child: SocialLoginButton(
                                   label: 'Google',
                                   iconPath: AppAssets.googleIcon,
-                                  onPressed: () {},
+                                  onPressed: () => ScaffoldMessenger.of(context)
+                                      .showSnackBar(
+                                        const SnackBar(
+                                          content: Text(
+                                            'Google Login coming soon!',
+                                          ),
+                                        ),
+                                      ),
                                 ),
                               ),
                               SizedBox(width: 16.w),
@@ -248,7 +278,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                 child: SocialLoginButton(
                                   label: 'Facebook',
                                   iconPath: AppAssets.facebookIcon,
-                                  onPressed: () {},
+                                  onPressed: () => ScaffoldMessenger.of(context)
+                                      .showSnackBar(
+                                        const SnackBar(
+                                          content: Text(
+                                            'Facebook Login coming soon!',
+                                          ),
+                                        ),
+                                      ),
                                 ),
                               ),
                             ],
@@ -264,7 +301,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                 textAlign: TextAlign.center,
                                 text: TextSpan(
                                   text: 'New to the pitch? ',
-                                  style: typography.bodySmall?.copyWith(color: const Color(0xFFBCC7DE)),
+                                  style: typography.bodySmall?.copyWith(
+                                    color: const Color(0xFFBCC7DE),
+                                  ),
                                   children: [
                                     TextSpan(
                                       text: 'Create an account',
@@ -333,4 +372,3 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
-

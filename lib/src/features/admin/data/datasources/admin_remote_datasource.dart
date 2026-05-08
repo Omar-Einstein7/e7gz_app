@@ -157,9 +157,15 @@ class AdminRemoteDataSource {
         AppLogger.info('Sending pitch (JSON)');
       }
 
-      // IMPORTANT: When sending FormData, do NOT manually set the Content-Type header.
-      // Dio will automatically set 'multipart/form-data' along with the required boundary.
-      final response = await _dio.post('pitches', data: data);
+      // IMPORTANT: Intercepts or BaseOptions might force application/json.
+      // We must explicitly override it to multipart/form-data when sending FormData.
+      final response = await _dio.post(
+        'pitches',
+        data: data,
+        options: imageBytes != null
+            ? Options(contentType: 'multipart/form-data')
+            : null,
+      );
 
       return response.statusCode == 201 || response.statusCode == 200;
     } catch (e) {

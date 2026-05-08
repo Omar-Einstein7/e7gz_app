@@ -16,52 +16,52 @@ class MatchRemoteDataSource {
       if (status != null) 'status': status,
     };
 
-    final result = await _dio.get('/matches', queryParameters: params);
-    return result.fold(
-      (failure) => throw Exception(failure.message),
-      (response) {
-        final data = response.data as Map<String, dynamic>;
-        final matches = data['data']['matches'] as List<dynamic>;
-        return matches
-            .map((m) => MatchModel.fromJson(m as Map<String, dynamic>))
-            .toList();
-      },
-    );
+    final result = await _dio.get('matches', queryParameters: params);
+    return result.fold((failure) => throw Exception(failure.message), (
+      response,
+    ) {
+      final data = response.data as Map<String, dynamic>;
+      final matches = data['data']['matches'] as List<dynamic>;
+      return matches
+          .map((m) => MatchModel.fromJson(m as Map<String, dynamic>))
+          .toList();
+    });
   }
 
   Future<MatchModel> getMatchById(String id) async {
-    final result = await _dio.get('/matches/$id');
-    return result.fold(
-      (failure) => throw Exception(failure.message),
-      (response) {
-        final data = response.data as Map<String, dynamic>;
-        return MatchModel.fromJson(
-            data['data']['match'] as Map<String, dynamic>);
-      },
-    );
+    final result = await _dio.get('matches/$id');
+    return result.fold((failure) => throw Exception(failure.message), (
+      response,
+    ) {
+      final data = response.data as Map<String, dynamic>;
+      return MatchModel.fromJson(data['data']['match'] as Map<String, dynamic>);
+    });
   }
 
   Future<MatchModel> createMatch(MatchModel match) async {
-    final result = await _dio.post('/matches', data: match.toJson());
+    final result = await _dio.post('matches', data: match.toJson());
     return result.fold(
-      (failure) => throw Exception(failure.message),
+      (failure) {
+        // Log the detailed error from the backend if available
+        if (failure.message.contains('500')) {
+          AppLogger.error('BACKEND ERROR: ${failure.message}');
+        }
+        throw failure.message;
+      },
       (response) {
         final data = response.data as Map<String, dynamic>;
         return MatchModel.fromJson(
-            data['data']['match'] as Map<String, dynamic>);
+          data['data']['match'] as Map<String, dynamic>,
+        );
       },
     );
   }
 
   Future<MatchModel> joinMatch(String id) async {
-    final result = await _dio.post('/matches/$id/join');
-    return result.fold(
-      (failure) => throw Exception(failure.message),
-      (response) {
-        final data = response.data as Map<String, dynamic>;
-        return MatchModel.fromJson(
-            data['data']['match'] as Map<String, dynamic>);
-      },
-    );
+    final result = await _dio.post('matches/$id/join');
+    return result.fold((failure) => throw failure.message, (response) {
+      final data = response.data as Map<String, dynamic>;
+      return MatchModel.fromJson(data['data']['match'] as Map<String, dynamic>);
+    });
   }
 }

@@ -31,7 +31,10 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text('Match Details', style: typography.titleLarge?.copyWith(color: Colors.white)),
+        title: Text(
+          'Match Details',
+          style: typography.titleLarge?.copyWith(color: Colors.white),
+        ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
@@ -57,7 +60,12 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
 
           final match = state.selectedMatch;
           if (match == null) {
-            return const Center(child: Text('Match not found', style: TextStyle(color: Colors.white)));
+            return const Center(
+              child: Text(
+                'Match not found',
+                style: TextStyle(color: Colors.white),
+              ),
+            );
           }
 
           return SingleChildScrollView(
@@ -69,7 +77,8 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(32.r),
                   child: Image.network(
-                    match.pitchImage ?? 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80',
+                    match.pitchImage ??
+                        'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80',
                     height: 250.h,
                     width: double.infinity,
                     fit: BoxFit.cover,
@@ -78,16 +87,26 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
                 SizedBox(height: 24.h),
                 Text(
                   match.title,
-                  style: typography.displaySmall?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+                  style: typography.displaySmall?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 Row(
                   children: [
-                    const Icon(Icons.location_on, color: Color(0xFF4BE277), size: 16),
+                    const Icon(
+                      Icons.location_on,
+                      color: Color(0xFF4BE277),
+                      size: 16,
+                    ),
                     SizedBox(width: 8.w),
                     Expanded(
                       child: Text(
                         match.pitchName ?? 'Premium Pitch',
-                        style: TextStyle(color: const Color(0xFFBCC7DE), fontSize: 14.sp),
+                        style: TextStyle(
+                          color: const Color(0xFFBCC7DE),
+                          fontSize: 14.sp,
+                        ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -101,28 +120,71 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
                   children: [
                     _infoCard('Date', match.date, Icons.calendar_today, colors),
                     _infoCard('Time', match.startTime, Icons.timer, colors),
-                    _infoCard('Level', match.skillLevel.toUpperCase(), Icons.bolt, colors),
+                    _infoCard(
+                      'Level',
+                      match.skillLevel.toUpperCase(),
+                      Icons.bolt,
+                      colors,
+                    ),
                   ],
                 ),
                 SizedBox(height: 16.h),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _infoCard('Slots', '${match.participantIds.length}/${match.maxPlayers}', Icons.group, colors),
-                    _infoCard('Price', '${match.pricePerPlayer.toInt()} EGP', Icons.payments, colors),
-                    _infoCard('Status', match.status.toUpperCase(), Icons.info, colors),
+                    _infoCard(
+                      'Slots',
+                      '${match.participantIds.length}/${match.maxPlayers}',
+                      Icons.group,
+                      colors,
+                    ),
+                    _infoCard(
+                      'Price',
+                      '${match.pricePerPlayer.toInt()} EGP',
+                      Icons.payments,
+                      colors,
+                    ),
+                    _infoCard(
+                      'Status',
+                      match.status.toUpperCase(),
+                      Icons.info,
+                      colors,
+                    ),
                   ],
                 ),
                 SizedBox(height: 48.h),
                 Text(
                   'Participants',
-                  style: typography.titleLarge?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+                  style: typography.titleLarge?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 SizedBox(height: 16.h),
-                if (match.participantIds.isEmpty)
-                  const Text('No participants yet', style: TextStyle(color: Color(0xFFBCC7DE)))
+                if (match.participants.isEmpty && match.participantIds.isEmpty)
+                  const Text(
+                    'No participants yet',
+                    style: TextStyle(color: Color(0xFFBCC7DE)),
+                  )
+                else if (match.participants.isEmpty)
+                  // Fallback to IDs if names aren't populated yet
+                  ...List.generate(
+                    match.participantIds.length,
+                    (index) => _participantTile(
+                      index,
+                      'Player ${match.participantIds[index]}',
+                      null,
+                    ),
+                  )
                 else
-                  ...List.generate(match.participantIds.length, (index) => _participantTile(index, match.participantIds[index])),
+                  ...List.generate(
+                    match.participants.length,
+                    (index) => _participantTile(
+                      index,
+                      match.participants[index].name,
+                      match.participants[index].photoUrl,
+                    ),
+                  ),
                 SizedBox(height: 120.h),
               ],
             ),
@@ -138,13 +200,19 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
             padding: EdgeInsets.all(24.w),
             decoration: BoxDecoration(
               color: const Color(0xFF131B2E),
-              border: Border(top: BorderSide(color: Colors.white.withValues(alpha: 0.1))),
+              border: Border(
+                top: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
+              ),
             ),
             child: AppButton(
               label: match.isFull ? 'Match Full' : 'Join This Match',
-              onPressed: match.isFull ? null : () => context.read<MatchmakingCubit>().joinMatch(match.id),
+              onPressed: match.isFull
+                  ? null
+                  : () => context.read<MatchmakingCubit>().joinMatch(match.id),
               isFullWidth: true,
-              variant: match.isFull ? ButtonVariant.secondary : ButtonVariant.primary,
+              variant: match.isFull
+                  ? ButtonVariant.secondary
+                  : ButtonVariant.primary,
             ),
           );
         },
@@ -152,7 +220,12 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
     );
   }
 
-  Widget _infoCard(String label, String value, IconData icon, ColorScheme colors) {
+  Widget _infoCard(
+    String label,
+    String value,
+    IconData icon,
+    ColorScheme colors,
+  ) {
     return Container(
       width: 105.w,
       padding: EdgeInsets.all(12.w),
@@ -164,9 +237,17 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
         children: [
           Icon(icon, color: colors.primary, size: 20),
           SizedBox(height: 8.h),
-          Text(label, style: TextStyle(color: const Color(0xFFBCC7DE), fontSize: 10.sp)),
-          Text(value, 
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12.sp),
+          Text(
+            label,
+            style: TextStyle(color: const Color(0xFFBCC7DE), fontSize: 10.sp),
+          ),
+          Text(
+            value,
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 12.sp,
+            ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
@@ -175,7 +256,7 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
     );
   }
 
-  Widget _participantTile(int index, String playerId) {
+  Widget _participantTile(int index, String name, String? photoUrl) {
     return Container(
       margin: EdgeInsets.only(bottom: 12.h),
       padding: EdgeInsets.all(12.w),
@@ -186,12 +267,21 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
       child: Row(
         children: [
           CircleAvatar(
-            radius: 20.r, 
+            radius: 20.r,
             backgroundColor: const Color(0xFF2D3449),
-            child: const Icon(Icons.person, color: Colors.white, size: 20),
+            backgroundImage: photoUrl != null ? NetworkImage(photoUrl) : null,
+            child: photoUrl == null
+                ? const Icon(Icons.person, color: Colors.white, size: 20)
+                : null,
           ),
           SizedBox(width: 16.w),
-          Text('Player $playerId', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+          Text(
+            name,
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           const Spacer(),
           const Icon(Icons.check_circle, color: Color(0xFF4BE277), size: 16),
         ],
