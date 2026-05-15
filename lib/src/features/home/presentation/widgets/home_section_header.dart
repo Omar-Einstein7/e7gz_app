@@ -27,9 +27,12 @@ class HomeSectionHeader extends StatelessWidget {
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
                   subtitle.toUpperCase(),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: typography.labelSmall?.copyWith(
                     color: colors.primary,
                     fontWeight: FontWeight.w900,
@@ -38,6 +41,8 @@ class HomeSectionHeader extends StatelessWidget {
                 ),
                 Text(
                   title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: typography.headlineSmall?.copyWith(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -46,6 +51,7 @@ class HomeSectionHeader extends StatelessWidget {
               ],
             ),
           ),
+          SizedBox(width: 16.w),
           if (showViewAll)
             GestureDetector(
               onTap: onViewAllPressed,
