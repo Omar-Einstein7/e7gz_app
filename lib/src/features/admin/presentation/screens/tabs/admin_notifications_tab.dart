@@ -3,13 +3,30 @@ import 'package:flutter/material.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:e7gz/src/features/admin/data/datasources/admin_remote_datasource.dart';
 
-class AdminNotificationsTab extends StatelessWidget {
+class AdminNotificationsTab extends StatefulWidget {
   final AdminRemoteDataSource dataSource;
 
   const AdminNotificationsTab({super.key, required this.dataSource});
 
   @override
+  State<AdminNotificationsTab> createState() => _AdminNotificationsTabState();
+}
+
+class _AdminNotificationsTabState extends State<AdminNotificationsTab> with AutomaticKeepAliveClientMixin {
+  late Future<List<dynamic>> _notificationsFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _notificationsFuture = widget.dataSource.getNotifications();
+  }
+
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(
@@ -28,7 +45,7 @@ class AdminNotificationsTab extends StatelessWidget {
               ),
               const Spacer(),
               TextButton.icon(
-                onPressed: () => dataSource.markNotificationsAsRead(),
+                onPressed: () => widget.dataSource.markNotificationsAsRead(),
                 icon: const Icon(
                   IconsaxPlusBold.tick_square,
                   color: AdminColors.accent,
@@ -44,7 +61,7 @@ class AdminNotificationsTab extends StatelessWidget {
           const SizedBox(height: 20),
           // ── List ─────────────────────────────────────────────
           FutureBuilder<List<dynamic>>(
-            future: dataSource.getNotifications(),
+            future: _notificationsFuture,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(

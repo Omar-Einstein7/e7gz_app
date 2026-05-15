@@ -5,15 +5,32 @@ import 'package:flutter/material.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:e7gz/src/features/admin/data/datasources/admin_remote_datasource.dart';
 
-class AdminDashboardTab extends StatelessWidget {
+class AdminDashboardTab extends StatefulWidget {
   final AdminRemoteDataSource dataSource;
 
   const AdminDashboardTab({super.key, required this.dataSource});
 
   @override
+  State<AdminDashboardTab> createState() => _AdminDashboardTabState();
+}
+
+class _AdminDashboardTabState extends State<AdminDashboardTab> with AutomaticKeepAliveClientMixin {
+  late Future<Map<String, dynamic>> _statsFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _statsFuture = widget.dataSource.getDashboardStats();
+  }
+
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     return FutureBuilder<Map<String, dynamic>>(
-      future: dataSource.getDashboardStats(),
+      future: _statsFuture,
       builder: (context, snapshot) {
         final stats = snapshot.data?['data'] ?? snapshot.data ?? {};
         final loading = snapshot.connectionState == ConnectionState.waiting;

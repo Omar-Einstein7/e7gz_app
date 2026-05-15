@@ -12,7 +12,7 @@ class FeaturedPitchesList extends StatelessWidget {
     final typography = context.typography;
 
     return SizedBox(
-      height: 450.h,
+      height: 300.h,
       child: BlocBuilder<PitchesCubit, PitchesState>(
         builder: (context, state) {
           if (state.status == PitchesStatus.loading) {

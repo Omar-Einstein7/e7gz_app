@@ -63,9 +63,11 @@ class _MainWrapperState extends State<MainWrapper> {
 
   @override
   Widget build(BuildContext context) {
-    
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final bgColor = isDark ? const Color(0xFF0B1326) : Theme.of(context).colorScheme.surface;
+
     return Scaffold(
-      backgroundColor: const Color(0xFF0B1326),
+      backgroundColor: bgColor,
       body: PageView(
         controller: _pageController,
         onPageChanged: _onPageChanged,
@@ -99,14 +101,18 @@ class CustomBottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bottomPadding = MediaQuery.paddingOf(context).bottom;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     
+    final navBg = isDark ? const Color(0xFF0B1326).withValues(alpha: 0.9) : Theme.of(context).colorScheme.surface.withValues(alpha: 0.9);
+    final borderColor = isDark ? Colors.white.withValues(alpha: 0.05) : Theme.of(context).colorScheme.outlineVariant;
+
     return Container(
       padding: EdgeInsets.only(bottom: bottomPadding > 0 ? bottomPadding : 10.h),
       decoration: BoxDecoration(
-        color: const Color(0xFF0B1326).withValues(alpha: 0.9),
+        color: navBg,
         border: Border(
           top: BorderSide(
-            color: Colors.white.withValues(alpha: 0.05),
+            color: borderColor,
             width: 1,
           ),
         ),
@@ -119,40 +125,50 @@ class CustomBottomNavBar extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _NavItem(
-                  label: 'Home',
-                  icon: IconsaxPlusLinear.home,
-                  activeIcon: IconsaxPlusBold.home,
-                  isSelected: currentIndex == 0,
-                  onTap: () => onTap(0),
+                Expanded(
+                  child: _NavItem(
+                    label: 'Home',
+                    icon: IconsaxPlusLinear.home,
+                    activeIcon: IconsaxPlusBold.home,
+                    isSelected: currentIndex == 0,
+                    onTap: () => onTap(0),
+                  ),
                 ),
-                _NavItem(
-                  label: 'Search',
-                  icon: IconsaxPlusLinear.search_normal_1,
-                  activeIcon: IconsaxPlusBold.search_normal_1,
-                  isSelected: currentIndex == 1,
-                  onTap: () => onTap(1),
+                Expanded(
+                  child: _NavItem(
+                    label: 'Search',
+                    icon: IconsaxPlusLinear.search_normal_1,
+                    activeIcon: IconsaxPlusBold.search_normal_1,
+                    isSelected: currentIndex == 1,
+                    onTap: () => onTap(1),
+                  ),
                 ),
-                _NavItem(
-                  label: 'Matches',
-                  icon: IconsaxPlusLinear.user_octagon,
-                  activeIcon: IconsaxPlusBold.user_octagon,
-                  isSelected: currentIndex == 2,
-                  onTap: () => onTap(2),
+                Expanded(
+                  child: _NavItem(
+                    label: 'Matches',
+                    icon: IconsaxPlusLinear.user_octagon,
+                    activeIcon: IconsaxPlusBold.user_octagon,
+                    isSelected: currentIndex == 2,
+                    onTap: () => onTap(2),
+                  ),
                 ),
-                _NavItem(
-                  label: 'Bookings',
-                  icon: IconsaxPlusLinear.calendar_1,
-                  activeIcon: IconsaxPlusBold.calendar_1,
-                  isSelected: currentIndex == 3,
-                  onTap: () => onTap(3),
+                Expanded(
+                  child: _NavItem(
+                    label: 'Bookings',
+                    icon: IconsaxPlusLinear.calendar_1,
+                    activeIcon: IconsaxPlusBold.calendar_1,
+                    isSelected: currentIndex == 3,
+                    onTap: () => onTap(3),
+                  ),
                 ),
-                _NavItem(
-                  label: 'Profile',
-                  icon: IconsaxPlusLinear.user,
-                  activeIcon: IconsaxPlusBold.user,
-                  isSelected: currentIndex == 4,
-                  onTap: () => onTap(4),
+                Expanded(
+                  child: _NavItem(
+                    label: 'Profile',
+                    icon: IconsaxPlusLinear.user,
+                    activeIcon: IconsaxPlusBold.user,
+                    isSelected: currentIndex == 4,
+                    onTap: () => onTap(4),
+                  ),
                 ),
               ],
             ),
@@ -188,7 +204,7 @@ class _NavItem extends StatelessWidget {
       child: AnimatedContainer(
         duration: 300.ms,
         curve: Curves.easeInOut,
-        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+        padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 8.h),
         decoration: BoxDecoration(
           color: isSelected ? cs.primary.withValues(alpha: 0.1) : Colors.transparent,
           borderRadius: BorderRadius.circular(24.r),
@@ -212,6 +228,8 @@ class _NavItem extends StatelessWidget {
                 fontWeight: isSelected ? FontWeight.w900 : FontWeight.w500,
                 letterSpacing: 0.5,
               ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),

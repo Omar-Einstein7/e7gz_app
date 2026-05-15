@@ -6,13 +6,30 @@ import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
-class AdminBookingsTab extends StatelessWidget {
+class AdminBookingsTab extends StatefulWidget {
   final AdminRemoteDataSource dataSource;
 
   const AdminBookingsTab({super.key, required this.dataSource});
 
   @override
+  State<AdminBookingsTab> createState() => _AdminBookingsTabState();
+}
+
+class _AdminBookingsTabState extends State<AdminBookingsTab> with AutomaticKeepAliveClientMixin {
+  late Future<List<dynamic>> _bookingsFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _bookingsFuture = widget.dataSource.getMyBookings();
+  }
+
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(
@@ -23,7 +40,7 @@ class AdminBookingsTab extends StatelessWidget {
           const Text('Track all reservations', style: AdminTextStyles.label),
           const SizedBox(height: 24),
           FutureBuilder<List<dynamic>>(
-            future: dataSource.getMyBookings(),
+            future: _bookingsFuture,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(

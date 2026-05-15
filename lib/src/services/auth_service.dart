@@ -2,6 +2,7 @@ import 'dart:async';
 import '../utils/utils.dart';
 import 'secure_storage_service.dart';
 import 'package:dio/dio.dart';
+import 'package:image_picker/image_picker.dart';
 
 /// Keys used to persist the JWT in secure storage.
 const _kAccessTokenKey = 'jwt_token';
@@ -85,8 +86,11 @@ class AuthService {
           'email': email,
           'password': password,
           'phone': phone,
-          'role': role ?? 'player',
+          'role': (role ?? 'player').toLowerCase(),
         },
+        options: Options(
+          headers: {'Content-Type': 'application/json'},
+        ),
       );
       final data = response.data as Map<String, dynamic>;
 
@@ -134,6 +138,41 @@ class AuthService {
       final response = await _dio.get<dynamic>('auth/me');
       final data = response.data as Map<String, dynamic>;
       return data['data'] ?? data;
+    });
+  }
+
+  FutureEither<Map<String, dynamic>?> updateProfile({
+    String? name,
+    String? phone,
+    String? photoPath,
+  }) async {
+    return runTask(() async {
+      final data = <String, dynamic>{};
+      if (name != null) data['name'] = name;
+      if (phone != null) data['phone'] = phone;
+      
+      final formData = FormData.fromMap(data);
+      if (photoPath != null) {
+        final xfile = XFile(photoPath);
+        final bytes = await xfile.readAsBytes();
+        formData.files.add(
+          MapEntry(
+            'photo',
+            MultipartFile.fromBytes(
+              bytes,
+              filename: 'profile_pic.jpg',
+              contentType: DioMediaType('image', 'jpeg'),
+            ),
+          ),
+        );
+      }
+
+      final response = await _dio.put<dynamic>('auth/me', data: formData);
+      final responseData = response.data as Map<String, dynamic>;
+      final userMap = responseData['data'] ?? responseData;
+      
+      _authStateController.add(userMap);
+      return userMap;
     });
   }
 

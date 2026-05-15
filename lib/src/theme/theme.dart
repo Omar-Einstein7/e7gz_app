@@ -1,4 +1,5 @@
 import 'package:e7gz/src/imports/core_imports.dart';
+import 'package:e7gz/src/theme/feature_themes.dart';
 
 Color _colorFromHex(String hex) {
   final cleaned = hex.replaceFirst('#', '');
@@ -81,22 +82,24 @@ class AppDesignTokens extends ThemeExtension<AppDesignTokens> {
   }
 }
 
-ThemeData _buildTheme(ColorScheme colorScheme, AppColorsExtension customColors) {
+ThemeData _buildTheme(ColorScheme colorScheme, AppColorsExtension customColors, PitchThemeExtension pitchTheme) {
   final textTheme = buildTextTheme();
   
   return ThemeData(
     useMaterial3: true,
+    fontFamily: 'Chewy',
     primaryColor: colorScheme.primary,
     colorScheme: colorScheme,
     textTheme: textTheme,
     extensions: [
       customColors,
+      pitchTheme,
       AppDesignTokens.fallback,
     ],
     
     // --- Basic Elements ---
     scaffoldBackgroundColor: colorScheme.brightness == Brightness.dark 
-      ? const Color(0xFF0B1326) 
+      ? pitchTheme.nightBackground 
       : colorScheme.surface,
     dividerTheme: DividerThemeData(
       color: colorScheme.outlineVariant,
@@ -358,7 +361,7 @@ ThemeData buildLightTheme({required String primaryColorHex}) {
     seedColor: seed,
     brightness: Brightness.light,
   );
-  return _buildTheme(colorScheme, AppPalettes.light);
+  return _buildTheme(colorScheme, AppPalettes.light, PitchThemeExtension.light);
 }
 
 ThemeData buildDarkTheme({required String primaryColorHex}) {
@@ -367,7 +370,7 @@ ThemeData buildDarkTheme({required String primaryColorHex}) {
     seedColor: seed,
     brightness: Brightness.dark,
   );
-  return _buildTheme(colorScheme, AppPalettes.dark);
+  return _buildTheme(colorScheme, AppPalettes.dark, PitchThemeExtension.dark);
 }
 
 CupertinoThemeData buildCupertinoTheme({required String primaryColorHex}) {

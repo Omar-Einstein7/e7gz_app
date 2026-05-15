@@ -31,5 +31,12 @@ abstract class AuthRepository {
   
   /// Check if the user is currently authenticated natively
   FutureEither<AppUser?> checkAuthState();
+  
+  /// Update current user profile
+  FutureEither<AppUser> updateProfile({
+    String? name,
+    String? phone,
+    String? photoPath,
+  });
 }
 

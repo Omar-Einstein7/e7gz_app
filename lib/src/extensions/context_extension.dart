@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../theme/color_schemes.dart';
+import '../theme/feature_themes.dart';
 import '../theme/theme.dart';
 import '../shared/enums/snack_bar_type.dart';
 
@@ -20,6 +21,10 @@ extension ContextExtension on BuildContext {
   /// Design tokens (spacing, border radii, elevation defaults).
   AppDesignTokens get designTokens =>
       theme.extension<AppDesignTokens>() ?? AppDesignTokens.fallback;
+
+  /// Premium Pitch specific theme tokens.
+  PitchThemeExtension get pitchTheme =>
+      theme.extension<PitchThemeExtension>() ?? (isDarkMode ? PitchThemeExtension.dark : PitchThemeExtension.light);
 
   // ── MediaQuery shortcuts ─────────────────────────────────────────────────
   Size get mediaQuerySize => MediaQuery.sizeOf(this);

@@ -10,6 +10,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<LoginRequested>(_onLoginRequested);
     on<SignUpRequested>(_onSignUpRequested);
     on<ForgotPasswordRequested>(_onForgotPasswordRequested);
+    on<UpdateProfileRequested>(_onUpdateProfileRequested);
   }
 
   Future<void> _onLoginRequested(
@@ -75,6 +76,30 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       },
     );
   }
+
+  Future<void> _onUpdateProfileRequested(
+    UpdateProfileRequested event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(state.copyWith(isLoading: true));
+    
+    final result = await _repository.updateProfile(
+      name: event.name,
+      phone: event.phone,
+      photoPath: event.photoPath,
+    );
+    
+    result.fold(
+      (failure) {
+        emit(state.copyWith(isLoading: false));
+        showGlobalToast(message: failure.message, status: 'error');
+      },
+      (user) {
+        emit(state.copyWith(isLoading: false));
+        showGlobalToast(message: 'Profile updated successfully', status: 'success');
+      },
+    );
+  }
 }
 
 abstract class AuthEvent extends Equatable {
@@ -107,6 +132,16 @@ class SignUpRequested extends AuthEvent {
 class ForgotPasswordRequested extends AuthEvent {
   final String email;
   const ForgotPasswordRequested({required this.email});
+}
+
+class UpdateProfileRequested extends AuthEvent {
+  final String? name;
+  final String? phone;
+  final String? photoPath;
+  const UpdateProfileRequested({this.name, this.phone, this.photoPath});
+
+  @override
+  List<Object> get props => [name ?? '', phone ?? '', photoPath ?? ''];
 }
 
 class AuthState extends Equatable {

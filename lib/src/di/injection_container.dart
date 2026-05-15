@@ -65,6 +65,9 @@ import '../features/notifications/data/datasources/notification_remote_datasourc
 import '../features/notifications/data/repositories/notification_repository_impl.dart';
 import '../features/notifications/domain/repositories/notification_repository.dart';
 import '../features/notifications/presentation/cubit/notifications_cubit.dart';
+import '../features/profile/presentation/cubit/profile_cubit.dart';
+import '../theme/cubit/theme_cubit.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // ── Home ─────────────────────────────────────────────────────────────────────
 import '../features/home/data/datasources/home_remote_datasource.dart';
@@ -99,6 +102,9 @@ Future<void> initDependencies() async {
     () => AppConfig.authDio,
     instanceName: 'authDio',
   );
+
+  final sharedPrefs = await SharedPreferences.getInstance();
+  sl.registerLazySingleton<SharedPreferences>(() => sharedPrefs);
 
   // ════════════════════════════════════════════════════════════════════════════
   // ── 2. SERVICES ───────────────────────────────────────────────────────────
@@ -274,4 +280,5 @@ Future<void> initDependencies() async {
   sl.registerFactory(() => HomeCubit(repository: sl<HomeRepository>()));
   sl.registerFactory(() => SearchCubit(repository: sl<SearchRepository>()));
   sl.registerFactory(() => ProfileCubit(repository: sl<ProfileRepository>()));
+  sl.registerSingleton<ThemeCubit>(ThemeCubit(sl<SharedPreferences>()));
 }

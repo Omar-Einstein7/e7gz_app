@@ -22,20 +22,56 @@ class ShiftCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final typography = context.typography;
+    final colors = context.colors;
     
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.all(24.w),
         decoration: BoxDecoration(
-          color: const Color(0xFF131B2E),
+          color: isSelected 
+            ? const Color(0xFF1D2942)
+            : const Color(0xFF131B2E),
           borderRadius: BorderRadius.circular(32.r),
-          border: isSelected
-              ? Border.all(color: const Color(0xFF4BE277), width: 1.5)
-              : null,
+          border: Border.all(
+            color: isSelected 
+              ? const Color(0xFF4BE277).withValues(alpha: 0.5) 
+              : Colors.white.withValues(alpha: 0.05),
+            width: 1.5,
+          ),
+          gradient: isSelected ? LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              const Color(0xFF4BE277).withValues(alpha: 0.1),
+              Colors.transparent,
+            ],
+          ) : null,
+          boxShadow: isSelected ? [
+            BoxShadow(
+              color: const Color(0xFF4BE277).withValues(alpha: 0.1),
+              blurRadius: 20,
+              offset: const Offset(0, 10),
+            ),
+          ] : null,
         ),
         child: Row(
           children: [
+            Container(
+              padding: EdgeInsets.all(12.w),
+              decoration: BoxDecoration(
+                color: isSelected 
+                  ? const Color(0xFF4BE277).withValues(alpha: 0.1) 
+                  : const Color(0xFF171F33),
+                borderRadius: BorderRadius.circular(16.r),
+              ),
+              child: Icon(
+                icon,
+                color: isSelected ? const Color(0xFF4BE277) : const Color(0xFFBCC7DE),
+                size: 24.sp,
+              ),
+            ),
+            SizedBox(width: 20.w),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -45,23 +81,37 @@ class ShiftCard extends StatelessWidget {
                     style: typography.labelSmall?.copyWith(
                       color: isSelected ? const Color(0xFF4BE277) : const Color(0xFFBCC7DE),
                       fontWeight: FontWeight.w900,
-                      letterSpacing: 1,
+                      letterSpacing: 1.5,
+                      fontSize: 10.sp,
                     ),
                   ),
+                  SizedBox(height: 4.h),
                   Text(
                     title,
-                    style: typography.titleLarge?.copyWith(
+                    style: typography.titleMedium?.copyWith(
                       color: Colors.white,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w900,
+                      fontSize: 18.sp,
                     ),
                   ),
-                  SizedBox(height: 12.h),
-                  Text(
-                    timeRange,
-                    style: TextStyle(
-                      color: const Color(0xFFBCC7DE).withValues(alpha: 0.5),
-                      fontSize: 12.sp,
-                    ),
+                  SizedBox(height: 8.h),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.access_time,
+                        color: const Color(0xFFBCC7DE).withValues(alpha: 0.4),
+                        size: 14.sp,
+                      ),
+                      SizedBox(width: 6.w),
+                      Text(
+                        timeRange,
+                        style: TextStyle(
+                          color: const Color(0xFFBCC7DE).withValues(alpha: 0.6),
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -69,23 +119,21 @@ class ShiftCard extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                RichText(
-                  text: TextSpan(
-                    text: '$price ',
-                    style: typography.headlineSmall?.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w900,
-                    ),
-                    children: [
-                      TextSpan(
-                        text: 'EGP / HOUR',
-                        style: TextStyle(
-                          color: const Color(0xFFBCC7DE),
-                          fontSize: 10.sp,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
+                Text(
+                  price,
+                  style: typography.headlineSmall?.copyWith(
+                    color: isSelected ? const Color(0xFF4BE277) : Colors.white,
+                    fontWeight: FontWeight.w900,
+                    fontSize: 22.sp,
+                  ),
+                ),
+                Text(
+                  'EGP / HR',
+                  style: TextStyle(
+                    color: const Color(0xFFBCC7DE).withValues(alpha: 0.5),
+                    fontSize: 9.sp,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 0.5,
                   ),
                 ),
               ],

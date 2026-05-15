@@ -10,11 +10,10 @@ class SignupScreen extends StatefulWidget {
   State<SignupScreen> createState() => _SignupScreenState();
 }
 
-enum AppRole { player, owner }
 
 class _SignupScreenState extends State<SignupScreen> {
   final _formKey = GlobalKey<FormState>();
-  AppRole _selectedRole = AppRole.player;
+  String? _selectedRole;
   
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -78,23 +77,23 @@ class _SignupScreenState extends State<SignupScreen> {
                     children: [
                       Expanded(
                         child: roleCard(
-                          role: AppRole.player,
+                          role: 'player',
                           title: 'Player',
                           subtitle: 'Book pitches, find teammates, and join matches.',
                           icon: Icons.sports_soccer,
-                          isSelected: _selectedRole == AppRole.player,
-                          onTap: () => setState(() => _selectedRole = AppRole.player),
+                          isSelected: _selectedRole == 'player',
+                          onTap: () => setState(() => _selectedRole = 'player'),
                         ),
                       ),
                       SizedBox(width: 16.w),
                       Expanded(
                         child: roleCard(
-                          role: AppRole.owner,
+                          role: 'owner',
                           title: 'Pitch Owner',
                           subtitle: 'List your stadium, manage bookings, and grow business.',
                           icon: Icons.stadium,
-                          isSelected: _selectedRole == AppRole.owner,
-                          onTap: () => setState(() => _selectedRole = AppRole.owner),
+                          isSelected: _selectedRole == 'owner',
+                          onTap: () => setState(() => _selectedRole = 'owner'),
                         ),
                       ),
                     ],
@@ -194,14 +193,14 @@ class _SignupScreenState extends State<SignupScreen> {
                                     height: ButtonSize.large,
                                     isLoading: state.isLoading,
                                     suffixIcon: const Icon(Icons.arrow_forward),
-                                    onPressed: () {
+                                    onPressed: _selectedRole == null ? null : () {
                                       if (_formKey.currentState?.validate() ?? false) {
                                         context.read<AuthBloc>().add(
                                         SignUpRequested(
                                           name: _nameController.text.trim(),
                                           email: _emailController.text.trim(),
                                           password: _passwordController.text,
-                                          role: _selectedRole.name,
+                                          role: _selectedRole ?? 'player',
                                           phone: _phoneController.text,
                                         ),
                                         );
@@ -305,7 +304,7 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
   Widget roleCard({
-    required AppRole role,
+    required String role,
     required String title,
     required String subtitle,
     required IconData icon,
@@ -341,12 +340,12 @@ class _SignupScreenState extends State<SignupScreen> {
                   width: 48.w,
                   height: 48.w,
                   decoration: BoxDecoration(
-                    color: (role == AppRole.player ? const Color(0xFF4BE277) : const Color(0xFF22C55E)).withValues(alpha: 0.2),
+                    color: (role == 'player' ? const Color(0xFF4BE277) : const Color(0xFF22C55E)).withValues(alpha: 0.2),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
                     icon,
-                    color: role == AppRole.player ? const Color(0xFF4BE277) : const Color(0xFF22C55E),
+                    color: role == 'player' ? const Color(0xFF4BE277) : const Color(0xFF22C55E),
                     size: 28,
                   ),
                 ),

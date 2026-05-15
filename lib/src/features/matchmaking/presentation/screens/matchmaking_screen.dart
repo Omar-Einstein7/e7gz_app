@@ -36,14 +36,21 @@ class _MatchmakingViewState extends State<_MatchmakingView> {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final typography = context.typography;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    final bgColor = isDark ? const Color(0xFF0B1326) : theme.colorScheme.surface;
+    final textColor = isDark ? Colors.white : theme.colorScheme.onSurface;
+    final secondaryTextColor = isDark ? const Color(0xFFBCC7DE) : theme.colorScheme.onSurfaceVariant;
+    final cardBg = isDark ? const Color(0xFF131B2E) : theme.colorScheme.surfaceContainerLow;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0B1326),
+      backgroundColor: bgColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(IconsaxPlusLinear.menu_1, color: Colors.white),
+          icon: Icon(IconsaxPlusLinear.menu_1, color: textColor),
           onPressed: () {},
         ),
         title: Text(
@@ -56,9 +63,9 @@ class _MatchmakingViewState extends State<_MatchmakingView> {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: const Icon(
+            icon: Icon(
               IconsaxPlusLinear.notification,
-              color: Colors.white,
+              color: textColor,
             ),
             onPressed: () {},
           ),
@@ -66,11 +73,11 @@ class _MatchmakingViewState extends State<_MatchmakingView> {
             padding: EdgeInsets.only(right: 16.w),
             child: CircleAvatar(
               radius: 18.r,
-              backgroundColor: const Color(0xFF2D3449),
-              child: const Icon(
+              backgroundColor: isDark ? const Color(0xFF2D3449) : theme.colorScheme.surfaceContainerHighest,
+              child: Icon(
                 IconsaxPlusBold.user,
                 size: 20,
-                color: Colors.white,
+                color: isDark ? Colors.white : theme.colorScheme.onSurfaceVariant,
               ),
             ),
           ),
@@ -98,6 +105,8 @@ class _MatchmakingViewState extends State<_MatchmakingView> {
         child: BlocBuilder<MatchmakingCubit, MatchmakingState>(
           builder: (context, state) {
             return RefreshIndicator(
+              color: theme.colorScheme.primary,
+              backgroundColor: theme.colorScheme.surface,
               onRefresh: () => context.read<MatchmakingCubit>().loadMatches(),
               child: SingleChildScrollView(
                 padding: EdgeInsets.all(24.w),
@@ -108,7 +117,7 @@ class _MatchmakingViewState extends State<_MatchmakingView> {
                     Text(
                       'Find Team',
                       style: typography.displaySmall?.copyWith(
-                        color: Colors.white,
+                        color: textColor,
                         fontWeight: FontWeight.w900,
                         fontSize: 36.sp,
                       ),
@@ -117,7 +126,7 @@ class _MatchmakingViewState extends State<_MatchmakingView> {
                     Text(
                       "Join open matches across Cairo's premium pitches. The field is waiting for its next star.",
                       style: typography.bodyMedium?.copyWith(
-                        color: const Color(0xFFBCC7DE),
+                        color: secondaryTextColor,
                         height: 1.5,
                       ),
                     ),
@@ -131,7 +140,7 @@ class _MatchmakingViewState extends State<_MatchmakingView> {
                         vertical: 12.h,
                       ),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF131B2E),
+                        color: cardBg,
                         borderRadius: BorderRadius.circular(100.r),
                       ),
                       child: Row(
@@ -140,7 +149,7 @@ class _MatchmakingViewState extends State<_MatchmakingView> {
                           Text(
                             'PUBLIC MATCHES',
                             style: typography.labelSmall?.copyWith(
-                              color: const Color(0xFFBCC7DE),
+                              color: secondaryTextColor,
                               fontWeight: FontWeight.bold,
                               letterSpacing: 1,
                             ),
@@ -158,20 +167,20 @@ class _MatchmakingViewState extends State<_MatchmakingView> {
 
                     if (state.status == MatchmakingStatus.loading &&
                         state.matches.isEmpty)
-                      const Center(child: CircularProgressIndicator())
+                      Center(child: CircularProgressIndicator(color: theme.colorScheme.primary))
                     else if (state.status == MatchmakingStatus.failure &&
                         state.matches.isEmpty)
                       Center(
                         child: Text(
                           state.errorMessage ?? 'Error loading matches',
-                          style: const TextStyle(color: Colors.white70),
+                          style: TextStyle(color: textColor),
                         ),
                       )
                     else if (state.matches.isEmpty)
-                      const Center(
+                      Center(
                         child: Text(
                           'No matches available at the moment',
-                          style: TextStyle(color: Colors.white70),
+                          style: TextStyle(color: secondaryTextColor),
                         ),
                       )
                     else
@@ -203,14 +212,14 @@ class _MatchmakingViewState extends State<_MatchmakingView> {
                           Text(
                             'Weekly Leaderboard',
                             style: typography.headlineSmall?.copyWith(
-                              color: Colors.white,
+                              color: textColor,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           Text(
                             'Top individual match contributors',
                             style: typography.bodySmall?.copyWith(
-                              color: const Color(0xFFBCC7DE),
+                              color: secondaryTextColor,
                             ),
                           ),
                         ],
@@ -242,7 +251,7 @@ class _MatchmakingViewState extends State<_MatchmakingView> {
       floatingActionButton: FloatingActionButton(
         onPressed: () => context.push(AppRoutes.createMatch),
         backgroundColor: colors.primary,
-        child: const Icon(Icons.add, color: Color(0xFF003915), size: 32),
+        child: Icon(Icons.add, color: isDark ? const Color(0xFF003915) : theme.colorScheme.onPrimary, size: 32),
       ),
     );
   }

@@ -8,12 +8,14 @@ class OwnerState extends Equatable {
   final Map<String, dynamic> stats;
   final List<Pitch> myPitches;
   final String? errorMessage;
+  final int selectedTab;
 
   const OwnerState({
     this.status = OwnerStatus.initial,
     this.stats = const {},
     this.myPitches = const [],
     this.errorMessage,
+    this.selectedTab = 0,
   });
 
   OwnerState copyWith({
@@ -21,15 +23,18 @@ class OwnerState extends Equatable {
     Map<String, dynamic>? stats,
     List<Pitch>? myPitches,
     String? errorMessage,
+    bool clearError = false,
+    int? selectedTab,
   }) {
     return OwnerState(
       status: status ?? this.status,
       stats: stats ?? this.stats,
       myPitches: myPitches ?? this.myPitches,
-      errorMessage: errorMessage ?? this.errorMessage,
+      errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
+      selectedTab: selectedTab ?? this.selectedTab,
     );
   }
 
   @override
-  List<Object?> get props => [status, stats, myPitches, errorMessage];
+  List<Object?> get props => [status, stats, myPitches, errorMessage, selectedTab];
 }

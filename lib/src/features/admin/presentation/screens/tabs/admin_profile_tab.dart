@@ -4,20 +4,37 @@ import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:go_router/go_router.dart';
 import 'package:e7gz/src/features/admin/data/datasources/admin_remote_datasource.dart';
 
-class AdminProfileTab extends StatelessWidget {
+class AdminProfileTab extends StatefulWidget {
   final AdminRemoteDataSource dataSource;
 
   const AdminProfileTab({super.key, required this.dataSource});
 
   @override
+  State<AdminProfileTab> createState() => _AdminProfileTabState();
+}
+
+class _AdminProfileTabState extends State<AdminProfileTab> with AutomaticKeepAliveClientMixin {
+  late Future<Map<String, dynamic>> _profileFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _profileFuture = widget.dataSource.getProfile();
+  }
+
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 600),
           child: FutureBuilder<Map<String, dynamic>>(
-            future: dataSource.getProfile(),
+            future: _profileFuture,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(

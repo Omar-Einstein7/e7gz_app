@@ -17,16 +17,22 @@ class MatchmakingCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final typography = context.typography;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final theme = Theme.of(context);
+    final cardBg = isDark ? const Color(0xFF131B2E) : theme.colorScheme.surfaceContainerLow;
+    final textColor = isDark ? Colors.white : theme.colorScheme.onSurface;
+    final subtitleColor = isDark ? const Color(0xFFBCC7DE) : theme.colorScheme.onSurfaceVariant;
+    final shadowColor = isDark ? Colors.black.withValues(alpha: 0.2) : theme.colorScheme.shadow.withValues(alpha: 0.05);
 
     return GestureDetector(
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: const Color(0xFF131B2E),
+          color: cardBg,
           borderRadius: BorderRadius.circular(40.r),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.2),
+              color: shadowColor,
               blurRadius: 20,
             ),
           ],
@@ -52,7 +58,7 @@ class MatchmakingCard extends StatelessWidget {
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
                     decoration: BoxDecoration(
-                      color: match.isFull ? Colors.red : const Color(0xFF4BE277),
+                      color: match.isFull ? Colors.red : (isDark ? const Color(0xFF4BE277) : theme.colorScheme.primary),
                       borderRadius: BorderRadius.circular(100.r),
                     ),
                     child: Text(
@@ -83,22 +89,22 @@ class MatchmakingCard extends StatelessWidget {
                             Text(
                               match.title,
                               style: typography.titleLarge?.copyWith(
-                                color: Colors.white,
+                                color: textColor,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             Row(
                               children: [
-                                const Icon(
+                                Icon(
                                   Icons.location_on,
-                                  color: Color(0xFFBCC7DE),
+                                  color: subtitleColor,
                                   size: 14,
                                 ),
                                 SizedBox(width: 4.w),
                                 Text(
                                   match.pitchName ?? 'Premium Pitch',
                                   style: TextStyle(
-                                    color: const Color(0xFFBCC7DE),
+                                    color: subtitleColor,
                                     fontSize: 12.sp,
                                   ),
                                 ),
@@ -113,14 +119,14 @@ class MatchmakingCard extends StatelessWidget {
                           Text(
                             '${match.pricePerPlayer.toInt()}',
                             style: typography.titleLarge?.copyWith(
-                              color: const Color(0xFF4BE277),
+                              color: isDark ? const Color(0xFF4BE277) : theme.colorScheme.primary,
                               fontWeight: FontWeight.w900,
                             ),
                           ),
                           Text(
                             'EGP / PLAYER',
                             style: TextStyle(
-                              color: const Color(0xFFBCC7DE),
+                              color: subtitleColor,
                               fontSize: 8.sp,
                               fontWeight: FontWeight.bold,
                             ),
@@ -152,7 +158,7 @@ class MatchmakingCard extends StatelessWidget {
                       Text(
                         '+${match.participantIds.length}',
                         style: TextStyle(
-                          color: const Color(0xFFBCC7DE),
+                          color: subtitleColor,
                           fontSize: 12.sp,
                           fontWeight: FontWeight.bold,
                         ),
@@ -164,7 +170,7 @@ class MatchmakingCard extends StatelessWidget {
                           Text(
                             'KICKOFF',
                             style: TextStyle(
-                              color: const Color(0xFFBCC7DE),
+                              color: subtitleColor,
                               fontSize: 8.sp,
                               fontWeight: FontWeight.w900,
                               letterSpacing: 1,
@@ -173,7 +179,7 @@ class MatchmakingCard extends StatelessWidget {
                           Text(
                             '${match.startTime} Today',
                             style: typography.bodySmall?.copyWith(
-                              color: Colors.white,
+                              color: textColor,
                               fontWeight: FontWeight.bold,
                             ),
                           ),

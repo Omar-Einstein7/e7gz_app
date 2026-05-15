@@ -6,13 +6,30 @@ import 'package:e7gz/src/features/admin/data/datasources/admin_remote_datasource
 import 'package:e7gz/src/imports/imports.dart';
 import '../add_pitch_screen.dart';
 
-class AdminPitchesTab extends StatelessWidget {
+class AdminPitchesTab extends StatefulWidget {
   final AdminRemoteDataSource dataSource;
 
   const AdminPitchesTab({super.key, required this.dataSource});
 
   @override
+  State<AdminPitchesTab> createState() => _AdminPitchesTabState();
+}
+
+class _AdminPitchesTabState extends State<AdminPitchesTab> with AutomaticKeepAliveClientMixin {
+  late Future<List<dynamic>> _pitchesFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _pitchesFuture = widget.dataSource.getAllPitches();
+  }
+
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(
@@ -56,7 +73,7 @@ class AdminPitchesTab extends StatelessWidget {
           const SizedBox(height: 24),
           // ── Table ─────────────────────────────────────────────
           FutureBuilder<List<dynamic>>(
-            future: dataSource.getAllPitches(),
+            future: _pitchesFuture,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(

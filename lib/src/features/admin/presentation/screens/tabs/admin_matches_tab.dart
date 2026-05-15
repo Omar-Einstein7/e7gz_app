@@ -3,13 +3,30 @@ import 'package:e7gz/src/features/admin/presentation/widgets/admin_data_table.da
 import 'package:flutter/material.dart';
 import 'package:e7gz/src/features/admin/data/datasources/admin_remote_datasource.dart';
 
-class AdminMatchesTab extends StatelessWidget {
+class AdminMatchesTab extends StatefulWidget {
   final AdminRemoteDataSource dataSource;
 
   const AdminMatchesTab({super.key, required this.dataSource});
 
   @override
+  State<AdminMatchesTab> createState() => _AdminMatchesTabState();
+}
+
+class _AdminMatchesTabState extends State<AdminMatchesTab> with AutomaticKeepAliveClientMixin {
+  late Future<List<dynamic>> _matchesFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _matchesFuture = widget.dataSource.getAllMatches();
+  }
+
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(
@@ -23,7 +40,7 @@ class AdminMatchesTab extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           FutureBuilder<List<dynamic>>(
-            future: dataSource.getAllMatches(),
+            future: _matchesFuture,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(

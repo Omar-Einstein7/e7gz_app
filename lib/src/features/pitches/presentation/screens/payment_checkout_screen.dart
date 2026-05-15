@@ -35,14 +35,22 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
   Widget build(BuildContext context) {
     final cs = context.theme.colorScheme;
     final tt = context.theme.textTheme;
+    final isDark = context.theme.brightness == Brightness.dark;
+
+    final bgColor = isDark ? const Color(0xFF0B1326) : cs.surface;
+    final cardBg = isDark ? const Color(0xFF131B2E) : cs.surfaceContainerLow;
+    final textColor = isDark ? Colors.white : cs.onSurface;
+    final subtitleColor = isDark ? const Color(0xFFBCC7DE) : cs.onSurfaceVariant;
+    final primaryAccent = isDark ? const Color(0xFF4BE277) : cs.primary;
+    final unselectedCardBg = isDark ? const Color(0xFF171F33) : cs.surfaceContainerHighest;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0B1326),
+      backgroundColor: bgColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back, color: textColor),
           onPressed: () => Navigator.pop(context),
         ),
         title: Row(
@@ -53,11 +61,11 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
               style: tt.headlineSmall?.copyWith(color: cs.primary, fontWeight: FontWeight.w900),
             ),
             SizedBox(width: 8.w),
-            const Icon(Icons.verified_user, color: Color(0xFF4BE277), size: 16),
+            Icon(Icons.verified_user, color: primaryAccent, size: 16),
             SizedBox(width: 4.w),
             Text(
               'SECURE CHECKOUT',
-              style: tt.labelSmall?.copyWith(color: const Color(0xFF4BE277), fontWeight: FontWeight.bold, letterSpacing: 1),
+              style: tt.labelSmall?.copyWith(color: primaryAccent, fontWeight: FontWeight.bold, letterSpacing: 1),
             ),
           ],
         ),
@@ -70,7 +78,7 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
           children: [
             Text(
               'Payment Method',
-              style: tt.headlineMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+              style: tt.headlineMedium?.copyWith(color: textColor, fontWeight: FontWeight.bold),
             ),
             
             SizedBox(height: 24.h),
@@ -83,6 +91,7 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
               icon: Icons.account_balance_outlined,
               isSelected: _selectedMethod == PaymentMethod.instapay,
               onTap: () => setState(() => _selectedMethod = PaymentMethod.instapay),
+              cs: cs, isDark: isDark, unselectedCardBg: unselectedCardBg, subtitleColor: subtitleColor, primaryAccent: primaryAccent, textColor: textColor,
             ),
             
             SizedBox(height: 16.h),
@@ -94,6 +103,7 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
               icon: IconsaxPlusBold.wallet,
               isSelected: _selectedMethod == PaymentMethod.wallet,
               onTap: () => setState(() => _selectedMethod = PaymentMethod.wallet),
+              cs: cs, isDark: isDark, unselectedCardBg: unselectedCardBg, subtitleColor: subtitleColor, primaryAccent: primaryAccent, textColor: textColor,
             ),
             
             SizedBox(height: 16.h),
@@ -105,6 +115,7 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
               icon: IconsaxPlusBold.card,
               isSelected: _selectedMethod == PaymentMethod.card,
               onTap: () => setState(() => _selectedMethod = PaymentMethod.card),
+              cs: cs, isDark: isDark, unselectedCardBg: unselectedCardBg, subtitleColor: subtitleColor, primaryAccent: primaryAccent, textColor: textColor,
             ),
             
             SizedBox(height: 32.h),
@@ -113,13 +124,13 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
             Container(
               padding: EdgeInsets.all(24.w),
               decoration: BoxDecoration(
-                color: const Color(0xFF171F33).withValues(alpha: 0.6),
+                color: unselectedCardBg.withValues(alpha: 0.6),
                 borderRadius: BorderRadius.circular(32.r),
               ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(Icons.shield_outlined, color: Color(0xFF4BE277), size: 24),
+                  Icon(Icons.shield_outlined, color: primaryAccent, size: 24),
                   SizedBox(width: 16.w),
                   Expanded(
                     child: Column(
@@ -127,12 +138,12 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
                       children: [
                         Text(
                           'Buyer Protection',
-                          style: tt.titleMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+                          style: tt.titleMedium?.copyWith(color: textColor, fontWeight: FontWeight.bold),
                         ),
                         SizedBox(height: 8.h),
                         Text(
                           'Your payment is secured with end-to-end encryption. Funds are held in escrow until your booking is confirmed by the stadium manager.',
-                          style: tt.bodySmall?.copyWith(color: const Color(0xFFBCC7DE), height: 1.5),
+                          style: tt.bodySmall?.copyWith(color: subtitleColor, height: 1.5),
                         ),
                       ],
                     ),
@@ -147,16 +158,16 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
             Container(
               padding: EdgeInsets.all(32.w),
               decoration: BoxDecoration(
-                color: const Color(0xFF131B2E),
+                color: cardBg,
                 borderRadius: BorderRadius.circular(32.r),
-                border: Border(left: BorderSide(color: cs.primary, width: 4)),
+                border: isDark ? Border(left: BorderSide(color: cs.primary, width: 4)) : Border.all(color: cs.outlineVariant),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     'Booking Summary',
-                    style: tt.titleLarge?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+                    style: tt.titleLarge?.copyWith(color: textColor, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 24.h),
                   Row(
@@ -176,24 +187,24 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
                         children: [
                           Text(
                             widget.pitchName,
-                            style: tt.titleMedium?.copyWith(color: const Color(0xFF4BE277), fontWeight: FontWeight.bold),
+                            style: tt.titleMedium?.copyWith(color: primaryAccent, fontWeight: FontWeight.bold),
                           ),
                           Text(
                             widget.bookingDetails,
-                            style: tt.bodySmall?.copyWith(color: const Color(0xFFBCC7DE)),
+                            style: tt.bodySmall?.copyWith(color: subtitleColor),
                           ),
                         ],
                       ),
                     ],
                   ),
                   SizedBox(height: 32.h),
-                  summaryRow('Subtotal', '${widget.amount.toInt()} EGP', tt),
+                  summaryRow('Subtotal', '${widget.amount.toInt()} EGP', tt, subtitleColor, textColor),
                   SizedBox(height: 12.h),
-                  summaryRow('Service Fee', '0 EGP', tt),
+                  summaryRow('Service Fee', '0 EGP', tt, subtitleColor, textColor),
                   SizedBox(height: 12.h),
-                  summaryRow('Discount', '0 EGP', tt),
+                  summaryRow('Discount', '0 EGP', tt, subtitleColor, textColor),
                   SizedBox(height: 32.h),
-                  Divider(color: Colors.white.withValues(alpha: 0.05)),
+                  Divider(color: isDark ? Colors.white.withValues(alpha: 0.05) : cs.outlineVariant),
                   SizedBox(height: 32.h),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -203,12 +214,12 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
                         children: [
                           Text(
                             'TOTAL AMOUNT',
-                            style: tt.labelSmall?.copyWith(color: const Color(0xFFBCC7DE), fontWeight: FontWeight.bold),
+                            style: tt.labelSmall?.copyWith(color: subtitleColor, fontWeight: FontWeight.bold),
                           ),
                           RichText(
                             text: TextSpan(
                               text: '${widget.amount.toInt()} ',
-                              style: tt.displaySmall?.copyWith(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 32.sp),
+                              style: tt.displaySmall?.copyWith(color: textColor, fontWeight: FontWeight.w900, fontSize: 32.sp),
                               children: [
                                 TextSpan(text: 'EGP', style: TextStyle(color: cs.primary, fontSize: 16.sp, fontWeight: FontWeight.bold)),
                               ],
@@ -219,12 +230,12 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
                       Container(
                         padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF22C55E).withValues(alpha: 0.1),
+                          color: isDark ? const Color(0xFF22C55E).withValues(alpha: 0.1) : cs.primaryContainer,
                           borderRadius: BorderRadius.circular(100.r),
                         ),
                         child: Text(
                           'PAY NOW',
-                          style: TextStyle(color: const Color(0xFF22C55E), fontSize: 10.sp, fontWeight: FontWeight.bold, letterSpacing: 1),
+                          style: TextStyle(color: isDark ? const Color(0xFF22C55E) : cs.onPrimaryContainer, fontSize: 10.sp, fontWeight: FontWeight.bold, letterSpacing: 1),
                         ),
                       ),
                     ],
@@ -246,7 +257,7 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
                     child: Text(
                       'By clicking confirm, you agree to our Terms of\nService and Pitch Cancellation Policy.',
                       textAlign: TextAlign.center,
-                      style: tt.bodySmall?.copyWith(color: const Color(0xFFBCC7DE).withValues(alpha: 0.5), fontSize: 10.sp),
+                      style: tt.bodySmall?.copyWith(color: subtitleColor.withValues(alpha: 0.5), fontSize: 10.sp),
                     ),
                   ),
                 ],
@@ -267,16 +278,22 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
     required IconData icon,
     required bool isSelected,
     required VoidCallback onTap,
+    required ColorScheme cs,
+    required bool isDark,
+    required Color unselectedCardBg,
+    required Color subtitleColor,
+    required Color primaryAccent,
+    required Color textColor,
   }) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.all(24.w),
         decoration: BoxDecoration(
-          color: const Color(0xFF171F33),
+          color: unselectedCardBg,
           borderRadius: BorderRadius.circular(24.r),
           border: Border.all(
-            color: isSelected ? const Color(0xFF4BE277).withValues(alpha: 0.5) : Colors.transparent,
+            color: isSelected ? primaryAccent.withValues(alpha: 0.5) : Colors.transparent,
             width: 2,
           ),
         ),
@@ -286,10 +303,10 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
               width: 48.w,
               height: 48.w,
               decoration: BoxDecoration(
-                color: const Color(0xFF2D3449).withValues(alpha: 0.8),
+                color: isDark ? const Color(0xFF2D3449).withValues(alpha: 0.8) : cs.primary.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
-              child: Icon(icon, color: Colors.white, size: 24),
+              child: Icon(icon, color: isDark ? Colors.white : cs.primary, size: 24),
             ),
             SizedBox(width: 16.w),
             Expanded(
@@ -298,11 +315,11 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
                 children: [
                   Text(
                     title,
-                    style: context.theme.textTheme.titleMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+                    style: context.theme.textTheme.titleMedium?.copyWith(color: textColor, fontWeight: FontWeight.bold),
                   ),
                   Text(
                     subtitle,
-                    style: context.theme.textTheme.bodySmall?.copyWith(color: const Color(0xFFBCC7DE)),
+                    style: context.theme.textTheme.bodySmall?.copyWith(color: subtitleColor),
                   ),
                 ],
               ),
@@ -313,7 +330,7 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: isSelected ? const Color(0xFF4BE277) : const Color(0xFF31394D),
+                  color: isSelected ? primaryAccent : (isDark ? const Color(0xFF31394D) : cs.outline),
                   width: 2,
                 ),
               ),
@@ -321,7 +338,7 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
                 child: Container(
                   width: 12.w,
                   height: 12.w,
-                  decoration: const BoxDecoration(color: Color(0xFF4BE277), shape: BoxShape.circle),
+                  decoration: BoxDecoration(color: primaryAccent, shape: BoxShape.circle),
                 ),
               ) : null,
             ),
@@ -331,12 +348,12 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
     );
   }
 
-  Widget summaryRow(String label, String value, TextTheme tt) {
+  Widget summaryRow(String label, String value, TextTheme tt, Color subtitleColor, Color textColor) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label, style: tt.bodyMedium?.copyWith(color: const Color(0xFFBCC7DE))),
-        Text(value, style: tt.titleMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.bold)),
+        Text(label, style: tt.bodyMedium?.copyWith(color: subtitleColor)),
+        Text(value, style: tt.titleMedium?.copyWith(color: textColor, fontWeight: FontWeight.bold)),
       ],
     );
   }
@@ -379,13 +396,16 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
   }
 
   void _showSuccessDialog() {
+    final isDark = context.theme.brightness == Brightness.dark;
+    final cs = context.theme.colorScheme;
+    
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) => BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
         child: AlertDialog(
-          backgroundColor: const Color(0xFF131B2E),
+          backgroundColor: isDark ? const Color(0xFF131B2E) : cs.surface,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32.r)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -394,19 +414,19 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
               Container(
                 width: 80.w,
                 height: 80.w,
-                decoration: const BoxDecoration(color: Color(0xFF4BE277), shape: BoxShape.circle),
-                child: const Icon(Icons.check, color: Color(0xFF003915), size: 40),
+                decoration: BoxDecoration(color: isDark ? const Color(0xFF4BE277) : cs.primary, shape: BoxShape.circle),
+                child: Icon(Icons.check, color: isDark ? const Color(0xFF003915) : cs.onPrimary, size: 40),
               ),
               SizedBox(height: 32.h),
               Text(
                 'Booking Confirmed!',
-                style: context.theme.textTheme.headlineSmall?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+                style: context.theme.textTheme.headlineSmall?.copyWith(color: isDark ? Colors.white : cs.onSurface, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 16.h),
               Text(
                 'Your pitch is ready. Get your gear and start playing!',
                 textAlign: TextAlign.center,
-                style: context.theme.textTheme.bodyMedium?.copyWith(color: const Color(0xFFBCC7DE)),
+                style: context.theme.textTheme.bodyMedium?.copyWith(color: isDark ? const Color(0xFFBCC7DE) : cs.onSurfaceVariant),
               ),
               SizedBox(height: 40.h),
               AppButton(

@@ -22,8 +22,8 @@ class AppUser extends Equatable {
   bool get isEmpty => id.isEmpty;
   bool get isNotEmpty => id.isNotEmpty;
 
-  bool get isOwner => role == 'owner';
-  bool get isAdmin => role == 'admin';
+  bool get isOwner => role.toLowerCase() == 'owner';
+  bool get isAdmin => role.toLowerCase() == 'admin';
 
   @override
   List<Object?> get props => [id, email, name, photoUrl, role, loyaltyPoints];

@@ -29,4 +29,14 @@ class OwnerRepositoryImpl implements OwnerRepository {
       return left(ServerFailure(e.toString()));
     }
   }
+
+  @override
+  FutureEither<void> deletePitch(String pitchId) async {
+    try {
+      await remoteDataSource.deletePitch(pitchId);
+      return right(null);
+    } catch (e) {
+      return left(ServerFailure(e.toString()));
+    }
+  }
 }

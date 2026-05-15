@@ -5,26 +5,28 @@ class SearchResultCard extends StatelessWidget {
   final Pitch pitch;
   final VoidCallback onTap;
 
-  const SearchResultCard({
-    super.key,
-    required this.pitch,
-    required this.onTap,
-  });
+  const SearchResultCard({super.key, required this.pitch, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     final typography = context.typography;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final theme = Theme.of(context);
+    final cardBg = isDark ? const Color(0xFF131B2E) : theme.colorScheme.surfaceContainerLow;
+    final textColor = isDark ? Colors.white : theme.colorScheme.onSurface;
+    final subtitleColor = isDark ? const Color(0xFFBCC7DE) : theme.colorScheme.onSurfaceVariant;
+    final shadowColor = isDark ? Colors.black.withValues(alpha: 0.2) : theme.colorScheme.shadow.withValues(alpha: 0.05);
 
     return GestureDetector(
       onTap: onTap,
       child: Container(
         margin: EdgeInsets.only(bottom: 24.h),
         decoration: BoxDecoration(
-          color: const Color(0xFF131B2E),
+          color: cardBg,
           borderRadius: BorderRadius.circular(40.r),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.2),
+              color: shadowColor,
               blurRadius: 20,
               offset: const Offset(0, 10),
             ),
@@ -35,7 +37,9 @@ class SearchResultCard extends StatelessWidget {
             Stack(
               children: [
                 ClipRRect(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(40.r)),
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(40.r),
+                  ),
                   child: AppCachedImage(
                     imageUrl: pitch.imageUrl,
                     height: 200.h,
@@ -63,15 +67,20 @@ class SearchResultCard extends StatelessWidget {
                   bottom: 0,
                   left: 20.w,
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 12.w,
+                      vertical: 6.h,
+                    ),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF4BE277),
-                      borderRadius: BorderRadius.vertical(top: Radius.circular(12.r)),
+                      color: isDark ? const Color(0xFF4BE277) : theme.colorScheme.primary,
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(12.r),
+                      ),
                     ),
                     child: Text(
                       'AVAILABLE TODAY',
                       style: TextStyle(
-                        color: const Color(0xFF003915),
+                        color: isDark ? const Color(0xFF003915) : theme.colorScheme.onPrimary,
                         fontSize: 10.sp,
                         fontWeight: FontWeight.w900,
                       ),
@@ -95,24 +104,28 @@ class SearchResultCard extends StatelessWidget {
                             Text(
                               pitch.name,
                               style: typography.titleLarge?.copyWith(
-                                color: Colors.white,
+                                color: textColor,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             SizedBox(height: 4.h),
                             Row(
                               children: [
-                                const Icon(
+                                Icon(
                                   Icons.location_on,
-                                  color: Color(0xFFBCC7DE),
+                                  color: subtitleColor,
                                   size: 14,
                                 ),
                                 SizedBox(width: 4.w),
-                                Text(
-                                  '${pitch.location} • 1.2 km',
-                                  style: TextStyle(
-                                    color: const Color(0xFFBCC7DE),
-                                    fontSize: 12.sp,
+                                Expanded(
+                                  child: Text(
+                                    '${pitch.location.city} • 1.2 km',
+                                    style: TextStyle(
+                                      color: subtitleColor,
+                                      fontSize: 12.sp,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
                               ],
@@ -121,19 +134,26 @@ class SearchResultCard extends StatelessWidget {
                         ),
                       ),
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8.w,
+                          vertical: 4.h,
+                        ),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF171F33),
+                          color: isDark ? const Color(0xFF171F33) : theme.colorScheme.surfaceContainerHighest,
                           borderRadius: BorderRadius.circular(8.r),
                         ),
                         child: Row(
                           children: [
-                            const Icon(Icons.star, color: Color(0xFF4BE277), size: 14),
+                            Icon(
+                              Icons.star,
+                              color: isDark ? const Color(0xFF4BE277) : theme.colorScheme.primary,
+                              size: 14,
+                            ),
                             SizedBox(width: 4.w),
                             Text(
                               pitch.rating.toString(),
                               style: TextStyle(
-                                color: Colors.white,
+                                color: textColor,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 12.sp,
                               ),
@@ -154,7 +174,7 @@ class SearchResultCard extends StatelessWidget {
                           Text(
                             'STARTING FROM',
                             style: TextStyle(
-                              color: const Color(0xFFBCC7DE),
+                              color: subtitleColor,
                               fontSize: 10.sp,
                               fontWeight: FontWeight.w900,
                               letterSpacing: 1,
@@ -164,14 +184,14 @@ class SearchResultCard extends StatelessWidget {
                             text: TextSpan(
                               text: pitch.pricePerHour.toInt().toString(),
                               style: typography.headlineSmall?.copyWith(
-                                color: Colors.white,
+                                color: textColor,
                                 fontWeight: FontWeight.w900,
                               ),
                               children: [
                                 TextSpan(
                                   text: ' EGP/HR',
                                   style: TextStyle(
-                                    color: const Color(0xFF4BE277),
+                                    color: isDark ? const Color(0xFF4BE277) : theme.colorScheme.primary,
                                     fontSize: 12.sp,
                                     fontWeight: FontWeight.bold,
                                   ),

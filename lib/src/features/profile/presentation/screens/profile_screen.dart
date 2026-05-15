@@ -1,6 +1,7 @@
 import 'package:e7gz/src/features/auth/presentation/providers/session_bloc.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
+import 'package:e7gz/src/theme/cubit/theme_cubit.dart';
 import '../widgets/profile_tile.dart';
 import '../widgets/support_action.dart';
 
@@ -14,8 +15,16 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
-    final colors = context.colors;
-    final typography = context.typography;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final typography = theme.textTheme;
+    final isDark = theme.brightness == Brightness.dark;
+    
+    final bgColor = isDark ? const Color(0xFF0B1326) : colorScheme.surface;
+    final primaryColor = isDark ? const Color(0xFF4BE277) : colorScheme.primary;
+    final textColor = isDark ? Colors.white : colorScheme.onSurface;
+    final secondaryTextColor = isDark ? const Color(0xFFBCC7DE) : colorScheme.onSurfaceVariant;
+    final cardColor = isDark ? const Color(0xFF131B2E) : colorScheme.surfaceContainerLow;
 
     return BlocBuilder<SessionBloc, SessionState>(
       builder: (context, state) {
@@ -28,18 +37,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
             'https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80';
 
         return Scaffold(
-          backgroundColor: const Color(0xFF0B1326),
+          backgroundColor: bgColor,
           appBar: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
             leading: IconButton(
-              icon: const Icon(IconsaxPlusLinear.menu_1, color: Colors.white),
+              icon: Icon(IconsaxPlusLinear.menu_1, color: textColor),
               onPressed: () => Scaffold.of(context).openDrawer(),
             ),
             title: Text(
               'e7gzz',
               style: typography.headlineSmall?.copyWith(
-                color: colors.primary,
+                color: primaryColor,
                 fontWeight: FontWeight.w900,
               ),
             ),
@@ -49,11 +58,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 padding: EdgeInsets.only(right: 16.w),
                 child: CircleAvatar(
                   radius: 18.r,
-                  backgroundColor: const Color(0xFF2D3449),
-                  child: const Icon(
+                  backgroundColor: isDark ? const Color(0xFF2D3449) : colorScheme.surfaceContainerHighest,
+                  child: Icon(
                     IconsaxPlusBold.user,
                     size: 20,
-                    color: Colors.white,
+                    color: isDark ? Colors.white : colorScheme.onSurfaceVariant,
                   ),
                 ),
               ),
@@ -72,7 +81,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(
-                            color: const Color(0xFF222A3D),
+                            color: isDark ? const Color(0xFF222A3D) : colorScheme.outlineVariant,
                             width: 2,
                           ),
                         ),
@@ -86,13 +95,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         right: 4,
                         child: Container(
                           padding: const EdgeInsets.all(6),
-                          decoration: const BoxDecoration(
-                            color: Color(0xFF4BE277),
+                          decoration: BoxDecoration(
+                            color: primaryColor,
                             shape: BoxShape.circle,
                           ),
-                          child: const Icon(
+                          child: Icon(
                             Icons.check,
-                            color: Color(0xFF003915),
+                            color: isDark ? const Color(0xFF003915) : colorScheme.onPrimary,
                             size: 16,
                           ),
                         ),
@@ -106,7 +115,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Text(
                   name,
                   style: typography.headlineSmall?.copyWith(
-                    color: Colors.white,
+                    color: textColor,
                     fontWeight: FontWeight.w900,
                     fontSize: 32.sp,
                   ),
@@ -114,7 +123,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Text(
                   email,
                   style: typography.bodyMedium?.copyWith(
-                    color: const Color(0xFFBCC7DE),
+                    color: secondaryTextColor,
                   ),
                 ),
 
@@ -125,11 +134,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   width: double.infinity,
                   padding: EdgeInsets.all(32.w),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF131B2E),
+                    color: cardColor,
                     borderRadius: BorderRadius.circular(48.r),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.2),
+                        color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.05),
                         blurRadius: 30,
                         offset: const Offset(0, 15),
                       ),
@@ -142,7 +151,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         top: -10,
                         child: Icon(
                           Icons.star,
-                          color: Colors.white.withValues(alpha: 0.03),
+                          color: isDark ? Colors.white.withValues(alpha: 0.03) : colorScheme.primary.withValues(alpha: 0.05),
                           size: 120,
                         ),
                       ),
@@ -152,7 +161,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           Text(
                             'E7GZZ POINTS',
                             style: typography.labelSmall?.copyWith(
-                              color: const Color(0xFFBCC7DE),
+                              color: secondaryTextColor,
                               fontWeight: FontWeight.bold,
                               letterSpacing: 1,
                             ),
@@ -162,14 +171,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             text: TextSpan(
                               text: '$points ',
                               style: typography.displayMedium?.copyWith(
-                                color: const Color(0xFF4BE277),
+                                color: primaryColor,
                                 fontWeight: FontWeight.w900,
                               ),
                               children: [
                                 TextSpan(
                                   text: 'PTS',
                                   style: TextStyle(
-                                    color: const Color(0xFF4BE277),
+                                    color: primaryColor,
                                     fontSize: 18.sp,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -223,6 +232,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ],
 
                 SizedBox(height: 16.h),
+
+                // Theme Switcher integrated directly into Settings
+                BlocBuilder<ThemeCubit, ThemeMode>(
+                  builder: (context, mode) {
+                    final currentIsDark = mode == ThemeMode.dark || (mode == ThemeMode.system && MediaQuery.of(context).platformBrightness == Brightness.dark);
+                    return ProfileTile(
+                      title: currentIsDark ? 'Switch to Light Theme' : 'Switch to Dark Theme',
+                      subtitle: 'Change app appearance',
+                      icon: currentIsDark ? IconsaxPlusBold.sun_1 : IconsaxPlusBold.moon,
+                      onTap: () => context.read<ThemeCubit>().setTheme(currentIsDark ? ThemeMode.light : ThemeMode.dark),
+                    );
+                  },
+                ),
+                
+                SizedBox(height: 16.h),
                 const ProfileTile(
                   title: 'Settings',
                   subtitle: 'Privacy, notifications, and app preferences',
@@ -244,7 +268,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Text(
                   'Need help with your booking?',
                   style: typography.bodySmall?.copyWith(
-                    color: const Color(0xFFBCC7DE),
+                    color: secondaryTextColor,
                   ),
                 ),
                 SizedBox(height: 24.h),

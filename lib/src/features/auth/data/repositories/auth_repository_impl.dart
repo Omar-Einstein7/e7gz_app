@@ -29,7 +29,7 @@ class AuthRepositoryImpl implements AuthRepository {
       email: userMap['email'] ?? '',
       name: userMap['name'],
       photoUrl: userMap['photoUrl'],
-      role: userMap['role']?.toString() ?? 'player',
+      role: (userMap['role'] ?? userMap['userType'] ?? userMap['type'])?.toString().toLowerCase() ?? 'player',
       loyaltyPoints: (userMap['loyaltyPoints'] as num?)?.toInt() ?? 0,
     );
   }
@@ -90,5 +90,26 @@ class AuthRepositoryImpl implements AuthRepository {
     final result = await _authService.getCurrentUser();
     
     return result.map(_mapUserDataToAppUser);
+  }
+
+  @override
+  FutureEither<AppUser> updateProfile({
+    String? name,
+    String? phone,
+    String? photoPath,
+  }) async {
+    final result = await _authService.updateProfile(
+      name: name,
+      phone: phone,
+      photoPath: photoPath,
+    );
+    return result.fold(
+      (failure) => left(failure),
+      (userData) {
+        final user = _mapUserDataToAppUser(userData);
+        if (user == null) return left(ServerFailure('Failed to update profile'));
+        return right(user);
+      },
+    );
   }
 }

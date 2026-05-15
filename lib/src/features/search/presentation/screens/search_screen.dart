@@ -6,7 +6,8 @@ import '../widgets/search_filter_chip.dart';
 import '../widgets/search_result_card.dart';
 
 class SearchScreen extends StatefulWidget {
-  const SearchScreen({super.key});
+  final String? initialSport;
+  const SearchScreen({super.key, this.initialSport});
 
   @override
   State<SearchScreen> createState() => _SearchScreenState();
@@ -14,35 +15,82 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController _searchController = TextEditingController();
-  String _selectedSport = 'football';
+  final Debouncer _debouncer = Debouncer(delay: const Duration(milliseconds: 500));
+  String? _selectedSport;
+  double? _selectedRating;
+  double? _minPrice;
+  double? _maxPrice;
 
   @override
   void initState() {
     super.initState();
+    _selectedSport = widget.initialSport;
     _searchController.addListener(_onSearchChanged);
+    
+    // Trigger initial search on entry
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _onSearchChanged();
+    });
+  }
+
+  @override
+  void didUpdateWidget(SearchScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.initialSport != oldWidget.initialSport) {
+      setState(() {
+        _selectedSport = widget.initialSport;
+      });
+      _onSearchChanged();
+    }
   }
 
   @override
   void dispose() {
     _searchController.removeListener(_onSearchChanged);
     _searchController.dispose();
+    _debouncer.dispose();
     super.dispose();
   }
 
-  void _onSearchChanged() {
-    context.read<SearchCubit>().search(
-      query: _searchController.text,
-      sportType: _selectedSport,
-    );
+  void _onSearchChanged({bool immediate = false}) {
+    if (immediate) {
+      _debouncer.run(() {}); // Cancel any pending debounce
+      context.read<SearchCubit>().search(
+            query: _searchController.text,
+            sportType: _selectedSport,
+            rating: _selectedRating,
+            minPrice: _minPrice,
+            maxPrice: _maxPrice,
+          );
+      return;
+    }
+
+    _debouncer.run(() {
+      if (!mounted) return;
+      context.read<SearchCubit>().search(
+            query: _searchController.text,
+            sportType: _selectedSport,
+            rating: _selectedRating,
+            minPrice: _minPrice,
+            maxPrice: _maxPrice,
+          );
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
     final typography = context.typography;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    final bgColor = isDark ? const Color(0xFF0B1326) : theme.colorScheme.surface;
+    final textColor = isDark ? Colors.white : theme.colorScheme.onSurface;
+    final searchBg = isDark ? const Color(0xFF131B2E) : theme.colorScheme.surfaceContainerLow;
+    final searchHint = isDark ? const Color(0xFFBCC7DE).withValues(alpha: 0.5) : theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5);
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0B1326),
+      backgroundColor: bgColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -56,7 +104,7 @@ class _SearchScreenState extends State<SearchScreen> {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: const Icon(IconsaxPlusLinear.map, color: Colors.white),
+            icon: Icon(IconsaxPlusLinear.map, color: textColor),
             onPressed: () => context.push(AppRoutes.search),
           ),
           SizedBox(width: 8.w),
@@ -73,23 +121,23 @@ class _SearchScreenState extends State<SearchScreen> {
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 20.w),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF131B2E),
+                    color: searchBg,
                     borderRadius: BorderRadius.circular(100.r),
                     border: Border.all(
-                      color: Colors.white.withValues(alpha: 0.05),
+                      color: isDark ? Colors.white.withValues(alpha: 0.05) : theme.colorScheme.outlineVariant,
                     ),
                   ),
                   child: TextField(
                     controller: _searchController,
-                    style: const TextStyle(color: Colors.white),
+                    style: TextStyle(color: textColor),
                     decoration: InputDecoration(
                       hintText: 'Search stadium or location...',
                       hintStyle: TextStyle(
-                        color: const Color(0xFFBCC7DE).withValues(alpha: 0.5),
+                        color: searchHint,
                       ),
-                      icon: const Icon(
+                      icon: Icon(
                         IconsaxPlusLinear.search_normal_1,
-                        color: Color(0xFF4BE277),
+                        color: isDark ? const Color(0xFF4BE277) : theme.colorScheme.primary,
                       ),
                       border: InputBorder.none,
                       enabledBorder: InputBorder.none,
@@ -105,33 +153,59 @@ class _SearchScreenState extends State<SearchScreen> {
                     scrollDirection: Axis.horizontal,
                     children: [
                       SearchFilterChip(
-                        label: 'Football',
-                        isSelected: _selectedSport == 'football',
+                        label: 'All',
+                        isSelected: _selectedSport == null,
                         onTap: () => setState(() {
-                          _selectedSport = 'football';
-                          _onSearchChanged();
+                          _selectedSport = null;
+                          _onSearchChanged(immediate: true);
                         }),
+                      ),
+                      SizedBox(width: 12.w),
+                      ...['Football', 'Padel', 'Basketball', 'Tennis', 'Volleyball'].map((sport) {
+                        final value = sport.toLowerCase();
+                        return Padding(
+                          padding: EdgeInsets.only(right: 12.w),
+                          child: SearchFilterChip(
+                            label: sport,
+                            isSelected: _selectedSport == value,
+                            onTap: () => setState(() {
+                              _selectedSport = value;
+                              _onSearchChanged(immediate: true);
+                            }),
+                          ),
+                        );
+                      }),
+                      SearchFilterChip(
+                        label: 'Price',
+                        icon: IconsaxPlusLinear.arrow_down_1,
+                        isSelected: _minPrice != null || _maxPrice != null,
+                        onTap: () {
+                          // Simple toggle for demonstration or could open a bottom sheet
+                          setState(() {
+                            if (_maxPrice == null) {
+                              _maxPrice = 500; // Example filter
+                            } else {
+                              _maxPrice = null;
+                            }
+                            _onSearchChanged(immediate: true);
+                          });
+                        },
                       ),
                       SizedBox(width: 12.w),
                       SearchFilterChip(
-                        label: 'Padel',
-                        isSelected: _selectedSport == 'padel',
-                        onTap: () => setState(() {
-                          _selectedSport = 'padel';
-                          _onSearchChanged();
-                        }),
-                      ),
-                      SizedBox(width: 12.w),
-                      const SearchFilterChip(label: 'Basketball'),
-                      SizedBox(width: 12.w),
-                      const SearchFilterChip(
-                        label: 'Price',
-                        icon: IconsaxPlusLinear.arrow_down_1,
-                      ),
-                      SizedBox(width: 12.w),
-                      const SearchFilterChip(
                         label: 'Rating',
                         icon: IconsaxPlusLinear.star,
+                        isSelected: _selectedRating != null,
+                        onTap: () {
+                          setState(() {
+                            if (_selectedRating == null) {
+                              _selectedRating = 4.0;
+                            } else {
+                              _selectedRating = null;
+                            }
+                            _onSearchChanged(immediate: true);
+                          });
+                        },
                       ),
                     ],
                   ),

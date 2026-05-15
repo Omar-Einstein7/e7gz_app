@@ -53,17 +53,25 @@ class _BookingSlotsScreenState extends State<BookingSlotsScreen> {
   Widget build(BuildContext context) {
     final cs = context.theme.colorScheme;
     final tt = context.theme.textTheme;
+    final isDark = context.theme.brightness == Brightness.dark;
+
+    final bgColor = isDark ? const Color(0xFF0B1326) : cs.surface;
+    final cardBg = isDark ? const Color(0xFF131B2E) : cs.surfaceContainerLow;
+    final textColor = isDark ? Colors.white : cs.onSurface;
+    final subtitleColor = isDark ? const Color(0xFFBCC7DE) : cs.onSurfaceVariant;
+    final primaryAccent = isDark ? const Color(0xFF4BE277) : cs.primary;
+    final unselectedCardBg = isDark ? const Color(0xFF171F33) : cs.surfaceContainerHighest;
 
     return BlocProvider.value(
       value: _slotsCubit,
       child: Scaffold(
-        backgroundColor: const Color(0xFF0B1326),
+        backgroundColor: bgColor,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
           leading: Builder(
             builder: (context) => IconButton(
-              icon: const Icon(Icons.arrow_back, color: Colors.white),
+              icon: Icon(Icons.arrow_back, color: textColor),
               onPressed: () => context.pop(),
             ),
           ),
@@ -80,11 +88,11 @@ class _BookingSlotsScreenState extends State<BookingSlotsScreen> {
               padding: EdgeInsets.only(right: 16.w),
               child: CircleAvatar(
                 radius: 18.r,
-                backgroundColor: const Color(0xFF2D3449),
-                child: const Icon(
+                backgroundColor: isDark ? const Color(0xFF2D3449) : cs.surfaceContainerHighest,
+                child: Icon(
                   IconsaxPlusBold.user,
                   size: 20,
-                  color: Colors.white,
+                  color: isDark ? Colors.white : cs.onSurfaceVariant,
                 ),
               ),
             ),
@@ -206,7 +214,7 @@ class _BookingSlotsScreenState extends State<BookingSlotsScreen> {
                     Text(
                       'Select Date',
                       style: tt.headlineSmall?.copyWith(
-                        color: Colors.white,
+                        color: textColor,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -245,7 +253,7 @@ class _BookingSlotsScreenState extends State<BookingSlotsScreen> {
                         decoration: BoxDecoration(
                           color: isSelected
                               ? cs.primary
-                              : const Color(0xFF171F33),
+                              : unselectedCardBg,
                           borderRadius: BorderRadius.circular(24.r),
                           boxShadow: isSelected
                               ? [
@@ -264,8 +272,8 @@ class _BookingSlotsScreenState extends State<BookingSlotsScreen> {
                               DateFormat('EEE').format(date).toUpperCase(),
                               style: TextStyle(
                                 color: isSelected
-                                    ? const Color(0xFF003915)
-                                    : const Color(0xFFBCC7DE),
+                                    ? (isDark ? const Color(0xFF003915) : cs.onPrimary)
+                                    : subtitleColor,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 12.sp,
                               ),
@@ -275,8 +283,8 @@ class _BookingSlotsScreenState extends State<BookingSlotsScreen> {
                               '${date.day}',
                               style: TextStyle(
                                 color: isSelected
-                                    ? const Color(0xFF003915)
-                                    : Colors.white,
+                                    ? (isDark ? const Color(0xFF003915) : cs.onPrimary)
+                                    : textColor,
                                 fontWeight: FontWeight.w900,
                                 fontSize: 24.sp,
                               ),
@@ -300,15 +308,15 @@ class _BookingSlotsScreenState extends State<BookingSlotsScreen> {
                     Text(
                       'Available Slots',
                       style: tt.headlineSmall?.copyWith(
-                        color: Colors.white,
+                        color: textColor,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     Row(
                       children: [
-                        indicatorChip('AVAILABLE', cs.primary),
+                        indicatorChip('AVAILABLE', cs.primary, subtitleColor),
                         SizedBox(width: 12.w),
-                        indicatorChip('BOOKED', const Color(0xFF3E495D)),
+                        indicatorChip('BOOKED', isDark ? const Color(0xFF3E495D) : cs.outlineVariant, subtitleColor),
                       ],
                     ),
                   ],
@@ -321,7 +329,7 @@ class _BookingSlotsScreenState extends State<BookingSlotsScreen> {
               BlocBuilder<SlotsCubit, SlotsState>(
                 builder: (context, state) {
                   if (state.status == SlotsStatus.loading) {
-                    return const Center(child: CircularProgressIndicator());
+                    return Center(child: CircularProgressIndicator(color: cs.primary));
                   }
                   if (state.status == SlotsStatus.failure) {
                     return Center(
@@ -339,7 +347,7 @@ class _BookingSlotsScreenState extends State<BookingSlotsScreen> {
                       child: Text(
                         'No slots available on this date',
                         style: TextStyle(
-                          color: const Color(0xFFBCC7DE),
+                          color: subtitleColor,
                           fontSize: 14.sp,
                         ),
                       ),
@@ -360,7 +368,7 @@ class _BookingSlotsScreenState extends State<BookingSlotsScreen> {
                     itemBuilder: (context, index) {
                       final slot = state.slots[index];
                       final isSelected = state.selectedSlot == slot;
-                      return slotBox(slot, isSelected, cs, context);
+                      return slotBox(slot, isSelected, cs, context, isDark, unselectedCardBg, subtitleColor, textColor);
                     },
                   );
                 },
@@ -373,16 +381,16 @@ class _BookingSlotsScreenState extends State<BookingSlotsScreen> {
                 padding: EdgeInsets.symmetric(horizontal: 24.w),
                 child: Row(
                   children: [
-                    const Icon(
+                    Icon(
                       IconsaxPlusBold.card,
-                      color: Color(0xFF4BE277),
+                      color: primaryAccent,
                       size: 24,
                     ),
                     SizedBox(width: 12.w),
                     Text(
                       'Payment Plan',
                       style: tt.titleLarge?.copyWith(
-                        color: Colors.white,
+                        color: textColor,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -396,7 +404,7 @@ class _BookingSlotsScreenState extends State<BookingSlotsScreen> {
                 margin: EdgeInsets.symmetric(horizontal: 24.w),
                 padding: EdgeInsets.all(24.w),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF131B2E),
+                  color: cardBg,
                   borderRadius: BorderRadius.circular(32.r),
                 ),
                 child: Column(
@@ -409,9 +417,11 @@ class _BookingSlotsScreenState extends State<BookingSlotsScreen> {
                       isSelected: _isFullPayment,
                       onTap: () => setState(() => _isFullPayment = true),
                       cs: cs,
+                      textColor: textColor,
+                      subtitleColor: subtitleColor,
                     ),
                     SizedBox(height: 24.h),
-                    Divider(color: Colors.white.withValues(alpha: 0.05)),
+                    Divider(color: isDark ? Colors.white.withValues(alpha: 0.05) : cs.outlineVariant),
                     SizedBox(height: 24.h),
                     paymentOption(
                       title: 'Deposit',
@@ -421,6 +431,8 @@ class _BookingSlotsScreenState extends State<BookingSlotsScreen> {
                       isSelected: !_isFullPayment,
                       onTap: () => setState(() => _isFullPayment = false),
                       cs: cs,
+                      textColor: textColor,
+                      subtitleColor: subtitleColor,
                     ),
                   ],
                 ),
@@ -433,8 +445,9 @@ class _BookingSlotsScreenState extends State<BookingSlotsScreen> {
                 margin: EdgeInsets.symmetric(horizontal: 24.w),
                 padding: EdgeInsets.all(32.w),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF131B2E),
+                  color: cardBg,
                   borderRadius: BorderRadius.circular(48.r),
+                  border: isDark ? null : Border.all(color: cs.outlineVariant),
                 ),
                 child: Column(
                   children: [
@@ -443,10 +456,10 @@ class _BookingSlotsScreenState extends State<BookingSlotsScreen> {
                       children: [
                         CircleAvatar(
                           radius: 20.r,
-                          backgroundColor: const Color(0xFF171F33),
-                          child: const Icon(
+                          backgroundColor: unselectedCardBg,
+                          child: Icon(
                             IconsaxPlusBold.ticket,
-                            color: Color(0xFF4BE277),
+                            color: primaryAccent,
                             size: 20,
                           ),
                         ),
@@ -457,7 +470,7 @@ class _BookingSlotsScreenState extends State<BookingSlotsScreen> {
                             Text(
                               'TOTAL PRICE',
                               style: TextStyle(
-                                color: const Color(0xFFBCC7DE),
+                                color: subtitleColor,
                                 fontSize: 10.sp,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -465,7 +478,7 @@ class _BookingSlotsScreenState extends State<BookingSlotsScreen> {
                             Text(
                               '500 EGP',
                               style: tt.titleLarge?.copyWith(
-                                color: Colors.white,
+                                color: textColor,
                                 fontWeight: FontWeight.w900,
                               ),
                             ),
@@ -555,12 +568,11 @@ class _BookingSlotsScreenState extends State<BookingSlotsScreen> {
             ],
           ),
         ),
-
       ),
     );
   }
 
-  Widget indicatorChip(String label, Color color) {
+  Widget indicatorChip(String label, Color color, Color subtitleColor) {
     return Row(
       children: [
         Container(
@@ -572,7 +584,7 @@ class _BookingSlotsScreenState extends State<BookingSlotsScreen> {
         Text(
           label,
           style: TextStyle(
-            color: const Color(0xFFBCC7DE),
+            color: subtitleColor,
             fontSize: 10.sp,
             fontWeight: FontWeight.bold,
           ),
@@ -586,6 +598,10 @@ class _BookingSlotsScreenState extends State<BookingSlotsScreen> {
     bool isSelected,
     ColorScheme cs,
     BuildContext context,
+    bool isDark,
+    Color unselectedCardBg,
+    Color subtitleColor,
+    Color textColor,
   ) {
     final isBooked = !slot.isAvailable;
     return GestureDetector(
@@ -595,8 +611,8 @@ class _BookingSlotsScreenState extends State<BookingSlotsScreen> {
       child: Container(
         decoration: BoxDecoration(
           color: isBooked
-              ? const Color(0xFF131B2E).withValues(alpha: 0.5)
-              : (isSelected ? cs.primary : const Color(0xFF171F33)),
+              ? (isDark ? const Color(0xFF131B2E).withValues(alpha: 0.5) : cs.surfaceContainerLow.withValues(alpha: 0.5))
+              : (isSelected ? cs.primary : unselectedCardBg),
           borderRadius: BorderRadius.circular(20.r),
           boxShadow: isSelected
               ? [
@@ -614,10 +630,10 @@ class _BookingSlotsScreenState extends State<BookingSlotsScreen> {
               'SLOT',
               style: TextStyle(
                 color: isBooked
-                    ? const Color(0xFFBCC7DE).withValues(alpha: 0.3)
+                    ? subtitleColor.withValues(alpha: 0.3)
                     : (isSelected
-                          ? const Color(0xFF003915)
-                          : const Color(0xFFBCC7DE)),
+                          ? (isDark ? const Color(0xFF003915) : cs.onPrimary)
+                          : subtitleColor),
                 fontSize: 10.sp,
                 fontWeight: FontWeight.bold,
               ),
@@ -626,8 +642,8 @@ class _BookingSlotsScreenState extends State<BookingSlotsScreen> {
               slot.startTime,
               style: TextStyle(
                 color: isBooked
-                    ? const Color(0xFFBCC7DE).withValues(alpha: 0.5)
-                    : (isSelected ? const Color(0xFF003915) : Colors.white),
+                    ? subtitleColor.withValues(alpha: 0.5)
+                    : (isSelected ? (isDark ? const Color(0xFF003915) : cs.onPrimary) : textColor),
                 fontSize: 20.sp,
                 fontWeight: FontWeight.w900,
               ),
@@ -636,8 +652,8 @@ class _BookingSlotsScreenState extends State<BookingSlotsScreen> {
               isBooked ? 'Booked' : '${slot.price.toInt()} EGP',
               style: TextStyle(
                 color: isBooked
-                    ? const Color(0xFFBCC7DE).withValues(alpha: 0.3)
-                    : (isSelected ? const Color(0xFF003915) : cs.primary),
+                    ? subtitleColor.withValues(alpha: 0.3)
+                    : (isSelected ? (isDark ? const Color(0xFF003915) : cs.onPrimary) : cs.primary),
                 fontSize: 10.sp,
                 fontWeight: FontWeight.bold,
               ),
@@ -655,6 +671,8 @@ class _BookingSlotsScreenState extends State<BookingSlotsScreen> {
     required bool isSelected,
     required VoidCallback onTap,
     required ColorScheme cs,
+    required Color textColor,
+    required Color subtitleColor,
   }) {
     return GestureDetector(
       onTap: onTap,
@@ -677,7 +695,7 @@ class _BookingSlotsScreenState extends State<BookingSlotsScreen> {
                   Text(
                     title,
                     style: TextStyle(
-                      color: Colors.white,
+                      color: textColor,
                       fontWeight: FontWeight.bold,
                       fontSize: 16.sp,
                     ),
@@ -686,7 +704,7 @@ class _BookingSlotsScreenState extends State<BookingSlotsScreen> {
                   Text(
                     subtitle,
                     style: TextStyle(
-                      color: const Color(0xFFBCC7DE),
+                      color: subtitleColor,
                       fontSize: 12.sp,
                       height: 1.4,
                     ),
@@ -696,7 +714,7 @@ class _BookingSlotsScreenState extends State<BookingSlotsScreen> {
                     text: TextSpan(
                       text: '$price ',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: textColor,
                         fontWeight: FontWeight.w900,
                         fontSize: 20.sp,
                       ),
@@ -704,7 +722,7 @@ class _BookingSlotsScreenState extends State<BookingSlotsScreen> {
                         TextSpan(
                           text: 'EGP',
                           style: TextStyle(
-                            color: const Color(0xFFBCC7DE),
+                            color: subtitleColor,
                             fontSize: 12.sp,
                           ),
                         ),
@@ -720,7 +738,7 @@ class _BookingSlotsScreenState extends State<BookingSlotsScreen> {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: isSelected ? cs.primary : const Color(0xFFBCC7DE),
+                  color: isSelected ? cs.primary : subtitleColor,
                   width: 2,
                 ),
               ),
@@ -742,6 +760,4 @@ class _BookingSlotsScreenState extends State<BookingSlotsScreen> {
       ),
     );
   }
-
-
 }

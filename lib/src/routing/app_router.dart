@@ -58,7 +58,10 @@ final GoRouter appRouter = GoRouter(
             GoRoute(
               path: AppRoutes.search,
               name: 'search',
-              builder: (context, state) => const SearchScreen(),
+              builder: (context, state) {
+                final initialSport = state.extra as String?;
+                return SearchScreen(initialSport: initialSport);
+              },
             ),
           ],
         ),

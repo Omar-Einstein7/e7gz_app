@@ -55,12 +55,16 @@ class HomeSectionHeader extends StatelessWidget {
           if (showViewAll)
             GestureDetector(
               onTap: onViewAllPressed,
-              child: Text(
-                'View All',
-                style: TextStyle(
-                  color: colors.primary,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14.sp,
+              behavior: HitTestBehavior.opaque,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                child: Text(
+                  'View All',
+                  style: TextStyle(
+                    color: colors.primary,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14.sp,
+                  ),
                 ),
               ),
             )
