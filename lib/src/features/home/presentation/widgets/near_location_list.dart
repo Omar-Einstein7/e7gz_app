@@ -60,20 +60,13 @@ class NearLocationList extends StatelessWidget {
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.vertical(top: Radius.circular(32.r)),
-                        child: Image.network(
-                          pitch.imageUrl.isNotEmpty ? pitch.imageUrl : 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80',
+                        child: AppCachedImage(
+                          imageUrl: pitch.imageUrl.isNotEmpty 
+                              ? pitch.imageUrl 
+                              : 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80',
                           height: 140.h,
                           width: double.infinity,
                           fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return SizedBox(
-                              height: 140.h,
-                              width: double.infinity,
-                              child: const Center(
-                                child: Icon(Icons.broken_image, color: Colors.white24),
-                              ),
-                            );
-                          },
                         ),
                       ),
                       Padding(

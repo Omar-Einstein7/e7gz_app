@@ -54,15 +54,15 @@ class FeaturedPitchesList extends StatelessWidget {
                   child: Stack(
                     children: [
                       // Image
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(40.r),
-                          image: DecorationImage(
-                            image: NetworkImage(
-                              pitch.imageUrl.isNotEmpty ? pitch.imageUrl : 'https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80'
-                            ),
-                            fit: BoxFit.cover,
-                          ),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(40.r),
+                        child: AppCachedImage(
+                          imageUrl: pitch.imageUrl.isNotEmpty 
+                              ? pitch.imageUrl 
+                              : 'https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80',
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                          height: double.infinity,
                         ),
                       ),
                       // Overlay

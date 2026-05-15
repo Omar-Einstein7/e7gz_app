@@ -3,9 +3,7 @@ import 'package:e7gz/src/imports/imports.dart';
 import 'package:e7gz/src/features/pitches/domain/entities/pitch.dart';
 import 'package:e7gz/src/features/pitches/presentation/cubit/pitches_cubit.dart';
 import 'package:e7gz/src/features/pitches/presentation/cubit/pitches_state.dart';
-import 'package:e7gz/src/features/pitches/domain/usecases/pitch_usecases.dart';
-import 'package:e7gz/src/features/pitches/data/repositories/pitch_repository_impl.dart';
-import 'package:e7gz/src/features/pitches/data/datasources/pitch_remote_datasource.dart';
+import 'package:e7gz/src/di/injection_container.dart';
 
 class BookingSummaryScreen extends StatelessWidget {
   final String pitchId;
@@ -22,9 +20,7 @@ class BookingSummaryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => PitchDetailCubit(
-        GetPitchDetailsUseCase(PitchRepositoryImpl(PitchRemoteDataSource())),
-      )..loadPitch(pitchId),
+      create: (context) => sl<PitchDetailCubit>()..loadPitch(pitchId),
       child: _BookingSummaryView(date: date, time: time),
     );
   }
@@ -46,7 +42,10 @@ class _BookingSummaryView extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text('Review Booking', style: typography.titleLarge?.copyWith(color: Colors.white)),
+        title: Text(
+          'Review Booking',
+          style: typography.titleLarge?.copyWith(color: Colors.white),
+        ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => context.pop(),
@@ -58,11 +57,22 @@ class _BookingSummaryView extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           }
           if (state.status == PitchDetailStatus.failure) {
-            return Center(child: Text(state.errorMessage ?? 'Error', style: const TextStyle(color: Colors.redAccent)));
+            return Center(
+              child: Text(
+                state.errorMessage ?? 'Error',
+                style: const TextStyle(color: Colors.redAccent),
+              ),
+            );
           }
-          
+
           final pitch = state.pitch;
-          if (pitch == null) return const Center(child: Text('Pitch not found', style: TextStyle(color: Colors.white)));
+          if (pitch == null)
+            return const Center(
+              child: Text(
+                'Pitch not found',
+                style: TextStyle(color: Colors.white),
+              ),
+            );
 
           return SingleChildScrollView(
             padding: EdgeInsets.all(24.w),
@@ -79,10 +89,19 @@ class _BookingSummaryView extends StatelessWidget {
                 SizedBox(height: 32.h),
                 _buildSectionTitle('Payment Summary', typography),
                 SizedBox(height: 16.h),
-                _buildPriceRow('Court Price', '${pitch.pricePerHour} EGP', typography),
+                _buildPriceRow(
+                  'Court Price',
+                  '${pitch.pricePerHour} EGP',
+                  typography,
+                ),
                 _buildPriceRow('Service Fee', '20 EGP', typography),
                 const Divider(color: Colors.white10),
-                _buildPriceRow('Total Amount', '${pitch.pricePerHour + 20} EGP', typography, isTotal: true),
+                _buildPriceRow(
+                  'Total Amount',
+                  '${pitch.pricePerHour + 20} EGP',
+                  typography,
+                  isTotal: true,
+                ),
                 SizedBox(height: 100.h),
               ],
             ),
@@ -96,16 +115,21 @@ class _BookingSummaryView extends StatelessWidget {
             padding: EdgeInsets.all(24.w),
             decoration: BoxDecoration(
               color: const Color(0xFF131B2E),
-              border: Border(top: BorderSide(color: Colors.white.withValues(alpha: 0.1))),
+              border: Border(
+                top: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
+              ),
             ),
             child: AppButton(
               label: 'Proceed to Payment',
-              onPressed: () => context.push(AppRoutes.paymentCheckout, extra: {
-                'pitchName': state.pitch!.name,
-                'pitchImage': state.pitch!.imageUrl,
-                'amount': state.pitch!.pricePerHour + 20,
-                'bookingDetails': '$date at $time',
-              }),
+              onPressed: () => context.push(
+                AppRoutes.paymentCheckout,
+                extra: {
+                  'pitchName': state.pitch!.name,
+                  'pitchImage': state.pitch!.imageUrl,
+                  'amount': state.pitch!.pricePerHour + 20,
+                  'bookingDetails': '$date at $time',
+                },
+              ),
               isFullWidth: true,
             ),
           );
@@ -126,7 +150,9 @@ class _BookingSummaryView extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(16.r),
             child: Image.network(
-              pitch.imageUrl.isNotEmpty ? pitch.imageUrl : 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80',
+              pitch.imageUrl.isNotEmpty
+                  ? pitch.imageUrl
+                  : 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80',
               width: 80.w,
               height: 80.w,
               fit: BoxFit.cover,
@@ -137,8 +163,17 @@ class _BookingSummaryView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(pitch.name, style: typography.titleMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.bold)),
-                Text(pitch.location.city, style: const TextStyle(color: Color(0xFFBCC7DE))),
+                Text(
+                  pitch.name,
+                  style: typography.titleMedium?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  pitch.location.city,
+                  style: const TextStyle(color: Color(0xFFBCC7DE)),
+                ),
               ],
             ),
           ),
@@ -148,10 +183,21 @@ class _BookingSummaryView extends StatelessWidget {
   }
 
   Widget _buildSectionTitle(String title, typography) {
-    return Text(title, style: typography.titleLarge?.copyWith(color: Colors.white, fontWeight: FontWeight.bold));
+    return Text(
+      title,
+      style: typography.titleLarge?.copyWith(
+        color: Colors.white,
+        fontWeight: FontWeight.bold,
+      ),
+    );
   }
 
-  Widget _buildDetailTile(String label, String value, IconData icon, ColorScheme colors) {
+  Widget _buildDetailTile(
+    String label,
+    String value,
+    IconData icon,
+    ColorScheme colors,
+  ) {
     return Container(
       margin: EdgeInsets.only(bottom: 12.h),
       padding: EdgeInsets.all(16.w),
@@ -165,20 +211,43 @@ class _BookingSummaryView extends StatelessWidget {
           SizedBox(width: 16.w),
           Text(label, style: const TextStyle(color: Color(0xFFBCC7DE))),
           const Spacer(),
-          Text(value, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+          Text(
+            value,
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildPriceRow(String label, String price, typography, {bool isTotal = false}) {
+  Widget _buildPriceRow(
+    String label,
+    String price,
+    typography, {
+    bool isTotal = false,
+  }) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 8.h),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: TextStyle(color: isTotal ? Colors.white : const Color(0xFFBCC7DE), fontWeight: isTotal ? FontWeight.bold : FontWeight.normal)),
-          Text(price, style: typography.titleLarge?.copyWith(color: isTotal ? const Color(0xFF4BE277) : Colors.white, fontWeight: FontWeight.bold)),
+          Text(
+            label,
+            style: TextStyle(
+              color: isTotal ? Colors.white : const Color(0xFFBCC7DE),
+              fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
+            ),
+          ),
+          Text(
+            price,
+            style: typography.titleLarge?.copyWith(
+              color: isTotal ? const Color(0xFF4BE277) : Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ],
       ),
     );

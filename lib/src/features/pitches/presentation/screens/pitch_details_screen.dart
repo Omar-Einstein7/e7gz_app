@@ -7,9 +7,7 @@ import '../widgets/shift_card.dart';
 import 'dart:ui';
 import 'package:e7gz/src/features/pitches/presentation/cubit/pitches_cubit.dart';
 import 'package:e7gz/src/features/pitches/presentation/cubit/pitches_state.dart';
-import 'package:e7gz/src/features/pitches/domain/usecases/pitch_usecases.dart';
-import 'package:e7gz/src/features/pitches/data/repositories/pitch_repository_impl.dart';
-import 'package:e7gz/src/features/pitches/data/datasources/pitch_remote_datasource.dart';
+import 'package:e7gz/src/di/injection_container.dart';
 
 class PitchDetailsScreen extends StatelessWidget {
   final String pitchId;
@@ -18,9 +16,7 @@ class PitchDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => PitchDetailCubit(
-        GetPitchDetailsUseCase(PitchRepositoryImpl(PitchRemoteDataSource())),
-      )..loadPitch(pitchId),
+      create: (context) => sl<PitchDetailCubit>()..loadPitch(pitchId),
       child: const _PitchDetailsView(),
     );
   }
@@ -102,8 +98,8 @@ class _PitchDetailsView extends StatelessWidget {
                     fit: StackFit.expand,
                     children: [
                       // Image
-                      Image.network(
-                        pitch.imageUrl.isNotEmpty
+                      AppCachedImage(
+                        imageUrl: pitch.imageUrl.isNotEmpty
                             ? pitch.imageUrl
                             : 'https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80',
                         fit: BoxFit.cover,

@@ -12,16 +12,16 @@ class HomeModel extends HomeData {
   factory HomeModel.fromJson(Map<String, dynamic> json) {
     return HomeModel(
       banners: (json['banners'] as List? ?? [])
-          .map((e) => HomeBannerModel.fromJson(e))
+          .map((e) => HomeBannerModel.fromJson(e as Map<String, dynamic>))
           .toList(),
       categories: (json['categories'] as List? ?? [])
-          .map((e) => HomeCategoryModel.fromJson(e))
+          .map((e) => HomeCategoryModel.fromJson(e as Map<String, dynamic>))
           .toList(),
       featuredPitches: (json['featuredPitches'] as List? ?? [])
-          .map((e) => PitchModel.fromJson(e))
+          .map((e) => PitchModel.fromJson(e as Map<String, dynamic>))
           .toList(),
       nearbyPitches: (json['nearbyPitches'] as List? ?? [])
-          .map((e) => PitchModel.fromJson(e))
+          .map((e) => PitchModel.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
   }
@@ -32,9 +32,9 @@ class HomeBannerModel extends HomeBanner {
 
   factory HomeBannerModel.fromJson(Map<String, dynamic> json) {
     return HomeBannerModel(
-      id: json['id'] ?? json['_id'] ?? '',
-      imageUrl: json['imageUrl'] ?? '',
-      link: json['link'],
+      id: json['id']?.toString() ?? json['_id']?.toString() ?? '',
+      imageUrl: json['imageUrl']?.toString() ?? '',
+      link: json['link']?.toString(),
     );
   }
 }
@@ -44,9 +44,9 @@ class HomeCategoryModel extends HomeCategory {
 
   factory HomeCategoryModel.fromJson(Map<String, dynamic> json) {
     return HomeCategoryModel(
-      id: json['id'] ?? json['_id'] ?? '',
-      name: json['name'] ?? '',
-      icon: json['icon'] ?? '',
+      id: json['id']?.toString() ?? json['_id']?.toString() ?? '',
+      name: json['name']?.toString() ?? '',
+      icon: json['icon']?.toString() ?? '',
     );
   }
 }

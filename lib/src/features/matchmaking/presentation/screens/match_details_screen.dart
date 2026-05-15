@@ -76,8 +76,8 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
                 // Match Image
                 ClipRRect(
                   borderRadius: BorderRadius.circular(32.r),
-                  child: Image.network(
-                    match.pitchImage ??
+                  child: AppCachedImage(
+                    imageUrl: match.pitchImage ??
                         'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80',
                     height: 250.h,
                     width: double.infinity,

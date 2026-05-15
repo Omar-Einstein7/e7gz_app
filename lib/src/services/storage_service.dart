@@ -3,8 +3,7 @@ import '../utils/utils.dart';
 
 /// A wrapper around [SharedPreferences] for simple key-value persistence.
 class StorageService {
-  StorageService._();
-  static final StorageService instance = StorageService._();
+  StorageService();
 
   late final SharedPreferences _prefs;
 

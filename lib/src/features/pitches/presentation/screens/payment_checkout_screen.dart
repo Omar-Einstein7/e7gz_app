@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
+import 'package:e7gz/src/di/injection_container.dart';
 
 class PaymentCheckoutScreen extends StatefulWidget {
   final String? bookingId;
@@ -344,7 +345,7 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
     setState(() => _isLoading = true);
     
     try {
-      final response = await DioService.instance.post(
+      final response = await sl<DioService>().post(
         '/payments/checkout',
         data: {
           'bookingId': widget.bookingId,

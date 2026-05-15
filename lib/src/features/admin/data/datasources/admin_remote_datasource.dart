@@ -1,10 +1,11 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
-import '../../../../config/app_config.dart';
 import '../../../../utils/logger.dart';
 
 class AdminRemoteDataSource {
-  final Dio _dio = AppConfig.dio;
+  final Dio _dio;
+
+  AdminRemoteDataSource({required Dio dio}) : _dio = dio;
 
   /// Helper to extract data or return an empty fallback
   T _extractData<T>(Response response, String key, T fallback) {

@@ -39,10 +39,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> with SingleTickerPr
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => context.pop(),
-        ),
+      
         title: Text(
           'My Bookings',
           style: tt.headlineSmall?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),

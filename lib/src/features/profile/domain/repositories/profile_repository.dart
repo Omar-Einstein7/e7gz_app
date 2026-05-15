@@ -1,4 +1,3 @@
-import 'package:fpdart/fpdart.dart';
 import '../../../../utils/typedefs.dart';
 import '../entities/reward.dart';
 

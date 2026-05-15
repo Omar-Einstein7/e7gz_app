@@ -1,6 +1,5 @@
 import 'dart:async';
 import '../utils/utils.dart';
-import '../config/app_config.dart';
 import 'secure_storage_service.dart';
 import 'package:dio/dio.dart';
 
@@ -9,14 +8,17 @@ const _kAccessTokenKey = 'jwt_token';
 const _kRefreshTokenKey = 'refresh_token';
 
 class AuthService {
-  AuthService._();
-  static final AuthService instance = AuthService._();
+  final SecureStorageService _secureStorage;
+  final Dio _dio;
+  final Dio _authDio;
 
-  /// Clean Dio for unauthenticated auth endpoints (login, signup, refresh)
-  Dio get _authDio => AppConfig.authDio;
-
-  /// Authenticated Dio for protected endpoints (me, logout)
-  Dio get _dio => AppConfig.dio;
+  AuthService({
+    required SecureStorageService secureStorage,
+    required Dio dio,
+    required Dio authDio,
+  }) : _secureStorage = secureStorage,
+       _dio = dio,
+       _authDio = authDio;
 
   final StreamController<Map<String, dynamic>?> _authStateController =
       StreamController<Map<String, dynamic>?>.broadcast();
@@ -28,9 +30,9 @@ class AuthService {
   // ─── Internal token helpers ────────────────────────────────────────────────
 
   Future<void> _saveTokens(String accessToken, String? refreshToken) async {
-    await SecureStorageService.instance.write(_kAccessTokenKey, accessToken);
+    await _secureStorage.write(_kAccessTokenKey, accessToken);
     if (refreshToken != null) {
-      await SecureStorageService.instance.write(_kRefreshTokenKey, refreshToken);
+      await _secureStorage.write(_kRefreshTokenKey, refreshToken);
     }
   }
 
@@ -47,10 +49,10 @@ class AuthService {
   }) async {
     return runTask(() async {
       // Use authDio — NO Authorization header sent
-      final response = await _authDio.post<dynamic>('auth/login', data: {
-        'email': email,
-        'password': password,
-      });
+      final response = await _authDio.post<dynamic>(
+        'auth/login',
+        data: {'email': email, 'password': password},
+      );
       final data = response.data as Map<String, dynamic>;
 
       // Postman says: response.data.accessToken
@@ -76,13 +78,16 @@ class AuthService {
   }) async {
     return runTask(() async {
       // Use authDio — NO Authorization header sent
-      final response = await _authDio.post<dynamic>('auth/signup', data: {
-        'name': name,
-        'email': email,
-        'password': password,
-        'phone': phone,
-        'role': role ?? 'player',
-      });
+      final response = await _authDio.post<dynamic>(
+        'auth/signup',
+        data: {
+          'name': name,
+          'email': email,
+          'password': password,
+          'phone': phone,
+          'role': role ?? 'player',
+        },
+      );
       final data = response.data as Map<String, dynamic>;
 
       final responseData = data['data'] ?? data;
@@ -101,7 +106,10 @@ class AuthService {
   FutureEither<void> forgotPassword({required String email}) async {
     return runTask(() async {
       // Use authDio — no token needed
-      await _authDio.post<dynamic>('auth/forgot-password', data: {'email': email});
+      await _authDio.post<dynamic>(
+        'auth/forgot-password',
+        data: {'email': email},
+      );
     }, requiresNetwork: true);
   }
 
@@ -111,10 +119,12 @@ class AuthService {
         // Use authenticated dio — logout requires token
         await _dio.post<dynamic>('auth/logout');
       } catch (e) {
-        AppLogger.error('Logout request failed but continuing local logout: $e');
+        AppLogger.error(
+          'Logout request failed but continuing local logout: $e',
+        );
       }
-      await SecureStorageService.instance.delete(_kAccessTokenKey);
-      await SecureStorageService.instance.delete(_kRefreshTokenKey);
+      await _secureStorage.delete(_kAccessTokenKey);
+      await _secureStorage.delete(_kRefreshTokenKey);
       _authStateController.add(null);
     }, requiresNetwork: true);
   }
@@ -131,23 +141,25 @@ class AuthService {
   /// Uses authDio — MUST NOT send Authorization header.
   Future<bool> refreshAccessToken() async {
     try {
-      final refreshTokenResult = await SecureStorageService.instance.read(_kRefreshTokenKey);
+      final refreshTokenResult = await _secureStorage.read(_kRefreshTokenKey);
       String? storedRefreshToken;
       refreshTokenResult.fold((_) => null, (v) => storedRefreshToken = v);
 
-      if (storedRefreshToken == null || storedRefreshToken!.isEmpty) return false;
+      if (storedRefreshToken == null || storedRefreshToken!.isEmpty)
+        return false;
 
       // Use authDio to avoid token injection loop
-      final response = await _authDio.post<dynamic>('auth/refresh', data: {
-        'refreshToken': storedRefreshToken,
-      });
+      final response = await _authDio.post<dynamic>(
+        'auth/refresh',
+        data: {'refreshToken': storedRefreshToken},
+      );
 
       final data = response.data as Map<String, dynamic>;
       final responseData = data['data'] ?? data;
       final newAccessToken = responseData['accessToken']?.toString();
 
       if (newAccessToken != null) {
-        await SecureStorageService.instance.write(_kAccessTokenKey, newAccessToken);
+        await _secureStorage.write(_kAccessTokenKey, newAccessToken);
         return true;
       }
       return false;

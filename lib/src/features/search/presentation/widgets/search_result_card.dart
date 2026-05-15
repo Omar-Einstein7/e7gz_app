@@ -36,20 +36,11 @@ class SearchResultCard extends StatelessWidget {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.vertical(top: Radius.circular(40.r)),
-                  child: Image.network(
-                    pitch.imageUrl,
+                  child: AppCachedImage(
+                    imageUrl: pitch.imageUrl,
                     height: 200.h,
                     width: double.infinity,
                     fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return SizedBox(
-                        height: 200.h,
-                        width: double.infinity,
-                        child: const Center(
-                          child: Icon(Icons.broken_image, color: Colors.white24),
-                        ),
-                      );
-                    },
                   ),
                 ),
                 Positioned(

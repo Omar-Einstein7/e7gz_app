@@ -3,7 +3,9 @@ import 'package:e7gz/src/services/dio_service.dart';
 import '../models/match_model.dart';
 
 class MatchRemoteDataSource {
-  final DioService _dio = DioService.instance;
+  final DioService _dio;
+
+  MatchRemoteDataSource({required DioService dioService}) : _dio = dioService;
 
   Future<List<MatchModel>> getMatches({
     String? pitchId,

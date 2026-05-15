@@ -4,8 +4,6 @@ import 'package:e7gz/src/imports/packages_imports.dart';
 import '../widgets/matchmaking_card.dart';
 import '../widgets/leaderboard_tile.dart';
 import '../cubit/matchmaking_cubit.dart';
-import '../../data/repositories/match_repository_impl.dart';
-import '../../data/datasources/match_remote_datasource.dart';
 
 class MatchmakingScreen extends StatelessWidget {
   const MatchmakingScreen({super.key});

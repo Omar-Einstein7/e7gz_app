@@ -38,21 +38,12 @@ class MatchmakingCard extends StatelessWidget {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.vertical(top: Radius.circular(40.r)),
-                  child: Image.network(
-                    match.pitchImage ??
+                  child: AppCachedImage(
+                    imageUrl: match.pitchImage ??
                         'https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80',
                     height: 160.h,
                     width: double.infinity,
                     fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return SizedBox(
-                        height: 160.h,
-                        width: double.infinity,
-                        child: const Center(
-                          child: Icon(Icons.broken_image, color: Colors.white24),
-                        ),
-                      );
-                    },
                   ),
                 ),
                 Positioned(

@@ -7,6 +7,7 @@ import 'tabs/admin_bookings_tab.dart';
 import 'tabs/admin_matches_tab.dart';
 import 'tabs/admin_notifications_tab.dart';
 import 'tabs/admin_profile_tab.dart';
+import '../../../../di/injection_container.dart';
 
 class AdminDashboardScreen extends StatefulWidget {
   const AdminDashboardScreen({super.key});
@@ -16,7 +17,7 @@ class AdminDashboardScreen extends StatefulWidget {
 }
 
 class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
-  final AdminRemoteDataSource _dataSource = AdminRemoteDataSource();
+  final AdminRemoteDataSource _dataSource = sl<AdminRemoteDataSource>();
   int _selectedIndex = 0;
   final PageController _pageController = PageController();
 

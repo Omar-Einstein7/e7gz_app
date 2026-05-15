@@ -1,8 +1,6 @@
-import 'package:fpdart/fpdart.dart';
-import 'package:e7gz/src/utils/failure.dart';
-import 'package:e7gz/src/utils/typedefs.dart';
 import '../entities/pitch.dart';
 import '../repositories/pitch_repository.dart';
+import 'package:e7gz/src/utils/utils.dart';
 
 class GetPitchesUseCase {
   final PitchRepository _repository;

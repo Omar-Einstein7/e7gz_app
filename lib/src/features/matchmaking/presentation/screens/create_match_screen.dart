@@ -4,6 +4,7 @@ import 'package:e7gz/src/features/matchmaking/presentation/cubit/matchmaking_sta
 import 'package:e7gz/src/features/matchmaking/data/models/match_model.dart';
 import 'package:e7gz/src/features/pitches/domain/entities/pitch.dart';
 import 'package:e7gz/src/features/search/data/datasources/search_remote_datasource.dart';
+import 'package:e7gz/src/di/injection_container.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
 
@@ -38,7 +39,7 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
 
   Future<void> _fetchPitches() async {
     try {
-      final ds = SearchRemoteDataSourceImpl(dio: AppConfig.dio);
+      final ds = sl<SearchRemoteDataSource>();
       final pitches = await ds.searchPitches();
       if (mounted) {
         setState(() {

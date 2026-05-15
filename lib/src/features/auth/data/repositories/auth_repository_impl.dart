@@ -7,8 +7,8 @@ import 'package:e7gz/src/features/auth/domain/repositories/auth_repository.dart'
 class AuthRepositoryImpl implements AuthRepository {
   final AuthService _authService;
 
-  AuthRepositoryImpl({AuthService? authService}) 
-      : _authService = authService ?? AuthService.instance;
+  AuthRepositoryImpl({required AuthService authService})
+      : _authService = authService;
 
   @override
   Stream<AppUser?> get onAuthStateChanged {

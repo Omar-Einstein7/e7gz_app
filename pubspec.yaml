@@ -108,6 +108,7 @@ dependencies:
   flutter_map:
   latlong2:
   location: 
+  get_it: ^9.2.1
 
 
 dev_dependencies:

@@ -4,7 +4,9 @@ import '../models/route_model.dart';
 /// Proxies all map operations through our Node.js backend
 /// which in turn calls OpenRouteService.
 class MapsRemoteDataSource {
-  final DioService _dio = DioService.instance;
+  final DioService _dio;
+
+  MapsRemoteDataSource({required DioService dioService}) : _dio = dioService;
 
   Future<RouteModel> getRoute({
     required double fromLat,

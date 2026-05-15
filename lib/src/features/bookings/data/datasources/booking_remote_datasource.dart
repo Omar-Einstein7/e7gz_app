@@ -2,7 +2,9 @@ import 'package:e7gz/src/services/dio_service.dart';
 import '../models/booking_model.dart';
 
 class BookingRemoteDataSource {
-  final DioService _dio = DioService.instance;
+  final DioService _dio;
+
+  BookingRemoteDataSource({required DioService dioService}) : _dio = dioService;
 
   Future<List<BookingModel>> getMyBookings({String? status}) async {
     final params = <String, dynamic>{if (status != null) 'status': status};

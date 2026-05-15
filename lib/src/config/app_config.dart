@@ -1,6 +1,7 @@
 import '../imports/core_imports.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:get_it/get_it.dart';
 
 class AppConfig {
   AppConfig._();
@@ -81,7 +82,7 @@ class AppConfig {
           );
 
           // Always inject token — this client is only used for protected routes
-          final tokenResult = await SecureStorageService.instance.read(
+          final tokenResult = await GetIt.instance<SecureStorageService>().read(
             'jwt_token',
           );
           tokenResult.fold((_) {}, (token) {
@@ -107,10 +108,10 @@ class AppConfig {
 
           if (e.response?.statusCode == 401) {
             try {
-              final isRefreshed = await AuthService.instance
+              final isRefreshed = await GetIt.instance<AuthService>()
                   .refreshAccessToken();
               if (isRefreshed) {
-                final tokenResult = await SecureStorageService.instance.read(
+                final tokenResult = await GetIt.instance<SecureStorageService>().read(
                   'jwt_token',
                 );
                 String? newToken;
@@ -148,7 +149,7 @@ class AppConfig {
   static String _getBaseUrl() {
     String url = dotenv.get(
       'API_BASE_URL',
-      fallback: 'https://e7gz-backend.onrender.com/api',
+      fallback: 'http://192.168.1.7/api',
     );
 
     if (url.endsWith('/')) {

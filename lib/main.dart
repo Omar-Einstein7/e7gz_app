@@ -1,6 +1,7 @@
 import 'src/imports/core_imports.dart';
 import 'src/imports/packages_imports.dart';
 import 'src/app.dart';
+import 'src/di/injection_container.dart';
 
 
 Future<void> main() async {
@@ -9,7 +10,11 @@ Future<void> main() async {
   await EasyLocalization.ensureInitialized();
   await dotenv.load(fileName: '.env');
   await AppConfig.init();
-  await AuthService.instance.loadSavedToken();
+
+  // Register all dependencies with get_it (sync — no async registrations)
+  await initDependencies();
+
+  await sl<AuthService>().loadSavedToken();
 
   runApp(
     const LocalizationWrapper(

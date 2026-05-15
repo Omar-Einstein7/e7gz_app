@@ -4,7 +4,9 @@ import '../models/pitch_model.dart';
 import '../models/review_model.dart';
 
 class PitchRemoteDataSource {
-  final DioService _dio = DioService.instance;
+  final DioService _dio;
+
+  PitchRemoteDataSource({required DioService dioService}) : _dio = dioService;
 
   Future<Map<String, dynamic>> getPitches({
     String? search,

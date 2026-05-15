@@ -26,26 +26,26 @@ class PitchModel extends Pitch {
 
     return PitchModel(
       id: json['_id']?.toString() ?? json['id']?.toString() ?? '',
-      name: json['name'] ?? '',
-      description: json['description'] ?? '',
+      name: json['name']?.toString() ?? '',
+      description: json['description']?.toString() ?? '',
       ownerId: _extractOwnerId(json['ownerId']),
-      sportType: json['sportType'] ?? 'football',
+      sportType: json['sportType']?.toString() ?? 'football',
       location: PitchLocation(
-        address: loc['address'] ?? '',
-        city: loc['city'] ?? '',
-        country: loc['country'] ?? 'Egypt',
+        address: loc['address']?.toString() ?? '',
+        city: loc['city']?.toString() ?? '',
+        country: loc['country']?.toString() ?? 'Egypt',
         // ORS / GeoJSON: [longitude, latitude]
-        longitude: (coordsList[0] as num).toDouble(),
-        latitude: (coordsList[1] as num).toDouble(),
+        longitude: (coordsList.isNotEmpty ? (coordsList[0] as num?)?.toDouble() ?? 0.0 : 0.0),
+        latitude: (coordsList.length > 1 ? (coordsList[1] as num?)?.toDouble() ?? 0.0 : 0.0),
       ),
       pricePerHour: (json['pricePerHour'] as num?)?.toDouble() ?? 0.0,
-      amenities: List<String>.from(json['amenities'] ?? []),
-      images: List<String>.from(json['images'] ?? []),
+      amenities: (json['amenities'] as List?)?.map((e) => e?.toString() ?? '').toList() ?? [],
+      images: (json['images'] as List?)?.map((e) => e?.toString() ?? '').toList() ?? [],
       rating: (json['rating'] as num?)?.toDouble() ?? 0.0,
       reviewsCount: (json['reviewsCount'] as num?)?.toInt() ?? 0,
       isAvailable: json['isAvailable'] ?? true,
-      openingTime: json['openingTime'] ?? '06:00',
-      closingTime: json['closingTime'] ?? '24:00',
+      openingTime: json['openingTime']?.toString() ?? '06:00',
+      closingTime: json['closingTime']?.toString() ?? '24:00',
       slotDurationMinutes: (json['slotDurationMinutes'] as num?)?.toInt() ?? 60,
     );
   }

@@ -11,6 +11,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart' as loc;
 import '../layout/admin_layout.dart';
 import '../../data/datasources/admin_remote_datasource.dart';
+import '../../../../di/injection_container.dart';
 
 class AdminAddPitchScreen extends StatefulWidget {
   const AdminAddPitchScreen({super.key});
@@ -35,7 +36,7 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
   final MapController _mapController = MapController();
   final loc.Location _locationService = loc.Location();
 
-  final AdminRemoteDataSource _dataSource = AdminRemoteDataSource();
+  final AdminRemoteDataSource _dataSource = sl<AdminRemoteDataSource>();
   final ImagePicker _picker = ImagePicker();
 
   Future<void> _getCurrentLocation() async {

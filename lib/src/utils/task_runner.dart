@@ -1,5 +1,6 @@
 import 'package:fpdart/fpdart.dart';
 
+import '../di/injection_container.dart';
 import '../imports/core_imports.dart';
 
 /// A reusable generic function to handle potential exceptions in async tasks
@@ -13,10 +14,12 @@ FutureEither<T> runTask<T>(
 }) async {
   if (requiresNetwork) {
     try {
-      final hasNetwork = await InternetConnectionService().hasConnection();
+      final hasNetwork = await sl<InternetConnectionService>().hasConnection();
 
       if (!hasNetwork) {
-        AppLogger.warning('Network detection reported offline, but attempting task anyway...');
+        AppLogger.warning(
+          'Network detection reported offline, but attempting task anyway...',
+        );
         // We continue anyway because the check might be unreliable in some environments
       }
     } catch (e) {
