@@ -31,6 +31,7 @@ class AuthService {
   // ─── Internal token helpers ────────────────────────────────────────────────
 
   Future<void> _saveTokens(String accessToken, String? refreshToken) async {
+    AppLogger.info('💾 Saving new tokens to secure storage');
     await _secureStorage.write(_kAccessTokenKey, accessToken);
     if (refreshToken != null) {
       await _secureStorage.write(_kRefreshTokenKey, refreshToken);
@@ -63,6 +64,8 @@ class AuthService {
 
       if (accessToken != null) {
         await _saveTokens(accessToken, refreshToken);
+      } else {
+        AppLogger.warning('⚠️ Login successful but no accessToken found in response');
       }
 
       _authStateController.add(responseData);
@@ -179,13 +182,16 @@ class AuthService {
   /// Refreshes the access token using the stored refresh token.
   /// Uses authDio — MUST NOT send Authorization header.
   Future<bool> refreshAccessToken() async {
+    AppLogger.info('🔄 Attempting to refresh access token...');
     try {
       final refreshTokenResult = await _secureStorage.read(_kRefreshTokenKey);
       String? storedRefreshToken;
       refreshTokenResult.fold((_) => null, (v) => storedRefreshToken = v);
 
-      if (storedRefreshToken == null || storedRefreshToken!.isEmpty)
+      if (storedRefreshToken == null || storedRefreshToken!.isEmpty) {
+        AppLogger.warning('❌ Refresh token not found in storage');
         return false;
+      }
 
       // Use authDio to avoid token injection loop
       final response = await _authDio.post<dynamic>(
@@ -198,12 +204,14 @@ class AuthService {
       final newAccessToken = responseData['accessToken']?.toString();
 
       if (newAccessToken != null) {
+        AppLogger.info('✅ Token refreshed successfully');
         await _secureStorage.write(_kAccessTokenKey, newAccessToken);
         return true;
       }
+      AppLogger.warning('❌ Refresh response did not contain a new accessToken');
       return false;
     } catch (e) {
-      AppLogger.error('Token refresh failed: $e');
+      AppLogger.error('❌ Token refresh failed: $e');
       return false;
     }
   }

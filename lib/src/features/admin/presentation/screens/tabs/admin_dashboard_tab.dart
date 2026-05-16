@@ -32,6 +32,34 @@ class _AdminDashboardTabState extends State<AdminDashboardTab> with AutomaticKee
     return FutureBuilder<Map<String, dynamic>>(
       future: _statsFuture,
       builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(IconsaxPlusBold.warning_2, color: Colors.red, size: 48),
+                const SizedBox(height: 16),
+                Text(
+                  'Error loading dashboard: ${snapshot.error}',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: AdminColors.textSecondary),
+                ),
+                const SizedBox(height: 24),
+                ElevatedButton(
+                  onPressed: () => setState(() {
+                    _statsFuture = widget.dataSource.getDashboardStats();
+                  }),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AdminColors.accent,
+                    foregroundColor: Colors.white,
+                  ),
+                  child: const Text('Retry'),
+                ),
+              ],
+            ),
+          );
+        }
+
         final stats = snapshot.data?['data'] ?? snapshot.data ?? {};
         final loading = snapshot.connectionState == ConnectionState.waiting;
 
@@ -58,7 +86,7 @@ class _AdminDashboardTabState extends State<AdminDashboardTab> with AutomaticKee
                         title: 'Total Revenue',
                         value: loading
                             ? '—'
-                            : 'EGP ${stats['totalRevenue'] ?? '42.8k'}',
+                            : 'EGP ${stats['totalRevenue'] ?? '0'}',
                         subtitle: '+12% this month',
                         icon: IconsaxPlusBold.wallet_3,
                         color: AdminColors.accent,
@@ -67,14 +95,14 @@ class _AdminDashboardTabState extends State<AdminDashboardTab> with AutomaticKee
                         title: 'Bookings',
                         value: loading
                             ? '—'
-                            : '${stats['totalBookings'] ?? '156'}',
+                            : '${stats['totalBookings'] ?? '0'}',
                         subtitle: '+8 today',
                         icon: IconsaxPlusBold.calendar_tick,
                         color: AdminColors.accentBlue,
                       ),
                       StatCard(
                         title: 'Pitches',
-                        value: loading ? '—' : '${stats['pitchCount'] ?? '12'}',
+                        value: loading ? '—' : '${stats['pitchCount'] ?? '0'}',
                         subtitle: '2 pending review',
                         icon: IconsaxPlusBold.location,
                         color: AdminColors.accentAmber,
@@ -83,7 +111,7 @@ class _AdminDashboardTabState extends State<AdminDashboardTab> with AutomaticKee
                         title: 'Total Users',
                         value: loading
                             ? '—'
-                            : '${stats['userCount'] ?? '1.2k'}',
+                            : '${stats['userCount'] ?? '0'}',
                         subtitle: '+24 this week',
                         icon: IconsaxPlusBold.user_square,
                         color: AdminColors.accentPurple,

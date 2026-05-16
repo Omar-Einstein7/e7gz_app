@@ -1,8 +1,8 @@
 import 'dart:ui';
 
 import 'package:e7gz/src/imports/imports.dart';
-import 'package:e7gz/src/features/pitches/presentation/cubit/pitches_cubit.dart';
-import 'package:e7gz/src/features/pitches/presentation/cubit/pitches_state.dart';
+import 'package:e7gz/src/features/home/presentation/cubit/home_cubit.dart';
+import 'package:e7gz/src/features/home/presentation/cubit/home_state.dart';
 
 
 class NearLocationList extends StatelessWidget {
@@ -14,13 +14,13 @@ class NearLocationList extends StatelessWidget {
 
     return SizedBox(
       height: 285.h,
-      child: BlocBuilder<PitchesCubit, PitchesState>(
+      child: BlocBuilder<HomeCubit, HomeState>(
         builder: (context, state) {
-          if (state.status == PitchesStatus.loading) {
+          if (state.status == HomeStatus.loading && state.data == null) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          if (state.status == PitchesStatus.failure) {
+          if (state.status == HomeStatus.failure) {
             return Center(
               child: Text(
                 state.errorMessage ?? 'Failed to load pitches',
@@ -29,7 +29,7 @@ class NearLocationList extends StatelessWidget {
             );
           }
 
-          final pitches = state.pitches.reversed.toList();
+          final pitches = state.data?.nearbyPitches ?? [];
           if (pitches.isEmpty) {
             return Center(
               child: Text(

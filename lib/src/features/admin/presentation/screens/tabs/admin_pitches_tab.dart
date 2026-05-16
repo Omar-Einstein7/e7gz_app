@@ -83,6 +83,26 @@ class _AdminPitchesTabState extends State<AdminPitchesTab> with AutomaticKeepAli
                   ),
                 );
               }
+              
+              if (snapshot.hasError) {
+                return Center(
+                  child: Column(
+                    children: [
+                      const Icon(IconsaxPlusBold.warning_2, color: Colors.red, size: 40),
+                      const SizedBox(height: 12),
+                      Text('Failed to load pitches: ${snapshot.error}', style: const TextStyle(color: AdminColors.textSecondary)),
+                      const SizedBox(height: 16),
+                      TextButton(
+                        onPressed: () => setState(() {
+                          _pitchesFuture = widget.dataSource.getAllPitches();
+                        }),
+                        child: const Text('Retry'),
+                      ),
+                    ],
+                  ),
+                );
+              }
+
               final pitches = snapshot.data ?? [];
               return AdminDataTable(
                 title: 'All Pitches',

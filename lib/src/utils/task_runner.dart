@@ -14,14 +14,18 @@ FutureEither<T> runTask<T>(
 }) async {
   if (requiresNetwork) {
     try {
-      final hasNetwork = await sl<InternetConnectionService>().hasConnection();
+      // Add a small timeout to avoid hanging on slow network checks
+      final hasNetwork = await sl<InternetConnectionService>()
+          .hasConnection()
+          .timeout(const Duration(seconds: 2));
 
       if (!hasNetwork) {
         return left(const NetworkFailure());
       }
     } catch (e) {
-      AppLogger.warning('Network check error: $e');
-      // If network check fails, we still attempt the task
+      AppLogger.warning('Network check failed or timed out, proceeding anyway: $e');
+      // If network check fails or times out, we still attempt the task 
+      // and let Dio handle actual network errors.
     }
   }
 

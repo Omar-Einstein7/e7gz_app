@@ -60,8 +60,18 @@ class _SignupScreenState extends State<SignupScreen> {
           ),
 
           SafeArea(
-            child: SingleChildScrollView(
-              padding: EdgeInsets.all(AppSpacing.lg.w),
+            child: BlocListener<AuthBloc, AuthState>(
+              listener: (context, state) {
+                if (state.isFailure) {
+                  context.showErrorSnackBar(state.errorMessage ?? 'Signup failed');
+                }
+                if (state.isSuccess) {
+                  context.showSuccessSnackBar('Account created successfully!');
+                  context.go(AppRoutes.login);
+                }
+              },
+              child: SingleChildScrollView(
+                padding: EdgeInsets.all(AppSpacing.lg.w),
               child: Column(
                 children: [
                   // Header
@@ -239,8 +249,8 @@ class _SignupScreenState extends State<SignupScreen> {
                 ],
               ),
             ),
-          ),
-        ],
+          )
+      )],
       ),
     );
   }

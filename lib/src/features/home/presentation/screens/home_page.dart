@@ -12,6 +12,17 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final cubit = context.read<HomeCubit>();
+      if (cubit.state.data == null) {
+        cubit.loadHomeData();
+      }
+    });
+  }
+
   void _onViewAll(String? sport) {
     context.go(AppRoutes.search, extra: sport);
   }

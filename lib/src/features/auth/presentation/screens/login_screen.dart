@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:e7gz/src/features/auth/presentation/providers/auth_bloc.dart';
+import 'package:e7gz/src/features/auth/presentation/providers/session_bloc.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
 import 'package:e7gz/src/theme/app_colors.dart';
@@ -73,141 +74,164 @@ class _LoginScreenState extends State<LoginScreen> {
 
           SafeArea(
             child: Center(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(horizontal: AppSpacing.xl.w),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // Brand Identity
-                    const BrandHeader(),
+              child: BlocListener<AuthBloc, AuthState>(
+                listener: (context, state) {
+                  if (state.isFailure) {
+                    context.showErrorSnackBar(state.errorMessage ?? 'Authentication failed');
+                  }
+                  if (state.isSuccess) {
+                    context.showSuccessSnackBar('Login successful!');
+                    final session = context.read<SessionBloc>().state;
+                    final user = session.user;
+                    if (user != null) {
+                      if (user.isAdmin) {
+                        context.go(AppRoutes.admin);
+                      } else if (user.isOwner) {
+                        context.go(AppRoutes.ownerDashboard);
+                      } else {
+                        context.go(AppRoutes.home);
+                      }
+                    } else {
+                      // If user not available in session yet, fallback to home
+                      context.go(AppRoutes.home);
+                    }
+                  }
+                },
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.symmetric(horizontal: AppSpacing.xl.w),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // Brand Identity
+                      const BrandHeader(),
 
-                    SizedBox(height: AppSpacing.xxl.h),
+                      SizedBox(height: AppSpacing.xxl.h),
 
-                    // Login Container
-                    Container(
-                      padding: EdgeInsets.all(AppSpacing.xl.w),
-                      decoration: BoxDecoration(
-                        color: cs.surfaceContainerLow.withValues(alpha: 0.8),
-                        borderRadius: AppRadius.bxxl.r,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.4),
-                            blurRadius: 40,
-                            offset: const Offset(0, 20),
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Section Header
-                          Text(
-                            'Welcome Back',
-                            style: typography.headlineSmall?.copyWith(
-                              color: cs.onSurface,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 24.sp,
+                      // Login Container
+                      Container(
+                        padding: EdgeInsets.all(AppSpacing.xl.w),
+                        decoration: BoxDecoration(
+                          color: cs.surfaceContainerLow.withValues(alpha: 0.8),
+                          borderRadius: AppRadius.bxxl.r,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.4),
+                              blurRadius: 40,
+                              offset: const Offset(0, 20),
                             ),
-                          ),
-                          SizedBox(height: AppSpacing.xs.h),
-                          Text(
-                            'Securely log in to manage your bookings.',
-                            style: typography.bodySmall?.copyWith(
-                              color: cs.onSurfaceVariant,
-                              fontSize: 14.sp,
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Section Header
+                            Text(
+                              'Welcome Back',
+                              style: typography.headlineSmall?.copyWith(
+                                color: cs.onSurface,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 24.sp,
+                              ),
                             ),
-                          ),
+                            SizedBox(height: AppSpacing.xs.h),
+                            Text(
+                              'Securely log in to manage your bookings.',
+                              style: typography.bodySmall?.copyWith(
+                                color: cs.onSurfaceVariant,
+                                fontSize: 14.sp,
+                              ),
+                            ),
 
-                          SizedBox(height: AppSpacing.xl.h),
+                            SizedBox(height: AppSpacing.xl.h),
 
-                          // Form
-                          Form(
-                            key: _formKey,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                _inputLabel(context, 'EMAIL ADDRESS'),
-                                AppTextField(
-                                  controller: _emailController,
-                                  hint: 'name@example.com',
-                                  keyboardType: TextInputType.emailAddress,
-                                  prefixIcon: const Icon(IconsaxPlusBold.sms),
-                                  validator: Validators.email,
-                                ),
+                            // Form
+                            Form(
+                              key: _formKey,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  _inputLabel(context, 'EMAIL ADDRESS'),
+                                  AppTextField(
+                                    controller: _emailController,
+                                    hint: 'name@example.com',
+                                    keyboardType: TextInputType.emailAddress,
+                                    prefixIcon: const Icon(IconsaxPlusBold.sms),
+                                    validator: Validators.email,
+                                  ),
 
-                                SizedBox(height: AppSpacing.lg.h),
+                                  SizedBox(height: AppSpacing.lg.h),
 
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    _inputLabel(context, 'PASSWORD'),
-                                    TextButton(
-                                      onPressed: () => context.push(
-                                        AppRoutes.forgotPassword,
-                                      ),
-                                      style: TextButton.styleFrom(
-                                        padding: EdgeInsets.zero,
-                                        minimumSize: Size.zero,
-                                      ),
-                                      child: Text(
-                                        'Forgot Password?',
-                                        style: typography.labelSmall?.copyWith(
-                                          color: cs.primary,
-                                          fontWeight: FontWeight.bold,
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      _inputLabel(context, 'PASSWORD'),
+                                      TextButton(
+                                        onPressed: () => context.push(
+                                          AppRoutes.forgotPassword,
+                                        ),
+                                        style: TextButton.styleFrom(
+                                          padding: EdgeInsets.zero,
+                                          minimumSize: Size.zero,
+                                        ),
+                                        child: Text(
+                                          'Forgot Password?',
+                                          style: typography.labelSmall?.copyWith(
+                                            color: cs.primary,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                                AppTextField(
-                                  controller: _passwordController,
-                                  hint: '••••••••',
-                                  obscureText: _obscurePassword,
-                                  prefixIcon: const Icon(IconsaxPlusBold.lock),
-                                  validator: Validators.password,
-                                  suffixIcon: IconButton(
-                                    icon: Icon(
-                                      _obscurePassword
-                                          ? IconsaxPlusBold.eye_slash
-                                          : IconsaxPlusBold.eye,
-                                      size: 20,
-                                    ),
-                                    onPressed: () => setState(
-                                      () =>
-                                          _obscurePassword = !_obscurePassword,
+                                    ],
+                                  ),
+                                  AppTextField(
+                                    controller: _passwordController,
+                                    hint: '••••••••',
+                                    obscureText: _obscurePassword,
+                                    prefixIcon: const Icon(IconsaxPlusBold.lock),
+                                    validator: Validators.password,
+                                    suffixIcon: IconButton(
+                                      icon: Icon(
+                                        _obscurePassword
+                                            ? IconsaxPlusBold.eye_slash
+                                            : IconsaxPlusBold.eye,
+                                        size: 20,
+                                      ),
+                                      onPressed: () => setState(
+                                        () =>
+                                            _obscurePassword = !_obscurePassword,
+                                      ),
                                     ),
                                   ),
-                                ),
 
-                                SizedBox(height: AppSpacing.xl.h),
+                                  SizedBox(height: AppSpacing.xl.h),
 
-                                BlocBuilder<AuthBloc, AuthState>(
-                                  builder: (context, state) {
-                                    return AppButton(
-                                      label: 'Login to Account',
-                                      isFullWidth: true,
-                                      height: ButtonSize.large,
-                                      isLoading: state.isLoading,
-                                      onPressed: () {
-                                        if (_formKey.currentState?.validate() ??
-                                            false) {
-                                          context.read<AuthBloc>().add(
-                                            LoginRequested(
-                                              email: _emailController.text
-                                                  .trim(),
-                                              password:
-                                                  _passwordController.text,
-                                            ),
-                                          );
-                                        }
-                                      },
-                                    );
-                                  },
-                                ),
-                              ],
+                                  BlocBuilder<AuthBloc, AuthState>(
+                                    builder: (context, state) {
+                                      return AppButton(
+                                        label: 'Login to Account',
+                                        isFullWidth: true,
+                                        height: ButtonSize.large,
+                                        isLoading: state.isLoading,
+                                        onPressed: () {
+                                          if (_formKey.currentState?.validate() ??
+                                              false) {
+                                            context.read<AuthBloc>().add(
+                                              LoginRequested(
+                                                email: _emailController.text
+                                                    .trim(),
+                                                password:
+                                                    _passwordController.text,
+                                              ),
+                                            );
+                                          }
+                                        },
+                                      );
+                                    },
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
 
                           // Divider
                           SizedBox(height: AppSpacing.xl.h),
@@ -313,7 +337,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
           ),
-        ],
+       ) ],
       ),
     );
   }

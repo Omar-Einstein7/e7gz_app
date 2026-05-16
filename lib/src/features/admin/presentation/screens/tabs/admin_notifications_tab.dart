@@ -71,6 +71,26 @@ class _AdminNotificationsTabState extends State<AdminNotificationsTab> with Auto
                   ),
                 );
               }
+
+              if (snapshot.hasError) {
+                return Center(
+                  child: Column(
+                    children: [
+                      const Icon(IconsaxPlusBold.warning_2, color: Colors.red, size: 40),
+                      const SizedBox(height: 12),
+                      Text('Failed to load alerts: ${snapshot.error}', style: const TextStyle(color: AdminColors.textSecondary)),
+                      const SizedBox(height: 16),
+                      TextButton(
+                        onPressed: () => setState(() {
+                          _notificationsFuture = widget.dataSource.getNotifications();
+                        }),
+                        child: const Text('Retry'),
+                      ),
+                    ],
+                  ),
+                );
+              }
+
               final notifications = snapshot.data ?? [];
               if (notifications.isEmpty) {
                 return _EmptyNotifications();

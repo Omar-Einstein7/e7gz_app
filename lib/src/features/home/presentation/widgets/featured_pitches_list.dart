@@ -1,7 +1,7 @@
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/imports.dart';
-import 'package:e7gz/src/features/pitches/presentation/cubit/pitches_cubit.dart';
-import 'package:e7gz/src/features/pitches/presentation/cubit/pitches_state.dart';
+import 'package:e7gz/src/features/home/presentation/cubit/home_cubit.dart';
+import 'package:e7gz/src/features/home/presentation/cubit/home_state.dart';
 
 class FeaturedPitchesList extends StatelessWidget {
   const FeaturedPitchesList({super.key});
@@ -13,13 +13,13 @@ class FeaturedPitchesList extends StatelessWidget {
 
     return SizedBox(
       height: 300.h,
-      child: BlocBuilder<PitchesCubit, PitchesState>(
+      child: BlocBuilder<HomeCubit, HomeState>(
         builder: (context, state) {
-          if (state.status == PitchesStatus.loading) {
+          if (state.status == HomeStatus.loading && state.data == null) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          if (state.status == PitchesStatus.failure) {
+          if (state.status == HomeStatus.failure) {
             return Center(
               child: Text(
                 state.errorMessage ?? 'Failed to load pitches',
@@ -28,7 +28,7 @@ class FeaturedPitchesList extends StatelessWidget {
             );
           }
 
-          final pitches = state.pitches;
+          final pitches = state.data?.featuredPitches ?? [];
           if (pitches.isEmpty) {
             return Center(
               child: Text(
