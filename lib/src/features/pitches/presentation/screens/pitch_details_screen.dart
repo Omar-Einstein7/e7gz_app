@@ -29,25 +29,22 @@ class _PitchDetailsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.colors;
-    final pitchTheme = context.pitchTheme;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final textColor = isDark ? Colors.white : Theme.of(context).colorScheme.onSurface;
+    final cs = context.colorScheme;
 
     return Scaffold(
-      backgroundColor: isDark ? pitchTheme.nightBackground : Theme.of(context).colorScheme.surface,
+      backgroundColor: cs.background,
       body: BlocBuilder<PitchDetailCubit, PitchDetailState>(
         builder: (context, state) {
           if (state.status == PitchDetailStatus.loading ||
               state.status == PitchDetailStatus.initial) {
-            return Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary));
+            return Center(child: CircularProgressIndicator(color: cs.primary));
           }
 
           if (state.status == PitchDetailStatus.failure) {
             return Center(
               child: Text(
                 state.errorMessage ?? 'Failed to load pitch details',
-                style: TextStyle(color: colors.error, fontSize: 16.sp),
+                style: TextStyle(color: cs.error, fontSize: 16.sp),
               ),
             );
           }
@@ -57,7 +54,7 @@ class _PitchDetailsView extends StatelessWidget {
             return Center(
               child: Text(
                 'Pitch not found',
-                style: TextStyle(color: textColor, fontSize: 16.sp),
+                style: TextStyle(color: cs.onSurface, fontSize: 16.sp),
               ),
             );
           }
@@ -67,24 +64,24 @@ class _PitchDetailsView extends StatelessWidget {
             slivers: [
               _HeaderSection(pitch: pitch),
               SliverPadding(
-                padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 32.h),
+                padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg.w, vertical: AppSpacing.xl.h),
                 sliver: SliverList(
                   delegate: SliverChildListDelegate([
                     _AmenitiesSection(amenities: pitch.amenities)
                         .animate()
                         .fadeIn(duration: 600.ms, delay: 200.ms)
                         .moveY(begin: 20, end: 0),
-                    SizedBox(height: 48.h),
+                    SizedBox(height: AppSpacing.xxl.h),
                     _ShiftsSection()
                         .animate()
                         .fadeIn(duration: 600.ms, delay: 400.ms)
                         .moveY(begin: 20, end: 0),
-                    SizedBox(height: 48.h),
+                    SizedBox(height: AppSpacing.xxl.h),
                     _LocationSection(pitch: pitch)
                         .animate()
                         .fadeIn(duration: 600.ms, delay: 600.ms)
                         .moveY(begin: 20, end: 0),
-                    SizedBox(height: 48.h),
+                    SizedBox(height: AppSpacing.xxl.h),
                     _AboutSection(description: pitch.description)
                         .animate()
                         .fadeIn(duration: 600.ms, delay: 800.ms)
@@ -108,8 +105,8 @@ class _HeaderSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final pitchTheme = context.pitchTheme;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final pc = context.pitchColors;
+    final cs = context.colorScheme;
     
     return SliverAppBar(
       expandedHeight: 500.h,
@@ -118,9 +115,9 @@ class _HeaderSection extends StatelessWidget {
       pinned: true,
       stretch: true,
       leading: Container(
-        margin: EdgeInsets.all(8.w),
+        margin: EdgeInsets.all(AppSpacing.sm.w),
         decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.3),
+          color: Colors.black.withValues(alpha: 0.3),
           shape: BoxShape.circle,
         ),
         child: IconButton(
@@ -137,7 +134,7 @@ class _HeaderSection extends StatelessWidget {
           icon: IconsaxPlusLinear.heart,
           onPressed: () {},
         ),
-        SizedBox(width: 16.w),
+        SizedBox(width: AppSpacing.md.w),
       ],
       flexibleSpace: FlexibleSpaceBar(
         stretchModes: const [
@@ -147,34 +144,37 @@ class _HeaderSection extends StatelessWidget {
         background: Stack(
           fit: StackFit.expand,
           children: [
-            AppCachedImage(
-              imageUrl: pitch.imageUrl.isNotEmpty
-                  ? pitch.imageUrl
-                  : 'https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80',
-              fit: BoxFit.cover,
+            Hero(
+              tag: 'pitch_image_${pitch.id}',
+              child: AppCachedImage(
+                imageUrl: pitch.imageUrl.isNotEmpty
+                    ? pitch.imageUrl
+                    : 'https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80',
+                fit: BoxFit.cover,
+              ),
             ),
-            // Sophisticated Gradient Overlay from PitchTheme
+            // Sophisticated Gradient Overlay from PitchColors extension
             DecoratedBox(
               decoration: BoxDecoration(
-                gradient: pitchTheme.heroGradient,
+                gradient: pc.heroGradient,
               ),
             ),
             // Venue Info Card with Glassmorphism
             Positioned(
-              bottom: 30.h,
-              left: 20.w,
-              right: 20.w,
+              bottom: AppSpacing.xl.h,
+              left: AppSpacing.md.w,
+              right: AppSpacing.md.w,
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(32.r),
+                borderRadius: AppRadius.bxxl.r,
                 child: BackdropFilter(
                   filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
                   child: Container(
-                    padding: EdgeInsets.all(24.w),
+                    padding: EdgeInsets.all(AppSpacing.lg.w),
                     decoration: BoxDecoration(
-                      color: pitchTheme.glassSurface,
-                      borderRadius: BorderRadius.circular(32.r),
+                      color: pc.glassSurface,
+                      borderRadius: AppRadius.bxxl.r,
                       border: Border.all(
-                        color: pitchTheme.glassBorder,
+                        color: pc.glassBorder,
                         width: 1.5,
                       ),
                     ),
@@ -183,38 +183,37 @@ class _HeaderSection extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         _PremiumBadge().animate().scale(delay: 400.ms, curve: Curves.elasticOut),
-                        SizedBox(height: 16.h),
+                        SizedBox(height: AppSpacing.md.h),
                         Text(
                           pitch.name,
-                          style: TextStyle(
-                            fontFamily: 'Chewy',
-                            color: isDark ? Colors.white : Theme.of(context).colorScheme.onSurface,
+                          style: context.textTheme.headlineLarge?.copyWith(
+                            color: cs.onSurface,
                             fontWeight: FontWeight.w800,
-                            fontSize: 32.sp,
                             height: 1.1,
                           ),
                         ),
-                        SizedBox(height: 12.h),
+                        SizedBox(height: AppSpacing.sm.h),
                         Row(
                           children: [
                             Icon(
                               IconsaxPlusBold.location,
-                              color: pitchTheme.accentGreen,
+                              color: pc.accentGreen,
                               size: 18,
                             ),
-                            SizedBox(width: 6.w),
+                            SizedBox(width: AppSpacing.xs.w),
                             Expanded(
                               child: Text(
                                 pitch.location.city,
-                                style: TextStyle(
-                                  fontFamily: 'Chewy',
-                                  color: isDark ? const Color(0xFFBCC7DE) : Theme.of(context).colorScheme.onSurfaceVariant,
-                                  fontSize: 16.sp,
+                                style: context.textTheme.bodyLarge?.copyWith(
+                                  color: cs.onSurfaceVariant,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
                             ),
-                            _RatingBadge(rating: pitch.rating, reviews: pitch.reviewsCount, isDark: isDark, cs: Theme.of(context).colorScheme),
+                            _RatingBadge(
+                              rating: pitch.rating, 
+                              reviews: pitch.reviewsCount, 
+                            ),
                           ],
                         ),
                       ],
@@ -257,17 +256,17 @@ class _CircleActionButton extends StatelessWidget {
 class _PremiumBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final pitchTheme = context.pitchTheme;
+    final pc = context.pitchColors;
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 6.h),
+      padding: EdgeInsets.symmetric(horizontal: AppSpacing.md.w, vertical: AppSpacing.xs.h),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [pitchTheme.accentGreen, pitchTheme.accentGreen.withOpacity(0.8)],
+          colors: [pc.accentGreen, pc.accentGreen.withValues(alpha: 0.8)],
         ),
-        borderRadius: BorderRadius.circular(100.r),
+        borderRadius: AppRadius.bfull.r,
         boxShadow: [
           BoxShadow(
-            color: pitchTheme.accentGreen.withOpacity(0.3),
+            color: pc.accentGreen.withValues(alpha: 0.3),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -275,10 +274,8 @@ class _PremiumBadge extends StatelessWidget {
       ),
       child: Text(
         'PREMIUM ARENA',
-        style: TextStyle(
-          fontFamily: 'Chewy',
+        style: context.textTheme.labelSmall?.copyWith(
           color: Colors.white,
-          fontSize: 10.sp,
           fontWeight: FontWeight.w800,
           letterSpacing: 1.2,
         ),
@@ -290,37 +287,32 @@ class _PremiumBadge extends StatelessWidget {
 class _RatingBadge extends StatelessWidget {
   final double rating;
   final int reviews;
-  final bool isDark;
-  final ColorScheme cs;
-  const _RatingBadge({required this.rating, required this.reviews, required this.isDark, required this.cs});
+  const _RatingBadge({required this.rating, required this.reviews});
 
   @override
   Widget build(BuildContext context) {
+    final cs = context.colorScheme;
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+      padding: EdgeInsets.symmetric(horizontal: AppSpacing.md.w, vertical: AppSpacing.sm.h),
       decoration: BoxDecoration(
-        color: isDark ? Colors.white.withOpacity(0.1) : cs.primary.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(16.r),
+        color: cs.primary.withValues(alpha: 0.1),
+        borderRadius: AppRadius.blg.r,
       ),
       child: Row(
         children: [
           const Icon(Icons.star_rounded, color: Color(0xFFFFD700), size: 16),
-          SizedBox(width: 4.w),
+          SizedBox(width: AppSpacing.xs.w),
           Text(
             rating.toString(),
-            style: TextStyle(
-              fontFamily: 'Chewy',
-              color: isDark ? Colors.white : cs.onSurface,
+            style: context.textTheme.titleSmall?.copyWith(
+              color: cs.onSurface,
               fontWeight: FontWeight.bold,
-              fontSize: 14.sp,
             ),
           ),
           Text(
             ' ($reviews+)',
-            style: TextStyle(
-              fontFamily: 'Chewy',
-              color: isDark ? const Color(0xFFBCC7DE) : cs.onSurfaceVariant,
-              fontSize: 12.sp,
+            style: context.textTheme.bodySmall?.copyWith(
+              color: cs.onSurfaceVariant,
             ),
           ),
         ],
@@ -392,31 +384,29 @@ class _LocationSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final pitchTheme = context.pitchTheme;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final pc = context.pitchColors;
+    final cs = context.colorScheme;
     
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _SectionHeader(title: 'LOCATION & ACCESS'),
-        SizedBox(height: 16.h),
+        SizedBox(height: AppSpacing.md.h),
         Text(
           pitch.location.fullAddress,
-          style: TextStyle(
-            fontFamily: 'Chewy',
-            color: isDark ? const Color(0xFFBCC7DE) : Theme.of(context).colorScheme.onSurfaceVariant,
-            fontSize: 16.sp,
+          style: context.textTheme.bodyLarge?.copyWith(
+            color: cs.onSurfaceVariant,
             height: 1.6,
           ),
         ),
-        SizedBox(height: 24.h),
+        SizedBox(height: AppSpacing.lg.h),
         ClipRRect(
-          borderRadius: BorderRadius.circular(32.r),
+          borderRadius: AppRadius.bxxl.r,
           child: Container(
             height: 220.h,
             width: double.infinity,
             decoration: BoxDecoration(
-              border: Border.all(color: isDark ? Colors.white.withOpacity(0.05) : Theme.of(context).colorScheme.outlineVariant),
+              border: Border.all(color: cs.outlineVariant),
             ),
             child: FlutterMap(
               options: MapOptions(
@@ -442,12 +432,12 @@ class _LocationSection extends StatelessWidget {
                       height: 60,
                       child: Container(
                         decoration: BoxDecoration(
-                          color: pitchTheme.accentGreen.withOpacity(0.2),
+                          color: pc.accentGreen.withValues(alpha: 0.2),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
                           IconsaxPlusBold.location,
-                          color: pitchTheme.accentGreen,
+                          color: pc.accentGreen,
                           size: 32,
                         ),
                       ).animate(onPlay: (controller) => controller.repeat())
@@ -472,20 +462,18 @@ class _AboutSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final cs = context.colorScheme;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _SectionHeader(title: 'ABOUT THIS ARENA'),
-        SizedBox(height: 16.h),
+        SizedBox(height: AppSpacing.md.h),
         Text(
           description.isNotEmpty
               ? description
               : "Featuring high-grade FIFA certified artificial turf, this pitch offers a premium playing surface that reduces injury risk and ensures optimal ball roll.",
-          style: TextStyle(
-            fontFamily: 'Chewy',
-            color: isDark ? const Color(0xFFBCC7DE).withOpacity(0.8) : Theme.of(context).colorScheme.onSurfaceVariant,
-            fontSize: 16.sp,
+          style: context.textTheme.bodyLarge?.copyWith(
+            color: cs.onSurfaceVariant,
             height: 1.8,
           ),
         ),
@@ -500,14 +488,12 @@ class _SectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final pitchTheme = context.pitchTheme;
+    final pc = context.pitchColors;
     return Text(
       title,
-      style: TextStyle(
-        fontFamily: 'Chewy',
-        color: pitchTheme.accentGreen,
+      style: context.textTheme.labelSmall?.copyWith(
+        color: pc.accentGreen,
         fontWeight: FontWeight.w800,
-        fontSize: 12.sp,
         letterSpacing: 2,
       ),
     );
@@ -517,9 +503,8 @@ class _SectionHeader extends StatelessWidget {
 class _BookingBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final pitchTheme = context.pitchTheme;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final cs = Theme.of(context).colorScheme;
+    final pc = context.pitchColors;
+    final cs = context.colorScheme;
 
     return BlocBuilder<PitchDetailCubit, PitchDetailState>(
       builder: (context, state) {
@@ -530,11 +515,11 @@ class _BookingBottomSheet extends StatelessWidget {
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
             child: Container(
-              padding: EdgeInsets.fromLTRB(32.w, 20.h, 32.w, 40.h),
+              padding: EdgeInsets.fromLTRB(AppSpacing.xl.w, AppSpacing.md.h, AppSpacing.xl.w, AppSpacing.xxl.h),
               decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF131B2E).withOpacity(0.8) : cs.surface.withOpacity(0.9),
-                borderRadius: BorderRadius.vertical(top: Radius.circular(40.r)),
-                border: Border.all(color: isDark ? pitchTheme.glassBorder : cs.outlineVariant),
+                color: pc.glassSurface.withValues(alpha: 0.8),
+                borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.xxl.r)),
+                border: Border.all(color: pc.glassBorder),
               ),
               child: Row(
                 children: [
@@ -545,32 +530,26 @@ class _BookingBottomSheet extends StatelessWidget {
                       children: [
                         Text(
                           'PRICE / HOUR',
-                          style: TextStyle(
-                            fontFamily: 'Chewy',
-                            color: isDark ? const Color(0xFFBCC7DE) : cs.onSurfaceVariant,
+                          style: context.textTheme.labelSmall?.copyWith(
+                            color: cs.onSurfaceVariant,
                             fontWeight: FontWeight.w700,
-                            fontSize: 10.sp,
                             letterSpacing: 1.2,
                           ),
                         ),
-                        SizedBox(height: 4.h),
+                        SizedBox(height: AppSpacing.xs.h),
                         RichText(
                           text: TextSpan(
                             text: '${pitch.pricePerHour.toInt()} ',
-                            style: TextStyle(
-                              fontFamily: 'Chewy',
-                              color: isDark ? Colors.white : cs.onSurface,
+                            style: context.textTheme.titleMedium?.copyWith(
+                              color: cs.onSurface,
                               fontWeight: FontWeight.w900,
-                              fontSize: 15.sp,
                             ),
                             children: [
                               TextSpan(
                                 text: 'EGP',
-                                style: TextStyle(
-                                  fontFamily: 'Chewy',
-                                  color: pitchTheme.accentGreen,
+                                style: context.textTheme.labelMedium?.copyWith(
+                                  color: pc.accentGreen,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 14.sp,
                                 ),
                               ),
                             ],
@@ -579,7 +558,7 @@ class _BookingBottomSheet extends StatelessWidget {
                       ],
                     ),
                   ),
-                  SizedBox(width: 16.w),
+                  SizedBox(width: AppSpacing.md.w),
                   _BookNowButton(onPressed: () {
                     HapticFeedback.mediumImpact();
                     context.push(
@@ -603,13 +582,13 @@ class _BookNowButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final pitchTheme = context.pitchTheme;
+    final pc = context.pitchColors;
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20.r),
+        borderRadius: AppRadius.bxl.r,
         boxShadow: [
           BoxShadow(
-            color: pitchTheme.accentGreen.withOpacity(0.3),
+            color: pc.accentGreen.withValues(alpha: 0.3),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -618,11 +597,11 @@ class _BookNowButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: pitchTheme.accentGreen,
+          backgroundColor: pc.accentGreen,
           foregroundColor: Colors.white,
-          padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 18.h),
+          padding: EdgeInsets.symmetric(horizontal: AppSpacing.xl.w, vertical: AppSpacing.md.h),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.r),
+            borderRadius: AppRadius.bxl.r,
           ),
           elevation: 0,
         ),
@@ -631,14 +610,13 @@ class _BookNowButton extends StatelessWidget {
           children: [
             Text(
               'BOOK NOW',
-              style: TextStyle(
-                fontFamily: 'Chewy',
+              style: context.textTheme.labelLarge?.copyWith(
                 fontWeight: FontWeight.w800,
-                fontSize: 12.sp,
                 letterSpacing: 1,
+                color: Colors.white,
               ),
             ),
-            SizedBox(width: 12.w),
+            SizedBox(width: AppSpacing.md.w),
             const Icon(IconsaxPlusBold.calendar_2, size: 18),
           ],
         ),

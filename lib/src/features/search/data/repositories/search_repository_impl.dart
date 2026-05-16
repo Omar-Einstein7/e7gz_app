@@ -1,6 +1,4 @@
-import 'package:fpdart/fpdart.dart';
-import '../../../../utils/failure.dart';
-import '../../../../utils/typedefs.dart';
+import 'package:e7gz/src/imports/core_imports.dart';
 import '../../../pitches/domain/entities/pitch.dart';
 import '../../domain/repositories/search_repository.dart';
 import '../datasources/search_remote_datasource.dart';
@@ -17,22 +15,20 @@ class SearchRepositoryImpl implements SearchRepository {
     double? minPrice,
     double? maxPrice,
     double? rating,
+    int page = 1,
+    int limit = 10,
   }) async {
-    try {
+    return runTask(() async {
       final results = await remoteDataSource.searchPitches(
         query: query,
         sportType: sportType,
         minPrice: minPrice,
         maxPrice: maxPrice,
         rating: rating,
+        page: page,
+        limit: limit,
       );
-      return right(results);
-    } catch (e) {
-      return left(
-        ServerFailure(
-          'Unable to fetch pitches at this time. Please try again later. ($e)',
-        ),
-      );
-    }
+      return results;
+    }, requiresNetwork: true);
   }
 }

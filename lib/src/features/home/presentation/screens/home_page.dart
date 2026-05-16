@@ -30,16 +30,16 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       backgroundColor: bgColor,
-      drawer: const Drawer(), // Menu
+      // drawer: const Drawer(), // Menu
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: Builder(
-          builder: (context) => IconButton(
-            icon: Icon(IconsaxPlusLinear.menu_1, color: textColor),
-            onPressed: () => Scaffold.of(context).openDrawer(),
-          ),
-        ),
+        // leading: Builder(
+        //   builder: (context) => IconButton(
+        //     icon: Icon(IconsaxPlusLinear.menu_1, color: textColor),
+        //     onPressed: () => Scaffold.of(context).openDrawer(),
+        //   ),
+        // ),
         title: Text(
           'e7gzz',
           style: typography.headlineSmall?.copyWith(
@@ -49,23 +49,23 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         centerTitle: true,
-        actions: [
-          GestureDetector(
-            onTap: () => context.push(AppRoutes.profile),
-            child: Padding(
-              padding: EdgeInsets.only(right: 16.w),
-              child: CircleAvatar(
-                radius: 18.r,
-                backgroundColor: isDark ? const Color(0xFF2D3449) : theme.colorScheme.surfaceContainerHighest,
-                child: Icon(
-                  IconsaxPlusBold.user,
-                  size: 20,
-                  color: isDark ? Colors.white : theme.colorScheme.onSurfaceVariant,
-                ),
-              ),
-            ),
-          ),
-        ],
+        // actions: [
+        //   GestureDetector(
+        //     onTap: () => context.push(AppRoutes.profile),
+        //     child: Padding(
+        //       padding: EdgeInsets.only(right: 16.w),
+        //       child: CircleAvatar(
+        //         radius: 18.r,
+        //         backgroundColor: isDark ? const Color(0xFF2D3449) : theme.colorScheme.surfaceContainerHighest,
+        //         child: Icon(
+        //           IconsaxPlusBold.user,
+        //           size: 20,
+        //           color: isDark ? Colors.white : theme.colorScheme.onSurfaceVariant,
+        //         ),
+        //       ),
+        //     ),
+        //   ),
+        // ],
       ),
       body: BlocBuilder<HomeCubit, HomeState>(
         builder: (context, state) {
@@ -117,7 +117,7 @@ class _HomePageState extends State<HomePage> {
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 24.w),
                     child: GestureDetector(
-                      onTap: () => context.push(AppRoutes.search),
+                      onTap: () => StatefulNavigationShell.of(context).goBranch(1),
                       child: Container(
                         height: 56.h,
                         padding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -219,7 +219,7 @@ class _HomePageState extends State<HomePage> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => context.push(AppRoutes.search),
+        onPressed: () => StatefulNavigationShell.of(context).goBranch(1),
         backgroundColor: colors.primary,
         child: const Icon(Icons.add, color: Color(0xFF003915), size: 32),
       ),

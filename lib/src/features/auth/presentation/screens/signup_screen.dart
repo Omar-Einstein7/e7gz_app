@@ -2,6 +2,8 @@ import 'dart:ui';
 import 'package:e7gz/src/features/auth/presentation/providers/auth_bloc.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
+import 'package:e7gz/src/theme/app_colors.dart';
+import 'package:e7gz/src/utils/validators.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -9,7 +11,6 @@ class SignupScreen extends StatefulWidget {
   @override
   State<SignupScreen> createState() => _SignupScreenState();
 }
-
 
 class _SignupScreenState extends State<SignupScreen> {
   final _formKey = GlobalKey<FormState>();
@@ -33,11 +34,11 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final cs = context.theme.colorScheme;
-    final tt = context.theme.textTheme;
+    final cs = context.colorScheme;
+    final typography = context.textTheme;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0B1326),
+      backgroundColor: cs.background,
       body: Stack(
         children: [
           // Background Decorative Elements
@@ -60,18 +61,18 @@ class _SignupScreenState extends State<SignupScreen> {
 
           SafeArea(
             child: SingleChildScrollView(
-              padding: EdgeInsets.all(24.w),
+              padding: EdgeInsets.all(AppSpacing.lg.w),
               child: Column(
                 children: [
                   // Header
-                  headerBranding(tt, cs),
+                  headerBranding(typography, cs),
                   
-                  SizedBox(height: 40.h),
+                  SizedBox(height: AppSpacing.xxl.h),
                   
                   // Role Selection
-                  roleSelectionHeader(tt),
+                  roleSelectionHeader(typography, cs),
                   
-                  SizedBox(height: 24.h),
+                  SizedBox(height: AppSpacing.lg.h),
                   
                   Row(
                     children: [
@@ -85,7 +86,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           onTap: () => setState(() => _selectedRole = 'player'),
                         ),
                       ),
-                      SizedBox(width: 16.w),
+                      SizedBox(width: AppSpacing.md.w),
                       Expanded(
                         child: roleCard(
                           role: 'owner',
@@ -99,20 +100,20 @@ class _SignupScreenState extends State<SignupScreen> {
                     ],
                   ),
                   
-                  SizedBox(height: 40.h),
+                  SizedBox(height: AppSpacing.xxl.h),
                   
                   // Form Section
                   Container(
-                    padding: EdgeInsets.all(32.w),
+                    padding: EdgeInsets.all(AppSpacing.xl.w),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF2D3449).withValues(alpha: 0.4),
-                      borderRadius: BorderRadius.circular(32.r),
+                      color: cs.surfaceContainerLow.withValues(alpha: 0.4),
+                      borderRadius: AppRadius.bxxl.r,
                       border: Border.all(
-                        color: Colors.white.withValues(alpha: 0.05),
+                        color: cs.outlineVariant,
                       ),
                     ),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(32.r),
+                      borderRadius: AppRadius.bxxl.r,
                       child: BackdropFilter(
                         filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
                         child: Form(
@@ -125,12 +126,9 @@ class _SignupScreenState extends State<SignupScreen> {
                                 controller: _nameController,
                                 hint: "Mohamed Ahmed",
                                 prefixIcon: const Icon(IconsaxPlusBold.profile),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) return 'Name is required';
-                                  return null;
-                                },
+                                validator: Validators.name,
                               ),
-                              SizedBox(height: 24.h),
+                              SizedBox(height: AppSpacing.lg.h),
                               
                               inputLabel("Email Address"),
                               AppTextField(
@@ -138,15 +136,9 @@ class _SignupScreenState extends State<SignupScreen> {
                                 hint: "mohamed@example.com",
                                 keyboardType: TextInputType.emailAddress,
                                 prefixIcon: const Icon(IconsaxPlusBold.sms),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) return 'Email is required';
-                                  if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-                                    return 'Enter a valid email';
-                                  }
-                                  return null;
-                                },
+                                validator: Validators.email,
                               ),
-                              SizedBox(height: 24.h),
+                              SizedBox(height: AppSpacing.lg.h),
                               
                               inputLabel("Mobile Number"),
                               AppTextField(
@@ -155,13 +147,9 @@ class _SignupScreenState extends State<SignupScreen> {
                                 keyboardType: TextInputType.phone,
                                 prefixIcon: const Icon(IconsaxPlusBold.call),
                                 suffixIcon: walletReadyChip(),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) return 'Phone is required';
-                                  if (value.length < 11) return 'Enter a valid phone number';
-                                  return null;
-                                },
+                                validator: Validators.phone,
                               ),
-                              SizedBox(height: 24.h),
+                              SizedBox(height: AppSpacing.lg.h),
                               
                               inputLabel("Create Password"),
                               AppTextField(
@@ -169,11 +157,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                 hint: "••••••••",
                                 obscureText: _obscurePassword,
                                 prefixIcon: const Icon(IconsaxPlusBold.lock),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) return 'Password is required';
-                                  if (value.length < 6) return 'Password must be at least 6 characters';
-                                  return null;
-                                },
+                                validator: Validators.password,
                                 suffixIcon: IconButton(
                                   icon: Icon(
                                     _obscurePassword ? IconsaxPlusBold.eye_slash : IconsaxPlusBold.eye,
@@ -183,7 +167,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                 ),
                               ),
                               
-                              SizedBox(height: 32.h),
+                              SizedBox(height: AppSpacing.xl.h),
                               
                               BlocBuilder<AuthBloc, AuthState>(
                                 builder: (context, state) {
@@ -210,7 +194,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                 },
                               ),
                               
-                              SizedBox(height: 24.h),
+                              SizedBox(height: AppSpacing.lg.h),
                               
                               Center(
                                 child: TextButton(
@@ -218,7 +202,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                   child: RichText(
                                     text: TextSpan(
                                       text: "Already have an account? ",
-                                      style: tt.bodyMedium?.copyWith(color: const Color(0xFFBCC7DE)),
+                                      style: typography.bodyMedium?.copyWith(color: cs.onSurfaceVariant),
                                       children: [
                                         TextSpan(
                                           text: "Sign in",
@@ -239,19 +223,19 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                   ),
                   
-                  SizedBox(height: 32.h),
+                  SizedBox(height: AppSpacing.xl.h),
                   
                   // Footer
                   Text(
                     'By creating an account, you agree to our Terms of Service and Privacy Policy. Experience the game, managed professionally.',
                     textAlign: TextAlign.center,
-                    style: tt.bodySmall?.copyWith(
-                      color: const Color(0xFFBCC7DE).withValues(alpha: 0.6),
+                    style: typography.bodySmall?.copyWith(
+                      color: cs.onSurfaceVariant.withValues(alpha: 0.6),
                       height: 1.5,
                     ),
                   ),
                   
-                  SizedBox(height: 32.h),
+                  SizedBox(height: AppSpacing.xl.h),
                 ],
               ),
             ),
@@ -272,31 +256,31 @@ class _SignupScreenState extends State<SignupScreen> {
             letterSpacing: -2,
           ),
         ),
-        SizedBox(height: 8.h),
+        SizedBox(height: AppSpacing.xs.h),
         Text(
           'Join the Arena',
           style: tt.headlineSmall?.copyWith(
-            color: Colors.white,
+            color: cs.onSurface,
             fontWeight: FontWeight.bold,
           ),
         ),
-        SizedBox(height: 8.h),
+        SizedBox(height: AppSpacing.xs.h),
         Text(
           'Choose your path and start your sports journey in Egypt.',
           textAlign: TextAlign.center,
           style: tt.bodyMedium?.copyWith(
-            color: const Color(0xFFBCC7DE),
+            color: cs.onSurfaceVariant,
           ),
         ),
       ],
     );
   }
 
-  Widget roleSelectionHeader(TextTheme tt) {
+  Widget roleSelectionHeader(TextTheme tt, ColorScheme cs) {
     return Text(
       'SELECT YOUR ROLE',
       style: tt.labelSmall?.copyWith(
-        color: const Color(0xFFBCC7DE),
+        color: cs.onSurfaceVariant,
         fontWeight: FontWeight.w900,
         letterSpacing: 2,
       ),
@@ -311,21 +295,24 @@ class _SignupScreenState extends State<SignupScreen> {
     required bool isSelected,
     required VoidCallback onTap,
   }) {
+    final cs = context.colorScheme;
+    final typography = context.textTheme;
+
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
-        padding: EdgeInsets.all(20.w),
+        padding: EdgeInsets.all(AppSpacing.lg.w),
         decoration: BoxDecoration(
-          color: const Color(0xFF171F33),
-          borderRadius: BorderRadius.circular(24.r),
+          color: cs.surfaceContainerHigh,
+          borderRadius: AppRadius.blg.r,
           border: Border.all(
-            color: isSelected ? const Color(0xFF4BE277).withValues(alpha: 0.5) : Colors.transparent,
+            color: isSelected ? cs.primary.withValues(alpha: 0.5) : Colors.transparent,
             width: 2,
           ),
           boxShadow: isSelected ? [
             BoxShadow(
-              color: const Color(0xFF4BE277).withValues(alpha: 0.1),
+              color: cs.primary.withValues(alpha: 0.1),
               blurRadius: 20,
               spreadRadius: 2,
             )
@@ -340,29 +327,29 @@ class _SignupScreenState extends State<SignupScreen> {
                   width: 48.w,
                   height: 48.w,
                   decoration: BoxDecoration(
-                    color: (role == 'player' ? const Color(0xFF4BE277) : const Color(0xFF22C55E)).withValues(alpha: 0.2),
+                    color: cs.primary.withValues(alpha: 0.2),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
                     icon,
-                    color: role == 'player' ? const Color(0xFF4BE277) : const Color(0xFF22C55E),
+                    color: cs.primary,
                     size: 28,
                   ),
                 ),
-                SizedBox(height: 16.h),
+                SizedBox(height: AppSpacing.md.h),
                 Text(
                   title,
-                  style: context.theme.textTheme.titleLarge?.copyWith(
-                    color: Colors.white,
+                  style: typography.titleLarge?.copyWith(
+                    color: cs.onSurface,
                     fontWeight: FontWeight.bold,
                     fontSize: 18.sp,
                   ),
                 ),
-                SizedBox(height: 8.h),
+                SizedBox(height: AppSpacing.xs.h),
                 Text(
                   subtitle,
-                  style: context.theme.textTheme.bodySmall?.copyWith(
-                    color: const Color(0xFFBCC7DE),
+                  style: typography.bodySmall?.copyWith(
+                    color: cs.onSurfaceVariant,
                     height: 1.4,
                   ),
                 ),
@@ -377,7 +364,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: isSelected ? const Color(0xFF4BE277) : const Color(0xFF3D4A3D),
+                    color: isSelected ? cs.primary : cs.outline,
                     width: 2,
                   ),
                 ),
@@ -385,8 +372,8 @@ class _SignupScreenState extends State<SignupScreen> {
                   child: Container(
                     width: 12.w,
                     height: 12.w,
-                    decoration: const BoxDecoration(
-                      color: Color(0xFF4BE277),
+                    decoration: BoxDecoration(
+                      color: cs.primary,
                       shape: BoxShape.circle,
                     ),
                   ),
@@ -404,8 +391,8 @@ class _SignupScreenState extends State<SignupScreen> {
       padding: EdgeInsets.only(left: 8.w, bottom: 8.h),
       child: Text(
         text,
-        style: context.theme.textTheme.labelMedium?.copyWith(
-          color: Colors.white.withValues(alpha: 0.8),
+        style: context.textTheme.labelMedium?.copyWith(
+          color: context.colorScheme.onSurface.withValues(alpha: 0.8),
           fontWeight: FontWeight.bold,
         ),
       ),
@@ -413,11 +400,12 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
   Widget walletReadyChip() {
+    final cs = context.colorScheme;
     return Container(
       margin: EdgeInsets.only(right: 8.w),
       padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
       decoration: BoxDecoration(
-        color: const Color(0xFF222A3D),
+        color: cs.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(100.r),
       ),
       child: Row(
@@ -444,8 +432,8 @@ class _SignupScreenState extends State<SignupScreen> {
           SizedBox(width: 6.w),
           Text(
             'Wallet Ready',
-            style: context.theme.textTheme.labelSmall?.copyWith(
-              color: const Color(0xFFBCCBB9),
+            style: context.textTheme.labelSmall?.copyWith(
+              color: cs.onSurfaceVariant,
               fontSize: 10.sp,
               fontWeight: FontWeight.bold,
             ),

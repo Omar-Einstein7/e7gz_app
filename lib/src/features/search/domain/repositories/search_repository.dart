@@ -8,5 +8,7 @@ abstract class SearchRepository {
     double? minPrice,
     double? maxPrice,
     double? rating,
+    int page = 1,
+    int limit = 10,
   });
 }

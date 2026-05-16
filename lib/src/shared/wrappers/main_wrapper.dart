@@ -1,9 +1,10 @@
 import 'dart:ui';
-
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
+import 'package:e7gz/src/theme/app_colors.dart';
 
-class MainWrapper extends StatefulWidget {
+/// The main application scaffold that handles bottom navigation with [StatefulNavigationShell].
+class MainWrapper extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
 
   const MainWrapper({
@@ -11,77 +12,20 @@ class MainWrapper extends StatefulWidget {
     required this.navigationShell,
   });
 
-  @override
-  State<MainWrapper> createState() => _MainWrapperState();
-}
-
-class _MainWrapperState extends State<MainWrapper> {
-  late PageController _pageController;
-
-  @override
-  void initState() {
-    super.initState();
-    _pageController = PageController(initialPage: widget.navigationShell.currentIndex);
-  }
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
-
-  @override
-  void didUpdateWidget(MainWrapper oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    // Sync PageController with GoRouter state if they drift
-    if (widget.navigationShell.currentIndex != _pageController.page?.round()) {
-      _pageController.animateToPage(
-        widget.navigationShell.currentIndex,
-        duration: const Duration(milliseconds: 400),
-        curve: Curves.easeInOutCubic,
-      );
-    }
-  }
-
-  void _onPageChanged(int index) {
-    if (index != widget.navigationShell.currentIndex) {
-      widget.navigationShell.goBranch(index);
-    }
-  }
-
   void _onTap(int index) {
-    _pageController.animateToPage(
+    navigationShell.goBranch(
       index,
-      duration: const Duration(milliseconds: 400),
-      curve: Curves.easeInOutCubic,
-    );
-    widget.navigationShell.goBranch(
-      index,
-      initialLocation: index == widget.navigationShell.currentIndex,
+      initialLocation: index == navigationShell.currentIndex,
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bgColor = isDark ? const Color(0xFF0B1326) : Theme.of(context).colorScheme.surface;
-
     return Scaffold(
-      backgroundColor: bgColor,
-      body: PageView(
-        controller: _pageController,
-        onPageChanged: _onPageChanged,
-        physics: const BouncingScrollPhysics(),
-        children: const [
-          HomePage(),
-          SearchScreen(),
-          MatchmakingScreen(),
-          MyBookingsScreen(),
-          ProfileScreen(),
-        ],
-      ),
+      backgroundColor: context.colorScheme.background,
+      body: navigationShell,
       bottomNavigationBar: CustomBottomNavBar(
-        currentIndex: widget.navigationShell.currentIndex,
+        currentIndex: navigationShell.currentIndex,
         onTap: _onTap,
       ),
     );
@@ -100,19 +44,16 @@ class CustomBottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = context.colorScheme;
     final bottomPadding = MediaQuery.paddingOf(context).bottom;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     
-    final navBg = isDark ? const Color(0xFF0B1326).withValues(alpha: 0.9) : Theme.of(context).colorScheme.surface.withValues(alpha: 0.9);
-    final borderColor = isDark ? Colors.white.withValues(alpha: 0.05) : Theme.of(context).colorScheme.outlineVariant;
-
     return Container(
-      padding: EdgeInsets.only(bottom: bottomPadding > 0 ? bottomPadding : 10.h),
+      padding: EdgeInsets.only(bottom: bottomPadding > 0 ? bottomPadding : AppSpacing.sm.h),
       decoration: BoxDecoration(
-        color: navBg,
+        color: cs.background,
         border: Border(
           top: BorderSide(
-            color: borderColor,
+            color: cs.outlineVariant,
             width: 1,
           ),
         ),
@@ -121,7 +62,7 @@ class CustomBottomNavBar extends StatelessWidget {
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+            padding: EdgeInsets.symmetric(horizontal: AppSpacing.md.w, vertical: AppSpacing.sm.h),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -196,7 +137,7 @@ class _NavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cs = context.theme.colorScheme;
+    final cs = context.colorScheme;
     
     return GestureDetector(
       onTap: onTap,
@@ -204,26 +145,26 @@ class _NavItem extends StatelessWidget {
       child: AnimatedContainer(
         duration: 300.ms,
         curve: Curves.easeInOut,
-        padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 8.h),
+        padding: EdgeInsets.symmetric(horizontal: AppSpacing.xs.w, vertical: AppSpacing.sm.h),
         decoration: BoxDecoration(
           color: isSelected ? cs.primary.withValues(alpha: 0.1) : Colors.transparent,
-          borderRadius: BorderRadius.circular(24.r),
+          borderRadius: AppRadius.bxxl.r,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
               isSelected ? activeIcon : icon,
-              color: isSelected ? cs.primary : const Color(0xFFBCC7DE),
+              color: isSelected ? cs.primary : cs.onSurfaceVariant,
               size: 24.sp,
             ).animate(target: isSelected ? 1 : 0)
              .scale(begin: const Offset(1, 1), end: const Offset(1.2, 1.2), duration: 200.ms)
              .shimmer(delay: 200.ms, duration: 1000.ms, color: Colors.white.withValues(alpha: 0.2)),
-            SizedBox(height: 4.h),
+            SizedBox(height: AppSpacing.xs.h),
             Text(
               label,
               style: TextStyle(
-                color: isSelected ? cs.primary : const Color(0xFFBCC7DE),
+                color: isSelected ? cs.primary : cs.onSurfaceVariant,
                 fontSize: 10.sp,
                 fontWeight: isSelected ? FontWeight.w900 : FontWeight.w500,
                 letterSpacing: 0.5,

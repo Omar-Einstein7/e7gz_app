@@ -1,3 +1,4 @@
+import 'package:e7gz/src/features/pitches/domain/entities/pitch.dart';
 import 'package:e7gz/src/features/search/presentation/cubit/search_cubit.dart';
 import 'package:e7gz/src/features/search/presentation/cubit/search_state.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
@@ -15,6 +16,7 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController _searchController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
   final Debouncer _debouncer = Debouncer(delay: const Duration(milliseconds: 500));
   String? _selectedSport;
   double? _selectedRating;
@@ -26,11 +28,24 @@ class _SearchScreenState extends State<SearchScreen> {
     super.initState();
     _selectedSport = widget.initialSport;
     _searchController.addListener(_onSearchChanged);
+    _scrollController.addListener(_onScroll);
     
     // Trigger initial search on entry
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _onSearchChanged();
     });
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent * 0.9) {
+      context.read<SearchCubit>().loadMore(
+        query: _searchController.text,
+        sportType: _selectedSport,
+        rating: _selectedRating,
+        minPrice: _minPrice,
+        maxPrice: _maxPrice,
+      );
+    }
   }
 
   @override
@@ -47,7 +62,9 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   void dispose() {
     _searchController.removeListener(_onSearchChanged);
+    _scrollController.removeListener(_onScroll);
     _searchController.dispose();
+    _scrollController.dispose();
     _debouncer.dispose();
     super.dispose();
   }
@@ -79,69 +96,61 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.colors;
-    final typography = context.typography;
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
-
-    final bgColor = isDark ? const Color(0xFF0B1326) : theme.colorScheme.surface;
-    final textColor = isDark ? Colors.white : theme.colorScheme.onSurface;
-    final searchBg = isDark ? const Color(0xFF131B2E) : theme.colorScheme.surfaceContainerLow;
-    final searchHint = isDark ? const Color(0xFFBCC7DE).withValues(alpha: 0.5) : theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5);
+    final cs = context.colorScheme;
+    final typography = context.textTheme;
 
     return Scaffold(
-      backgroundColor: bgColor,
+      backgroundColor: cs.background,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
         title: Text(
           'e7gzz',
           style: typography.headlineSmall?.copyWith(
-            color: colors.primary,
+            color: cs.primary,
             fontWeight: FontWeight.w900,
           ),
         ),
-        centerTitle: true,
         actions: [
           IconButton(
-            icon: Icon(IconsaxPlusLinear.map, color: textColor),
+            icon: Icon(IconsaxPlusLinear.map, color: cs.onSurface),
             onPressed: () => context.push(AppRoutes.search),
           ),
-          SizedBox(width: 8.w),
+          SizedBox(width: AppSpacing.sm.w),
         ],
       ),
       body: Column(
         children: [
           // Search & Filter Header
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
+            padding: EdgeInsets.symmetric(
+              horizontal: AppSpacing.lg.w,
+              vertical: AppSpacing.md.h,
+            ),
             child: Column(
               children: [
-                // Glass Search Bar
+                // Modern Search Bar
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w),
+                  padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg.w),
                   decoration: BoxDecoration(
-                    color: searchBg,
-                    borderRadius: BorderRadius.circular(100.r),
-                    border: Border.all(
-                      color: isDark ? Colors.white.withValues(alpha: 0.05) : theme.colorScheme.outlineVariant,
-                    ),
+                    color: cs.surfaceContainerLow,
+                    borderRadius: AppRadius.bfull.r,
+                    border: Border.all(color: cs.outlineVariant),
                   ),
                   child: TextField(
                     controller: _searchController,
-                    style: TextStyle(color: textColor),
+                    style: TextStyle(color: cs.onSurface),
                     decoration: InputDecoration(
                       hintText: 'Search stadium or location...',
                       hintStyle: TextStyle(
-                        color: searchHint,
+                        color: cs.onSurfaceVariant.withValues(alpha: 0.5),
                       ),
                       icon: Icon(
                         IconsaxPlusLinear.search_normal_1,
-                        color: isDark ? const Color(0xFF4BE277) : theme.colorScheme.primary,
+                        color: cs.primary,
                       ),
                       border: InputBorder.none,
                       enabledBorder: InputBorder.none,
                       focusedBorder: InputBorder.none,
+                      filled: false, // Override theme if necessary
                     ),
                   ),
                 ),
@@ -218,16 +227,27 @@ class _SearchScreenState extends State<SearchScreen> {
           Expanded(
             child: BlocBuilder<SearchCubit, SearchState>(
               builder: (context, state) {
-                if (state.status == SearchStatus.loading &&
-                    state.results.isEmpty) {
-                  return const Center(child: CircularProgressIndicator());
+                if (state.status == SearchStatus.loading && state.results.isEmpty) {
+                  return Skeletonizer(
+                    enabled: true,
+                    child: ListView.builder(
+                      padding: EdgeInsets.all(24.w),
+                      itemCount: 5,
+                      itemBuilder: (context, index) {
+                        return SearchResultCard(
+                          pitch: Pitch.empty(),
+                          onTap: () {},
+                        );
+                      },
+                    ),
+                  );
                 }
 
                 if (state.status == SearchStatus.failure) {
                   return Center(
                     child: Text(
                       state.errorMessage ?? 'An error occurred',
-                      style: const TextStyle(color: Colors.redAccent),
+                      style: TextStyle(color: cs.error),
                     ),
                   );
                 }
@@ -235,25 +255,34 @@ class _SearchScreenState extends State<SearchScreen> {
                 final results = state.results;
 
                 if (results.isEmpty) {
-                  return const Center(
+                  return Center(
                     child: Text(
                       'No stadiums found',
-                      style: TextStyle(color: Color(0xFFBCC7DE)),
+                      style: TextStyle(color: cs.onSurfaceVariant),
                     ),
                   );
                 }
 
                 return ListView.builder(
+                  controller: _scrollController,
                   padding: EdgeInsets.all(24.w),
-                  itemCount: results.length,
+                  itemCount: results.length + (state.hasReachedMax ? 0 : 1),
                   itemBuilder: (context, index) {
+                    if (index >= results.length) {
+                      return const Center(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 20),
+                          child: CircularProgressIndicator(),
+                        ),
+                      );
+                    }
                     final pitch = results[index];
                     return SearchResultCard(
                       pitch: pitch,
                       onTap: () => context.push(
                         AppRoutes.pitchDetails.replaceFirst(':id', pitch.id),
                       ),
-                    );
+                    ).animate().fadeIn(duration: 400.ms).slideY(begin: 0.1, end: 0);
                   },
                 );
               },

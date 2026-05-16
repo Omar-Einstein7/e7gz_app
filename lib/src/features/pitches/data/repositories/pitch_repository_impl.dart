@@ -1,8 +1,7 @@
-import 'package:fpdart/fpdart.dart';
-import 'package:e7gz/src/utils/failure.dart';
-import 'package:e7gz/src/utils/typedefs.dart';
 import 'package:e7gz/src/features/pitches/domain/entities/pitch.dart';
 import 'package:e7gz/src/features/pitches/domain/repositories/pitch_repository.dart';
+import 'package:e7gz/src/imports/core_imports.dart';
+import 'package:e7gz/src/imports/packages_imports.dart';
 import '../datasources/pitch_remote_datasource.dart';
 import '../models/pitch_model.dart';
 
@@ -21,7 +20,7 @@ class PitchRepositoryImpl implements PitchRepository {
     int page = 1,
     int limit = 10,
   }) async {
-    try {
+    return runTask(() async {
       final json = await _remote.getPitches(
         search: search,
         city: city,
@@ -40,15 +39,13 @@ class PitchRepositoryImpl implements PitchRepository {
           .map((p) => PitchModel.fromJson(p as Map<String, dynamic>))
           .toList();
 
-      return right(PitchListResult(
+      return PitchListResult(
         pitches: pitches,
         total: (pagination['total'] as num?)?.toInt() ?? pitches.length,
         page: (pagination['page'] as num?)?.toInt() ?? page,
         totalPages: (pagination['totalPages'] as num?)?.toInt() ?? 1,
-      ));
-    } catch (e) {
-      return left(ServerFailure(e.toString()));
-    }
+      );
+    }, requiresNetwork: true);
   }
 
   @override
@@ -57,22 +54,21 @@ class PitchRepositoryImpl implements PitchRepository {
     required double lng,
     double radiusMeters = 5000,
   }) async {
-    try {
-      final pitches =
-          await _remote.getNearbyPitches(lat: lat, lng: lng, radiusMeters: radiusMeters);
-      return right(pitches);
-    } catch (e) {
-      return left(ServerFailure(e.toString()));
-    }
+    return runTask(() async {
+      final pitches = await _remote.getNearbyPitches(
+        lat: lat, 
+        lng: lng, 
+        radiusMeters: radiusMeters,
+      );
+      return pitches;
+    }, requiresNetwork: true);
   }
 
   @override
   FutureEither<Pitch> getPitchById(String id) async {
-    try {
+    return runTask(() async {
       final pitch = await _remote.getPitchById(id);
-      return right(pitch);
-    } catch (e) {
-      return left(ServerFailure(e.toString()));
-    }
+      return pitch;
+    }, requiresNetwork: true);
   }
 }

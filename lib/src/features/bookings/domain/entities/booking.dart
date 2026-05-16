@@ -34,6 +34,20 @@ class Booking extends Equatable {
     required this.createdAt,
   });
 
+  factory Booking.empty() => Booking(
+        id: '',
+        userId: '',
+        pitchId: '',
+        pitchName: 'Stadium Name Placeholder',
+        pitchAddress: 'Address Placeholder',
+        date: '2025-01-01',
+        startTime: '00:00',
+        endTime: '00:00',
+        totalPrice: 0,
+        status: BookingStatus.confirmed,
+        createdAt: DateTime.now(),
+      );
+
   String get timeRange => '$startTime - $endTime';
 
   @override

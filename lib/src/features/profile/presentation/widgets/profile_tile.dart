@@ -17,15 +17,22 @@ class ProfileTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final typography = context.typography;
+    final cs = context.colorScheme;
+    final typography = context.textTheme;
+
+    final bgColor = isLogout ? cs.errorContainer.withValues(alpha: 0.1) : cs.surfaceContainerLow;
+    final iconBgColor = isLogout ? cs.errorContainer.withValues(alpha: 0.2) : cs.surfaceContainerHigh;
+    final iconColor = isLogout ? cs.error : cs.primary;
+    final textColor = cs.onSurface;
+    final subtitleColor = cs.onSurfaceVariant;
 
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.all(20.w),
+        padding: EdgeInsets.all(AppSpacing.md.w),
         decoration: BoxDecoration(
-          color: isLogout ? const Color(0xFF200F15) : const Color(0xFF131B2E),
-          borderRadius: BorderRadius.circular(32.r),
+          color: bgColor,
+          borderRadius: AppRadius.bxl.r,
         ),
         child: Row(
           children: [
@@ -33,16 +40,16 @@ class ProfileTile extends StatelessWidget {
               width: 48.w,
               height: 48.w,
               decoration: BoxDecoration(
-                color: const Color(0xFF171F33),
-                borderRadius: BorderRadius.circular(16.r),
+                color: iconBgColor,
+                borderRadius: AppRadius.blg.r,
               ),
               child: Icon(
                 icon,
-                color: isLogout ? Colors.red : Colors.white,
+                color: iconColor,
                 size: 20,
               ),
             ),
-            SizedBox(width: 16.w),
+            SizedBox(width: AppSpacing.md.w),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,14 +57,14 @@ class ProfileTile extends StatelessWidget {
                   Text(
                     title,
                     style: typography.titleMedium?.copyWith(
-                      color: Colors.white,
+                      color: textColor,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   Text(
                     subtitle,
                     style: typography.bodySmall?.copyWith(
-                      color: const Color(0xFFBCC7DE).withValues(alpha: 0.6),
+                      color: subtitleColor,
                     ),
                   ),
                 ],
@@ -65,7 +72,7 @@ class ProfileTile extends StatelessWidget {
             ),
             Icon(
               Icons.chevron_right,
-              color: const Color(0xFFBCC7DE).withValues(alpha: 0.3),
+              color: subtitleColor.withValues(alpha: 0.3),
             ),
           ],
         ),

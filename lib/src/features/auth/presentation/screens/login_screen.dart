@@ -2,6 +2,8 @@ import 'dart:ui';
 import 'package:e7gz/src/features/auth/presentation/providers/auth_bloc.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
+import 'package:e7gz/src/theme/app_colors.dart';
+import 'package:e7gz/src/utils/validators.dart';
 import '../widgets/brand_header.dart';
 import '../widgets/social_login_button.dart';
 
@@ -27,11 +29,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.colors;
-    final typography = context.typography;
+    final cs = context.colorScheme;
+    final typography = context.textTheme;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0B1326),
+      backgroundColor: cs.background,
       body: Stack(
         children: [
           // Background Decorative Elements
@@ -42,7 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
               width: 600.w,
               height: 600.h,
               decoration: BoxDecoration(
-                color: colors.primary.withValues(alpha: 0.1),
+                color: cs.primary.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: BackdropFilter(
@@ -59,7 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
               width: 400.w,
               height: 400.h,
               decoration: BoxDecoration(
-                color: colors.primaryContainer.withValues(alpha: 0.1),
+                color: cs.primaryContainer.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: BackdropFilter(
@@ -72,21 +74,21 @@ class _LoginScreenState extends State<LoginScreen> {
           SafeArea(
             child: Center(
               child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(horizontal: 32.w),
+                padding: EdgeInsets.symmetric(horizontal: AppSpacing.xl.w),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     // Brand Identity
                     const BrandHeader(),
 
-                    SizedBox(height: 48.h),
+                    SizedBox(height: AppSpacing.xxl.h),
 
                     // Login Container
                     Container(
-                      padding: EdgeInsets.all(32.w),
+                      padding: EdgeInsets.all(AppSpacing.xl.w),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF131B2E).withValues(alpha: 0.8),
-                        borderRadius: BorderRadius.circular(32.r),
+                        color: cs.surfaceContainerLow.withValues(alpha: 0.8),
+                        borderRadius: AppRadius.bxxl.r,
                         boxShadow: [
                           BoxShadow(
                             color: Colors.black.withValues(alpha: 0.4),
@@ -102,21 +104,21 @@ class _LoginScreenState extends State<LoginScreen> {
                           Text(
                             'Welcome Back',
                             style: typography.headlineSmall?.copyWith(
-                              color: Colors.white,
+                              color: cs.onSurface,
                               fontWeight: FontWeight.bold,
                               fontSize: 24.sp,
                             ),
                           ),
-                          SizedBox(height: 8.h),
+                          SizedBox(height: AppSpacing.xs.h),
                           Text(
                             'Securely log in to manage your bookings.',
                             style: typography.bodySmall?.copyWith(
-                              color: const Color(0xFFBCC7DE),
+                              color: cs.onSurfaceVariant,
                               fontSize: 14.sp,
                             ),
                           ),
 
-                          SizedBox(height: 32.h),
+                          SizedBox(height: AppSpacing.xl.h),
 
                           // Form
                           Form(
@@ -130,20 +132,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                   hint: 'name@example.com',
                                   keyboardType: TextInputType.emailAddress,
                                   prefixIcon: const Icon(IconsaxPlusBold.sms),
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Email is required';
-                                    }
-                                    if (!RegExp(
-                                      r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
-                                    ).hasMatch(value)) {
-                                      return 'Enter a valid email';
-                                    }
-                                    return null;
-                                  },
+                                  validator: Validators.email,
                                 ),
 
-                                SizedBox(height: 24.h),
+                                SizedBox(height: AppSpacing.lg.h),
 
                                 Row(
                                   mainAxisAlignment:
@@ -161,7 +153,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       child: Text(
                                         'Forgot Password?',
                                         style: typography.labelSmall?.copyWith(
-                                          color: colors.primary,
+                                          color: cs.primary,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
@@ -173,15 +165,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   hint: '••••••••',
                                   obscureText: _obscurePassword,
                                   prefixIcon: const Icon(IconsaxPlusBold.lock),
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Password is required';
-                                    }
-                                    if (value.length < 6) {
-                                      return 'Password must be at least 6 characters';
-                                    }
-                                    return null;
-                                  },
+                                  validator: Validators.password,
                                   suffixIcon: IconButton(
                                     icon: Icon(
                                       _obscurePassword
@@ -196,7 +180,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                 ),
 
-                                SizedBox(height: 32.h),
+                                SizedBox(height: AppSpacing.xl.h),
 
                                 BlocBuilder<AuthBloc, AuthState>(
                                   builder: (context, state) {
@@ -226,22 +210,20 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
 
                           // Divider
-                          SizedBox(height: 32.h),
+                          SizedBox(height: AppSpacing.xl.h),
                           Row(
                             children: [
                               Expanded(
                                 child: Divider(
-                                  color: Colors.white.withValues(alpha: 0.1),
+                                  color: cs.outlineVariant,
                                 ),
                               ),
                               Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                                padding: EdgeInsets.symmetric(horizontal: AppSpacing.md.w),
                                 child: Text(
                                   'OR CONTINUE WITH',
                                   style: typography.labelSmall?.copyWith(
-                                    color: const Color(
-                                      0xFFBCC7DE,
-                                    ).withValues(alpha: 0.5),
+                                    color: cs.onSurfaceVariant.withValues(alpha: 0.5),
                                     fontWeight: FontWeight.w900,
                                     letterSpacing: 1.5,
                                   ),
@@ -249,12 +231,12 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                               Expanded(
                                 child: Divider(
-                                  color: Colors.white.withValues(alpha: 0.1),
+                                  color: cs.outlineVariant,
                                 ),
                               ),
                             ],
                           ),
-                          SizedBox(height: 32.h),
+                          SizedBox(height: AppSpacing.xl.h),
 
                           // Social Logins
                           Row(
@@ -263,35 +245,25 @@ class _LoginScreenState extends State<LoginScreen> {
                                 child: SocialLoginButton(
                                   label: 'Google',
                                   iconPath: AppAssets.googleIcon,
-                                  onPressed: () => ScaffoldMessenger.of(context)
-                                      .showSnackBar(
-                                        const SnackBar(
-                                          content: Text(
-                                            'Google Login coming soon!',
-                                          ),
-                                        ),
-                                      ),
+                                  onPressed: () => context.showSnackBar(
+                                    'Google Login coming soon!',
+                                  ),
                                 ),
                               ),
-                              SizedBox(width: 16.w),
+                              SizedBox(width: AppSpacing.md.w),
                               Expanded(
                                 child: SocialLoginButton(
                                   label: 'Facebook',
                                   iconPath: AppAssets.facebookIcon,
-                                  onPressed: () => ScaffoldMessenger.of(context)
-                                      .showSnackBar(
-                                        const SnackBar(
-                                          content: Text(
-                                            'Facebook Login coming soon!',
-                                          ),
-                                        ),
-                                      ),
+                                  onPressed: () => context.showSnackBar(
+                                    'Facebook Login coming soon!',
+                                  ),
                                 ),
                               ),
                             ],
                           ),
 
-                          SizedBox(height: 32.h),
+                          SizedBox(height: AppSpacing.xl.h),
 
                           // Footer Action
                           Center(
@@ -302,13 +274,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                 text: TextSpan(
                                   text: 'New to the pitch? ',
                                   style: typography.bodySmall?.copyWith(
-                                    color: const Color(0xFFBCC7DE),
+                                    color: cs.onSurfaceVariant,
                                   ),
                                   children: [
                                     TextSpan(
                                       text: 'Create an account',
                                       style: TextStyle(
-                                        color: colors.primary,
+                                        color: cs.primary,
                                         fontWeight: FontWeight.bold,
                                         decoration: TextDecoration.underline,
                                       ),
@@ -322,20 +294,20 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
 
-                    SizedBox(height: 48.h),
+                    SizedBox(height: AppSpacing.xxl.h),
 
                     // Legal/Footer
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         _legalLink(context, 'PRIVACY POLICY'),
-                        SizedBox(width: 10.w),
+                        SizedBox(width: AppSpacing.sm.w),
                         _legalLink(context, 'TERMS OF SERVICE'),
-                        SizedBox(width: 10.w),
+                        SizedBox(width: AppSpacing.sm.w),
                         _legalLink(context, 'SUPPORT'),
                       ],
                     ),
-                    SizedBox(height: 24.h),
+                    SizedBox(height: AppSpacing.lg.h),
                   ],
                 ),
               ),
@@ -351,8 +323,8 @@ class _LoginScreenState extends State<LoginScreen> {
       padding: EdgeInsets.only(left: 4.w, bottom: 8.h),
       child: Text(
         text,
-        style: context.typography.labelSmall?.copyWith(
-          color: const Color(0xFFBCC7DE).withValues(alpha: 0.6),
+        style: context.textTheme.labelSmall?.copyWith(
+          color: context.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
           fontWeight: FontWeight.w900,
           letterSpacing: 1.2,
         ),
@@ -363,8 +335,8 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _legalLink(BuildContext context, String text) {
     return Text(
       text,
-      style: context.typography.labelSmall?.copyWith(
-        color: const Color(0xFFBCC7DE).withValues(alpha: 0.4),
+      style: context.textTheme.labelSmall?.copyWith(
+        color: context.colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
         fontSize: 10.sp,
         fontWeight: FontWeight.w900,
         letterSpacing: 1.5,

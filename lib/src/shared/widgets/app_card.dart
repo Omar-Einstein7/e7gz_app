@@ -1,3 +1,5 @@
+import 'package:e7gz/src/theme/app_borders.dart';
+
 import '../../imports/imports.dart';
 
 /// A themed card widget with consistent padding, radius, and optional header.

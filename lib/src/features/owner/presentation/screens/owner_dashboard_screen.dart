@@ -36,13 +36,12 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bgColor = isDark ? const Color(0xFF0B1326) : Theme.of(context).colorScheme.surface;
+    final cs = context.colorScheme;
 
     return BlocBuilder<OwnerCubit, OwnerState>(
       builder: (context, state) {
         return Scaffold(
-          backgroundColor: bgColor,
+          backgroundColor: cs.background,
           body: SafeArea(
             child: _buildBody(context, state),
           ),
@@ -53,9 +52,8 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
   }
 
   Widget _buildBody(BuildContext context, OwnerState state) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final primaryColor = colorScheme.brightness == Brightness.dark ? const Color(0xFF4BE277) : colorScheme.primary;
-    final textColor = colorScheme.brightness == Brightness.dark ? const Color(0xFFBCC7DE) : colorScheme.onSurfaceVariant;
+    final cs = context.colorScheme;
+    final tt = context.textTheme;
 
     // Global loading (first load, no data yet)
     if (state.status == OwnerStatus.loading && state.stats.isEmpty && state.myPitches.isEmpty) {
@@ -63,9 +61,9 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CircularProgressIndicator(color: primaryColor),
-            SizedBox(height: 16.h),
-            Text('Loading dashboard...', style: TextStyle(color: textColor)),
+            CircularProgressIndicator(color: cs.primary),
+            SizedBox(height: AppSpacing.md.h),
+            Text('Loading dashboard...', style: tt.bodyMedium?.copyWith(color: cs.onSurfaceVariant)),
           ],
         ),
       );
@@ -86,18 +84,15 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
   }
 
   Widget _buildBottomNav(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bgColor = isDark ? const Color(0xFF131B2E) : Theme.of(context).colorScheme.surface;
-    final selectedColor = isDark ? const Color(0xFF4BE277) : Theme.of(context).colorScheme.primary;
-    final unselectedColor = isDark ? const Color(0xFFBCC7DE) : Theme.of(context).colorScheme.onSurfaceVariant;
+    final cs = context.colorScheme;
 
     return BottomNavigationBar(
       currentIndex: _currentTab,
       onTap: (index) => setState(() => _currentTab = index),
-      backgroundColor: bgColor,
+      backgroundColor: cs.surface,
       type: BottomNavigationBarType.fixed,
-      selectedItemColor: selectedColor,
-      unselectedItemColor: unselectedColor,
+      selectedItemColor: cs.primary,
+      unselectedItemColor: cs.onSurfaceVariant,
       showSelectedLabels: true,
       showUnselectedLabels: true,
       selectedLabelStyle: TextStyle(
@@ -113,9 +108,9 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
         return BottomNavigationBarItem(
           icon: Icon(tab.inactiveIcon, size: 22),
           activeIcon: Container(
-            padding: EdgeInsets.all(8.w),
+            padding: EdgeInsets.all(AppSpacing.xs.w),
             decoration: BoxDecoration(
-              color: selectedColor.withValues(alpha: 0.1),
+              color: cs.primary.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
             child: Icon(tab.activeIcon, size: 22),
@@ -143,18 +138,18 @@ class _HomeTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final stats = state.stats;
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final cs = context.colorScheme;
+    final tt = context.textTheme;
 
     return RefreshIndicator(
-      color: colorScheme.primary,
-      backgroundColor: colorScheme.surface,
+      color: cs.primary,
+      backgroundColor: cs.surface,
       onRefresh: () => context.read<OwnerCubit>().loadDashboardData(),
       child: CustomScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
         slivers: [
           SliverAppBar(
-            backgroundColor: theme.scaffoldBackgroundColor,
+            backgroundColor: cs.background,
             floating: true,
             pinned: false,
             automaticallyImplyLeading: false,
@@ -162,42 +157,41 @@ class _HomeTab extends StatelessWidget {
               children: [
                 Text(
                   'e7gzz',
-                  style: TextStyle(
-                    color: colorScheme.primary,
+                  style: tt.headlineSmall?.copyWith(
+                    color: cs.primary,
                     fontWeight: FontWeight.w900,
-                    fontSize: 22.sp,
                   ),
                 ),
                 const Spacer(),
                 IconButton(
-                  icon: Icon(IconsaxPlusLinear.notification, color: colorScheme.onSurface),
+                  icon: Icon(IconsaxPlusLinear.notification, color: cs.onSurface),
                   onPressed: () => context.push(AppRoutes.notifications),
                 ),
               ],
             ),
           ),
           SliverPadding(
-            padding: EdgeInsets.all(24.w),
+            padding: EdgeInsets.all(AppSpacing.lg.w),
             sliver: SliverList(
               delegate: SliverChildListDelegate([
                 // Error banner
                 if (state.status == OwnerStatus.failure && state.errorMessage != null)
                   Container(
-                    margin: EdgeInsets.only(bottom: 16.h),
-                    padding: EdgeInsets.all(16.w),
+                    margin: EdgeInsets.only(bottom: AppSpacing.md.h),
+                    padding: EdgeInsets.all(AppSpacing.md.w),
                     decoration: BoxDecoration(
-                      color: colorScheme.errorContainer,
-                      borderRadius: BorderRadius.circular(16.r),
-                      border: Border.all(color: colorScheme.error.withValues(alpha: 0.3)),
+                      color: cs.errorContainer,
+                      borderRadius: AppRadius.blg.r,
+                      border: Border.all(color: cs.error.withValues(alpha: 0.3)),
                     ),
                     child: Row(
                       children: [
-                        Icon(Icons.error_outline, color: colorScheme.error, size: 18),
-                        SizedBox(width: 8.w),
-                        Expanded(child: Text(state.errorMessage!, style: TextStyle(color: colorScheme.onErrorContainer, fontSize: 13))),
+                        Icon(Icons.error_outline, color: cs.error, size: 18),
+                        SizedBox(width: AppSpacing.xs.w),
+                        Expanded(child: Text(state.errorMessage!, style: tt.bodySmall?.copyWith(color: cs.onErrorContainer))),
                         TextButton(
                           onPressed: () => context.read<OwnerCubit>().loadDashboardData(),
-                          child: Text('RETRY', style: TextStyle(color: colorScheme.primary)),
+                          child: Text('RETRY', style: TextStyle(color: cs.primary)),
                         ),
                       ],
                     ),
@@ -206,23 +200,23 @@ class _HomeTab extends StatelessWidget {
                 // Greeting
                 Text(
                   'Welcome back,',
-                  style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 14.sp),
+                  style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant),
                 ),
                 Text(
                   'Dashboard Overview',
-                  style: TextStyle(color: colorScheme.onSurface, fontSize: 24.sp, fontWeight: FontWeight.w900),
+                  style: tt.headlineMedium?.copyWith(color: cs.onSurface, fontWeight: FontWeight.w900),
                 ),
-                SizedBox(height: 32.h),
+                SizedBox(height: AppSpacing.xl.h),
 
                 // Stats Cards
                 const _SectionLabel('STATISTICS'),
-                SizedBox(height: 12.h),
+                SizedBox(height: AppSpacing.sm.h),
                 GridView.count(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   crossAxisCount: 2,
-                  mainAxisSpacing: 16.h,
-                  crossAxisSpacing: 16.w,
+                  mainAxisSpacing: AppSpacing.md.h,
+                  crossAxisSpacing: AppSpacing.md.w,
                   childAspectRatio: 1.6,
                   children: [
                     _StatCard('Total Revenue', _fmt(stats['totalRevenue']), 'EGP'),
@@ -231,7 +225,7 @@ class _HomeTab extends StatelessWidget {
                     _StatCard('My Pitches', _fmt(stats['pitchesCount']), '', accent: false),
                   ],
                 ),
-                SizedBox(height: 32.h),
+                SizedBox(height: AppSpacing.xl.h),
 
                 // Recent pitches preview
                 Row(
@@ -240,18 +234,18 @@ class _HomeTab extends StatelessWidget {
                     const _SectionLabel('MY PITCHES'),
                     TextButton(
                       onPressed: () {},
-                      child: Text('See All', style: TextStyle(color: colorScheme.primary)),
+                      child: Text('See All', style: TextStyle(color: cs.primary)),
                     ),
                   ],
                 ),
-                SizedBox(height: 12.h),
+                SizedBox(height: AppSpacing.sm.h),
                 if (state.status == OwnerStatus.loading)
-                  Center(child: CircularProgressIndicator(color: colorScheme.primary))
+                  Center(child: CircularProgressIndicator(color: cs.primary))
                 else if (state.myPitches.isEmpty)
                   _EmptyPitches(onAdd: () => context.push(AppRoutes.addPitch))
                 else
                   ...state.myPitches.take(3).map((p) => Padding(
-                        padding: EdgeInsets.only(bottom: 12.h),
+                        padding: EdgeInsets.only(bottom: AppSpacing.md.h),
                         child: _PitchCard(pitch: p),
                       )),
                 SizedBox(height: 100.h),
@@ -278,24 +272,24 @@ class _PitchesTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final cs = context.colorScheme;
+    final tt = context.textTheme;
 
     return RefreshIndicator(
-      color: colorScheme.primary,
-      backgroundColor: colorScheme.surface,
+      color: cs.primary,
+      backgroundColor: cs.surface,
       onRefresh: () => context.read<OwnerCubit>().refreshPitches(),
       child: CustomScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
         slivers: [
           SliverAppBar(
-            backgroundColor: theme.scaffoldBackgroundColor,
+            backgroundColor: cs.background,
             floating: true,
             automaticallyImplyLeading: false,
-            title: Text('My Pitches', style: TextStyle(color: colorScheme.onSurface, fontWeight: FontWeight.bold, fontSize: 20.sp)),
+            title: Text('My Pitches', style: tt.titleLarge?.copyWith(color: cs.onSurface, fontWeight: FontWeight.bold)),
             actions: [
               Padding(
-                padding: EdgeInsets.only(right: 16.w),
+                padding: EdgeInsets.only(right: AppSpacing.md.w),
                 child: FilledButton.icon(
                   onPressed: () async {
                     await context.push(AppRoutes.addPitch);
@@ -303,24 +297,24 @@ class _PitchesTab extends StatelessWidget {
                   },
                   icon: const Icon(Icons.add, size: 18),
                   label: const Text('Add'),
-                  style: FilledButton.styleFrom(backgroundColor: colorScheme.primary, foregroundColor: colorScheme.onPrimary),
+                  style: FilledButton.styleFrom(backgroundColor: cs.primary, foregroundColor: cs.onPrimary),
                 ),
               ),
             ],
           ),
           if (state.status == OwnerStatus.loading && state.myPitches.isEmpty)
             SliverFillRemaining(
-              child: Center(child: CircularProgressIndicator(color: colorScheme.primary)),
+              child: Center(child: CircularProgressIndicator(color: cs.primary)),
             )
           else if (state.myPitches.isEmpty)
             SliverFillRemaining(child: _EmptyPitches(onAdd: () => context.push(AppRoutes.addPitch)))
           else
             SliverPadding(
-              padding: EdgeInsets.all(24.w),
+              padding: EdgeInsets.all(AppSpacing.lg.w),
               sliver: SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (ctx, i) => Padding(
-                    padding: EdgeInsets.only(bottom: 16.h),
+                    padding: EdgeInsets.only(bottom: AppSpacing.md.h),
                     child: _PitchCard(pitch: state.myPitches[i], showActions: true),
                   ),
                   childCount: state.myPitches.length,
@@ -347,74 +341,71 @@ class _RevenueTab extends StatelessWidget {
     final net = (stats['netEarnings'] as num?)?.toDouble() ?? 0;
     final monthly = (stats['monthlyRevenue'] as num?)?.toDouble() ?? 0;
 
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final isDark = colorScheme.brightness == Brightness.dark;
+    final cs = context.colorScheme;
+    final tt = context.textTheme;
 
     return RefreshIndicator(
-      color: colorScheme.primary,
-      backgroundColor: colorScheme.surface,
+      color: cs.primary,
+      backgroundColor: cs.surface,
       onRefresh: () => context.read<OwnerCubit>().loadDashboardData(),
       child: ListView(
-        padding: EdgeInsets.all(24.w),
+        padding: EdgeInsets.all(AppSpacing.lg.w),
         children: [
-          Text('Revenue', style: TextStyle(color: colorScheme.onSurface, fontWeight: FontWeight.w900, fontSize: 24.sp)),
-          SizedBox(height: 8.h),
-          Text('Financial overview of your pitches', style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 13.sp)),
-          SizedBox(height: 32.h),
+          Text('Revenue', style: tt.headlineMedium?.copyWith(color: cs.onSurface, fontWeight: FontWeight.w900)),
+          SizedBox(height: AppSpacing.xs.h),
+          Text('Financial overview of your pitches', style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant)),
+          SizedBox(height: AppSpacing.xl.h),
 
           // Big revenue card
           Container(
-            padding: EdgeInsets.all(28.w),
+            padding: EdgeInsets.all(AppSpacing.xl.w),
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: isDark 
-                  ? [const Color(0xFF1A2E1A), const Color(0xFF0F1F0F)]
-                  : [colorScheme.primaryContainer, colorScheme.surfaceContainerHigh],
+                colors: [cs.primaryContainer, cs.surfaceContainerHigh],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
-              borderRadius: BorderRadius.circular(28.r),
-              border: Border.all(color: colorScheme.primary.withValues(alpha: 0.2)),
+              borderRadius: AppRadius.bxxl.r,
+              border: Border.all(color: cs.primary.withValues(alpha: 0.2)),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Total Lifetime Revenue', style: TextStyle(color: isDark ? const Color(0xFFBCC7DE) : colorScheme.onSurfaceVariant, fontSize: 12.sp)),
-                SizedBox(height: 8.h),
+                Text('Total Lifetime Revenue', style: tt.labelSmall?.copyWith(color: cs.onSurfaceVariant)),
+                SizedBox(height: AppSpacing.xs.h),
                 Text(
                   '${total.toStringAsFixed(0)} EGP',
-                  style: TextStyle(color: isDark ? const Color(0xFF4BE277) : colorScheme.primary, fontSize: 36.sp, fontWeight: FontWeight.w900),
+                  style: tt.displaySmall?.copyWith(color: cs.primary, fontWeight: FontWeight.w900),
                 ),
-                SizedBox(height: 16.h),
+                SizedBox(height: AppSpacing.md.h),
                 Row(
                   children: [
-                    _MiniStat('This Month', '${monthly.toStringAsFixed(0)} EGP', isDark: isDark),
-                    SizedBox(width: 24.w),
-                    _MiniStat('Commission', '${commission.toStringAsFixed(0)} EGP', isDark: isDark),
-                    SizedBox(width: 24.w),
-                    _MiniStat('Net Payout', '${net.toStringAsFixed(0)} EGP', isDark: isDark),
+                    _MiniStat('This Month', '${monthly.toStringAsFixed(0)} EGP'),
+                    SizedBox(width: AppSpacing.lg.w),
+                    _MiniStat('Commission', '${commission.toStringAsFixed(0)} EGP'),
+                    SizedBox(width: AppSpacing.lg.w),
+                    _MiniStat('Net Payout', '${net.toStringAsFixed(0)} EGP'),
                   ],
                 ),
               ],
             ),
           ),
-          SizedBox(height: 24.h),
+          SizedBox(height: AppSpacing.lg.h),
 
           if (state.status == OwnerStatus.loading)
-            Center(child: CircularProgressIndicator(color: colorScheme.primary))
+            Center(child: CircularProgressIndicator(color: cs.primary))
           else if (total == 0)
             Container(
-              padding: EdgeInsets.all(24.w),
+              padding: EdgeInsets.all(AppSpacing.lg.w),
               decoration: BoxDecoration(
-                color: colorScheme.surfaceContainerLow,
-                borderRadius: BorderRadius.circular(20.r),
+                color: cs.surfaceContainerLow,
+                borderRadius: AppRadius.blg.r,
               ),
               child: Center(
                 child: Text(
                   'No revenue yet.\nBookings will appear here once confirmed.',
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: colorScheme.onSurfaceVariant),
+                  style: tt.bodyMedium?.copyWith(color: cs.onSurfaceVariant),
                 ),
               ),
             ),
@@ -439,22 +430,22 @@ class _ProfileTabState extends State<_ProfileTab> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final cs = context.colorScheme;
+    final tt = context.textTheme;
 
     return BlocBuilder<SessionBloc, SessionState>(
       builder: (context, sessionState) {
         final user = sessionState.user;
         return ListView(
-          padding: EdgeInsets.all(24.w),
+          padding: EdgeInsets.all(AppSpacing.lg.w),
           children: [
-            Text('Profile', style: TextStyle(color: colorScheme.onSurface, fontWeight: FontWeight.w900, fontSize: 24.sp)),
-            SizedBox(height: 24.h),
+            Text('Profile', style: tt.headlineMedium?.copyWith(color: cs.onSurface, fontWeight: FontWeight.w900)),
+            SizedBox(height: AppSpacing.lg.h),
             Container(
-              padding: EdgeInsets.all(24.w),
+              padding: EdgeInsets.all(AppSpacing.lg.w),
               decoration: BoxDecoration(
-                color: colorScheme.surfaceContainerLow,
-                borderRadius: BorderRadius.circular(24.r),
+                color: cs.surfaceContainerLow,
+                borderRadius: AppRadius.blg.r,
               ),
               child: Column(
                 children: [
@@ -478,62 +469,62 @@ class _ProfileTabState extends State<_ProfileTab> {
                               height: 80.w,
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
-                                  colors: [colorScheme.primary, colorScheme.primary.withValues(alpha: 0.7)],
+                                  colors: [cs.primary, cs.primary.withValues(alpha: 0.7)],
                                 ),
                                 shape: BoxShape.circle,
                               ),
                               child: ClipOval(
                                 child: authState.isLoading
-                                    ? Center(child: CircularProgressIndicator(color: colorScheme.onPrimary, strokeWidth: 2))
+                                    ? Center(child: CircularProgressIndicator(color: cs.onPrimary, strokeWidth: 2))
                                     : _localPhotoBytes != null
                                         ? Image.memory(
                                             _localPhotoBytes!,
                                             fit: BoxFit.cover,
-                                            errorBuilder: (_, __, ___) => Icon(IconsaxPlusBold.user, color: colorScheme.onPrimary, size: 36),
+                                            errorBuilder: (_, __, ___) => Icon(IconsaxPlusBold.user, color: cs.onPrimary, size: 36),
                                           )
                                         : (user?.photoUrl != null && user!.photoUrl!.isNotEmpty)
-                                            ? CachedNetworkImage(
-                                                imageUrl: '${user.photoUrl!}?v=${DateTime.now().millisecondsSinceEpoch}',
+                                            ? AppCachedImage(
+                                                imageUrl: user.photoUrl!,
                                                 fit: BoxFit.cover,
-                                                placeholder: (context, url) => Center(child: CircularProgressIndicator(color: colorScheme.onPrimary, strokeWidth: 2)),
-                                                errorWidget: (context, url, error) => Icon(IconsaxPlusBold.user, color: colorScheme.onPrimary, size: 36),
+                                                placeholder: Center(child: CircularProgressIndicator(color: cs.onPrimary, strokeWidth: 2)),
+                                                errorWidget: Container(color: cs.surfaceContainerHighest, child: Icon(IconsaxPlusBold.user, color: cs.onPrimary, size: 36)),
                                               )
-                                            : Icon(IconsaxPlusBold.user, color: colorScheme.onPrimary, size: 36),
+                                            : Icon(IconsaxPlusBold.user, color: cs.onPrimary, size: 36),
                               ),
                             ),
                             if (!authState.isLoading)
                               Container(
-                                padding: EdgeInsets.all(4.w),
-                                decoration: BoxDecoration(color: colorScheme.primary, shape: BoxShape.circle),
-                                child: Icon(Icons.camera_alt, color: colorScheme.onPrimary, size: 14),
+                                padding: EdgeInsets.all(AppSpacing.xxs.w),
+                                decoration: BoxDecoration(color: cs.primary, shape: BoxShape.circle),
+                                child: Icon(Icons.camera_alt, color: cs.onPrimary, size: 14),
                               ),
                           ],
                         );
                       },
                     ),
                   ),
-                  SizedBox(height: 16.h),
+                  SizedBox(height: AppSpacing.md.h),
                   Text(
                     user?.name ?? 'Pitch Owner',
-                    style: TextStyle(color: colorScheme.onSurface, fontWeight: FontWeight.bold, fontSize: 18.sp),
+                    style: tt.titleLarge?.copyWith(color: cs.onSurface, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 4.h),
+                  SizedBox(height: AppSpacing.xxs.h),
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
+                    padding: EdgeInsets.symmetric(horizontal: AppSpacing.md.w, vertical: AppSpacing.xs.h),
                     decoration: BoxDecoration(
-                      color: colorScheme.primaryContainer.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(20.r),
-                      border: Border.all(color: colorScheme.primary.withValues(alpha: 0.3)),
+                      color: cs.primaryContainer.withValues(alpha: 0.1),
+                      borderRadius: AppRadius.bxxl.r,
+                      border: Border.all(color: cs.primary.withValues(alpha: 0.3)),
                     ),
                     child: Text(
                       user?.role?.toUpperCase() ?? 'OWNER',
-                      style: TextStyle(color: colorScheme.primary, fontSize: 11.sp, fontWeight: FontWeight.bold),
+                      style: tt.labelSmall?.copyWith(color: cs.primary, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ],
               ),
             ),
-            SizedBox(height: 16.h),
+            SizedBox(height: AppSpacing.md.h),
             _ProfileAction(icon: IconsaxPlusLinear.add_circle, label: 'Add New Pitch', onTap: () => context.push(AppRoutes.addPitch)),
             _ProfileAction(icon: IconsaxPlusLinear.notification, label: 'Notifications', onTap: () => context.push(AppRoutes.notifications)),
             
@@ -570,10 +561,11 @@ class _SectionLabel extends StatelessWidget {
   const _SectionLabel(this.text);
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final cs = context.colorScheme;
+    final tt = context.textTheme;
     return Text(
       text,
-      style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 11.sp, fontWeight: FontWeight.w900, letterSpacing: 1.5),
+      style: tt.labelSmall?.copyWith(color: cs.onSurfaceVariant, fontWeight: FontWeight.w900, letterSpacing: 1.5),
     );
   }
 }
@@ -587,25 +579,26 @@ class _StatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final cs = context.colorScheme;
+    final tt = context.textTheme;
+
     return Container(
-      padding: EdgeInsets.all(16.w),
+      padding: EdgeInsets.all(AppSpacing.md.w),
       decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(color: colorScheme.outlineVariant.withValues(alpha: 0.2)),
+        color: cs.surfaceContainerLow,
+        borderRadius: AppRadius.blg.r,
+        border: Border.all(color: cs.outlineVariant.withValues(alpha: 0.2)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(label, style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 10.sp, fontWeight: FontWeight.w600)),
-          SizedBox(height: 8.h),
+          Text(label, style: tt.labelSmall?.copyWith(color: cs.onSurfaceVariant, fontWeight: FontWeight.w600)),
+          SizedBox(height: AppSpacing.xs.h),
           Text(
             unit.isNotEmpty ? '$value $unit' : value,
-            style: TextStyle(
-              color: accent ? colorScheme.primary : colorScheme.onSurface,
-              fontSize: 20.sp,
+            style: tt.headlineSmall?.copyWith(
+              color: accent ? cs.primary : cs.onSurface,
               fontWeight: FontWeight.w900,
             ),
           ),
@@ -622,14 +615,15 @@ class _PitchCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final cs = context.colorScheme;
+    final tt = context.textTheme;
 
     return Container(
-      padding: EdgeInsets.all(12.w),
+      padding: EdgeInsets.all(AppSpacing.sm.w),
       decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(24.r),
-        border: Border.all(color: colorScheme.outlineVariant.withValues(alpha: 0.5)),
+        color: cs.surfaceContainerLow,
+        borderRadius: AppRadius.bxxl.r,
+        border: Border.all(color: cs.outlineVariant.withValues(alpha: 0.5)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.05),
@@ -642,67 +636,63 @@ class _PitchCard extends StatelessWidget {
         children: [
           Hero(
             tag: 'pitch_${pitch.id}',
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(16.r),
-              child: Image.network(
-                pitch.imageUrl.isNotEmpty
-                    ? pitch.imageUrl
-                    : 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80',
+            child: AppCachedImage(
+              imageUrl: pitch.imageUrl.isNotEmpty
+                  ? pitch.imageUrl
+                  : 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80',
+              width: 80.w,
+              height: 80.w,
+              fit: BoxFit.cover,
+              borderRadius: AppRadius.blg.r,
+              errorWidget: Container(
                 width: 80.w,
                 height: 80.w,
-                fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => Container(
-                  width: 80.w,
-                  height: 80.w,
-                  color: colorScheme.surfaceContainerHighest,
-                  child: Icon(Icons.sports_soccer, color: colorScheme.primary, size: 32),
-                ),
+                color: cs.surfaceContainerHighest,
+                child: Icon(Icons.sports_soccer, color: cs.primary, size: 32),
               ),
             ),
           ),
-          SizedBox(width: 16.w),
+          SizedBox(width: AppSpacing.md.w),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   pitch.name,
-                  style: TextStyle(
-                    color: colorScheme.onSurface,
+                  style: tt.titleMedium?.copyWith(
+                    color: cs.onSurface,
                     fontWeight: FontWeight.w900,
-                    fontSize: 16.sp,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                SizedBox(height: 6.h),
+                SizedBox(height: AppSpacing.xxs.h),
                 Row(
                   children: [
-                    Icon(IconsaxPlusLinear.location, color: colorScheme.onSurfaceVariant, size: 14),
-                    SizedBox(width: 4.w),
+                    Icon(IconsaxPlusLinear.location, color: cs.onSurfaceVariant, size: 14),
+                    SizedBox(width: AppSpacing.xxs.w),
                     Expanded(
                       child: Text(
                         pitch.location.city,
-                        style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 12.sp),
+                        style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height: 8.h),
+                SizedBox(height: AppSpacing.xs.h),
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                  padding: EdgeInsets.symmetric(horizontal: AppSpacing.md.w, vertical: AppSpacing.xs.h),
                   decoration: BoxDecoration(
-                    color: colorScheme.primaryContainer.withValues(alpha: 0.3),
-                    borderRadius: BorderRadius.circular(12.r),
+                    color: cs.primaryContainer.withValues(alpha: 0.3),
+                    borderRadius: AppRadius.bsm.r,
                   ),
                   child: Text(
                     '${pitch.pricePerHour.toInt()} EGP/hr',
-                    style: TextStyle(
-                      color: colorScheme.primary,
+                    style: tt.labelSmall?.copyWith(
+                      color: cs.primary,
                       fontWeight: FontWeight.bold,
-                      fontSize: 12.sp,
                     ),
                   ),
                 ),
@@ -714,32 +704,32 @@ class _PitchCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 IconButton(
-                  icon: Icon(IconsaxPlusLinear.edit, color: colorScheme.primary, size: 20),
+                  icon: Icon(IconsaxPlusLinear.edit, color: cs.primary, size: 20),
                   onPressed: () {
                     context.push(AppRoutes.addPitch, extra: pitch);
                   },
                   tooltip: 'Edit Pitch',
                 ),
                 IconButton(
-                  icon: const Icon(IconsaxPlusLinear.trash, color: Colors.redAccent, size: 20),
+                  icon: Icon(IconsaxPlusLinear.trash, color: cs.error, size: 20),
                   onPressed: () {
                     showDialog(
                       context: context,
                       builder: (ctx) => AlertDialog(
-                        backgroundColor: colorScheme.surface,
-                        title: Text('Delete Pitch', style: TextStyle(color: colorScheme.onSurface)),
-                        content: Text('Are you sure you want to delete this pitch?', style: TextStyle(color: colorScheme.onSurfaceVariant)),
+                        backgroundColor: cs.surface,
+                        title: Text('Delete Pitch', style: tt.titleLarge?.copyWith(color: cs.onSurface)),
+                        content: Text('Are you sure you want to delete this pitch?', style: tt.bodyMedium?.copyWith(color: cs.onSurfaceVariant)),
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.pop(ctx),
-                            child: Text('Cancel', style: TextStyle(color: colorScheme.onSurfaceVariant)),
+                            child: Text('Cancel', style: TextStyle(color: cs.onSurfaceVariant)),
                           ),
                           TextButton(
                             onPressed: () {
                               Navigator.pop(ctx);
                               context.read<OwnerCubit>().deletePitch(pitch.id);
                             },
-                            child: const Text('Delete', style: TextStyle(color: Colors.redAccent)),
+                            child: Text('Delete', style: TextStyle(color: cs.error)),
                           ),
                         ],
                       ),
@@ -761,7 +751,8 @@ class _EmptyPitches extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final cs = context.colorScheme;
+    final tt = context.textTheme;
 
     return Center(
       child: Column(
@@ -769,25 +760,25 @@ class _EmptyPitches extends StatelessWidget {
         children: [
           SizedBox(height: 40.h),
           Container(
-            padding: EdgeInsets.all(24.w),
-            decoration: BoxDecoration(color: colorScheme.surfaceContainerLow, shape: BoxShape.circle),
-            child: Icon(Icons.stadium_outlined, color: colorScheme.primary, size: 48),
+            padding: EdgeInsets.all(AppSpacing.xl.w),
+            decoration: BoxDecoration(color: cs.surfaceContainerLow, shape: BoxShape.circle),
+            child: Icon(Icons.stadium_outlined, color: cs.primary, size: 48),
           ),
-          SizedBox(height: 16.h),
+          SizedBox(height: AppSpacing.md.h),
           Text(
             'No Pitches Yet',
-            style: TextStyle(color: colorScheme.onSurface, fontWeight: FontWeight.bold, fontSize: 18.sp),
+            style: tt.titleLarge?.copyWith(color: cs.onSurface, fontWeight: FontWeight.bold),
           ),
-          SizedBox(height: 8.h),
-          Text('Add your first pitch to get started', style: TextStyle(color: colorScheme.onSurfaceVariant)),
-          SizedBox(height: 24.h),
+          SizedBox(height: AppSpacing.xs.h),
+          Text('Add your first pitch to get started', style: tt.bodyMedium?.copyWith(color: cs.onSurfaceVariant)),
+          SizedBox(height: AppSpacing.xl.h),
           FilledButton.icon(
             onPressed: onAdd,
             icon: const Icon(Icons.add),
             label: const Text('Add Pitch'),
             style: FilledButton.styleFrom(
-              backgroundColor: colorScheme.primary,
-              foregroundColor: colorScheme.onPrimary,
+              backgroundColor: cs.primary,
+              foregroundColor: cs.onPrimary,
             ),
           ),
         ],
@@ -799,20 +790,18 @@ class _EmptyPitches extends StatelessWidget {
 class _MiniStat extends StatelessWidget {
   final String label;
   final String value;
-  final bool isDark;
-  const _MiniStat(this.label, this.value, {this.isDark = false});
+  const _MiniStat(this.label, this.value);
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final cs = context.colorScheme;
+    final tt = context.textTheme;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: TextStyle(color: isDark ? const Color(0xFFBCC7DE) : colorScheme.onSurfaceVariant, fontSize: 10.sp)),
-        Text(
-          value,
-          style: TextStyle(color: isDark ? Colors.white : colorScheme.onSurface, fontWeight: FontWeight.bold, fontSize: 13.sp),
-        ),
+        Text(label, style: tt.labelSmall?.copyWith(color: cs.onSurfaceVariant, fontSize: 10.sp)),
+        SizedBox(height: AppSpacing.xxs.h),
+        Text(value, style: tt.titleSmall?.copyWith(color: cs.onSurface, fontWeight: FontWeight.bold)),
       ],
     );
   }
@@ -827,21 +816,17 @@ class _ProfileAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final color = isDestructive ? Colors.red : colorScheme.onSurface;
+    final cs = context.colorScheme;
+    final tt = context.textTheme;
+    final color = isDestructive ? cs.error : cs.onSurface;
 
-    return Container(
-      margin: EdgeInsets.only(bottom: 12.h),
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(16.r),
-      ),
-      child: ListTile(
-        leading: Icon(icon, color: color, size: 20),
-        title: Text(label, style: TextStyle(color: color, fontWeight: FontWeight.w600)),
-        trailing: Icon(Icons.chevron_right, color: color.withValues(alpha: 0.5), size: 18),
-        onTap: onTap,
-      ),
+    return ListTile(
+      onTap: onTap,
+      leading: Icon(icon, color: color, size: 22),
+      title: Text(label, style: tt.bodyLarge?.copyWith(color: color, fontWeight: FontWeight.w500)),
+      trailing: Icon(Icons.arrow_forward_ios, color: cs.onSurfaceVariant, size: 14),
+      contentPadding: EdgeInsets.symmetric(horizontal: AppSpacing.md.w, vertical: AppSpacing.xs.h),
+      shape: RoundedRectangleBorder(borderRadius: AppRadius.blg.r),
     );
   }
 }

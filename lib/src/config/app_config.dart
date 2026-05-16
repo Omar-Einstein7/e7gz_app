@@ -17,16 +17,6 @@ class AppConfig {
   static String get baseUrl => _getBaseUrl();
 
   static Future<void> init() async {
-    final baseOptions = BaseOptions(
-      baseUrl: _getBaseUrl(),
-      connectTimeout: const Duration(seconds: 30),
-      receiveTimeout: const Duration(seconds: 30),
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-    );
-
     // ── Clean Auth Client (no token injection, no retry) ─────────────────────
     authDio = Dio(
       BaseOptions(
@@ -39,30 +29,8 @@ class AppConfig {
         },
       ),
     );
-    authDio.interceptors.add(
-      InterceptorsWrapper(
-        onRequest: (options, handler) {
-          AppLogger.info(
-            '🌐 [AUTH] REQUEST[${options.method}] => PATH: ${options.path}',
-          );
-          return handler.next(options);
-        },
-        onResponse: (response, handler) {
-          AppLogger.info(
-            '✅ [AUTH] RESPONSE[${response.statusCode}] => PATH: ${response.requestOptions.path}',
-          );
-          return handler.next(response);
-        },
-        onError: (e, handler) {
-          AppLogger.error(
-            '❌ [AUTH] ERROR[${e.response?.statusCode}] => PATH: ${e.requestOptions.path}',
-          );
-          return handler.next(e);
-        },
-      ),
-    );
 
-    // ── Protected Client (token injection + auto-refresh on 401) ─────────────
+    // ── Protected Client (Base Setup) ─────────────────────
     dio = Dio(
       BaseOptions(
         baseUrl: _getBaseUrl(),
@@ -74,66 +42,77 @@ class AppConfig {
         },
       ),
     );
+  }
+
+  /// Attaches interceptors that depend on [GetIt] services.
+  /// This MUST be called after [initDependencies].
+  static void attachInterceptors({
+    required SecureStorageService secureStorage,
+    required AuthService authService,
+  }) {
+    // ── Auth Client Logging ─────────────────────
+    authDio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) {
+          AppLogger.info('🌐 [AUTH] REQUEST[${options.method}] => PATH: ${options.path}');
+          // Note: We don't log the request body here to prevent leaking credentials in logs
+          return handler.next(options);
+        },
+        onResponse: (response, handler) {
+          AppLogger.info('✅ [AUTH] RESPONSE[${response.statusCode}] => PATH: ${response.requestOptions.path}');
+          return handler.next(response);
+        },
+        onError: (e, handler) {
+          // Log only the status code and path, avoiding the body which might contain sensitive info
+          AppLogger.error('❌ [AUTH] ERROR[${e.response?.statusCode}] => PATH: ${e.requestOptions.path}');
+          return handler.next(e);
+        },
+      ),
+    );
+
+    // ── Protected Client (Token Injection + Refresh) ─────────────────────
     dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
-          AppLogger.info(
-            '🌐 [DIO] REQUEST[${options.method}] => PATH: ${options.path}',
-          );
+          AppLogger.info('🌐 [DIO] REQUEST[${options.method}] => PATH: ${options.path}');
 
-          // Always inject token — this client is only used for protected routes
-          final tokenResult = await GetIt.instance<SecureStorageService>().read(
-            'jwt_token',
-          );
+          final tokenResult = await secureStorage.read('jwt_token');
           tokenResult.fold((_) {}, (token) {
             if (token != null && token.isNotEmpty) {
               options.headers['Authorization'] = 'Bearer $token';
             }
           });
 
-          AppLogger.info('🔑 HEADERS: ${options.headers}');
           return handler.next(options);
         },
         onResponse: (response, handler) {
-          AppLogger.info(
-            '✅ [DIO] RESPONSE[${response.statusCode}] => PATH: ${response.requestOptions.path}',
-          );
+          AppLogger.info('✅ [DIO] RESPONSE[${response.statusCode}] => PATH: ${response.requestOptions.path}');
           return handler.next(response);
         },
         onError: (DioException e, handler) async {
           final errorBody = e.response?.data;
-          AppLogger.error(
-            '❌ [DIO] ERROR[${e.response?.statusCode}] => PATH: ${e.requestOptions.path} => BODY: $errorBody',
-          );
+          AppLogger.error('❌ [DIO] ERROR[${e.response?.statusCode}] => PATH: ${e.requestOptions.path} => BODY: $errorBody');
 
           if (e.response?.statusCode == 401) {
             try {
-              final isRefreshed = await GetIt.instance<AuthService>()
-                  .refreshAccessToken();
+              final isRefreshed = await authService.refreshAccessToken();
               if (isRefreshed) {
-                final tokenResult = await GetIt.instance<SecureStorageService>().read(
-                  'jwt_token',
-                );
+                final tokenResult = await secureStorage.read('jwt_token');
                 String? newToken;
                 tokenResult.fold((_) => null, (v) => newToken = v);
 
                 if (newToken != null && newToken!.isNotEmpty) {
-                  e.requestOptions.headers['Authorization'] =
-                      'Bearer $newToken';
-                  try {
-                    final response = await dio.request<dynamic>(
-                      e.requestOptions.path,
-                      data: e.requestOptions.data,
-                      queryParameters: e.requestOptions.queryParameters,
-                      options: Options(
-                        method: e.requestOptions.method,
-                        headers: e.requestOptions.headers,
-                      ),
-                    );
-                    return handler.resolve(response);
-                  } on DioException catch (retryError) {
-                    return handler.next(retryError);
-                  }
+                  e.requestOptions.headers['Authorization'] = 'Bearer $newToken';
+                  final response = await dio.request<dynamic>(
+                    e.requestOptions.path,
+                    data: e.requestOptions.data,
+                    queryParameters: e.requestOptions.queryParameters,
+                    options: Options(
+                      method: e.requestOptions.method,
+                      headers: e.requestOptions.headers,
+                    ),
+                  );
+                  return handler.resolve(response);
                 }
               }
             } catch (err) {
@@ -149,7 +128,7 @@ class AppConfig {
   static String _getBaseUrl() {
     String url = dotenv.get(
       'API_BASE_URL',
-      fallback: 'http://192.168.1.7/api',
+      fallback: 'https://api.e7gzz.com/api',
     );
 
     if (url.endsWith('/')) {

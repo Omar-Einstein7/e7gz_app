@@ -15,15 +15,15 @@ class SearchFilterChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.colors;
+    final cs = context.colorScheme;
 
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 20.w),
+        padding: EdgeInsets.symmetric(horizontal: AppSpacing.md.w),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFF4BE277) : const Color(0xFF171F33),
-          borderRadius: BorderRadius.circular(100.r),
+          color: isSelected ? cs.primary : cs.surfaceContainerHigh,
+          borderRadius: AppRadius.bfull.r,
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -31,15 +31,15 @@ class SearchFilterChip extends StatelessWidget {
             if (icon != null) ...[
               Icon(
                 icon,
-                color: isSelected ? const Color(0xFF003915) : Colors.white,
+                color: isSelected ? cs.onPrimary : cs.onSurfaceVariant,
                 size: 14,
               ),
-              SizedBox(width: 6.w),
+              SizedBox(width: AppSpacing.xs.w),
             ],
             Text(
               label,
               style: TextStyle(
-                color: isSelected ? const Color(0xFF003915) : Colors.white,
+                color: isSelected ? cs.onPrimary : cs.onSurfaceVariant,
                 fontWeight: FontWeight.bold,
                 fontSize: 13.sp,
               ),

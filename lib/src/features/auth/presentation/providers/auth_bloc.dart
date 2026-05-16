@@ -17,17 +17,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     LoginRequested event,
     Emitter<AuthState> emit,
   ) async {
-    emit(state.copyWith(isLoading: true));
+    emit(state.copyWith(status: AuthStatus.loading));
     
     final result = await _repository.login(email: event.email, password: event.password);
     
     result.fold(
       (failure) {
-        emit(state.copyWith(isLoading: false));
+        emit(state.copyWith(status: AuthStatus.failure, errorMessage: failure.message));
         showGlobalToast(message: failure.message, status: 'error');
       },
       (user) {
-        emit(state.copyWith(isLoading: false));
+        emit(state.copyWith(status: AuthStatus.success));
       },
     );
   }
@@ -36,7 +36,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     SignUpRequested event,
     Emitter<AuthState> emit,
   ) async {
-    emit(state.copyWith(isLoading: true));
+    emit(state.copyWith(status: AuthStatus.loading));
     
     final result = await _repository.signUp(
       name: event.name, 
@@ -48,11 +48,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     
     result.fold(
       (failure) {
-        emit(state.copyWith(isLoading: false));
+        emit(state.copyWith(status: AuthStatus.failure, errorMessage: failure.message));
         showGlobalToast(message: failure.message, status: 'error');
       },
       (user) {
-        emit(state.copyWith(isLoading: false));
+        emit(state.copyWith(status: AuthStatus.success));
       },
     );
   }
@@ -61,17 +61,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     ForgotPasswordRequested event,
     Emitter<AuthState> emit,
   ) async {
-    emit(state.copyWith(isLoading: true));
+    emit(state.copyWith(status: AuthStatus.loading));
     
     final result = await _repository.forgotPassword(email: event.email);
     
     result.fold(
       (failure) {
-        emit(state.copyWith(isLoading: false));
+        emit(state.copyWith(status: AuthStatus.failure, errorMessage: failure.message));
         showGlobalToast(message: failure.message, status: 'error');
       },
       (success) {
-        emit(state.copyWith(isLoading: false));
+        emit(state.copyWith(status: AuthStatus.success));
         showGlobalToast(message: 'Password reset link sent successfully', status: 'success');
       },
     );
@@ -81,7 +81,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     UpdateProfileRequested event,
     Emitter<AuthState> emit,
   ) async {
-    emit(state.copyWith(isLoading: true));
+    emit(state.copyWith(status: AuthStatus.loading));
     
     final result = await _repository.updateProfile(
       name: event.name,
@@ -91,11 +91,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     
     result.fold(
       (failure) {
-        emit(state.copyWith(isLoading: false));
+        emit(state.copyWith(status: AuthStatus.failure, errorMessage: failure.message));
         showGlobalToast(message: failure.message, status: 'error');
       },
       (user) {
-        emit(state.copyWith(isLoading: false));
+        emit(state.copyWith(status: AuthStatus.success));
         showGlobalToast(message: 'Profile updated successfully', status: 'success');
       },
     );
@@ -144,13 +144,35 @@ class UpdateProfileRequested extends AuthEvent {
   List<Object> get props => [name ?? '', phone ?? '', photoPath ?? ''];
 }
 
+enum AuthStatus { initial, loading, success, failure }
+
 class AuthState extends Equatable {
-  final bool isLoading;
-  const AuthState({required this.isLoading});
-  const AuthState.initial() : isLoading = false;
-  AuthState copyWith({bool? isLoading}) {
-    return AuthState(isLoading: isLoading ?? this.isLoading);
+  final AuthStatus status;
+  final String? errorMessage;
+
+  const AuthState({
+    required this.status,
+    this.errorMessage,
+  });
+
+  const AuthState.initial()
+      : status = AuthStatus.initial,
+        errorMessage = null;
+
+  bool get isLoading => status == AuthStatus.loading;
+  bool get isSuccess => status == AuthStatus.success;
+  bool get isFailure => status == AuthStatus.failure;
+
+  AuthState copyWith({
+    AuthStatus? status,
+    String? errorMessage,
+  }) {
+    return AuthState(
+      status: status ?? this.status,
+      errorMessage: errorMessage ?? this.errorMessage,
+    );
   }
+
   @override
-  List<Object?> get props => [isLoading];
+  List<Object?> get props => [status, errorMessage];
 }

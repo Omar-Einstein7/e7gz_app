@@ -147,16 +147,14 @@ class _BookingSummaryView extends StatelessWidget {
       ),
       child: Row(
         children: [
-          ClipRRect(
+          AppCachedImage(
+            imageUrl: pitch.imageUrl.isNotEmpty
+                ? pitch.imageUrl
+                : 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80',
+            width: 80.w,
+            height: 80.w,
+            fit: BoxFit.cover,
             borderRadius: BorderRadius.circular(16.r),
-            child: Image.network(
-              pitch.imageUrl.isNotEmpty
-                  ? pitch.imageUrl
-                  : 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80',
-              width: 80.w,
-              height: 80.w,
-              fit: BoxFit.cover,
-            ),
           ),
           SizedBox(width: 16.w),
           Expanded(

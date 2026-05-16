@@ -1,8 +1,7 @@
-import 'package:fpdart/fpdart.dart';
-import 'package:e7gz/src/utils/failure.dart';
-import 'package:e7gz/src/utils/typedefs.dart';
 import 'package:e7gz/src/features/bookings/domain/entities/booking.dart';
 import 'package:e7gz/src/features/bookings/domain/repositories/booking_repository.dart';
+import 'package:e7gz/src/imports/core_imports.dart';
+import 'package:e7gz/src/imports/packages_imports.dart';
 import '../datasources/booking_remote_datasource.dart';
 
 class BookingRepositoryImpl implements BookingRepository {
@@ -12,23 +11,18 @@ class BookingRepositoryImpl implements BookingRepository {
 
   @override
   FutureEither<List<Booking>> getMyBookings({BookingStatus? status}) async {
-    try {
-      final bookings =
-          await _remote.getMyBookings(status: status?.name);
-      return right(bookings);
-    } catch (e) {
-      return left(ServerFailure(e.toString()));
-    }
+    return runTask(() async {
+      final bookings = await _remote.getMyBookings(status: status?.name);
+      return bookings;
+    }, requiresNetwork: true);
   }
 
   @override
   FutureEither<Booking> getBookingById(String id) async {
-    try {
+    return runTask(() async {
       final booking = await _remote.getBookingById(id);
-      return right(booking);
-    } catch (e) {
-      return left(ServerFailure(e.toString()));
-    }
+      return booking;
+    }, requiresNetwork: true);
   }
 
   @override
@@ -39,7 +33,7 @@ class BookingRepositoryImpl implements BookingRepository {
     required String endTime,
     String? notes,
   }) async {
-    try {
+    return runTask(() async {
       final booking = await _remote.createBooking(
         pitchId: pitchId,
         date: date,
@@ -47,20 +41,16 @@ class BookingRepositoryImpl implements BookingRepository {
         endTime: endTime,
         notes: notes,
       );
-      return right(booking);
-    } catch (e) {
-      return left(ServerFailure(e.toString()));
-    }
+      return booking;
+    }, requiresNetwork: true);
   }
 
   @override
   FutureEither<Booking> cancelBooking(String bookingId) async {
-    try {
+    return runTask(() async {
       final booking = await _remote.cancelBooking(bookingId);
-      return right(booking);
-    } catch (e) {
-      return left(ServerFailure(e.toString()));
-    }
+      return booking;
+    }, requiresNetwork: true);
   }
 
   @override
@@ -68,12 +58,9 @@ class BookingRepositoryImpl implements BookingRepository {
     required String pitchId,
     required String date,
   }) async {
-    try {
-      final slots =
-          await _remote.getAvailableSlots(pitchId: pitchId, date: date);
-      return right(slots);
-    } catch (e) {
-      return left(ServerFailure(e.toString()));
-    }
+    return runTask(() async {
+      final slots = await _remote.getAvailableSlots(pitchId: pitchId, date: date);
+      return slots;
+    }, requiresNetwork: true);
   }
 }

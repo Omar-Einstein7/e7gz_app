@@ -14,6 +14,12 @@ Future<void> main() async {
   // Register all dependencies with get_it (sync — no async registrations)
   await initDependencies();
 
+  // Attach interceptors AFTER dependencies are registered
+  AppConfig.attachInterceptors(
+    secureStorage: sl<SecureStorageService>(),
+    authService: sl<AuthService>(),
+  );
+
   await sl<AuthService>().loadSavedToken();
 
   runApp(

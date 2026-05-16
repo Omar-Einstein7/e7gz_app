@@ -3,6 +3,7 @@ import 'package:e7gz/src/imports/packages_imports.dart';
 
 import 'package:e7gz/src/features/auth/domain/entities/user.dart';
 import 'package:e7gz/src/features/auth/domain/repositories/auth_repository.dart';
+import '../models/user_model.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthService _authService;
@@ -12,26 +13,7 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Stream<AppUser?> get onAuthStateChanged {
-    return _authService.authStateChanges.map(_mapUserDataToAppUser);
-  }
-
-  AppUser? _mapUserDataToAppUser(Map<String, dynamic>? userData) {
-    if (userData == null) return null;
-    
-    // Normalize user data: handle cases where it's nested under 'user' or 'data'
-    // or returned directly (common in auth/me vs auth/login)
-    final userMap = userData['user'] as Map<String, dynamic>? ?? 
-                   userData['data'] as Map<String, dynamic>? ?? 
-                   userData;
-                   
-    return AppUser(
-      id: userMap['id']?.toString() ?? userMap['_id']?.toString() ?? '',
-      email: userMap['email'] ?? '',
-      name: userMap['name'],
-      photoUrl: userMap['photoUrl'],
-      role: (userMap['role'] ?? userMap['userType'] ?? userMap['type'])?.toString().toLowerCase() ?? 'player',
-      loyaltyPoints: (userMap['loyaltyPoints'] as num?)?.toInt() ?? 0,
-    );
+    return _authService.authStateChanges.map((data) => data != null ? UserModel.fromJson(data) : null);
   }
 
   @override
@@ -42,11 +24,10 @@ class AuthRepositoryImpl implements AuthRepository {
     final result = await _authService.login(email: email, password: password);
     
     return result.flatMap((userData) {
-      final user = _mapUserDataToAppUser(userData);
-      if (user == null) {
+      if (userData == null) {
         return left(const ServerFailure('Login failed: User record not found'));
       }
-      return right(user);
+      return right(UserModel.fromJson(userData));
     });
   }
 
@@ -67,11 +48,10 @@ class AuthRepositoryImpl implements AuthRepository {
     );
 
     return result.flatMap((userData) {
-      final user = _mapUserDataToAppUser(userData);
-      if (user == null) {
+      if (userData == null) {
         return left(const ServerFailure('Sign up failed: User record corrupted'));
       }
-      return right(user);
+      return right(UserModel.fromJson(userData));
     });
   }
 
@@ -88,8 +68,7 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   FutureEither<AppUser?> checkAuthState() async {
     final result = await _authService.getCurrentUser();
-    
-    return result.map(_mapUserDataToAppUser);
+    return result.map((data) => data != null ? UserModel.fromJson(data) : null);
   }
 
   @override
@@ -106,9 +85,8 @@ class AuthRepositoryImpl implements AuthRepository {
     return result.fold(
       (failure) => left(failure),
       (userData) {
-        final user = _mapUserDataToAppUser(userData);
-        if (user == null) return left(ServerFailure('Failed to update profile'));
-        return right(user);
+        if (userData == null) return left(const ServerFailure('Failed to update profile'));
+        return right(UserModel.fromJson(userData));
       },
     );
   }

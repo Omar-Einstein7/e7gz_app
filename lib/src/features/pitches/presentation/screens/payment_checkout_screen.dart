@@ -33,24 +33,14 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final cs = context.theme.colorScheme;
-    final tt = context.theme.textTheme;
-    final isDark = context.theme.brightness == Brightness.dark;
-
-    final bgColor = isDark ? const Color(0xFF0B1326) : cs.surface;
-    final cardBg = isDark ? const Color(0xFF131B2E) : cs.surfaceContainerLow;
-    final textColor = isDark ? Colors.white : cs.onSurface;
-    final subtitleColor = isDark ? const Color(0xFFBCC7DE) : cs.onSurfaceVariant;
-    final primaryAccent = isDark ? const Color(0xFF4BE277) : cs.primary;
-    final unselectedCardBg = isDark ? const Color(0xFF171F33) : cs.surfaceContainerHighest;
+    final cs = context.colorScheme;
+    final tt = context.textTheme;
 
     return Scaffold(
-      backgroundColor: bgColor,
+      backgroundColor: cs.background,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: textColor),
+          icon: Icon(Icons.arrow_back, color: cs.onSurface),
           onPressed: () => Navigator.pop(context),
         ),
         title: Row(
@@ -60,28 +50,27 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
               'e7gzz',
               style: tt.headlineSmall?.copyWith(color: cs.primary, fontWeight: FontWeight.w900),
             ),
-            SizedBox(width: 8.w),
-            Icon(Icons.verified_user, color: primaryAccent, size: 16),
-            SizedBox(width: 4.w),
+            SizedBox(width: AppSpacing.sm.w),
+            Icon(Icons.verified_user, color: cs.primary, size: 16),
+            SizedBox(width: AppSpacing.xs.w),
             Text(
               'SECURE CHECKOUT',
-              style: tt.labelSmall?.copyWith(color: primaryAccent, fontWeight: FontWeight.bold, letterSpacing: 1),
+              style: tt.labelSmall?.copyWith(color: cs.primary, fontWeight: FontWeight.bold, letterSpacing: 1),
             ),
           ],
         ),
-        centerTitle: true,
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(24.w),
+        padding: EdgeInsets.all(AppSpacing.lg.w),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               'Payment Method',
-              style: tt.headlineMedium?.copyWith(color: textColor, fontWeight: FontWeight.bold),
+              style: tt.headlineMedium?.copyWith(color: cs.onSurface, fontWeight: FontWeight.bold),
             ),
             
-            SizedBox(height: 24.h),
+            SizedBox(height: AppSpacing.lg.h),
             
             // Methods
             paymentCard(
@@ -91,10 +80,9 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
               icon: Icons.account_balance_outlined,
               isSelected: _selectedMethod == PaymentMethod.instapay,
               onTap: () => setState(() => _selectedMethod = PaymentMethod.instapay),
-              cs: cs, isDark: isDark, unselectedCardBg: unselectedCardBg, subtitleColor: subtitleColor, primaryAccent: primaryAccent, textColor: textColor,
             ),
             
-            SizedBox(height: 16.h),
+            SizedBox(height: AppSpacing.md.h),
             
             paymentCard(
               method: PaymentMethod.wallet,
@@ -103,10 +91,9 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
               icon: IconsaxPlusBold.wallet,
               isSelected: _selectedMethod == PaymentMethod.wallet,
               onTap: () => setState(() => _selectedMethod = PaymentMethod.wallet),
-              cs: cs, isDark: isDark, unselectedCardBg: unselectedCardBg, subtitleColor: subtitleColor, primaryAccent: primaryAccent, textColor: textColor,
             ),
             
-            SizedBox(height: 16.h),
+            SizedBox(height: AppSpacing.md.h),
             
             paymentCard(
               method: PaymentMethod.card,
@@ -115,35 +102,34 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
               icon: IconsaxPlusBold.card,
               isSelected: _selectedMethod == PaymentMethod.card,
               onTap: () => setState(() => _selectedMethod = PaymentMethod.card),
-              cs: cs, isDark: isDark, unselectedCardBg: unselectedCardBg, subtitleColor: subtitleColor, primaryAccent: primaryAccent, textColor: textColor,
             ),
             
-            SizedBox(height: 32.h),
+            SizedBox(height: AppSpacing.xl.h),
             
             // Buyer Protection
             Container(
-              padding: EdgeInsets.all(24.w),
+              padding: EdgeInsets.all(AppSpacing.lg.w),
               decoration: BoxDecoration(
-                color: unselectedCardBg.withValues(alpha: 0.6),
-                borderRadius: BorderRadius.circular(32.r),
+                color: cs.surfaceContainerHigh.withValues(alpha: 0.6),
+                borderRadius: AppRadius.bxxl.r,
               ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(Icons.shield_outlined, color: primaryAccent, size: 24),
-                  SizedBox(width: 16.w),
+                  Icon(Icons.shield_outlined, color: cs.primary, size: 24),
+                  SizedBox(width: AppSpacing.md.w),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           'Buyer Protection',
-                          style: tt.titleMedium?.copyWith(color: textColor, fontWeight: FontWeight.bold),
+                          style: tt.titleMedium?.copyWith(color: cs.onSurface, fontWeight: FontWeight.bold),
                         ),
-                        SizedBox(height: 8.h),
+                        SizedBox(height: AppSpacing.xs.h),
                         Text(
                           'Your payment is secured with end-to-end encryption. Funds are held in escrow until your booking is confirmed by the stadium manager.',
-                          style: tt.bodySmall?.copyWith(color: subtitleColor, height: 1.5),
+                          style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant, height: 1.5),
                         ),
                       ],
                     ),
@@ -152,60 +138,58 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
               ),
             ),
             
-            SizedBox(height: 32.h),
+            SizedBox(height: AppSpacing.xl.h),
             
             // Booking Summary
             Container(
-              padding: EdgeInsets.all(32.w),
+              padding: EdgeInsets.all(AppSpacing.xl.w),
               decoration: BoxDecoration(
-                color: cardBg,
-                borderRadius: BorderRadius.circular(32.r),
-                border: isDark ? Border(left: BorderSide(color: cs.primary, width: 4)) : Border.all(color: cs.outlineVariant),
+                color: cs.surfaceContainerLow,
+                borderRadius: AppRadius.bxxl.r,
+                border: Border.all(color: cs.outlineVariant),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     'Booking Summary',
-                    style: tt.titleLarge?.copyWith(color: textColor, fontWeight: FontWeight.bold),
+                    style: tt.titleLarge?.copyWith(color: cs.onSurface, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 24.h),
+                  SizedBox(height: AppSpacing.lg.h),
                   Row(
                     children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(16.r),
-                        child: Image.network(
-                          widget.pitchImage ?? 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80',
-                          width: 80.w,
-                          height: 80.w,
-                          fit: BoxFit.cover,
-                        ),
+                      AppCachedImage(
+                        imageUrl: widget.pitchImage ?? 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80',
+                        width: 80.w,
+                        height: 80.w,
+                        fit: BoxFit.cover,
+                        borderRadius: AppRadius.blg.r,
                       ),
-                      SizedBox(width: 16.w),
+                      SizedBox(width: AppSpacing.md.w),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             widget.pitchName,
-                            style: tt.titleMedium?.copyWith(color: primaryAccent, fontWeight: FontWeight.bold),
+                            style: tt.titleMedium?.copyWith(color: cs.primary, fontWeight: FontWeight.bold),
                           ),
                           Text(
                             widget.bookingDetails,
-                            style: tt.bodySmall?.copyWith(color: subtitleColor),
+                            style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant),
                           ),
                         ],
                       ),
                     ],
                   ),
-                  SizedBox(height: 32.h),
-                  summaryRow('Subtotal', '${widget.amount.toInt()} EGP', tt, subtitleColor, textColor),
-                  SizedBox(height: 12.h),
-                  summaryRow('Service Fee', '0 EGP', tt, subtitleColor, textColor),
-                  SizedBox(height: 12.h),
-                  summaryRow('Discount', '0 EGP', tt, subtitleColor, textColor),
-                  SizedBox(height: 32.h),
-                  Divider(color: isDark ? Colors.white.withValues(alpha: 0.05) : cs.outlineVariant),
-                  SizedBox(height: 32.h),
+                  SizedBox(height: AppSpacing.xl.h),
+                  summaryRow('Subtotal', '${widget.amount.toInt()} EGP', tt, cs.onSurfaceVariant, cs.onSurface),
+                  SizedBox(height: AppSpacing.sm.h),
+                  summaryRow('Service Fee', '0 EGP', tt, cs.onSurfaceVariant, cs.onSurface),
+                  SizedBox(height: AppSpacing.sm.h),
+                  summaryRow('Discount', '0 EGP', tt, cs.onSurfaceVariant, cs.onSurface),
+                  SizedBox(height: AppSpacing.xl.h),
+                  Divider(color: cs.outlineVariant),
+                  SizedBox(height: AppSpacing.xl.h),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -214,12 +198,12 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
                         children: [
                           Text(
                             'TOTAL AMOUNT',
-                            style: tt.labelSmall?.copyWith(color: subtitleColor, fontWeight: FontWeight.bold),
+                            style: tt.labelSmall?.copyWith(color: cs.onSurfaceVariant, fontWeight: FontWeight.bold),
                           ),
                           RichText(
                             text: TextSpan(
                               text: '${widget.amount.toInt()} ',
-                              style: tt.displaySmall?.copyWith(color: textColor, fontWeight: FontWeight.w900, fontSize: 32.sp),
+                              style: tt.displaySmall?.copyWith(color: cs.onSurface, fontWeight: FontWeight.w900, fontSize: 32.sp),
                               children: [
                                 TextSpan(text: 'EGP', style: TextStyle(color: cs.primary, fontSize: 16.sp, fontWeight: FontWeight.bold)),
                               ],
@@ -228,20 +212,20 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
                         ],
                       ),
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                        padding: EdgeInsets.symmetric(horizontal: AppSpacing.md.w, vertical: AppSpacing.xs.h),
                         decoration: BoxDecoration(
-                          color: isDark ? const Color(0xFF22C55E).withValues(alpha: 0.1) : cs.primaryContainer,
+                          color: cs.primaryContainer,
                           borderRadius: BorderRadius.circular(100.r),
                         ),
                         child: Text(
                           'PAY NOW',
-                          style: TextStyle(color: isDark ? const Color(0xFF22C55E) : cs.onPrimaryContainer, fontSize: 10.sp, fontWeight: FontWeight.bold, letterSpacing: 1),
+                          style: TextStyle(color: cs.onPrimaryContainer, fontSize: 10.sp, fontWeight: FontWeight.bold, letterSpacing: 1),
                         ),
                       ),
                     ],
                   ),
                   
-                  SizedBox(height: 32.h),
+                  SizedBox(height: AppSpacing.xl.h),
                   
                   AppButton(
                     label: _isLoading ? 'Processing...' : 'Confirm & Pay',
@@ -252,19 +236,19 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
                     onPressed: _isLoading ? null : _handlePayment,
                   ),
                   
-                  SizedBox(height: 16.h),
+                  SizedBox(height: AppSpacing.md.h),
                   Center(
                     child: Text(
                       'By clicking confirm, you agree to our Terms of\nService and Pitch Cancellation Policy.',
                       textAlign: TextAlign.center,
-                      style: tt.bodySmall?.copyWith(color: subtitleColor.withValues(alpha: 0.5), fontSize: 10.sp),
+                      style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant.withValues(alpha: 0.5), fontSize: 10.sp),
                     ),
                   ),
                 ],
               ),
             ),
             
-            SizedBox(height: 48.h),
+            SizedBox(height: AppSpacing.xxl.h),
           ],
         ),
       ),
@@ -278,22 +262,19 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
     required IconData icon,
     required bool isSelected,
     required VoidCallback onTap,
-    required ColorScheme cs,
-    required bool isDark,
-    required Color unselectedCardBg,
-    required Color subtitleColor,
-    required Color primaryAccent,
-    required Color textColor,
   }) {
+    final cs = context.colorScheme;
+    final typography = context.textTheme;
+    
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.all(24.w),
+        padding: EdgeInsets.all(AppSpacing.lg.w),
         decoration: BoxDecoration(
-          color: unselectedCardBg,
-          borderRadius: BorderRadius.circular(24.r),
+          color: cs.surfaceContainerHigh,
+          borderRadius: AppRadius.blg.r,
           border: Border.all(
-            color: isSelected ? primaryAccent.withValues(alpha: 0.5) : Colors.transparent,
+            color: isSelected ? cs.primary.withValues(alpha: 0.5) : Colors.transparent,
             width: 2,
           ),
         ),
@@ -303,23 +284,23 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
               width: 48.w,
               height: 48.w,
               decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF2D3449).withValues(alpha: 0.8) : cs.primary.withValues(alpha: 0.1),
+                color: cs.surfaceContainerHighest,
                 shape: BoxShape.circle,
               ),
-              child: Icon(icon, color: isDark ? Colors.white : cs.primary, size: 24),
+              child: Icon(icon, color: cs.primary, size: 24),
             ),
-            SizedBox(width: 16.w),
+            SizedBox(width: AppSpacing.md.w),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     title,
-                    style: context.theme.textTheme.titleMedium?.copyWith(color: textColor, fontWeight: FontWeight.bold),
+                    style: typography.titleMedium?.copyWith(color: cs.onSurface, fontWeight: FontWeight.bold),
                   ),
                   Text(
                     subtitle,
-                    style: context.theme.textTheme.bodySmall?.copyWith(color: subtitleColor),
+                    style: typography.bodySmall?.copyWith(color: cs.onSurfaceVariant),
                   ),
                 ],
               ),
@@ -330,7 +311,7 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: isSelected ? primaryAccent : (isDark ? const Color(0xFF31394D) : cs.outline),
+                  color: isSelected ? cs.primary : cs.outline,
                   width: 2,
                 ),
               ),
@@ -338,7 +319,7 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
                 child: Container(
                   width: 12.w,
                   height: 12.w,
-                  decoration: BoxDecoration(color: primaryAccent, shape: BoxShape.circle),
+                  decoration: BoxDecoration(color: cs.primary, shape: BoxShape.circle),
                 ),
               ) : null,
             ),
@@ -377,7 +358,7 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
           if (!mounted) return;
           setState(() => _isLoading = false);
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(failure.message), backgroundColor: Colors.redAccent),
+            SnackBar(content: Text(failure.message), backgroundColor: context.colorScheme.error),
           );
         },
         (success) {
@@ -390,51 +371,51 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
       if (!mounted) return;
       setState(() => _isLoading = false);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Payment failed. Please try again.'), backgroundColor: Colors.redAccent),
+        SnackBar(content: const Text('Payment failed. Please try again.'), backgroundColor: context.colorScheme.error),
       );
     }
   }
 
   void _showSuccessDialog() {
-    final isDark = context.theme.brightness == Brightness.dark;
-    final cs = context.theme.colorScheme;
-    
+    final cs = context.colorScheme;
+    final tt = context.textTheme;
+
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) => BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
         child: AlertDialog(
-          backgroundColor: isDark ? const Color(0xFF131B2E) : cs.surface,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32.r)),
+          backgroundColor: cs.surfaceContainerHigh,
+          shape: RoundedRectangleBorder(borderRadius: AppRadius.bxxl.r),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              SizedBox(height: 24.h),
+              SizedBox(height: AppSpacing.lg.h),
               Container(
                 width: 80.w,
                 height: 80.w,
-                decoration: BoxDecoration(color: isDark ? const Color(0xFF4BE277) : cs.primary, shape: BoxShape.circle),
-                child: Icon(Icons.check, color: isDark ? const Color(0xFF003915) : cs.onPrimary, size: 40),
+                decoration: BoxDecoration(color: cs.primary, shape: BoxShape.circle),
+                child: Icon(Icons.check, color: cs.onPrimary, size: 40),
               ),
-              SizedBox(height: 32.h),
+              SizedBox(height: AppSpacing.xl.h),
               Text(
                 'Booking Confirmed!',
-                style: context.theme.textTheme.headlineSmall?.copyWith(color: isDark ? Colors.white : cs.onSurface, fontWeight: FontWeight.bold),
+                style: tt.headlineSmall?.copyWith(color: cs.onSurface, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 16.h),
+              SizedBox(height: AppSpacing.md.h),
               Text(
                 'Your pitch is ready. Get your gear and start playing!',
                 textAlign: TextAlign.center,
-                style: context.theme.textTheme.bodyMedium?.copyWith(color: isDark ? const Color(0xFFBCC7DE) : cs.onSurfaceVariant),
+                style: tt.bodyMedium?.copyWith(color: cs.onSurfaceVariant),
               ),
-              SizedBox(height: 40.h),
+              SizedBox(height: AppSpacing.xxl.h),
               AppButton(
                 label: 'Go to Home',
                 isFullWidth: true,
                 onPressed: () => context.go(AppRoutes.home),
               ),
-              SizedBox(height: 12.h),
+              SizedBox(height: AppSpacing.sm.h),
             ],
           ),
         ),

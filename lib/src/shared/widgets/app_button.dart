@@ -43,7 +43,6 @@ class AppButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cs = context.theme.colorScheme;
-    final appColors = context.theme.extension<AppColorsExtension>()!;
     final isDisabled = onPressed == null || isLoading;
 
     final buttonHeight = switch (height) {
@@ -89,7 +88,7 @@ class AppButton extends StatelessWidget {
       ),
       ButtonVariant.ghost => (Colors.transparent, cs.primary, null),
       ButtonVariant.danger => (cs.error, cs.onError, null),
-      ButtonVariant.success => (appColors.success, appColors.onSuccess, null),
+      ButtonVariant.success => (context.semanticColors.success, context.semanticColors.onSuccess, null),
     };
 
     final child = AnimatedSwitcher(
@@ -131,13 +130,16 @@ class AppButton extends StatelessWidget {
     final decoration = BoxDecoration(
       color: bg,
       gradient: variant == ButtonVariant.primary && !isDisabled
-          ? const LinearGradient(
-              colors: [Color(0xFF4BE277), Color(0xFF22C55E)],
+          ? LinearGradient(
+              colors: [
+                cs.primary,
+                cs.primary.withValues(alpha: 0.8),
+              ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             )
           : null,
-      borderRadius: AppBorders.button,
+      borderRadius: AppRadius.bmd,
       border: border != null ? Border.fromBorderSide(border) : null,
     );
 
@@ -154,7 +156,7 @@ class AppButton extends StatelessWidget {
             backgroundColor: Colors.transparent,
             foregroundColor: fg,
             padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-            shape: RoundedRectangleBorder(borderRadius: AppBorders.button),
+            shape: RoundedRectangleBorder(borderRadius: AppRadius.bmd),
           ),
           child: child,
         ),

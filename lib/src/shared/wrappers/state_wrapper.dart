@@ -54,20 +54,16 @@ class StateWrapper extends StatelessWidget {
         BlocProvider(create: (_) => sl<AuthBloc>()),
 
         // Home
-        BlocProvider(create: (_) => sl<HomeCubit>()..loadHomeData()),
+        BlocProvider(create: (_) => sl<HomeCubit>()),
 
         // Pitches – list
-        BlocProvider(
-          create: (_) => sl<PitchesCubit>()..loadPitches(refresh: true),
-        ),
+        BlocProvider(create: (_) => sl<PitchesCubit>()),
 
         // Search
         BlocProvider(create: (_) => sl<SearchCubit>()),
 
         // Profile
-        BlocProvider(
-          create: (_) => sl<ProfileCubit>()..loadProfileData(),
-        ),
+        BlocProvider(create: (_) => sl<ProfileCubit>()),
 
         // Bookings – my bookings list
         BlocProvider(create: (_) => sl<BookingsCubit>()),
@@ -79,17 +75,13 @@ class StateWrapper extends StatelessWidget {
         BlocProvider(create: (_) => sl<MapsCubit>()),
 
         // Matchmaking
-        BlocProvider(
-          create: (_) => sl<MatchmakingCubit>()..loadMatches(),
-        ),
+        BlocProvider(create: (_) => sl<MatchmakingCubit>()),
 
         // Owner
         BlocProvider(create: (_) => sl<OwnerCubit>()),
 
         // Notifications
-        BlocProvider(
-          create: (_) => sl<NotificationsCubit>()..loadNotifications(),
-        ),
+        BlocProvider(create: (_) => sl<NotificationsCubit>()),
       ],
       child: child,
     );

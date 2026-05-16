@@ -9,28 +9,17 @@ class SearchResultCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final typography = context.typography;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final theme = Theme.of(context);
-    final cardBg = isDark ? const Color(0xFF131B2E) : theme.colorScheme.surfaceContainerLow;
-    final textColor = isDark ? Colors.white : theme.colorScheme.onSurface;
-    final subtitleColor = isDark ? const Color(0xFFBCC7DE) : theme.colorScheme.onSurfaceVariant;
-    final shadowColor = isDark ? Colors.black.withValues(alpha: 0.2) : theme.colorScheme.shadow.withValues(alpha: 0.05);
+    final cs = context.colorScheme;
+    final typography = context.textTheme;
 
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: EdgeInsets.only(bottom: 24.h),
+        margin: EdgeInsets.only(bottom: AppSpacing.lg.h),
         decoration: BoxDecoration(
-          color: cardBg,
-          borderRadius: BorderRadius.circular(40.r),
-          boxShadow: [
-            BoxShadow(
-              color: shadowColor,
-              blurRadius: 20,
-              offset: const Offset(0, 10),
-            ),
-          ],
+          color: cs.surface,
+          borderRadius: AppRadius.bxl.r,
+          boxShadow: AppShadows.card,
         ),
         child: Column(
           children: [
@@ -40,11 +29,14 @@ class SearchResultCard extends StatelessWidget {
                   borderRadius: BorderRadius.vertical(
                     top: Radius.circular(40.r),
                   ),
-                  child: AppCachedImage(
-                    imageUrl: pitch.imageUrl,
-                    height: 200.h,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
+                  child: Hero(
+                    tag: 'pitch_image_${pitch.id}',
+                    child: AppCachedImage(
+                      imageUrl: pitch.imageUrl,
+                      height: 200.h,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
                 Positioned(
@@ -65,22 +57,22 @@ class SearchResultCard extends StatelessWidget {
                 ),
                 Positioned(
                   bottom: 0,
-                  left: 20.w,
+                  left: AppSpacing.lg.w,
                   child: Container(
                     padding: EdgeInsets.symmetric(
-                      horizontal: 12.w,
-                      vertical: 6.h,
+                      horizontal: AppSpacing.md.w,
+                      vertical: AppSpacing.sm.h,
                     ),
                     decoration: BoxDecoration(
-                      color: isDark ? const Color(0xFF4BE277) : theme.colorScheme.primary,
+                      color: cs.primary,
                       borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(12.r),
+                        top: Radius.circular(AppRadius.md.r),
                       ),
                     ),
                     child: Text(
                       'AVAILABLE TODAY',
                       style: TextStyle(
-                        color: isDark ? const Color(0xFF003915) : theme.colorScheme.onPrimary,
+                        color: cs.onPrimary,
                         fontSize: 10.sp,
                         fontWeight: FontWeight.w900,
                       ),
@@ -90,7 +82,7 @@ class SearchResultCard extends StatelessWidget {
               ],
             ),
             Padding(
-              padding: EdgeInsets.all(24.w),
+              padding: EdgeInsets.all(AppSpacing.lg.w),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -104,24 +96,24 @@ class SearchResultCard extends StatelessWidget {
                             Text(
                               pitch.name,
                               style: typography.titleLarge?.copyWith(
-                                color: textColor,
+                                color: cs.onSurface,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            SizedBox(height: 4.h),
+                            SizedBox(height: AppSpacing.xs.h),
                             Row(
                               children: [
                                 Icon(
                                   Icons.location_on,
-                                  color: subtitleColor,
+                                  color: cs.onSurfaceVariant,
                                   size: 14,
                                 ),
-                                SizedBox(width: 4.w),
+                                SizedBox(width: AppSpacing.xs.w),
                                 Expanded(
                                   child: Text(
                                     '${pitch.location.city} • 1.2 km',
                                     style: TextStyle(
-                                      color: subtitleColor,
+                                      color: cs.onSurfaceVariant,
                                       fontSize: 12.sp,
                                     ),
                                     maxLines: 1,
@@ -135,25 +127,25 @@ class SearchResultCard extends StatelessWidget {
                       ),
                       Container(
                         padding: EdgeInsets.symmetric(
-                          horizontal: 8.w,
-                          vertical: 4.h,
+                          horizontal: AppSpacing.sm.w,
+                          vertical: AppSpacing.xs.h,
                         ),
                         decoration: BoxDecoration(
-                          color: isDark ? const Color(0xFF171F33) : theme.colorScheme.surfaceContainerHighest,
-                          borderRadius: BorderRadius.circular(8.r),
+                          color: cs.surfaceVariant,
+                          borderRadius: AppRadius.bsm.r,
                         ),
                         child: Row(
                           children: [
                             Icon(
                               Icons.star,
-                              color: isDark ? const Color(0xFF4BE277) : theme.colorScheme.primary,
+                              color: cs.primary,
                               size: 14,
                             ),
-                            SizedBox(width: 4.w),
+                            SizedBox(width: AppSpacing.xs.w),
                             Text(
                               pitch.rating.toString(),
                               style: TextStyle(
-                                color: textColor,
+                                color: cs.onSurface,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 12.sp,
                               ),
@@ -174,7 +166,7 @@ class SearchResultCard extends StatelessWidget {
                           Text(
                             'STARTING FROM',
                             style: TextStyle(
-                              color: subtitleColor,
+                              color: cs.onSurfaceVariant,
                               fontSize: 10.sp,
                               fontWeight: FontWeight.w900,
                               letterSpacing: 1,
@@ -184,14 +176,14 @@ class SearchResultCard extends StatelessWidget {
                             text: TextSpan(
                               text: pitch.pricePerHour.toInt().toString(),
                               style: typography.headlineSmall?.copyWith(
-                                color: textColor,
+                                color: cs.onSurface,
                                 fontWeight: FontWeight.w900,
                               ),
                               children: [
                                 TextSpan(
                                   text: ' EGP/HR',
                                   style: TextStyle(
-                                    color: isDark ? const Color(0xFF4BE277) : theme.colorScheme.primary,
+                                    color: cs.primary,
                                     fontSize: 12.sp,
                                     fontWeight: FontWeight.bold,
                                   ),

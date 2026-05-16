@@ -14,7 +14,7 @@ class SearchCubit extends Cubit<SearchState> {
     double? maxPrice,
     double? rating,
   }) async {
-    emit(state.copyWith(status: SearchStatus.loading));
+    emit(state.copyWith(status: SearchStatus.loading, results: [], page: 1, hasReachedMax: false));
     
     final result = await repository.searchPitches(
       query: query,
@@ -22,6 +22,7 @@ class SearchCubit extends Cubit<SearchState> {
       minPrice: minPrice,
       maxPrice: maxPrice,
       rating: rating,
+      page: 1,
     );
 
     result.fold(
@@ -32,7 +33,45 @@ class SearchCubit extends Cubit<SearchState> {
       (results) => emit(state.copyWith(
         status: SearchStatus.success,
         results: results,
+        hasReachedMax: results.length < 10,
       )),
+    );
+  }
+
+  Future<void> loadMore({
+    String? query,
+    String? sportType,
+    double? minPrice,
+    double? maxPrice,
+    double? rating,
+  }) async {
+    if (state.hasReachedMax || state.status == SearchStatus.loading) return;
+
+    final nextPage = state.page + 1;
+    
+    final result = await repository.searchPitches(
+      query: query,
+      sportType: sportType,
+      minPrice: minPrice,
+      maxPrice: maxPrice,
+      rating: rating,
+      page: nextPage,
+    );
+
+    result.fold(
+      (failure) => emit(state.copyWith(status: SearchStatus.failure, errorMessage: failure.message)),
+      (newResults) {
+        if (newResults.isEmpty) {
+          emit(state.copyWith(hasReachedMax: true));
+        } else {
+          emit(state.copyWith(
+            status: SearchStatus.success,
+            results: List.of(state.results)..addAll(newResults),
+            page: nextPage,
+            hasReachedMax: newResults.length < 10,
+          ));
+        }
+      },
     );
   }
 }

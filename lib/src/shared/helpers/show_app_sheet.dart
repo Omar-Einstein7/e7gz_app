@@ -1,4 +1,6 @@
 import 'dart:ui';
+import 'package:e7gz/src/theme/app_borders.dart';
+
 import '../../imports/imports.dart';
 
 /// Shows a highly customizable bottom sheet with premium features like backdrop blur.
@@ -23,7 +25,7 @@ Future<T?> showAppSheet<T>({
     elevation: 0,
     useSafeArea: useSafeArea,
     enableDrag: enableDrag,
-    shape: const RoundedRectangleBorder(
+    shape: RoundedRectangleBorder(
       borderRadius: AppBorders.bottomSheet,
     ),
     builder: (context) => GestureDetector(

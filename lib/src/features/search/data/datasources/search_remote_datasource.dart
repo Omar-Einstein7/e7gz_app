@@ -8,6 +8,8 @@ abstract class SearchRemoteDataSource {
     double? minPrice,
     double? maxPrice,
     double? rating,
+    int page = 1,
+    int limit = 10,
   });
 }
 
@@ -23,6 +25,8 @@ class SearchRemoteDataSourceImpl implements SearchRemoteDataSource {
     double? minPrice,
     double? maxPrice,
     double? rating,
+    int page = 1,
+    int limit = 10,
   }) async {
     final params = {
       if (query != null && query.isNotEmpty) 'search': query,
@@ -31,13 +35,13 @@ class SearchRemoteDataSourceImpl implements SearchRemoteDataSource {
       if (minPrice != null) 'minPrice': minPrice,
       if (maxPrice != null) 'maxPrice': maxPrice,
       if (rating != null) 'rating': rating,
-      'limit': 20,
+      'page': page,
+      'limit': limit,
     };
 
     final response = await dio.get('pitches', queryParameters: params);
 
     final data = response.data as Map<String, dynamic>;
-    // Robust extraction: handle { data: { pitches: [] } } or { data: [] }
     final dynamic pitchesData = data['data'];
     final List<dynamic> list = (pitchesData is Map)
         ? (pitchesData['pitches'] ?? [])

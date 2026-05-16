@@ -15,17 +15,9 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final typography = theme.textTheme;
-    final isDark = theme.brightness == Brightness.dark;
+    final cs = context.colorScheme;
+    final typography = context.textTheme;
     
-    final bgColor = isDark ? const Color(0xFF0B1326) : colorScheme.surface;
-    final primaryColor = isDark ? const Color(0xFF4BE277) : colorScheme.primary;
-    final textColor = isDark ? Colors.white : colorScheme.onSurface;
-    final secondaryTextColor = isDark ? const Color(0xFFBCC7DE) : colorScheme.onSurfaceVariant;
-    final cardColor = isDark ? const Color(0xFF131B2E) : colorScheme.surfaceContainerLow;
-
     return BlocBuilder<SessionBloc, SessionState>(
       builder: (context, state) {
         final user = state.user;
@@ -37,39 +29,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
             'https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80';
 
         return Scaffold(
-          backgroundColor: bgColor,
+          backgroundColor: cs.background,
           appBar: AppBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
             leading: IconButton(
-              icon: Icon(IconsaxPlusLinear.menu_1, color: textColor),
+              icon: Icon(IconsaxPlusLinear.menu_1, color: cs.onSurface),
               onPressed: () => Scaffold.of(context).openDrawer(),
             ),
             title: Text(
               'e7gzz',
               style: typography.headlineSmall?.copyWith(
-                color: primaryColor,
+                color: cs.primary,
                 fontWeight: FontWeight.w900,
               ),
             ),
-            centerTitle: true,
             actions: [
               Padding(
-                padding: EdgeInsets.only(right: 16.w),
+                padding: EdgeInsets.only(right: AppSpacing.md.w),
                 child: CircleAvatar(
                   radius: 18.r,
-                  backgroundColor: isDark ? const Color(0xFF2D3449) : colorScheme.surfaceContainerHighest,
+                  backgroundColor: cs.surfaceContainerHigh,
                   child: Icon(
                     IconsaxPlusBold.user,
                     size: 20,
-                    color: isDark ? Colors.white : colorScheme.onSurfaceVariant,
+                    color: cs.onSurfaceVariant,
                   ),
                 ),
               ),
             ],
           ),
           body: SingleChildScrollView(
-            padding: EdgeInsets.all(24.w),
+            padding: EdgeInsets.all(AppSpacing.lg.w),
             child: Column(
               children: [
                 // Avatar
@@ -81,7 +70,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(
-                            color: isDark ? const Color(0xFF222A3D) : colorScheme.outlineVariant,
+                            color: cs.outlineVariant,
                             width: 2,
                           ),
                         ),
@@ -96,12 +85,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: Container(
                           padding: const EdgeInsets.all(6),
                           decoration: BoxDecoration(
-                            color: primaryColor,
+                            color: cs.primary,
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
                             Icons.check,
-                            color: isDark ? const Color(0xFF003915) : colorScheme.onPrimary,
+                            color: cs.onPrimary,
                             size: 16,
                           ),
                         ),
@@ -110,12 +99,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
 
-                SizedBox(height: 16.h),
+                SizedBox(height: AppSpacing.md.h),
 
                 Text(
                   name,
                   style: typography.headlineSmall?.copyWith(
-                    color: textColor,
+                    color: cs.onSurface,
                     fontWeight: FontWeight.w900,
                     fontSize: 32.sp,
                   ),
@@ -123,26 +112,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Text(
                   email,
                   style: typography.bodyMedium?.copyWith(
-                    color: secondaryTextColor,
+                    color: cs.onSurfaceVariant,
                   ),
                 ),
 
-                SizedBox(height: 48.h),
+                SizedBox(height: AppSpacing.xxl.h),
 
                 // Loyalty Card
                 Container(
                   width: double.infinity,
-                  padding: EdgeInsets.all(32.w),
+                  padding: EdgeInsets.all(AppSpacing.xl.w),
                   decoration: BoxDecoration(
-                    color: cardColor,
-                    borderRadius: BorderRadius.circular(48.r),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.05),
-                        blurRadius: 30,
-                        offset: const Offset(0, 15),
-                      ),
-                    ],
+                    color: cs.surfaceContainerLow,
+                    borderRadius: AppRadius.bxxl.r,
+                    boxShadow: AppShadows.card,
                   ),
                   child: Stack(
                     children: [
@@ -151,7 +134,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         top: -10,
                         child: Icon(
                           Icons.star,
-                          color: isDark ? Colors.white.withValues(alpha: 0.03) : colorScheme.primary.withValues(alpha: 0.05),
+                          color: cs.primary.withValues(alpha: 0.05),
                           size: 120,
                         ),
                       ),
@@ -161,24 +144,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           Text(
                             'E7GZZ POINTS',
                             style: typography.labelSmall?.copyWith(
-                              color: secondaryTextColor,
+                              color: cs.onSurfaceVariant,
                               fontWeight: FontWeight.bold,
                               letterSpacing: 1,
                             ),
                           ),
-                          SizedBox(height: 8.h),
+                          SizedBox(height: AppSpacing.xs.h),
                           RichText(
                             text: TextSpan(
                               text: '$points ',
                               style: typography.displayMedium?.copyWith(
-                                color: primaryColor,
+                                color: cs.primary,
                                 fontWeight: FontWeight.w900,
                               ),
                               children: [
                                 TextSpan(
                                   text: 'PTS',
                                   style: TextStyle(
-                                    color: primaryColor,
+                                    color: cs.primary,
                                     fontSize: 18.sp,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -186,7 +169,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ],
                             ),
                           ),
-                          SizedBox(height: 24.h),
+                          SizedBox(height: AppSpacing.lg.h),
                           AppButton(
                             label: 'Redeem Rewards',
                             onPressed: () => context.push(AppRoutes.loyalty),
@@ -197,7 +180,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
 
-                SizedBox(height: 40.h),
+                SizedBox(height: AppSpacing.xl.h),
 
                 // Tiles
                 ProfileTile(
@@ -206,53 +189,51 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   icon: IconsaxPlusBold.calendar_1,
                   onTap: () => context.push(AppRoutes.myBookings),
                 ),
-                SizedBox(height: 16.h),
+                SizedBox(height: AppSpacing.md.h),
                 ProfileTile(
                   title: 'Loyalty Program',
                   subtitle: 'Check your tier status and benefits',
                   icon: IconsaxPlusBold.medal,
                   onTap: () => context.push(AppRoutes.loyalty),
                 ),
-                SizedBox(height: 16.h),
+                SizedBox(height: AppSpacing.md.h),
                 if ((user?.isAdmin ?? false) || (user?.isOwner ?? false)) ...[
-                  SizedBox(height: 16.h),
                   ProfileTile(
                     title: 'Owner Dashboard',
                     subtitle: 'Manage your stadiums and revenue',
                     icon: IconsaxPlusBold.element_3,
                     onTap: () => context.push(AppRoutes.ownerDashboard),
                   ),
-                  SizedBox(height: 16.h),
+                  SizedBox(height: AppSpacing.md.h),
                   ProfileTile(
                     title: 'Admin Panel',
                     subtitle: 'Full system management and reports',
                     icon: IconsaxPlusBold.shield_tick,
                     onTap: () => context.push(AppRoutes.admin),
                   ),
+                  SizedBox(height: AppSpacing.md.h),
                 ],
-
-                SizedBox(height: 16.h),
 
                 // Theme Switcher integrated directly into Settings
                 BlocBuilder<ThemeCubit, ThemeMode>(
                   builder: (context, mode) {
-                    final currentIsDark = mode == ThemeMode.dark || (mode == ThemeMode.system && MediaQuery.of(context).platformBrightness == Brightness.dark);
+                    final isDarkMode = context.isDarkMode;
                     return ProfileTile(
-                      title: currentIsDark ? 'Switch to Light Theme' : 'Switch to Dark Theme',
+                      title: isDarkMode ? 'Switch to Light Theme' : 'Switch to Dark Theme',
                       subtitle: 'Change app appearance',
-                      icon: currentIsDark ? IconsaxPlusBold.sun_1 : IconsaxPlusBold.moon,
-                      onTap: () => context.read<ThemeCubit>().setTheme(currentIsDark ? ThemeMode.light : ThemeMode.dark),
+                      icon: isDarkMode ? IconsaxPlusBold.sun_1 : IconsaxPlusBold.moon,
+                      onTap: () => context.read<ThemeCubit>().setTheme(isDarkMode ? ThemeMode.light : ThemeMode.dark),
                     );
                   },
                 ),
                 
-                SizedBox(height: 16.h),
+                SizedBox(height: AppSpacing.md.h),
                 const ProfileTile(
                   title: 'Settings',
                   subtitle: 'Privacy, notifications, and app preferences',
                   icon: IconsaxPlusBold.setting_2,
                 ),
-                SizedBox(height: 16.h),
+                SizedBox(height: AppSpacing.md.h),
                 ProfileTile(
                   title: 'Logout',
                   subtitle: 'Sign out of your account',
@@ -263,15 +244,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
 
-                SizedBox(height: 48.h),
+                SizedBox(height: AppSpacing.xxl.h),
 
                 Text(
                   'Need help with your booking?',
                   style: typography.bodySmall?.copyWith(
-                    color: secondaryTextColor,
+                    color: cs.onSurfaceVariant,
                   ),
                 ),
-                SizedBox(height: 24.h),
+                SizedBox(height: AppSpacing.lg.h),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -279,7 +260,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       label: 'SUPPORT',
                       icon: IconsaxPlusBold.headphone,
                     ),
-                    SizedBox(width: 40.w),
+                    SizedBox(width: AppSpacing.xxl.w),
                     const SupportAction(
                       label: 'FAQ',
                       icon: IconsaxPlusBold.info_circle,
