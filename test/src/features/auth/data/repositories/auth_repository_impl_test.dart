@@ -28,29 +28,30 @@ void main() {
   group('login', () {
     test('should return AppUser when login is successful', () async {
       // arrange
-      when(() => mockAuthService.login(email: tEmail, password: tPassword))
-          .thenAnswer((_) async => Right(tUserData));
+      when(
+        () => mockAuthService.login(email: tEmail, password: tPassword),
+      ).thenAnswer((_) async => Right(tUserData));
 
       // act
       final result = await repository.login(email: tEmail, password: tPassword);
 
       // assert
       expect(result.isRight(), true);
-      result.fold(
-        (l) => fail('Should not return failure'),
-        (r) {
-          expect(r.email, tEmail);
-          expect(r.name, 'Test User');
-        },
-      );
-      verify(() => mockAuthService.login(email: tEmail, password: tPassword)).called(1);
+      result.fold((l) => fail('Should not return failure'), (r) {
+        expect(r.email, tEmail);
+        expect(r.name, 'Test User');
+      });
+      verify(
+        () => mockAuthService.login(email: tEmail, password: tPassword),
+      ).called(1);
     });
 
     test('should return ServerFailure when login fails in service', () async {
       // arrange
       const tFailure = ServerFailure('Invalid credentials');
-      when(() => mockAuthService.login(email: tEmail, password: tPassword))
-          .thenAnswer((_) async => const Left(tFailure));
+      when(
+        () => mockAuthService.login(email: tEmail, password: tPassword),
+      ).thenAnswer((_) async => const Left(tFailure));
 
       // act
       final result = await repository.login(email: tEmail, password: tPassword);
@@ -63,28 +64,36 @@ void main() {
       );
     });
 
-    test('should return ServerFailure when service returns null data', () async {
-      // arrange
-      when(() => mockAuthService.login(email: tEmail, password: tPassword))
-          .thenAnswer((_) async => const Right(null));
+    test(
+      'should return ServerFailure when service returns null data',
+      () async {
+        // arrange
+        when(
+          () => mockAuthService.login(email: tEmail, password: tPassword),
+        ).thenAnswer((_) async => const Right(null));
 
-      // act
-      final result = await repository.login(email: tEmail, password: tPassword);
+        // act
+        final result = await repository.login(
+          email: tEmail,
+          password: tPassword,
+        );
 
-      // assert
-      expect(result.isLeft(), true);
-      result.fold(
-        (l) => expect(l.message, contains('User record not found')),
-        (r) => fail('Should not return user'),
-      );
-    });
+        // assert
+        expect(result.isLeft(), true);
+        result.fold(
+          (l) => expect(l.message, contains('User record not found')),
+          (r) => fail('Should not return user'),
+        );
+      },
+    );
   });
 
   group('checkAuthState', () {
     test('should return AppUser when user is authenticated', () async {
       // arrange
-      when(() => mockAuthService.getCurrentUser())
-          .thenAnswer((_) async => Right(tUserData));
+      when(
+        () => mockAuthService.getCurrentUser(),
+      ).thenAnswer((_) async => Right(tUserData));
 
       // act
       final result = await repository.checkAuthState();
@@ -96,8 +105,9 @@ void main() {
 
     test('should return null when user is not authenticated', () async {
       // arrange
-      when(() => mockAuthService.getCurrentUser())
-          .thenAnswer((_) async => const Right(null));
+      when(
+        () => mockAuthService.getCurrentUser(),
+      ).thenAnswer((_) async => const Right(null));
 
       // act
       final result = await repository.checkAuthState();

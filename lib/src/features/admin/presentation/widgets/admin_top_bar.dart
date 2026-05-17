@@ -12,7 +12,6 @@ const _titles = [
   'Profile',
 ];
 
-
 class AdminTopBar extends StatefulWidget {
   final int selectedIndex;
   final bool isDesktop;
@@ -185,15 +184,23 @@ class _AdminTopBarState extends State<AdminTopBar> {
                     width: 38,
                     height: 38,
                     decoration: BoxDecoration(
-                      color: _notificationOverlay != null ? AdminColors.surfaceHigh : Colors.transparent,
+                      color: _notificationOverlay != null
+                          ? AdminColors.surfaceHigh
+                          : Colors.transparent,
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(
-                        color: _notificationOverlay != null ? AdminColors.accent : AdminColors.border,
+                        color: _notificationOverlay != null
+                            ? AdminColors.accent
+                            : AdminColors.border,
                       ),
                     ),
                     child: Icon(
-                      _notificationOverlay != null ? IconsaxPlusBold.notification_status : IconsaxPlusBold.notification,
-                      color: _notificationOverlay != null ? AdminColors.accent : AdminColors.textSecondary,
+                      _notificationOverlay != null
+                          ? IconsaxPlusBold.notification_status
+                          : IconsaxPlusBold.notification,
+                      color: _notificationOverlay != null
+                          ? AdminColors.accent
+                          : AdminColors.textSecondary,
                       size: 18,
                     ),
                   ),

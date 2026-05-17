@@ -9,7 +9,6 @@ import 'package:latlong2/latlong.dart';
 import '../../cubit/admin_cubit.dart';
 import '../../cubit/admin_state.dart';
 
-
 class AdminBookingsTab extends StatefulWidget {
   const AdminBookingsTab({super.key});
 
@@ -17,7 +16,8 @@ class AdminBookingsTab extends StatefulWidget {
   State<AdminBookingsTab> createState() => _AdminBookingsTabState();
 }
 
-class _AdminBookingsTabState extends State<AdminBookingsTab> with AutomaticKeepAliveClientMixin {
+class _AdminBookingsTabState extends State<AdminBookingsTab>
+    with AutomaticKeepAliveClientMixin {
   @override
   void initState() {
     super.initState();
@@ -41,7 +41,8 @@ class _AdminBookingsTabState extends State<AdminBookingsTab> with AutomaticKeepA
           const SizedBox(height: 24),
           BlocBuilder<AdminCubit, AdminState>(
             builder: (context, state) {
-              if (state.bookingsStatus == AdminStatus.loading || state.bookingsStatus == AdminStatus.initial) {
+              if (state.bookingsStatus == AdminStatus.loading ||
+                  state.bookingsStatus == AdminStatus.initial) {
                 return const Center(
                   child: CircularProgressIndicator(
                     color: AdminColors.accent,
@@ -54,12 +55,22 @@ class _AdminBookingsTabState extends State<AdminBookingsTab> with AutomaticKeepA
                 return Center(
                   child: Column(
                     children: [
-                      const Icon(IconsaxPlusBold.warning_2, color: Colors.red, size: 40),
+                      const Icon(
+                        IconsaxPlusBold.warning_2,
+                        color: Colors.red,
+                        size: 40,
+                      ),
                       const SizedBox(height: 12),
-                      Text('Failed to load bookings: ${state.bookingsError}', style: const TextStyle(color: AdminColors.textSecondary)),
+                      Text(
+                        'Failed to load bookings: ${state.bookingsError}',
+                        style: const TextStyle(
+                          color: AdminColors.textSecondary,
+                        ),
+                      ),
                       const SizedBox(height: 16),
                       TextButton(
-                        onPressed: () => context.read<AdminCubit>().loadMyBookings(),
+                        onPressed: () =>
+                            context.read<AdminCubit>().loadMyBookings(),
                         child: const Text('Retry'),
                       ),
                     ],
@@ -99,11 +110,7 @@ class _AdminBookingsTabState extends State<AdminBookingsTab> with AutomaticKeepA
                       ),
                       DataCell(Text(b.pitchName)),
                       DataCell(Text(b.date)),
-                      DataCell(
-                        Text(
-                          '${b.startTime} – ${b.endTime}',
-                        ),
-                      ),
+                      DataCell(Text('${b.startTime} – ${b.endTime}')),
                       DataCell(StatusChip(label: status, color: statusColor)),
                       DataCell(
                         IconButton(
@@ -130,7 +137,9 @@ class _AdminBookingsTabState extends State<AdminBookingsTab> with AutomaticKeepA
   void _viewLocation(BuildContext context, Booking booking) {
     if (booking.pitchLatitude == null || booking.pitchLongitude == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('No location coordinates found for this pitch')),
+        const SnackBar(
+          content: Text('No location coordinates found for this pitch'),
+        ),
       );
       return;
     }

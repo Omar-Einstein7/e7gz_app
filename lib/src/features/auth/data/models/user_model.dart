@@ -19,7 +19,8 @@ class UserModel extends AppUser {
   /// Handles nested 'user' or 'data' keys and normalizes field names.
   factory UserModel.fromJson(Map<String, dynamic> json) {
     // Normalize: Handle cases where data is nested or direct
-    final Map<String, dynamic> data = json['user'] as Map<String, dynamic>? ??
+    final Map<String, dynamic> data =
+        json['user'] as Map<String, dynamic>? ??
         json['data'] as Map<String, dynamic>? ??
         json;
 

@@ -15,7 +15,12 @@ class HomeData extends Equatable {
   });
 
   @override
-  List<Object?> get props => [banners, categories, featuredPitches, nearbyPitches];
+  List<Object?> get props => [
+    banners,
+    categories,
+    featuredPitches,
+    nearbyPitches,
+  ];
 }
 
 class HomeBanner extends Equatable {
@@ -34,7 +39,11 @@ class HomeCategory extends Equatable {
   final String name;
   final String icon;
 
-  const HomeCategory({required this.id, required this.name, required this.icon});
+  const HomeCategory({
+    required this.id,
+    required this.name,
+    required this.icon,
+  });
 
   @override
   List<Object?> get props => [id, name, icon];

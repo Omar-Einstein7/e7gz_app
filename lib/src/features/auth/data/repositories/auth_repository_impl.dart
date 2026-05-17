@@ -9,20 +9,22 @@ class AuthRepositoryImpl implements AuthRepository {
   final AuthService _authService;
 
   AuthRepositoryImpl({required AuthService authService})
-      : _authService = authService;
+    : _authService = authService;
 
   @override
   Stream<AppUser?> get onAuthStateChanged {
-    return _authService.authStateChanges.map((data) => data != null ? UserModel.fromJson(data) : null);
+    return _authService.authStateChanges.map(
+      (data) => data != null ? UserModel.fromJson(data) : null,
+    );
   }
 
   @override
   FutureEither<AppUser> login({
-    required String email, 
+    required String email,
     required String password,
   }) async {
     final result = await _authService.login(email: email, password: password);
-    
+
     return result.flatMap((userData) {
       if (userData == null) {
         return left(const ServerFailure('Login failed: User record not found'));
@@ -33,8 +35,8 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   FutureEither<AppUser> signUp({
-    required String name, 
-    required String email, 
+    required String name,
+    required String email,
     required String password,
     required String phone,
     String? role,
@@ -49,7 +51,9 @@ class AuthRepositoryImpl implements AuthRepository {
 
     return result.flatMap((userData) {
       if (userData == null) {
-        return left(const ServerFailure('Sign up failed: User record corrupted'));
+        return left(
+          const ServerFailure('Sign up failed: User record corrupted'),
+        );
       }
       return right(UserModel.fromJson(userData));
     });
@@ -82,12 +86,10 @@ class AuthRepositoryImpl implements AuthRepository {
       phone: phone,
       photoPath: photoPath,
     );
-    return result.fold(
-      (failure) => left(failure),
-      (userData) {
-        if (userData == null) return left(const ServerFailure('Failed to update profile'));
-        return right(UserModel.fromJson(userData));
-      },
-    );
+    return result.fold((failure) => left(failure), (userData) {
+      if (userData == null)
+        return left(const ServerFailure('Failed to update profile'));
+      return right(UserModel.fromJson(userData));
+    });
   }
 }

@@ -1,15 +1,12 @@
 import 'dart:ui';
 
 import 'package:e7gz/src/imports/imports.dart';
+
 class AmenityItem extends StatelessWidget {
   final String label;
   final IconData icon;
 
-  const AmenityItem({
-    super.key,
-    required this.label,
-    required this.icon,
-  });
+  const AmenityItem({super.key, required this.label, required this.icon});
 
   @override
   Widget build(BuildContext context) {
@@ -39,11 +36,7 @@ class AmenityItem extends StatelessWidget {
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
               child: Center(
-                child: Icon(
-                  icon,
-                  color: const Color(0xFF4BE277),
-                  size: 26.sp,
-                ),
+                child: Icon(icon, color: const Color(0xFF4BE277), size: 26.sp),
               ),
             ),
           ),

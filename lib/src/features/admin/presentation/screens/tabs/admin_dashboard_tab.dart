@@ -14,7 +14,8 @@ class AdminDashboardTab extends StatefulWidget {
   State<AdminDashboardTab> createState() => _AdminDashboardTabState();
 }
 
-class _AdminDashboardTabState extends State<AdminDashboardTab> with AutomaticKeepAliveClientMixin {
+class _AdminDashboardTabState extends State<AdminDashboardTab>
+    with AutomaticKeepAliveClientMixin {
   @override
   void initState() {
     super.initState();
@@ -34,7 +35,11 @@ class _AdminDashboardTabState extends State<AdminDashboardTab> with AutomaticKee
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(IconsaxPlusBold.warning_2, color: Colors.red, size: 48),
+                const Icon(
+                  IconsaxPlusBold.warning_2,
+                  color: Colors.red,
+                  size: 48,
+                ),
                 const SizedBox(height: 16),
                 Text(
                   'Error loading dashboard: ${state.statsError}',
@@ -43,7 +48,8 @@ class _AdminDashboardTabState extends State<AdminDashboardTab> with AutomaticKee
                 ),
                 const SizedBox(height: 24),
                 ElevatedButton(
-                  onPressed: () => context.read<AdminCubit>().loadDashboardStats(),
+                  onPressed: () =>
+                      context.read<AdminCubit>().loadDashboardStats(),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AdminColors.accent,
                     foregroundColor: Colors.white,
@@ -56,7 +62,9 @@ class _AdminDashboardTabState extends State<AdminDashboardTab> with AutomaticKee
         }
 
         final stats = state.stats;
-        final loading = state.statsStatus == AdminStatus.loading || state.statsStatus == AdminStatus.initial;
+        final loading =
+            state.statsStatus == AdminStatus.loading ||
+            state.statsStatus == AdminStatus.initial;
 
         return SingleChildScrollView(
           padding: const EdgeInsets.all(24),
@@ -88,9 +96,7 @@ class _AdminDashboardTabState extends State<AdminDashboardTab> with AutomaticKee
                       ),
                       StatCard(
                         title: 'Bookings',
-                        value: loading
-                            ? '—'
-                            : '${stats?.totalBookings ?? '0'}',
+                        value: loading ? '—' : '${stats?.totalBookings ?? '0'}',
                         subtitle: '+8 today',
                         icon: IconsaxPlusBold.calendar_tick,
                         color: AdminColors.accentBlue,
@@ -104,9 +110,7 @@ class _AdminDashboardTabState extends State<AdminDashboardTab> with AutomaticKee
                       ),
                       StatCard(
                         title: 'Total Users',
-                        value: loading
-                            ? '—'
-                            : '${stats?.userCount ?? '0'}',
+                        value: loading ? '—' : '${stats?.userCount ?? '0'}',
                         subtitle: '+24 this week',
                         icon: IconsaxPlusBold.user_square,
                         color: AdminColors.accentPurple,

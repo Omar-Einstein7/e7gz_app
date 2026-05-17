@@ -5,7 +5,7 @@ import '../../imports/imports.dart';
 
 /// Shows a highly customizable bottom sheet with premium features like backdrop blur.
 ///
-/// This helper uses the [rootNavigatorKey] to display the sheet 
+/// This helper uses the [rootNavigatorKey] to display the sheet
 /// without needing a local [BuildContext].
 Future<T?> showAppSheet<T>({
   required Widget child,
@@ -25,9 +25,7 @@ Future<T?> showAppSheet<T>({
     elevation: 0,
     useSafeArea: useSafeArea,
     enableDrag: enableDrag,
-    shape: RoundedRectangleBorder(
-      borderRadius: AppBorders.bottomSheet,
-    ),
+    shape: RoundedRectangleBorder(borderRadius: AppBorders.bottomSheet),
     builder: (context) => GestureDetector(
       behavior: HitTestBehavior.opaque,
       child: BackdropFilter(
@@ -35,9 +33,7 @@ Future<T?> showAppSheet<T>({
           sigmaX: hasBlur ? 3 : 0,
           sigmaY: hasBlur ? 3 : 0,
         ),
-        child: SizedBox(
-          child: child,
-        ),
+        child: SizedBox(child: child),
       ),
     ),
   );

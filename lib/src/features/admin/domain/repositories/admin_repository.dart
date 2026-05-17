@@ -15,7 +15,7 @@ abstract class AdminRepository {
   FutureEither<List<AppNotification>> getNotifications();
   FutureEither<void> markNotificationsAsRead();
   FutureEither<AppUser> getProfile();
-  
+
   FutureEither<bool> createPitch(
     Map<String, dynamic> pitchData, {
     List<int>? imageBytes,

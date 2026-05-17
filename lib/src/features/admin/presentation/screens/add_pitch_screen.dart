@@ -59,12 +59,12 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
       _descriptionController.text = pitch.description;
       _sportType = pitch.sportType;
       _priceController.text = pitch.pricePerHour.toInt().toString();
-      
+
       final location = pitch.location;
       _addressController.text = location.address;
       _cityController.text = location.city;
       _selectedLocation = LatLng(location.latitude, location.longitude);
-      
+
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _mapController.move(_selectedLocation, 15);
       });
@@ -159,13 +159,17 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
       context.read<AdminCubit>().updatePitch(
         widget.pitch!.id,
         payload,
-        imageBytes: _pickedImage != null ? await _pickedImage!.readAsBytes() : null,
+        imageBytes: _pickedImage != null
+            ? await _pickedImage!.readAsBytes()
+            : null,
         fileName: _pickedImage?.name,
       );
     } else {
       context.read<AdminCubit>().createPitch(
         payload,
-        imageBytes: _pickedImage != null ? await _pickedImage!.readAsBytes() : null,
+        imageBytes: _pickedImage != null
+            ? await _pickedImage!.readAsBytes()
+            : null,
         fileName: _pickedImage?.name,
       );
     }
@@ -174,13 +178,19 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AdminCubit, AdminState>(
-      listenWhen: (previous, current) => previous.isMutating != current.isMutating || previous.mutationSuccess != current.mutationSuccess,
+      listenWhen: (previous, current) =>
+          previous.isMutating != current.isMutating ||
+          previous.mutationSuccess != current.mutationSuccess,
       listener: (context, state) {
         if (!state.isMutating) {
           if (state.mutationSuccess) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(_isEdit ? 'Pitch updated successfully!' : 'Pitch added successfully!'),
+                content: Text(
+                  _isEdit
+                      ? 'Pitch updated successfully!'
+                      : 'Pitch added successfully!',
+                ),
                 backgroundColor: AdminColors.accent,
               ),
             );
@@ -210,7 +220,10 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
               ),
               onPressed: () => context.pop(),
             ),
-            title: Text(_isEdit ? 'Edit Pitch' : 'Add New Pitch', style: AdminTextStyles.pageTitle),
+            title: Text(
+              _isEdit ? 'Edit Pitch' : 'Add New Pitch',
+              style: AdminTextStyles.pageTitle,
+            ),
             centerTitle: true,
           ),
           body: SingleChildScrollView(
@@ -272,17 +285,18 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
                               ],
                             )
                           : _pickedImage == null && _hasValidNetworkImage
-                              ? ClipRRect(
-                                  borderRadius: BorderRadius.circular(16),
-                                  child: Image.network(
-                                    widget.pitch!.images[0],
-                                    width: double.infinity,
-                                    height: 180,
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (context, error, stackTrace) => const Icon(Icons.broken_image),
-                                  ),
-                                )
-                              : Align(
+                          ? ClipRRect(
+                              borderRadius: BorderRadius.circular(16),
+                              child: Image.network(
+                                widget.pitch!.images[0],
+                                width: double.infinity,
+                                height: 180,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) =>
+                                    const Icon(Icons.broken_image),
+                              ),
+                            )
+                          : Align(
                               alignment: Alignment.topRight,
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
@@ -337,7 +351,11 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
                   Row(
                     children: [
                       Expanded(
-                        child: _buildTextField('CITY', _cityController, 'Cairo'),
+                        child: _buildTextField(
+                          'CITY',
+                          _cityController,
+                          'Cairo',
+                        ),
                       ),
                       const SizedBox(width: 16),
                       Expanded(
@@ -372,7 +390,10 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text('PITCH LOCATION', style: AdminTextStyles.label),
+                      const Text(
+                        'PITCH LOCATION',
+                        style: AdminTextStyles.label,
+                      ),
                       TextButton.icon(
                         onPressed: _getCurrentLocation,
                         icon: const Icon(
@@ -382,7 +403,10 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
                         ),
                         label: const Text(
                           'Current Location',
-                          style: TextStyle(color: AdminColors.accent, fontSize: 12),
+                          style: TextStyle(
+                            color: AdminColors.accent,
+                            fontSize: 12,
+                          ),
                         ),
                       ),
                     ],

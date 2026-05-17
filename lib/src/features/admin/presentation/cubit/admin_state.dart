@@ -111,12 +111,26 @@ class AdminState extends Equatable {
 
   @override
   List<Object?> get props => [
-        statsStatus, stats, statsError,
-        pitchesStatus, pitches, pitchesError,
-        bookingsStatus, bookings, bookingsError,
-        matchesStatus, matches, matchesError,
-        notificationsStatus, notifications, notificationsError,
-        profileStatus, profile, profileError,
-        isMutating, mutationError, mutationSuccess,
-      ];
+    statsStatus,
+    stats,
+    statsError,
+    pitchesStatus,
+    pitches,
+    pitchesError,
+    bookingsStatus,
+    bookings,
+    bookingsError,
+    matchesStatus,
+    matches,
+    matchesError,
+    notificationsStatus,
+    notifications,
+    notificationsError,
+    profileStatus,
+    profile,
+    profileError,
+    isMutating,
+    mutationError,
+    mutationSuccess,
+  ];
 }

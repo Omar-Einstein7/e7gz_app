@@ -100,12 +100,12 @@ class BookingModel extends Booking {
   }
 
   Map<String, dynamic> toJson() => {
-        'pitchId': pitchId,
-        'date': date,
-        'startTime': startTime,
-        'endTime': endTime,
-        if (notes != null) 'notes': notes,
-      };
+    'pitchId': pitchId,
+    'date': date,
+    'startTime': startTime,
+    'endTime': endTime,
+    if (notes != null) 'notes': notes,
+  };
 }
 
 class TimeSlotModel extends TimeSlot {

@@ -39,7 +39,7 @@ class VersionUpdateService {
           return;
         }
 
-        if(context.mounted){
+        if (context.mounted) {
           AppVersionUpdate.showAlertUpdate(
             appVersionResult: result,
             context: context,

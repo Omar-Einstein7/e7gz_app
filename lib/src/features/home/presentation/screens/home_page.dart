@@ -34,11 +34,17 @@ class _HomePageState extends State<HomePage> {
     final typography = context.typography;
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    
-    final bgColor = isDark ? const Color(0xFF0B1326) : theme.colorScheme.surface;
+
+    final bgColor = isDark
+        ? const Color(0xFF0B1326)
+        : theme.colorScheme.surface;
     final textColor = isDark ? Colors.white : theme.colorScheme.onSurface;
-    final searchBg = isDark ? const Color(0xFF131B2E) : theme.colorScheme.surfaceContainerLow;
-    final searchHint = isDark ? const Color(0xFFBCC7DE).withValues(alpha: 0.5) : theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5);
+    final searchBg = isDark
+        ? const Color(0xFF131B2E)
+        : theme.colorScheme.surfaceContainerLow;
+    final searchHint = isDark
+        ? const Color(0xFFBCC7DE).withValues(alpha: 0.5)
+        : theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5);
 
     return Scaffold(
       backgroundColor: bgColor,
@@ -46,7 +52,7 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-      
+
         title: Text(
           'e7gzz',
           style: typography.headlineSmall?.copyWith(
@@ -59,13 +65,18 @@ class _HomePageState extends State<HomePage> {
       body: BlocBuilder<PitchesCubit, PitchesState>(
         builder: (context, state) {
           if (state.status == PitchesStatus.loading && state.pitches.isEmpty) {
-            return Center(child: CircularProgressIndicator(color: theme.colorScheme.primary));
+            return Center(
+              child: CircularProgressIndicator(
+                color: theme.colorScheme.primary,
+              ),
+            );
           }
 
           return RefreshIndicator(
             color: theme.colorScheme.primary,
             backgroundColor: theme.colorScheme.surface,
-            onRefresh: () => context.read<PitchesCubit>().loadPitches(refresh: true),
+            onRefresh: () =>
+                context.read<PitchesCubit>().loadPitches(refresh: true),
             child: SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
               child: Column(
@@ -104,7 +115,8 @@ class _HomePageState extends State<HomePage> {
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 24.w),
                     child: GestureDetector(
-                      onTap: () => StatefulNavigationShell.of(context).goBranch(1),
+                      onTap: () =>
+                          StatefulNavigationShell.of(context).goBranch(1),
                       child: Container(
                         height: 56.h,
                         padding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -116,7 +128,9 @@ class _HomePageState extends State<HomePage> {
                           children: [
                             Icon(
                               IconsaxPlusLinear.search_normal_1,
-                              color: isDark ? const Color(0xFFBCC7DE) : theme.colorScheme.onSurfaceVariant,
+                              color: isDark
+                                  ? const Color(0xFFBCC7DE)
+                                  : theme.colorScheme.onSurfaceVariant,
                             ),
                             SizedBox(width: 12.w),
                             Expanded(
@@ -137,8 +151,6 @@ class _HomePageState extends State<HomePage> {
                   ),
 
                   SizedBox(height: 32.h),
-
-               
 
                   // Featured Section
                   HomeSectionHeader(

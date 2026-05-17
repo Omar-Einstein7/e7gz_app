@@ -6,7 +6,6 @@ import 'package:iconsax_plus/iconsax_plus.dart';
 import '../../cubit/admin_cubit.dart';
 import '../../cubit/admin_state.dart';
 
-
 class AdminNotificationsTab extends StatefulWidget {
   const AdminNotificationsTab({super.key});
 
@@ -14,7 +13,8 @@ class AdminNotificationsTab extends StatefulWidget {
   State<AdminNotificationsTab> createState() => _AdminNotificationsTabState();
 }
 
-class _AdminNotificationsTabState extends State<AdminNotificationsTab> with AutomaticKeepAliveClientMixin {
+class _AdminNotificationsTabState extends State<AdminNotificationsTab>
+    with AutomaticKeepAliveClientMixin {
   @override
   void initState() {
     super.initState();
@@ -45,7 +45,8 @@ class _AdminNotificationsTabState extends State<AdminNotificationsTab> with Auto
               ),
               const Spacer(),
               TextButton.icon(
-                onPressed: () => context.read<AdminCubit>().markNotificationsAsRead(),
+                onPressed: () =>
+                    context.read<AdminCubit>().markNotificationsAsRead(),
                 icon: const Icon(
                   IconsaxPlusBold.tick_square,
                   color: AdminColors.accent,
@@ -62,7 +63,8 @@ class _AdminNotificationsTabState extends State<AdminNotificationsTab> with Auto
           // ── List ─────────────────────────────────────────────
           BlocBuilder<AdminCubit, AdminState>(
             builder: (context, state) {
-              if (state.notificationsStatus == AdminStatus.loading || state.notificationsStatus == AdminStatus.initial) {
+              if (state.notificationsStatus == AdminStatus.loading ||
+                  state.notificationsStatus == AdminStatus.initial) {
                 return const Center(
                   child: CircularProgressIndicator(
                     color: AdminColors.accent,
@@ -75,12 +77,22 @@ class _AdminNotificationsTabState extends State<AdminNotificationsTab> with Auto
                 return Center(
                   child: Column(
                     children: [
-                      const Icon(IconsaxPlusBold.warning_2, color: Colors.red, size: 40),
+                      const Icon(
+                        IconsaxPlusBold.warning_2,
+                        color: Colors.red,
+                        size: 40,
+                      ),
                       const SizedBox(height: 12),
-                      Text('Failed to load alerts: ${state.notificationsError}', style: const TextStyle(color: AdminColors.textSecondary)),
+                      Text(
+                        'Failed to load alerts: ${state.notificationsError}',
+                        style: const TextStyle(
+                          color: AdminColors.textSecondary,
+                        ),
+                      ),
                       const SizedBox(height: 16),
                       TextButton(
-                        onPressed: () => context.read<AdminCubit>().loadNotifications(),
+                        onPressed: () =>
+                            context.read<AdminCubit>().loadNotifications(),
                         child: const Text('Retry'),
                       ),
                     ],
@@ -165,7 +177,9 @@ class _NotificationTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  notification.title.isEmpty ? 'System Update' : notification.title,
+                  notification.title.isEmpty
+                      ? 'System Update'
+                      : notification.title,
                   style: TextStyle(
                     color: AdminColors.textPrimary,
                     fontWeight: isRead ? FontWeight.w400 : FontWeight.w600,
@@ -189,7 +203,10 @@ class _NotificationTile extends StatelessWidget {
             children: [
               Text(
                 _timeAgo(notification.createdAt),
-                style: const TextStyle(color: AdminColors.textMuted, fontSize: 11),
+                style: const TextStyle(
+                  color: AdminColors.textMuted,
+                  fontSize: 11,
+                ),
               ),
               if (!isRead) ...[
                 const SizedBox(height: 6),

@@ -33,7 +33,10 @@ class FeaturedPitchesList extends StatelessWidget {
             return Center(
               child: Text(
                 'No pitches available',
-                style: TextStyle(color: const Color(0xFFBCC7DE), fontSize: 14.sp),
+                style: TextStyle(
+                  color: const Color(0xFFBCC7DE),
+                  fontSize: 14.sp,
+                ),
               ),
             );
           }
@@ -41,7 +44,9 @@ class FeaturedPitchesList extends StatelessWidget {
           return ListView.builder(
             scrollDirection: Axis.horizontal,
             padding: EdgeInsets.symmetric(horizontal: 24.w),
-            itemCount: pitches.length > 5 ? 5 : pitches.length, // Show up to 5 featured
+            itemCount: pitches.length > 5
+                ? 5
+                : pitches.length, // Show up to 5 featured
             itemBuilder: (context, index) {
               final pitch = pitches[index];
               return GestureDetector(
@@ -57,8 +62,8 @@ class FeaturedPitchesList extends StatelessWidget {
                       ClipRRect(
                         borderRadius: BorderRadius.circular(40.r),
                         child: AppCachedImage(
-                          imageUrl: pitch.imageUrl.isNotEmpty 
-                              ? pitch.imageUrl 
+                          imageUrl: pitch.imageUrl.isNotEmpty
+                              ? pitch.imageUrl
                               : 'https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80',
                           fit: BoxFit.cover,
                           width: double.infinity,
@@ -87,9 +92,14 @@ class FeaturedPitchesList extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Container(
-                              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 12.w,
+                                vertical: 6.h,
+                              ),
                               decoration: BoxDecoration(
-                                color: const Color(0xFF4BE277).withValues(alpha: 0.2),
+                                color: const Color(
+                                  0xFF4BE277,
+                                ).withValues(alpha: 0.2),
                                 borderRadius: BorderRadius.circular(100.r),
                               ),
                               child: Text(
@@ -107,16 +117,18 @@ class FeaturedPitchesList extends StatelessWidget {
                               children: [
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         pitch.name,
-                                        style: typography.headlineSmall?.copyWith(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w900,
-                                          fontSize: 28.sp,
-                                          height: 1,
-                                        ),
+                                        style: typography.headlineSmall
+                                            ?.copyWith(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w900,
+                                              fontSize: 28.sp,
+                                              height: 1,
+                                            ),
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                       ),
@@ -131,7 +143,9 @@ class FeaturedPitchesList extends StatelessWidget {
                                           SizedBox(width: 4.w),
                                           Expanded(
                                             child: Text(
-                                              pitch.location.city, // Display city instead of full location string
+                                              pitch
+                                                  .location
+                                                  .city, // Display city instead of full location string
                                               style: TextStyle(
                                                 color: const Color(0xFFBCC7DE),
                                                 fontSize: 12.sp,
@@ -188,4 +202,3 @@ class FeaturedPitchesList extends StatelessWidget {
     );
   }
 }
-

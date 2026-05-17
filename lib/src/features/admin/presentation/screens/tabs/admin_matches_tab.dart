@@ -13,7 +13,8 @@ class AdminMatchesTab extends StatefulWidget {
   State<AdminMatchesTab> createState() => _AdminMatchesTabState();
 }
 
-class _AdminMatchesTabState extends State<AdminMatchesTab> with AutomaticKeepAliveClientMixin {
+class _AdminMatchesTabState extends State<AdminMatchesTab>
+    with AutomaticKeepAliveClientMixin {
   @override
   void initState() {
     super.initState();
@@ -40,7 +41,8 @@ class _AdminMatchesTabState extends State<AdminMatchesTab> with AutomaticKeepAli
           const SizedBox(height: 24),
           BlocBuilder<AdminCubit, AdminState>(
             builder: (context, state) {
-              if (state.matchesStatus == AdminStatus.loading || state.matchesStatus == AdminStatus.initial) {
+              if (state.matchesStatus == AdminStatus.loading ||
+                  state.matchesStatus == AdminStatus.initial) {
                 return const Center(
                   child: CircularProgressIndicator(
                     color: AdminColors.accent,
@@ -53,12 +55,22 @@ class _AdminMatchesTabState extends State<AdminMatchesTab> with AutomaticKeepAli
                 return Center(
                   child: Column(
                     children: [
-                      const Icon(IconsaxPlusBold.warning_2, color: Colors.red, size: 40),
+                      const Icon(
+                        IconsaxPlusBold.warning_2,
+                        color: Colors.red,
+                        size: 40,
+                      ),
                       const SizedBox(height: 12),
-                      Text('Failed to load matches: ${state.matchesError}', style: const TextStyle(color: AdminColors.textSecondary)),
+                      Text(
+                        'Failed to load matches: ${state.matchesError}',
+                        style: const TextStyle(
+                          color: AdminColors.textSecondary,
+                        ),
+                      ),
                       const SizedBox(height: 16),
                       TextButton(
-                        onPressed: () => context.read<AdminCubit>().loadAllMatches(),
+                        onPressed: () =>
+                            context.read<AdminCubit>().loadAllMatches(),
                         child: const Text('Retry'),
                       ),
                     ],
@@ -91,11 +103,7 @@ class _AdminMatchesTabState extends State<AdminMatchesTab> with AutomaticKeepAli
                           ),
                         ),
                       ),
-                      DataCell(
-                        Text(
-                          m.sportType.toUpperCase(),
-                        ),
-                      ),
+                      DataCell(Text(m.sportType.toUpperCase())),
                       DataCell(Text('$players / $max')),
                       DataCell(Text('EGP ${m.pricePerPlayer}')),
                       DataCell(

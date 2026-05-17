@@ -35,6 +35,11 @@ class MatchmakingState extends Equatable {
   }
 
   @override
-  List<Object?> get props =>
-      [status, singleMatchStatus, matches, selectedMatch, errorMessage];
+  List<Object?> get props => [
+    status,
+    singleMatchStatus,
+    matches,
+    selectedMatch,
+    errorMessage,
+  ];
 }

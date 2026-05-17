@@ -23,7 +23,7 @@ class _NearLocationListState extends State<NearLocationList> {
 
   Future<void> _fetchLocation() async {
     try {
-      final locationService = sl <LocationService>();
+      final locationService = sl<LocationService>();
       final result = await locationService.getCurrentPosition();
       result.fold(
         (failure) {
@@ -45,8 +45,6 @@ class _NearLocationListState extends State<NearLocationList> {
 
   @override
   Widget build(BuildContext context) {
- 
-
     return SizedBox(
       height: 285.h,
       child: BlocBuilder<PitchesCubit, PitchesState>(
@@ -86,10 +84,10 @@ class _NearLocationListState extends State<NearLocationList> {
             itemBuilder: (context, index) {
               final pitch = pitches[index];
               return _NearPitchCard(
-                pitch: pitch,
-                userPosition: _userPosition,
-                isLoadingLocation: _isLoadingLocation,
-              )
+                    pitch: pitch,
+                    userPosition: _userPosition,
+                    isLoadingLocation: _isLoadingLocation,
+                  )
                   .animate(delay: (index * 100).ms)
                   .fadeIn(duration: 500.ms)
                   .moveX(begin: 30, end: 0, curve: Curves.easeOutCubic);
@@ -117,9 +115,8 @@ class _NearPitchCard extends StatelessWidget {
     final pitchTheme = context.pitchTheme;
 
     return GestureDetector(
-      onTap: () => context.push(
-        AppRoutes.pitchDetails.replaceFirst(':id', pitch.id),
-      ),
+      onTap: () =>
+          context.push(AppRoutes.pitchDetails.replaceFirst(':id', pitch.id)),
       child: Container(
         width: 275.w,
         margin: EdgeInsets.only(right: 20.w),
@@ -143,7 +140,9 @@ class _NearPitchCard extends StatelessWidget {
                 fit: StackFit.expand,
                 children: [
                   ClipRRect(
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(32.r)),
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(32.r),
+                    ),
                     child: AppCachedImage(
                       imageUrl: pitch.imageUrl.isNotEmpty
                           ? pitch.imageUrl
@@ -155,7 +154,9 @@ class _NearPitchCard extends StatelessWidget {
                   Positioned.fill(
                     child: DecoratedBox(
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.vertical(top: Radius.circular(32.r)),
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(32.r),
+                        ),
                         gradient: LinearGradient(
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
@@ -176,7 +177,10 @@ class _NearPitchCard extends StatelessWidget {
                       child: BackdropFilter(
                         filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
                         child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 12.w,
+                            vertical: 6.h,
+                          ),
                           decoration: BoxDecoration(
                             color: Colors.white.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(100.r),
@@ -198,7 +202,10 @@ class _NearPitchCard extends StatelessWidget {
                                 SizedBox(
                                   width: 12.w,
                                   height: 12.h,
-                                  child: const CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                                  child: const CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: Colors.white,
+                                  ),
                                 )
                               else
                                 Text(
@@ -245,7 +252,11 @@ class _NearPitchCard extends StatelessWidget {
                         SizedBox(height: 6.h),
                         Row(
                           children: [
-                            Icon(IconsaxPlusLinear.map_1, color: const Color(0xFFBCC7DE), size: 14),
+                            Icon(
+                              IconsaxPlusLinear.map_1,
+                              color: const Color(0xFFBCC7DE),
+                              size: 14,
+                            ),
                             SizedBox(width: 4.w),
                             Expanded(
                               child: Text(
@@ -304,7 +315,7 @@ class _NearPitchCard extends StatelessWidget {
 
   String _getDistanceText() {
     if (userPosition == null) return '-- KM';
-    
+
     try {
       final distanceInMeters = Geolocator.distanceBetween(
         userPosition!.latitude,
@@ -312,7 +323,7 @@ class _NearPitchCard extends StatelessWidget {
         pitch.location.latitude,
         pitch.location.longitude,
       );
-      
+
       final km = distanceInMeters / 1000;
       return '${km.toStringAsFixed(1)} KM';
     } catch (_) {
@@ -350,4 +361,3 @@ class _AvailabilityBadge extends StatelessWidget {
     );
   }
 }
-

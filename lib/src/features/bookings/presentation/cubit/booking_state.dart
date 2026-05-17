@@ -68,8 +68,13 @@ class SlotsState extends Equatable {
   }
 
   @override
-  List<Object?> get props =>
-      [status, slots, selectedSlot, selectedDate, errorMessage];
+  List<Object?> get props => [
+    status,
+    slots,
+    selectedSlot,
+    selectedDate,
+    errorMessage,
+  ];
 }
 
 // ─── Create Booking State ─────────────────────────────────────────────────────

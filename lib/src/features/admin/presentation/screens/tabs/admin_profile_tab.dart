@@ -13,7 +13,8 @@ class AdminProfileTab extends StatefulWidget {
   State<AdminProfileTab> createState() => _AdminProfileTabState();
 }
 
-class _AdminProfileTabState extends State<AdminProfileTab> with AutomaticKeepAliveClientMixin {
+class _AdminProfileTabState extends State<AdminProfileTab>
+    with AutomaticKeepAliveClientMixin {
   @override
   void initState() {
     super.initState();
@@ -33,7 +34,8 @@ class _AdminProfileTabState extends State<AdminProfileTab> with AutomaticKeepAli
           constraints: const BoxConstraints(maxWidth: 600),
           child: BlocBuilder<AdminCubit, AdminState>(
             builder: (context, state) {
-              if (state.profileStatus == AdminStatus.loading || state.profileStatus == AdminStatus.initial) {
+              if (state.profileStatus == AdminStatus.loading ||
+                  state.profileStatus == AdminStatus.initial) {
                 return const Center(
                   child: CircularProgressIndicator(
                     color: AdminColors.accent,
@@ -46,12 +48,22 @@ class _AdminProfileTabState extends State<AdminProfileTab> with AutomaticKeepAli
                 return Center(
                   child: Column(
                     children: [
-                      const Icon(IconsaxPlusBold.warning_2, color: Colors.red, size: 40),
+                      const Icon(
+                        IconsaxPlusBold.warning_2,
+                        color: Colors.red,
+                        size: 40,
+                      ),
                       const SizedBox(height: 12),
-                      Text('Failed to load profile: ${state.profileError}', style: const TextStyle(color: AdminColors.textSecondary)),
+                      Text(
+                        'Failed to load profile: ${state.profileError}',
+                        style: const TextStyle(
+                          color: AdminColors.textSecondary,
+                        ),
+                      ),
                       const SizedBox(height: 16),
                       TextButton(
-                        onPressed: () => context.read<AdminCubit>().loadProfile(),
+                        onPressed: () =>
+                            context.read<AdminCubit>().loadProfile(),
                         child: const Text('Retry'),
                       ),
                     ],
@@ -62,7 +74,10 @@ class _AdminProfileTabState extends State<AdminProfileTab> with AutomaticKeepAli
               final profile = state.profile;
               if (profile == null) {
                 return const Center(
-                  child: Text('No profile found', style: TextStyle(color: AdminColors.textSecondary)),
+                  child: Text(
+                    'No profile found',
+                    style: TextStyle(color: AdminColors.textSecondary),
+                  ),
                 );
               }
 
@@ -111,15 +126,9 @@ class _AdminProfileTabState extends State<AdminProfileTab> with AutomaticKeepAli
                           ),
                         ),
                         const SizedBox(height: 16),
-                        Text(
-                          userName,
-                          style: AdminTextStyles.pageTitle,
-                        ),
+                        Text(userName, style: AdminTextStyles.pageTitle),
                         const SizedBox(height: 4),
-                        Text(
-                          userEmail,
-                          style: AdminTextStyles.label,
-                        ),
+                        Text(userEmail, style: AdminTextStyles.label),
                         const SizedBox(height: 4),
                         Container(
                           padding: const EdgeInsets.symmetric(

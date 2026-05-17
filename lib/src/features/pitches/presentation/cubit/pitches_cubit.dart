@@ -11,9 +11,9 @@ class PitchesCubit extends Cubit<PitchesState> {
   PitchesCubit({
     required GetPitchesUseCase getPitches,
     required GetNearbyPitchesUseCase getNearbyPitches,
-  })  : _getPitches = getPitches,
-        _getNearbyPitches = getNearbyPitches,
-        super(const PitchesState());
+  }) : _getPitches = getPitches,
+       _getNearbyPitches = getNearbyPitches,
+       super(const PitchesState());
 
   // ─── Current filter cache (for pagination) ────────────────────────────────
   String? _search;
@@ -59,21 +59,25 @@ class PitchesCubit extends Cubit<PitchesState> {
     );
 
     result.fold(
-      (failure) => emit(state.copyWith(
-        status: PitchesStatus.failure,
-        errorMessage: failure.message,
-        isLoadingMore: false,
-      )),
+      (failure) => emit(
+        state.copyWith(
+          status: PitchesStatus.failure,
+          errorMessage: failure.message,
+          isLoadingMore: false,
+        ),
+      ),
       (pitchResult) {
         final allPitches = page == 1
             ? pitchResult.pitches
             : [...state.pitches, ...pitchResult.pitches];
-        emit(state.copyWith(
-          status: PitchesStatus.success,
-          pitches: allPitches,
-          result: pitchResult,
-          isLoadingMore: false,
-        ));
+        emit(
+          state.copyWith(
+            status: PitchesStatus.success,
+            pitches: allPitches,
+            result: pitchResult,
+            isLoadingMore: false,
+          ),
+        );
       },
     );
   }
@@ -103,14 +107,14 @@ class PitchDetailCubit extends Cubit<PitchDetailState> {
     emit(state.copyWith(status: PitchDetailStatus.loading));
     final result = await _getPitchDetails(pitchId);
     result.fold(
-      (failure) => emit(state.copyWith(
-        status: PitchDetailStatus.failure,
-        errorMessage: failure.message,
-      )),
-      (pitch) => emit(state.copyWith(
-        status: PitchDetailStatus.success,
-        pitch: pitch,
-      )),
+      (failure) => emit(
+        state.copyWith(
+          status: PitchDetailStatus.failure,
+          errorMessage: failure.message,
+        ),
+      ),
+      (pitch) =>
+          emit(state.copyWith(status: PitchDetailStatus.success, pitch: pitch)),
     );
   }
 }

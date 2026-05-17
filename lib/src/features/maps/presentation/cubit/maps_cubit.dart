@@ -11,10 +11,10 @@ class MapsCubit extends Cubit<MapsState> {
     required GetRouteUseCase getRoute,
     required GeocodeUseCase geocode,
     required ReverseGeocodeUseCase reverseGeocode,
-  })  : _getRoute = getRoute,
-        _geocode = geocode,
-        _reverseGeocode = reverseGeocode,
-        super(const MapsState());
+  }) : _getRoute = getRoute,
+       _geocode = geocode,
+       _reverseGeocode = reverseGeocode,
+       super(const MapsState());
 
   /// Fetch driving route to pitch location.
   Future<void> fetchRoute({
@@ -33,37 +33,40 @@ class MapsCubit extends Cubit<MapsState> {
       profile: profile,
     );
     result.fold(
-      (failure) => emit(state.copyWith(
-        routeStatus: MapsStatus.failure,
-        errorMessage: failure.message,
-      )),
-      (route) => emit(state.copyWith(
-        routeStatus: MapsStatus.success,
-        route: route,
-      )),
+      (failure) => emit(
+        state.copyWith(
+          routeStatus: MapsStatus.failure,
+          errorMessage: failure.message,
+        ),
+      ),
+      (route) =>
+          emit(state.copyWith(routeStatus: MapsStatus.success, route: route)),
     );
   }
 
   /// Search for places by address text.
   Future<void> search(String address) async {
     if (address.trim().isEmpty) {
-      emit(state.copyWith(
-        geocodeStatus: MapsStatus.initial,
-        geocodeResults: [],
-      ));
+      emit(
+        state.copyWith(geocodeStatus: MapsStatus.initial, geocodeResults: []),
+      );
       return;
     }
     emit(state.copyWith(geocodeStatus: MapsStatus.loading));
     final result = await _geocode(address);
     result.fold(
-      (failure) => emit(state.copyWith(
-        geocodeStatus: MapsStatus.failure,
-        errorMessage: failure.message,
-      )),
-      (places) => emit(state.copyWith(
-        geocodeStatus: MapsStatus.success,
-        geocodeResults: places,
-      )),
+      (failure) => emit(
+        state.copyWith(
+          geocodeStatus: MapsStatus.failure,
+          errorMessage: failure.message,
+        ),
+      ),
+      (places) => emit(
+        state.copyWith(
+          geocodeStatus: MapsStatus.success,
+          geocodeResults: places,
+        ),
+      ),
     );
   }
 

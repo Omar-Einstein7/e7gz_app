@@ -15,7 +15,10 @@ enum ResetMethod { email, sms }
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   ResetMethod _selectedMethod = ResetMethod.email;
   bool _codeSent = false;
-  final List<TextEditingController> _otpControllers = List.generate(6, (_) => TextEditingController());
+  final List<TextEditingController> _otpControllers = List.generate(
+    6,
+    (_) => TextEditingController(),
+  );
   final List<FocusNode> _otpFocusNodes = List.generate(6, (_) => FocusNode());
 
   @override
@@ -85,9 +88,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               padding: EdgeInsets.symmetric(horizontal: 32.w),
               child: Column(
                 children: [
-                   SizedBox(height: 20.h),
-                   // Brand
-                   Text(
+                  SizedBox(height: 20.h),
+                  // Brand
+                  Text(
                     'e7gzz',
                     style: tt.displaySmall?.copyWith(
                       color: cs.primary,
@@ -95,9 +98,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       letterSpacing: -2,
                     ),
                   ),
-                  
+
                   SizedBox(height: 48.h),
-                  
+
                   // Icon
                   Container(
                     width: 80.w,
@@ -114,9 +117,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       ),
                     ),
                   ),
-                  
+
                   SizedBox(height: 32.h),
-                  
+
                   // Text
                   Text(
                     'auth.forgot_password_title'.tr(),
@@ -135,9 +138,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       height: 1.5,
                     ),
                   ),
-                  
+
                   SizedBox(height: 40.h),
-                  
+
                   // Method Cards
                   methodCard(
                     method: ResetMethod.email,
@@ -145,22 +148,24 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     value: 'a***n@domain.com',
                     icon: IconsaxPlusBold.sms,
                     isSelected: _selectedMethod == ResetMethod.email,
-                    onTap: () => setState(() => _selectedMethod = ResetMethod.email),
+                    onTap: () =>
+                        setState(() => _selectedMethod = ResetMethod.email),
                   ),
-                  
+
                   SizedBox(height: 16.h),
-                  
+
                   methodCard(
                     method: ResetMethod.sms,
                     title: 'auth.via_sms'.tr(),
                     value: '010 **** 5567',
                     icon: IconsaxPlusBold.messages_1,
                     isSelected: _selectedMethod == ResetMethod.sms,
-                    onTap: () => setState(() => _selectedMethod = ResetMethod.sms),
+                    onTap: () =>
+                        setState(() => _selectedMethod = ResetMethod.sms),
                   ),
-                  
+
                   SizedBox(height: 40.h),
-                  
+
                   // Verification Section
                   Container(
                     padding: EdgeInsets.all(32.w),
@@ -179,27 +184,31 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         ),
                         SizedBox(height: 12.h),
                         Text(
-                          'auth.sent_verification_code'.tr(namedArgs: {
-                            'method': _selectedMethod == ResetMethod.email
-                                ? 'auth.email'.tr()
-                                : 'auth.mobile_number'.tr()
-                          }),
+                          'auth.sent_verification_code'.tr(
+                            namedArgs: {
+                              'method': _selectedMethod == ResetMethod.email
+                                  ? 'auth.email'.tr()
+                                  : 'auth.mobile_number'.tr(),
+                            },
+                          ),
                           textAlign: TextAlign.center,
                           style: tt.bodySmall?.copyWith(
-                            color: const Color(0xFFBCC7DE).withValues(alpha: 0.7),
+                            color: const Color(
+                              0xFFBCC7DE,
+                            ).withValues(alpha: 0.7),
                           ),
                         ),
-                        
+
                         SizedBox(height: 32.h),
-                        
+
                         // OTP Inputs
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: List.generate(6, (index) => otpBox(index)),
                         ),
-                        
+
                         SizedBox(height: 40.h),
-                        
+
                         AppButton(
                           label: 'auth.verify_continue'.tr(),
                           isFullWidth: true,
@@ -210,9 +219,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                             _showNewPasswordSheet();
                           },
                         ),
-                        
+
                         SizedBox(height: 24.h),
-                        
+
                         Text(
                           'auth.resend_code'.tr(namedArgs: {'time': '00:59'}),
                           style: tt.labelSmall?.copyWith(
@@ -224,9 +233,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       ],
                     ),
                   ),
-                  
+
                   SizedBox(height: 48.h),
-                  
+
                   // Back to Login
                   TextButton.icon(
                     onPressed: () => context.go(AppRoutes.login),
@@ -239,9 +248,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       ),
                     ),
                   ),
-                  
+
                   SizedBox(height: 16.h),
-                  
+
                   Text(
                     'PITCH READY SECURITY',
                     style: tt.labelSmall?.copyWith(
@@ -250,7 +259,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       letterSpacing: 2,
                     ),
                   ),
-                  
+
                   SizedBox(height: 40.h),
                 ],
               ),
@@ -277,7 +286,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           color: const Color(0xFF171F33),
           borderRadius: BorderRadius.circular(24.r),
           border: Border.all(
-            color: isSelected ? const Color(0xFF4BE277).withValues(alpha: 0.5) : Colors.transparent,
+            color: isSelected
+                ? const Color(0xFF4BE277).withValues(alpha: 0.5)
+                : Colors.transparent,
             width: 2,
           ),
         ),
@@ -319,20 +330,24 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: isSelected ? const Color(0xFF4BE277) : const Color(0xFF31394D),
+                  color: isSelected
+                      ? const Color(0xFF4BE277)
+                      : const Color(0xFF31394D),
                   width: 2,
                 ),
               ),
-              child: isSelected ? Center(
-                child: Container(
-                  width: 12.w,
-                  height: 12.w,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFF4BE277),
-                    shape: BoxShape.circle,
-                  ),
-                ),
-              ) : null,
+              child: isSelected
+                  ? Center(
+                      child: Container(
+                        width: 12.w,
+                        height: 12.w,
+                        decoration: const BoxDecoration(
+                          color: Color(0xFF4BE277),
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    )
+                  : null,
             ),
           ],
         ),
@@ -347,10 +362,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       decoration: BoxDecoration(
         color: const Color(0xFF171F33),
         borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(
-          color: const Color(0xFF31394D),
-          width: 1,
-        ),
+        border: Border.all(color: const Color(0xFF31394D), width: 1),
       ),
       child: TextField(
         controller: _otpControllers[index],
@@ -381,7 +393,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
       ),
       builder: (context) => Padding(
-        padding: EdgeInsets.fromLTRB(32.w, 32.h, 32.w, MediaQuery.of(context).viewInsets.bottom + 48.h),
+        padding: EdgeInsets.fromLTRB(
+          32.w,
+          32.h,
+          32.w,
+          MediaQuery.of(context).viewInsets.bottom + 48.h,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -396,13 +413,20 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             SizedBox(height: 8.h),
             Text(
               'auth.set_new_password_desc'.tr(),
-              style: context.theme.textTheme.bodySmall?.copyWith(color: const Color(0xFFBCC7DE)),
+              style: context.theme.textTheme.bodySmall?.copyWith(
+                color: const Color(0xFFBCC7DE),
+              ),
             ),
             SizedBox(height: 32.h),
-            
+
             Text(
               'auth.new_password_label'.tr().toUpperCase(),
-              style: const TextStyle(color: Color(0xFFBCC7DE), fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 1),
+              style: const TextStyle(
+                color: Color(0xFFBCC7DE),
+                fontSize: 10,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1,
+              ),
             ),
             SizedBox(height: 8.h),
             const AppTextField(
@@ -410,12 +434,17 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               obscureText: true,
               prefixIcon: Icon(IconsaxPlusBold.lock),
             ),
-            
+
             SizedBox(height: 24.h),
-            
+
             Text(
               'auth.confirm_new_password_label'.tr().toUpperCase(),
-              style: const TextStyle(color: Color(0xFFBCC7DE), fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 1),
+              style: const TextStyle(
+                color: Color(0xFFBCC7DE),
+                fontSize: 10,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1,
+              ),
             ),
             SizedBox(height: 8.h),
             const AppTextField(
@@ -423,9 +452,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               obscureText: true,
               prefixIcon: Icon(IconsaxPlusBold.lock),
             ),
-            
+
             SizedBox(height: 40.h),
-            
+
             AppButton(
               label: 'auth.reset_password_button'.tr(),
               isFullWidth: true,

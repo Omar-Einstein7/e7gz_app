@@ -37,19 +37,22 @@ class OwnerCubit extends Cubit<OwnerState> {
       (pitches) => finalPitches = pitches,
     );
 
-    emit(state.copyWith(
-      status: error != null ? OwnerStatus.failure : OwnerStatus.success,
-      stats: finalStats,
-      myPitches: finalPitches,
-      errorMessage: error,
-    ));
+    emit(
+      state.copyWith(
+        status: error != null ? OwnerStatus.failure : OwnerStatus.success,
+        stats: finalStats,
+        myPitches: finalPitches,
+        errorMessage: error,
+      ),
+    );
   }
 
   Future<void> refreshPitches() async {
     final result = await repository.getOwnerPitches();
     result.fold(
       (failure) => emit(state.copyWith(errorMessage: failure.message)),
-      (pitches) => emit(state.copyWith(myPitches: pitches, status: OwnerStatus.success)),
+      (pitches) =>
+          emit(state.copyWith(myPitches: pitches, status: OwnerStatus.success)),
     );
   }
 
@@ -65,7 +68,12 @@ class OwnerCubit extends Cubit<OwnerState> {
     emit(state.copyWith(status: OwnerStatus.loading));
     final result = await repository.deletePitch(pitchId);
     result.fold(
-      (failure) => emit(state.copyWith(errorMessage: failure.message, status: OwnerStatus.failure)),
+      (failure) => emit(
+        state.copyWith(
+          errorMessage: failure.message,
+          status: OwnerStatus.failure,
+        ),
+      ),
       (_) async {
         await refreshPitches();
       },

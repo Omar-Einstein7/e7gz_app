@@ -59,7 +59,10 @@ class BookingRepositoryImpl implements BookingRepository {
     required String date,
   }) async {
     return runTask(() async {
-      final slots = await _remote.getAvailableSlots(pitchId: pitchId, date: date);
+      final slots = await _remote.getAvailableSlots(
+        pitchId: pitchId,
+        date: date,
+      );
       return slots;
     }, requiresNetwork: true);
   }

@@ -103,36 +103,40 @@ class _OnboardingPageState extends State<OnboardingPage> {
                                     right: -40.w,
                                     left: 20.w,
                                     bottom: 20.h,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(48.r),
-                                          bottomLeft: Radius.circular(48.r),
-                                        ),
-                                        image: DecorationImage(
-                                          image: AssetImage(
-                                            item['image'] as String,
-                                          ),
-                                          fit: BoxFit.cover,
-                                        ),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.black.withValues(
-                                              alpha: 0.4,
+                                    child:
+                                        Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.only(
+                                                  topLeft: Radius.circular(
+                                                    48.r,
+                                                  ),
+                                                  bottomLeft: Radius.circular(
+                                                    48.r,
+                                                  ),
+                                                ),
+                                                image: DecorationImage(
+                                                  image: AssetImage(
+                                                    item['image'] as String,
+                                                  ),
+                                                  fit: BoxFit.cover,
+                                                ),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.black
+                                                        .withValues(alpha: 0.4),
+                                                    blurRadius: 30,
+                                                    offset: const Offset(0, 15),
+                                                  ),
+                                                ],
+                                              ),
+                                            )
+                                            .animate()
+                                            .fadeIn(duration: 600.ms)
+                                            .slideX(
+                                              begin: 0.2,
+                                              end: 0,
+                                              curve: Curves.easeOutCubic,
                                             ),
-                                            blurRadius: 30,
-                                            offset: const Offset(0, 15),
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                        .animate()
-                                        .fadeIn(duration: 600.ms)
-                                        .slideX(
-                                          begin: 0.2,
-                                          end: 0,
-                                          curve: Curves.easeOutCubic,
-                                        ),
                                   ),
                                 ],
                               ),
@@ -150,12 +154,13 @@ class _OnboardingPageState extends State<OnboardingPage> {
                                   children: [
                                     Text(
                                           (item['titleKey'] as String).tr(),
-                                          style: textTheme.displayMedium?.copyWith(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w900,
-                                            fontSize: 28.sp,
-                                            height: 1.1,
-                                          ),
+                                          style: textTheme.displayMedium
+                                              ?.copyWith(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w900,
+                                                fontSize: 28.sp,
+                                                height: 1.1,
+                                              ),
                                         )
                                         .animate()
                                         .fadeIn(delay: 200.ms, duration: 500.ms)

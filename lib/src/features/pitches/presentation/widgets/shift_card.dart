@@ -1,4 +1,5 @@
 import 'package:e7gz/src/imports/imports.dart';
+
 class ShiftCard extends StatelessWidget {
   final String title;
   final String subtitle;
@@ -23,51 +24,55 @@ class ShiftCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final typography = context.typography;
     final colors = context.colors;
-    
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.all(24.w),
         decoration: BoxDecoration(
-          color: isSelected 
-            ? const Color(0xFF1D2942)
-            : const Color(0xFF131B2E),
+          color: isSelected ? const Color(0xFF1D2942) : const Color(0xFF131B2E),
           borderRadius: BorderRadius.circular(32.r),
           border: Border.all(
-            color: isSelected 
-              ? const Color(0xFF4BE277).withValues(alpha: 0.5) 
-              : Colors.white.withValues(alpha: 0.05),
+            color: isSelected
+                ? const Color(0xFF4BE277).withValues(alpha: 0.5)
+                : Colors.white.withValues(alpha: 0.05),
             width: 1.5,
           ),
-          gradient: isSelected ? LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              const Color(0xFF4BE277).withValues(alpha: 0.1),
-              Colors.transparent,
-            ],
-          ) : null,
-          boxShadow: isSelected ? [
-            BoxShadow(
-              color: const Color(0xFF4BE277).withValues(alpha: 0.1),
-              blurRadius: 20,
-              offset: const Offset(0, 10),
-            ),
-          ] : null,
+          gradient: isSelected
+              ? LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    const Color(0xFF4BE277).withValues(alpha: 0.1),
+                    Colors.transparent,
+                  ],
+                )
+              : null,
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: const Color(0xFF4BE277).withValues(alpha: 0.1),
+                    blurRadius: 20,
+                    offset: const Offset(0, 10),
+                  ),
+                ]
+              : null,
         ),
         child: Row(
           children: [
             Container(
               padding: EdgeInsets.all(12.w),
               decoration: BoxDecoration(
-                color: isSelected 
-                  ? const Color(0xFF4BE277).withValues(alpha: 0.1) 
-                  : const Color(0xFF171F33),
+                color: isSelected
+                    ? const Color(0xFF4BE277).withValues(alpha: 0.1)
+                    : const Color(0xFF171F33),
                 borderRadius: BorderRadius.circular(16.r),
               ),
               child: Icon(
                 icon,
-                color: isSelected ? const Color(0xFF4BE277) : const Color(0xFFBCC7DE),
+                color: isSelected
+                    ? const Color(0xFF4BE277)
+                    : const Color(0xFFBCC7DE),
                 size: 24.sp,
               ),
             ),
@@ -79,7 +84,9 @@ class ShiftCard extends StatelessWidget {
                   Text(
                     subtitle.toUpperCase(),
                     style: typography.labelSmall?.copyWith(
-                      color: isSelected ? const Color(0xFF4BE277) : const Color(0xFFBCC7DE),
+                      color: isSelected
+                          ? const Color(0xFF4BE277)
+                          : const Color(0xFFBCC7DE),
                       fontWeight: FontWeight.w900,
                       letterSpacing: 1.5,
                       fontSize: 10.sp,

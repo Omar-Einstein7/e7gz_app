@@ -20,18 +20,15 @@ abstract class AuthRepository {
     String? role,
   });
 
-
   /// Send a password reset email
-  FutureEither<void> forgotPassword({
-    required String email,
-  });
+  FutureEither<void> forgotPassword({required String email});
 
   /// Sign out the current user
   FutureEither<void> logout();
-  
+
   /// Check if the user is currently authenticated natively
   FutureEither<AppUser?> checkAuthState();
-  
+
   /// Update current user profile
   FutureEither<AppUser> updateProfile({
     String? name,
@@ -39,4 +36,3 @@ abstract class AuthRepository {
     String? photoPath,
   });
 }
-

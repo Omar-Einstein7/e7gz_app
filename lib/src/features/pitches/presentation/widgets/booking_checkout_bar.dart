@@ -73,7 +73,7 @@ class BookingCheckoutBar extends StatelessWidget {
           ),
           SizedBox(height: AppSpacing.lg.h),
           _ConfirmButton(
-            pitchId: pitchId, 
+            pitchId: pitchId,
             extraPitch: extraPitch,
             isFullPayment: isFullPayment,
           ),
@@ -90,11 +90,7 @@ class _TicketIcon extends StatelessWidget {
     return CircleAvatar(
       radius: 20.r,
       backgroundColor: cs.surfaceContainerHigh,
-      child: Icon(
-        IconsaxPlusBold.ticket,
-        color: cs.primary,
-        size: 20,
-      ),
+      child: Icon(IconsaxPlusBold.ticket, color: cs.primary, size: 20),
     );
   }
 }
@@ -105,7 +101,7 @@ class _ConfirmButton extends StatelessWidget {
   final bool isFullPayment;
 
   const _ConfirmButton({
-    required this.pitchId, 
+    required this.pitchId,
     this.extraPitch,
     required this.isFullPayment,
   });
@@ -115,12 +111,15 @@ class _ConfirmButton extends StatelessWidget {
     final cs = context.colorScheme;
     return BlocListener<CreateBookingCubit, CreateBookingState>(
       listener: (context, state) {
-        if (state.status == CreateBookingStatus.success && state.createdBooking != null) {
+        if (state.status == CreateBookingStatus.success &&
+            state.createdBooking != null) {
           final booking = state.createdBooking!;
           final pitch = extraPitch is Pitch ? extraPitch as Pitch : null;
-          
-          final amountToPayNow = isFullPayment ? booking.totalPrice : (booking.totalPrice * 0.3);
-          
+
+          final amountToPayNow = isFullPayment
+              ? booking.totalPrice
+              : (booking.totalPrice * 0.3);
+
           context.push(
             AppRoutes.paymentCheckout,
             extra: {
@@ -134,7 +133,9 @@ class _ConfirmButton extends StatelessWidget {
         } else if (state.status == CreateBookingStatus.failure) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(state.errorMessage ?? 'booking_slots.failed_booking'.tr()),
+              content: Text(
+                state.errorMessage ?? 'booking_slots.failed_booking'.tr(),
+              ),
               backgroundColor: cs.error,
             ),
           );
@@ -143,7 +144,7 @@ class _ConfirmButton extends StatelessWidget {
       child: BlocBuilder<CreateBookingCubit, CreateBookingState>(
         builder: (context, state) {
           final slotsCubit = context.read<SlotsCubit>();
-          
+
           return AppButton(
             label: state.status == CreateBookingStatus.loading
                 ? 'booking_slots.creating'.tr()
@@ -155,7 +156,9 @@ class _ConfirmButton extends StatelessWidget {
               final selectedSlot = slotsCubit.state.selectedSlot;
               if (selectedSlot == null) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('booking_slots.select_slot_warning'.tr())),
+                  SnackBar(
+                    content: Text('booking_slots.select_slot_warning'.tr()),
+                  ),
                 );
                 return;
               }

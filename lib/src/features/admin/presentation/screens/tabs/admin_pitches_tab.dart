@@ -15,7 +15,8 @@ class AdminPitchesTab extends StatefulWidget {
   State<AdminPitchesTab> createState() => _AdminPitchesTabState();
 }
 
-class _AdminPitchesTabState extends State<AdminPitchesTab> with AutomaticKeepAliveClientMixin {
+class _AdminPitchesTabState extends State<AdminPitchesTab>
+    with AutomaticKeepAliveClientMixin {
   @override
   void initState() {
     super.initState();
@@ -80,7 +81,8 @@ class _AdminPitchesTabState extends State<AdminPitchesTab> with AutomaticKeepAli
           // ── Table ─────────────────────────────────────────────
           BlocBuilder<AdminCubit, AdminState>(
             builder: (context, state) {
-              if (state.pitchesStatus == AdminStatus.loading || state.pitchesStatus == AdminStatus.initial) {
+              if (state.pitchesStatus == AdminStatus.loading ||
+                  state.pitchesStatus == AdminStatus.initial) {
                 return const Center(
                   child: CircularProgressIndicator(
                     color: AdminColors.accent,
@@ -88,17 +90,27 @@ class _AdminPitchesTabState extends State<AdminPitchesTab> with AutomaticKeepAli
                   ),
                 );
               }
-              
+
               if (state.pitchesStatus == AdminStatus.failure) {
                 return Center(
                   child: Column(
                     children: [
-                      const Icon(IconsaxPlusBold.warning_2, color: Colors.red, size: 40),
+                      const Icon(
+                        IconsaxPlusBold.warning_2,
+                        color: Colors.red,
+                        size: 40,
+                      ),
                       const SizedBox(height: 12),
-                      Text('Failed to load pitches: ${state.pitchesError}', style: const TextStyle(color: AdminColors.textSecondary)),
+                      Text(
+                        'Failed to load pitches: ${state.pitchesError}',
+                        style: const TextStyle(
+                          color: AdminColors.textSecondary,
+                        ),
+                      ),
                       const SizedBox(height: 16),
                       TextButton(
-                        onPressed: () => context.read<AdminCubit>().loadAllPitches(),
+                        onPressed: () =>
+                            context.read<AdminCubit>().loadAllPitches(),
                         child: const Text('Retry'),
                       ),
                     ],
@@ -131,10 +143,7 @@ class _AdminPitchesTabState extends State<AdminPitchesTab> with AutomaticKeepAli
                       DataCell(Text(p.location.city)),
                       DataCell(Text('EGP ${p.pricePerHour}')),
                       const DataCell(
-                        StatusChip(
-                          label: 'Active',
-                          color: AdminColors.accent,
-                        ),
+                        StatusChip(label: 'Active', color: AdminColors.accent),
                       ),
                       DataCell(
                         Row(
@@ -166,13 +175,37 @@ class _AdminPitchesTabState extends State<AdminPitchesTab> with AutomaticKeepAli
                                   context: context,
                                   builder: (c) => AlertDialog(
                                     backgroundColor: AdminColors.surface,
-                                    title: const Text('Delete Pitch?', style: TextStyle(color: AdminColors.textPrimary)),
-                                    content: const Text('Are you sure you want to delete this pitch?', style: TextStyle(color: AdminColors.textSecondary)),
+                                    title: const Text(
+                                      'Delete Pitch?',
+                                      style: TextStyle(
+                                        color: AdminColors.textPrimary,
+                                      ),
+                                    ),
+                                    content: const Text(
+                                      'Are you sure you want to delete this pitch?',
+                                      style: TextStyle(
+                                        color: AdminColors.textSecondary,
+                                      ),
+                                    ),
                                     actions: [
-                                      TextButton(onPressed: () => Navigator.pop(c, false), child: const Text('Cancel', style: TextStyle(color: AdminColors.textSecondary))),
                                       TextButton(
-                                        onPressed: () => Navigator.pop(c, true), 
-                                        child: const Text('Delete', style: TextStyle(color: Colors.redAccent)),
+                                        onPressed: () =>
+                                            Navigator.pop(c, false),
+                                        child: const Text(
+                                          'Cancel',
+                                          style: TextStyle(
+                                            color: AdminColors.textSecondary,
+                                          ),
+                                        ),
+                                      ),
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(c, true),
+                                        child: const Text(
+                                          'Delete',
+                                          style: TextStyle(
+                                            color: Colors.redAccent,
+                                          ),
+                                        ),
                                       ),
                                     ],
                                   ),

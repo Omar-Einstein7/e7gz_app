@@ -31,7 +31,9 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
 
     final bgColor = isDark ? const Color(0xFF0B1326) : cs.surface;
     final textColor = isDark ? Colors.white : cs.onSurface;
-    final subtitleColor = isDark ? const Color(0xFFBCC7DE) : cs.onSurfaceVariant;
+    final subtitleColor = isDark
+        ? const Color(0xFFBCC7DE)
+        : cs.onSurfaceVariant;
     final primaryAccent = isDark ? const Color(0xFF4BE277) : cs.primary;
     final cardBg = isDark ? const Color(0xFF131B2E) : cs.surfaceContainerLow;
 
@@ -86,7 +88,8 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(32.r),
                   child: AppCachedImage(
-                    imageUrl: match.pitchImage ??
+                    imageUrl:
+                        match.pitchImage ??
                         'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80',
                     height: 250.h,
                     width: double.infinity,
@@ -103,19 +106,12 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
                 ),
                 Row(
                   children: [
-                    Icon(
-                      Icons.location_on,
-                      color: primaryAccent,
-                      size: 16,
-                    ),
+                    Icon(Icons.location_on, color: primaryAccent, size: 16),
                     SizedBox(width: 8.w),
                     Expanded(
                       child: Text(
                         match.pitchName ?? 'Premium Pitch',
-                        style: TextStyle(
-                          color: subtitleColor,
-                          fontSize: 14.sp,
-                        ),
+                        style: TextStyle(color: subtitleColor, fontSize: 14.sp),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -127,13 +123,35 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _infoCard('bookings.date'.tr(), match.date, Icons.calendar_today, cs, isDark, cardBg, subtitleColor, textColor),
-                    _infoCard('bookings.time'.tr(), match.startTime, Icons.timer, cs, isDark, cardBg, subtitleColor, textColor),
+                    _infoCard(
+                      'bookings.date'.tr(),
+                      match.date,
+                      Icons.calendar_today,
+                      cs,
+                      isDark,
+                      cardBg,
+                      subtitleColor,
+                      textColor,
+                    ),
+                    _infoCard(
+                      'bookings.time'.tr(),
+                      match.startTime,
+                      Icons.timer,
+                      cs,
+                      isDark,
+                      cardBg,
+                      subtitleColor,
+                      textColor,
+                    ),
                     _infoCard(
                       'matchmaking.level'.tr(),
                       match.skillLevel.toUpperCase(),
                       Icons.bolt,
-                      cs, isDark, cardBg, subtitleColor, textColor
+                      cs,
+                      isDark,
+                      cardBg,
+                      subtitleColor,
+                      textColor,
                     ),
                   ],
                 ),
@@ -145,19 +163,31 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
                       'matchmaking.slots'.tr(),
                       '${match.participantIds.length}/${match.maxPlayers}',
                       Icons.group,
-                      cs, isDark, cardBg, subtitleColor, textColor
+                      cs,
+                      isDark,
+                      cardBg,
+                      subtitleColor,
+                      textColor,
                     ),
                     _infoCard(
                       'matchmaking.price'.tr(),
                       '${match.pricePerPlayer.toInt()} ${'pitch_details.egp'.tr()}',
                       Icons.payments,
-                      cs, isDark, cardBg, subtitleColor, textColor
+                      cs,
+                      isDark,
+                      cardBg,
+                      subtitleColor,
+                      textColor,
                     ),
                     _infoCard(
                       'matchmaking.status'.tr(),
                       match.status.toUpperCase(),
                       Icons.info,
-                      cs, isDark, cardBg, subtitleColor, textColor
+                      cs,
+                      isDark,
+                      cardBg,
+                      subtitleColor,
+                      textColor,
                     ),
                   ],
                 ),
@@ -183,7 +213,11 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
                       index,
                       '${'matchmaking.player'.tr()} ${match.participantIds[index]}',
                       null,
-                      isDark, cs, cardBg, textColor, primaryAccent
+                      isDark,
+                      cs,
+                      cardBg,
+                      textColor,
+                      primaryAccent,
                     ),
                   )
                 else
@@ -193,7 +227,11 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
                       index,
                       match.participants[index].name,
                       match.participants[index].photoUrl,
-                      isDark, cs, cardBg, textColor, primaryAccent
+                      isDark,
+                      cs,
+                      cardBg,
+                      textColor,
+                      primaryAccent,
                     ),
                   ),
                 SizedBox(height: 120.h),
@@ -212,11 +250,17 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
             decoration: BoxDecoration(
               color: isDark ? const Color(0xFF131B2E) : cs.surface,
               border: Border(
-                top: BorderSide(color: isDark ? Colors.white.withValues(alpha: 0.1) : cs.outlineVariant),
+                top: BorderSide(
+                  color: isDark
+                      ? Colors.white.withValues(alpha: 0.1)
+                      : cs.outlineVariant,
+                ),
               ),
             ),
             child: AppButton(
-              label: match.isFull ? 'matchmaking.match_full'.tr() : 'matchmaking.join_match'.tr(),
+              label: match.isFull
+                  ? 'matchmaking.match_full'.tr()
+                  : 'matchmaking.join_match'.tr(),
               onPressed: match.isFull
                   ? null
                   : () => context.read<MatchmakingCubit>().joinMatch(match.id),
@@ -242,7 +286,7 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
     Color textColor,
   ) {
     return Container(
-      width:99.w,
+      width: 99.w,
       padding: EdgeInsets.all(12.w),
       decoration: BoxDecoration(
         color: cardBg,
@@ -272,7 +316,16 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
     );
   }
 
-  Widget _participantTile(int index, String name, String? photoUrl, bool isDark, ColorScheme cs, Color cardBg, Color textColor, Color primaryAccent) {
+  Widget _participantTile(
+    int index,
+    String name,
+    String? photoUrl,
+    bool isDark,
+    ColorScheme cs,
+    Color cardBg,
+    Color textColor,
+    Color primaryAccent,
+  ) {
     return Container(
       margin: EdgeInsets.only(bottom: 12.h),
       padding: EdgeInsets.all(12.w),
@@ -285,19 +338,22 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
         children: [
           CircleAvatar(
             radius: 20.r,
-            backgroundColor: isDark ? const Color(0xFF2D3449) : cs.surfaceContainerHighest,
+            backgroundColor: isDark
+                ? const Color(0xFF2D3449)
+                : cs.surfaceContainerHighest,
             backgroundImage: photoUrl != null ? NetworkImage(photoUrl) : null,
             child: photoUrl == null
-                ? Icon(Icons.person, color: isDark ? Colors.white : cs.onSurfaceVariant, size: 20)
+                ? Icon(
+                    Icons.person,
+                    color: isDark ? Colors.white : cs.onSurfaceVariant,
+                    size: 20,
+                  )
                 : null,
           ),
           SizedBox(width: 16.w),
           Text(
             name,
-            style: TextStyle(
-              color: textColor,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(color: textColor, fontWeight: FontWeight.bold),
           ),
           const Spacer(),
           Icon(Icons.check_circle, color: primaryAccent, size: 16),

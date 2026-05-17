@@ -36,7 +36,9 @@ class SlotsGrid extends StatelessWidget {
         BlocBuilder<SlotsCubit, SlotsState>(
           builder: (context, state) {
             if (state.status == SlotsStatus.loading) {
-              return Center(child: CircularProgressIndicator(color: cs.primary));
+              return Center(
+                child: CircularProgressIndicator(color: cs.primary),
+              );
             }
             if (state.status == SlotsStatus.failure) {
               return _ErrorState(errorMessage: state.errorMessage);
@@ -82,7 +84,10 @@ class _SlotsLegend extends StatelessWidget {
       children: [
         _IndicatorChip(label: 'AVAILABLE', color: context.colorScheme.primary),
         SizedBox(width: AppSpacing.md.w),
-        _IndicatorChip(label: 'BOOKED', color: context.colorScheme.surfaceVariant),
+        _IndicatorChip(
+          label: 'BOOKED',
+          color: context.colorScheme.surfaceVariant,
+        ),
       ],
     );
   }
@@ -136,11 +141,11 @@ class _SlotBox extends StatelessWidget {
     final bgColor = isBooked
         ? cs.surfaceVariant.withOpacity(0.3)
         : (isSelected ? cs.primary : cs.surfaceContainerHigh);
-    
+
     final onColor = isBooked
         ? cs.onSurfaceVariant.withOpacity(0.4)
         : (isSelected ? cs.onPrimary : cs.onSurfaceVariant);
-    
+
     final timeColor = isBooked
         ? cs.onSurfaceVariant.withOpacity(0.5)
         : (isSelected ? cs.onPrimary : cs.onSurface);
@@ -154,12 +159,7 @@ class _SlotBox extends StatelessWidget {
             ? Border.all(color: cs.outlineVariant.withOpacity(0.2), width: 1)
             : null,
         boxShadow: isSelected
-            ? [
-                BoxShadow(
-                  color: cs.primary.withOpacity(0.2),
-                  blurRadius: 10,
-                ),
-              ]
+            ? [BoxShadow(color: cs.primary.withOpacity(0.2), blurRadius: 10)]
             : [],
       ),
       child: Column(
@@ -169,11 +169,7 @@ class _SlotBox extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               if (isBooked) ...[
-                Icon(
-                  IconsaxPlusBold.lock,
-                  color: onColor,
-                  size: 10.sp,
-                ),
+                Icon(IconsaxPlusBold.lock, color: onColor, size: 10.sp),
                 SizedBox(width: 4.w),
               ],
               Text(
@@ -198,7 +194,9 @@ class _SlotBox extends StatelessWidget {
           Text(
             isBooked ? 'BOOKED' : '${slot.price.toInt()} EGP',
             style: TextStyle(
-              color: isBooked ? cs.error.withOpacity(0.6) : (isSelected ? cs.onPrimary : cs.primary),
+              color: isBooked
+                  ? cs.error.withOpacity(0.6)
+                  : (isSelected ? cs.onPrimary : cs.primary),
               fontSize: 10.sp,
               fontWeight: FontWeight.bold,
             ),
@@ -208,18 +206,10 @@ class _SlotBox extends StatelessWidget {
     );
 
     if (isBooked) {
-      return AbsorbPointer(
-        child: Opacity(
-          opacity: 0.5,
-          child: content,
-        ),
-      );
+      return AbsorbPointer(child: Opacity(opacity: 0.5, child: content));
     }
 
-    return GestureDetector(
-      onTap: onTap,
-      child: content,
-    );
+    return GestureDetector(onTap: onTap, child: content);
   }
 }
 
@@ -246,7 +236,10 @@ class _EmptyState extends StatelessWidget {
     return Center(
       child: Text(
         'No slots available on this date',
-        style: TextStyle(color: context.colorScheme.onSurfaceVariant, fontSize: 14.sp),
+        style: TextStyle(
+          color: context.colorScheme.onSurfaceVariant,
+          fontSize: 14.sp,
+        ),
       ),
     );
   }

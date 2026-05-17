@@ -40,17 +40,23 @@ class _MatchmakingViewState extends State<_MatchmakingView> {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
-    final bgColor = isDark ? const Color(0xFF0B1326) : theme.colorScheme.surface;
+    final bgColor = isDark
+        ? const Color(0xFF0B1326)
+        : theme.colorScheme.surface;
     final textColor = isDark ? Colors.white : theme.colorScheme.onSurface;
-    final secondaryTextColor = isDark ? const Color(0xFFBCC7DE) : theme.colorScheme.onSurfaceVariant;
-    final cardBg = isDark ? const Color(0xFF131B2E) : theme.colorScheme.surfaceContainerLow;
+    final secondaryTextColor = isDark
+        ? const Color(0xFFBCC7DE)
+        : theme.colorScheme.onSurfaceVariant;
+    final cardBg = isDark
+        ? const Color(0xFF131B2E)
+        : theme.colorScheme.surfaceContainerLow;
 
     return Scaffold(
       backgroundColor: bgColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-       
+
         title: Text(
           'e7gzz',
           style: typography.headlineSmall?.copyWith(
@@ -59,7 +65,6 @@ class _MatchmakingViewState extends State<_MatchmakingView> {
           ),
         ),
         centerTitle: true,
-     
       ),
       body: BlocListener<MatchmakingCubit, MatchmakingState>(
         listenWhen: (prev, curr) =>
@@ -145,12 +150,17 @@ class _MatchmakingViewState extends State<_MatchmakingView> {
 
                     if (state.status == MatchmakingStatus.loading &&
                         state.matches.isEmpty)
-                      Center(child: CircularProgressIndicator(color: theme.colorScheme.primary))
+                      Center(
+                        child: CircularProgressIndicator(
+                          color: theme.colorScheme.primary,
+                        ),
+                      )
                     else if (state.status == MatchmakingStatus.failure &&
                         state.matches.isEmpty)
                       Center(
                         child: Text(
-                          state.errorMessage ?? 'matchmaking.error_loading'.tr(),
+                          state.errorMessage ??
+                              'matchmaking.error_loading'.tr(),
                           style: TextStyle(color: textColor),
                         ),
                       )
@@ -208,14 +218,18 @@ class _MatchmakingViewState extends State<_MatchmakingView> {
                     LeaderboardTile(
                       rank: '01',
                       name: 'Amira Khaled',
-                      progress: 'matchmaking.matches_won'.tr(namedArgs: {'count': '12'}),
+                      progress: 'matchmaking.matches_won'.tr(
+                        namedArgs: {'count': '12'},
+                      ),
                       isMvp: true,
                     ),
                     SizedBox(height: 12.h),
                     LeaderboardTile(
                       rank: '02',
                       name: 'Youssef Tarek',
-                      progress: 'matchmaking.matches_won'.tr(namedArgs: {'count': '10'}),
+                      progress: 'matchmaking.matches_won'.tr(
+                        namedArgs: {'count': '10'},
+                      ),
                     ),
 
                     SizedBox(height: 100.h),
@@ -229,7 +243,11 @@ class _MatchmakingViewState extends State<_MatchmakingView> {
       floatingActionButton: FloatingActionButton(
         onPressed: () => context.push(AppRoutes.createMatch),
         backgroundColor: colors.primary,
-        child: Icon(Icons.add, color: isDark ? const Color(0xFF003915) : theme.colorScheme.onPrimary, size: 32),
+        child: Icon(
+          Icons.add,
+          color: isDark ? const Color(0xFF003915) : theme.colorScheme.onPrimary,
+          size: 32,
+        ),
       ),
     );
   }

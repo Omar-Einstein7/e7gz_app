@@ -36,5 +36,11 @@ class OwnerState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [status, stats, myPitches, errorMessage, selectedTab];
+  List<Object?> get props => [
+    status,
+    stats,
+    myPitches,
+    errorMessage,
+    selectedTab,
+  ];
 }

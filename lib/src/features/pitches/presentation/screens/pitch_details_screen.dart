@@ -11,7 +11,6 @@ import 'package:e7gz/src/features/pitches/presentation/cubit/pitches_state.dart'
 import 'package:e7gz/src/di/injection_container.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
-
 class PitchDetailsScreen extends StatelessWidget {
   final String pitchId;
   const PitchDetailsScreen({super.key, required this.pitchId});
@@ -65,7 +64,10 @@ class _PitchDetailsView extends StatelessWidget {
             slivers: [
               _HeaderSection(pitch: pitch),
               SliverPadding(
-                padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg.w, vertical: AppSpacing.xl.h),
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppSpacing.lg.w,
+                  vertical: AppSpacing.xl.h,
+                ),
                 sliver: SliverList(
                   delegate: SliverChildListDelegate([
                     _AmenitiesSection(amenities: pitch.amenities)
@@ -108,7 +110,7 @@ class _HeaderSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final pc = context.pitchColors;
     final cs = context.colorScheme;
-    
+
     return SliverAppBar(
       expandedHeight: 500.h,
       backgroundColor: Colors.transparent,
@@ -127,14 +129,8 @@ class _HeaderSection extends StatelessWidget {
         ),
       ),
       actions: [
-        _CircleActionButton(
-          icon: IconsaxPlusLinear.share,
-          onPressed: () {},
-        ),
-        _CircleActionButton(
-          icon: IconsaxPlusLinear.heart,
-          onPressed: () {},
-        ),
+        _CircleActionButton(icon: IconsaxPlusLinear.share, onPressed: () {}),
+        _CircleActionButton(icon: IconsaxPlusLinear.heart, onPressed: () {}),
         SizedBox(width: AppSpacing.md.w),
       ],
       flexibleSpace: FlexibleSpaceBar(
@@ -155,11 +151,7 @@ class _HeaderSection extends StatelessWidget {
               ),
             ),
             // Sophisticated Gradient Overlay from PitchColors extension
-            DecoratedBox(
-              decoration: BoxDecoration(
-                gradient: pc.heroGradient,
-              ),
-            ),
+            DecoratedBox(decoration: BoxDecoration(gradient: pc.heroGradient)),
             // Venue Info Card with Glassmorphism
             Positioned(
               bottom: AppSpacing.xl.h,
@@ -174,16 +166,16 @@ class _HeaderSection extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: pc.glassSurface,
                       borderRadius: AppRadius.bxxl.r,
-                      border: Border.all(
-                        color: pc.glassBorder,
-                        width: 1.5,
-                      ),
+                      border: Border.all(color: pc.glassBorder, width: 1.5),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        _PremiumBadge().animate().scale(delay: 400.ms, curve: Curves.elasticOut),
+                        _PremiumBadge().animate().scale(
+                          delay: 400.ms,
+                          curve: Curves.elasticOut,
+                        ),
                         SizedBox(height: AppSpacing.md.h),
                         Text(
                           pitch.name,
@@ -212,8 +204,8 @@ class _HeaderSection extends StatelessWidget {
                               ),
                             ),
                             _RatingBadge(
-                              rating: pitch.rating, 
-                              reviews: pitch.reviewsCount, 
+                              rating: pitch.rating,
+                              reviews: pitch.reviewsCount,
                             ),
                           ],
                         ),
@@ -259,7 +251,10 @@ class _PremiumBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     final pc = context.pitchColors;
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: AppSpacing.md.w, vertical: AppSpacing.xs.h),
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSpacing.md.w,
+        vertical: AppSpacing.xs.h,
+      ),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [pc.accentGreen, pc.accentGreen.withValues(alpha: 0.8)],
@@ -294,7 +289,10 @@ class _RatingBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     final cs = context.colorScheme;
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: AppSpacing.md.w, vertical: AppSpacing.sm.h),
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSpacing.md.w,
+        vertical: AppSpacing.sm.h,
+      ),
       decoration: BoxDecoration(
         color: cs.primary.withValues(alpha: 0.1),
         borderRadius: AppRadius.blg.r,
@@ -338,10 +336,14 @@ class _AmenitiesSection extends StatelessWidget {
           runSpacing: 12.h,
           children: amenities.map((amenity) {
             IconData iconData = IconsaxPlusLinear.star;
-            if (amenity.toLowerCase().contains('shower')) iconData = IconsaxPlusLinear.cloud_drizzle;
-            if (amenity.toLowerCase().contains('parking')) iconData = IconsaxPlusLinear.car;
-            if (amenity.toLowerCase().contains('wifi')) iconData = IconsaxPlusLinear.wifi;
-            if (amenity.toLowerCase().contains('cafe')) iconData = IconsaxPlusLinear.cup;
+            if (amenity.toLowerCase().contains('shower'))
+              iconData = IconsaxPlusLinear.cloud_drizzle;
+            if (amenity.toLowerCase().contains('parking'))
+              iconData = IconsaxPlusLinear.car;
+            if (amenity.toLowerCase().contains('wifi'))
+              iconData = IconsaxPlusLinear.wifi;
+            if (amenity.toLowerCase().contains('cafe'))
+              iconData = IconsaxPlusLinear.cup;
             return AmenityItem(label: amenity, icon: iconData);
           }).toList(),
         ),
@@ -418,7 +420,9 @@ class _LocationSection extends StatelessWidget {
   const _LocationSection({required this.pitch});
 
   Future<void> _openMap(double latitude, double longitude) async {
-    final Uri googleMapUrl = Uri.parse("https://www.google.com/maps/search/?api=1&query=$latitude,$longitude");
+    final Uri googleMapUrl = Uri.parse(
+      "https://www.google.com/maps/search/?api=1&query=$latitude,$longitude",
+    );
     try {
       await launchUrl(googleMapUrl, mode: LaunchMode.externalApplication);
     } catch (e) {
@@ -432,11 +436,13 @@ class _LocationSection extends StatelessWidget {
     final cs = context.colorScheme;
     final lat = pitch.location.latitude;
     final lng = pitch.location.longitude;
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _SectionHeader(title: 'pitch_details.location_title'.tr().toUpperCase()),
+        _SectionHeader(
+          title: 'pitch_details.location_title'.tr().toUpperCase(),
+        ),
         SizedBox(height: AppSpacing.md.h),
         InkWell(
           onTap: () => _openMap(lat, lng),
@@ -455,11 +461,7 @@ class _LocationSection extends StatelessWidget {
                   ),
                 ),
                 SizedBox(width: AppSpacing.sm.w),
-                Icon(
-                  IconsaxPlusBold.map_1,
-                  color: pc.accentGreen,
-                  size: 20,
-                ),
+                Icon(IconsaxPlusBold.map_1, color: pc.accentGreen, size: 20),
               ],
             ),
           ),
@@ -485,7 +487,8 @@ class _LocationSection extends StatelessWidget {
                       ),
                       children: [
                         TileLayer(
-                          urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                          urlTemplate:
+                              'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
                           userAgentPackageName: 'com.e7gz.app',
                         ),
                         MarkerLayer(
@@ -494,20 +497,37 @@ class _LocationSection extends StatelessWidget {
                               point: LatLng(lat, lng),
                               width: 60,
                               height: 60,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: pc.accentGreen.withValues(alpha: 0.2),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Icon(
-                                  IconsaxPlusBold.location,
-                                  color: pc.accentGreen,
-                                  size: 32,
-                                ),
-                              ).animate(onPlay: (controller) => controller.repeat())
-                               .scale(begin: const Offset(0.8, 0.8), end: const Offset(1.2, 1.2), duration: 1000.ms, curve: Curves.easeInOut)
-                               .then()
-                               .scale(begin: const Offset(1.2, 1.2), end: const Offset(0.8, 0.8), duration: 1000.ms, curve: Curves.easeInOut),
+                              child:
+                                  Container(
+                                        decoration: BoxDecoration(
+                                          color: pc.accentGreen.withValues(
+                                            alpha: 0.2,
+                                          ),
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Icon(
+                                          IconsaxPlusBold.location,
+                                          color: pc.accentGreen,
+                                          size: 32,
+                                        ),
+                                      )
+                                      .animate(
+                                        onPlay: (controller) =>
+                                            controller.repeat(),
+                                      )
+                                      .scale(
+                                        begin: const Offset(0.8, 0.8),
+                                        end: const Offset(1.2, 1.2),
+                                        duration: 1000.ms,
+                                        curve: Curves.easeInOut,
+                                      )
+                                      .then()
+                                      .scale(
+                                        begin: const Offset(1.2, 1.2),
+                                        end: const Offset(0.8, 0.8),
+                                        duration: 1000.ms,
+                                        curve: Curves.easeInOut,
+                                      ),
                             ),
                           ],
                         ),
@@ -518,14 +538,21 @@ class _LocationSection extends StatelessWidget {
                     bottom: 12.h,
                     right: 12.w,
                     child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12.w,
+                        vertical: 6.h,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.black.withOpacity(0.6),
                         borderRadius: BorderRadius.circular(20.r),
                       ),
                       child: Row(
                         children: [
-                          Icon(Icons.directions_rounded, color: Colors.white, size: 14.sp),
+                          Icon(
+                            Icons.directions_rounded,
+                            color: Colors.white,
+                            size: 14.sp,
+                          ),
                           SizedBox(width: 4.w),
                           Text(
                             'pitch_details.open_in_maps'.tr(),
@@ -608,10 +635,17 @@ class _BookingBottomSheet extends StatelessWidget {
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
             child: Container(
-              padding: EdgeInsets.fromLTRB(AppSpacing.xl.w, AppSpacing.md.h, AppSpacing.xl.w, AppSpacing.xxl.h),
+              padding: EdgeInsets.fromLTRB(
+                AppSpacing.xl.w,
+                AppSpacing.md.h,
+                AppSpacing.xl.w,
+                AppSpacing.xxl.h,
+              ),
               decoration: BoxDecoration(
                 color: pc.glassSurface.withValues(alpha: 0.8),
-                borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.xxl.r)),
+                borderRadius: BorderRadius.vertical(
+                  top: Radius.circular(AppRadius.xxl.r),
+                ),
                 border: Border.all(color: pc.glassBorder),
               ),
               child: Row(
@@ -652,18 +686,25 @@ class _BookingBottomSheet extends StatelessWidget {
                     ),
                   ),
                   SizedBox(width: AppSpacing.md.w),
-                  _BookNowButton(onPressed: () {
-                    HapticFeedback.mediumImpact();
-                    context.push(
-                      AppRoutes.bookingSlots.replaceFirst(':id', pitch.id),
-                      extra: pitch,
-                    );
-                  }),
+                  _BookNowButton(
+                    onPressed: () {
+                      HapticFeedback.mediumImpact();
+                      context.push(
+                        AppRoutes.bookingSlots.replaceFirst(':id', pitch.id),
+                        extra: pitch,
+                      );
+                    },
+                  ),
                 ],
               ),
             ),
           ),
-        ).animate().slideY(begin: 1, end: 0, duration: 600.ms, curve: Curves.easeOutCubic);
+        ).animate().slideY(
+          begin: 1,
+          end: 0,
+          duration: 600.ms,
+          curve: Curves.easeOutCubic,
+        );
       },
     );
   }
@@ -692,10 +733,11 @@ class _BookNowButton extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           backgroundColor: pc.accentGreen,
           foregroundColor: Colors.white,
-          padding: EdgeInsets.symmetric(horizontal: AppSpacing.xl.w, vertical: AppSpacing.md.h),
-          shape: RoundedRectangleBorder(
-            borderRadius: AppRadius.bxl.r,
+          padding: EdgeInsets.symmetric(
+            horizontal: AppSpacing.xl.w,
+            vertical: AppSpacing.md.h,
           ),
+          shape: RoundedRectangleBorder(borderRadius: AppRadius.bxl.r),
           elevation: 0,
         ),
         child: Row(
@@ -717,5 +759,3 @@ class _BookNowButton extends StatelessWidget {
     );
   }
 }
-
-

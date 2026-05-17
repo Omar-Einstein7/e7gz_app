@@ -11,19 +11,13 @@ abstract final class AppTheme {
   static ThemeData light = _buildTheme(
     brightness: Brightness.light,
     colorScheme: _lightColorScheme,
-    extensions: [
-      SemanticColors.light,
-      PitchColors.light,
-    ],
+    extensions: [SemanticColors.light, PitchColors.light],
   );
 
   static ThemeData dark = _buildTheme(
     brightness: Brightness.dark,
     colorScheme: _darkColorScheme,
-    extensions: [
-      SemanticColors.dark,
-      PitchColors.dark,
-    ],
+    extensions: [SemanticColors.dark, PitchColors.dark],
   );
 
   static final ColorScheme _lightColorScheme = ColorScheme.fromSeed(
@@ -65,12 +59,11 @@ abstract final class AppTheme {
       textTheme: textTheme,
       fontFamily: AppTypography.fontFamily,
       extensions: extensions,
-      
+
       scaffoldBackgroundColor: colorScheme.background,
       dividerColor: colorScheme.outline,
 
       // --- Component Themes ---
-
       appBarTheme: AppBarTheme(
         backgroundColor: colorScheme.surface,
         foregroundColor: colorScheme.onSurface,
@@ -97,7 +90,10 @@ abstract final class AppTheme {
           backgroundColor: colorScheme.primary,
           foregroundColor: colorScheme.onPrimary,
           minimumSize: const Size(88, 48),
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.md),
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.lg,
+            vertical: AppSpacing.md,
+          ),
           shape: RoundedRectangleBorder(borderRadius: AppRadius.bmd),
           elevation: 0,
         ),
@@ -106,7 +102,10 @@ abstract final class AppTheme {
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
           minimumSize: const Size(88, 48),
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.md),
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.lg,
+            vertical: AppSpacing.md,
+          ),
           shape: RoundedRectangleBorder(borderRadius: AppRadius.bmd),
         ),
       ),
@@ -114,7 +113,10 @@ abstract final class AppTheme {
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           minimumSize: const Size(88, 48),
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.md),
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.lg,
+            vertical: AppSpacing.md,
+          ),
           shape: RoundedRectangleBorder(borderRadius: AppRadius.bmd),
           side: BorderSide(color: colorScheme.outline, width: 1.5),
         ),
@@ -135,8 +137,13 @@ abstract final class AppTheme {
           borderRadius: AppRadius.bfull,
           borderSide: BorderSide(color: colorScheme.primary, width: 2),
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.md),
-        hintStyle: textTheme.bodyMedium?.copyWith(color: colorScheme.onSurfaceVariant),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.lg,
+          vertical: AppSpacing.md,
+        ),
+        hintStyle: textTheme.bodyMedium?.copyWith(
+          color: colorScheme.onSurfaceVariant,
+        ),
       ),
 
       navigationBarTheme: NavigationBarThemeData(
@@ -144,9 +151,14 @@ abstract final class AppTheme {
         indicatorColor: colorScheme.primary.withValues(alpha: 0.1),
         labelTextStyle: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
-            return textTheme.labelSmall?.copyWith(color: colorScheme.primary, fontWeight: FontWeight.bold);
+            return textTheme.labelSmall?.copyWith(
+              color: colorScheme.primary,
+              fontWeight: FontWeight.bold,
+            );
           }
-          return textTheme.labelSmall?.copyWith(color: colorScheme.onSurfaceVariant);
+          return textTheme.labelSmall?.copyWith(
+            color: colorScheme.onSurfaceVariant,
+          );
         }),
       ),
 
@@ -154,7 +166,9 @@ abstract final class AppTheme {
         backgroundColor: colorScheme.surface,
         showDragHandle: true,
         shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.xxl)),
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(AppRadius.xxl),
+          ),
         ),
       ),
     );

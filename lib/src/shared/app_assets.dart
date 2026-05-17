@@ -8,7 +8,7 @@ class AppAssets {
   static const String googleIcon = '$_iconsPath/google.svg';
   static const String facebookIcon = '$_iconsPath/facebook.svg';
   static const String appleIcon = '$_iconsPath/apple.svg';
-  
+
   // Images
   static const String _imagesPath = '$_basePath/images';
   static const String onboardingPitch = '$_imagesPath/onboarding_pitch.png';

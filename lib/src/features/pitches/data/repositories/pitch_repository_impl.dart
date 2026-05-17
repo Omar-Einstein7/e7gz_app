@@ -56,8 +56,8 @@ class PitchRepositoryImpl implements PitchRepository {
   }) async {
     return runTask(() async {
       final pitches = await _remote.getNearbyPitches(
-        lat: lat, 
-        lng: lng, 
+        lat: lat,
+        lng: lng,
         radiusMeters: radiusMeters,
       );
       return pitches;

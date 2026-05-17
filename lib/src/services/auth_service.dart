@@ -65,7 +65,9 @@ class AuthService {
       if (accessToken != null) {
         await _saveTokens(accessToken, refreshToken);
       } else {
-        AppLogger.warning('⚠️ Login successful but no accessToken found in response');
+        AppLogger.warning(
+          '⚠️ Login successful but no accessToken found in response',
+        );
       }
 
       _authStateController.add(responseData);
@@ -91,9 +93,7 @@ class AuthService {
           'phone': phone,
           'role': (role ?? 'player').toLowerCase(),
         },
-        options: Options(
-          headers: {'Content-Type': 'application/json'},
-        ),
+        options: Options(headers: {'Content-Type': 'application/json'}),
       );
       final data = response.data as Map<String, dynamic>;
 
@@ -153,7 +153,7 @@ class AuthService {
       final data = <String, dynamic>{};
       if (name != null) data['name'] = name;
       if (phone != null) data['phone'] = phone;
-      
+
       final formData = FormData.fromMap(data);
       if (photoPath != null) {
         final xfile = XFile(photoPath);
@@ -173,7 +173,7 @@ class AuthService {
       final response = await _dio.put<dynamic>('auth/me', data: formData);
       final responseData = response.data as Map<String, dynamic>;
       final userMap = responseData['data'] ?? responseData;
-      
+
       _authStateController.add(userMap);
       return userMap;
     });

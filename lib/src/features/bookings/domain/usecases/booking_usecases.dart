@@ -27,14 +27,13 @@ class CreateBookingUseCase {
     required String startTime,
     required String endTime,
     String? notes,
-  }) =>
-      _repository.createBooking(
-        pitchId: pitchId,
-        date: date,
-        startTime: startTime,
-        endTime: endTime,
-        notes: notes,
-      );
+  }) => _repository.createBooking(
+    pitchId: pitchId,
+    date: date,
+    startTime: startTime,
+    endTime: endTime,
+    notes: notes,
+  );
 }
 
 class CancelBookingUseCase {
@@ -52,6 +51,5 @@ class GetAvailableSlotsUseCase {
   FutureEither<List<TimeSlot>> call({
     required String pitchId,
     required String date,
-  }) =>
-      _repository.getAvailableSlots(pitchId: pitchId, date: date);
+  }) => _repository.getAvailableSlots(pitchId: pitchId, date: date);
 }

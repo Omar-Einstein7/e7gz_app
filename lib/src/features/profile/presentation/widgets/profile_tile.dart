@@ -1,4 +1,5 @@
 import 'package:e7gz/src/imports/imports.dart';
+
 class ProfileTile extends StatelessWidget {
   final String title;
   final String subtitle;
@@ -20,8 +21,12 @@ class ProfileTile extends StatelessWidget {
     final cs = context.colorScheme;
     final typography = context.textTheme;
 
-    final bgColor = isLogout ? cs.errorContainer.withValues(alpha: 0.1) : cs.surfaceContainerLow;
-    final iconBgColor = isLogout ? cs.errorContainer.withValues(alpha: 0.2) : cs.surfaceContainerHigh;
+    final bgColor = isLogout
+        ? cs.errorContainer.withValues(alpha: 0.1)
+        : cs.surfaceContainerLow;
+    final iconBgColor = isLogout
+        ? cs.errorContainer.withValues(alpha: 0.2)
+        : cs.surfaceContainerHigh;
     final iconColor = isLogout ? cs.error : cs.primary;
     final textColor = cs.onSurface;
     final subtitleColor = cs.onSurfaceVariant;
@@ -43,11 +48,7 @@ class ProfileTile extends StatelessWidget {
                 color: iconBgColor,
                 borderRadius: AppRadius.blg.r,
               ),
-              child: Icon(
-                icon,
-                color: iconColor,
-                size: 20,
-              ),
+              child: Icon(icon, color: iconColor, size: 20),
             ),
             SizedBox(width: AppSpacing.md.w),
             Expanded(
@@ -63,9 +64,7 @@ class ProfileTile extends StatelessWidget {
                   ),
                   Text(
                     subtitle,
-                    style: typography.bodySmall?.copyWith(
-                      color: subtitleColor,
-                    ),
+                    style: typography.bodySmall?.copyWith(color: subtitleColor),
                   ),
                 ],
               ),

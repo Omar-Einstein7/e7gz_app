@@ -40,10 +40,7 @@ import '../../features/profile/presentation/cubit/profile_cubit.dart';
 class StateWrapper extends StatelessWidget {
   final Widget child;
 
-  const StateWrapper({
-    super.key,
-    required this.child,
-  });
+  const StateWrapper({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {

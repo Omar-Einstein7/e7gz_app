@@ -18,7 +18,9 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController _searchController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
-  final Debouncer _debouncer = Debouncer(delay: const Duration(milliseconds: 500));
+  final Debouncer _debouncer = Debouncer(
+    delay: const Duration(milliseconds: 500),
+  );
   String? _selectedSport;
   double? _selectedRating;
   double? _minPrice;
@@ -30,7 +32,7 @@ class _SearchScreenState extends State<SearchScreen> {
     _selectedSport = widget.initialSport;
     _searchController.addListener(_onSearchChanged);
     _scrollController.addListener(_onScroll);
-    
+
     // Trigger initial search on entry
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _onSearchChanged();
@@ -38,7 +40,8 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   void _onScroll() {
-    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent * 0.9) {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent * 0.9) {
       context.read<SearchCubit>().loadMore(
         query: _searchController.text,
         sportType: _selectedSport,
@@ -74,24 +77,24 @@ class _SearchScreenState extends State<SearchScreen> {
     if (immediate) {
       _debouncer.run(() {}); // Cancel any pending debounce
       context.read<SearchCubit>().search(
-            query: _searchController.text,
-            sportType: _selectedSport,
-            rating: _selectedRating,
-            minPrice: _minPrice,
-            maxPrice: _maxPrice,
-          );
+        query: _searchController.text,
+        sportType: _selectedSport,
+        rating: _selectedRating,
+        minPrice: _minPrice,
+        maxPrice: _maxPrice,
+      );
       return;
     }
 
     _debouncer.run(() {
       if (!mounted) return;
       context.read<SearchCubit>().search(
-            query: _searchController.text,
-            sportType: _selectedSport,
-            rating: _selectedRating,
-            minPrice: _minPrice,
-            maxPrice: _maxPrice,
-          );
+        query: _searchController.text,
+        sportType: _selectedSport,
+        rating: _selectedRating,
+        minPrice: _minPrice,
+        maxPrice: _maxPrice,
+      );
     });
   }
 
@@ -108,10 +111,8 @@ class _SearchScreenState extends State<SearchScreen> {
           style: typography.headlineSmall?.copyWith(
             color: cs.primary,
             fontWeight: FontWeight.w900,
-       
           ),
         ),
-      
       ),
       body: Column(
         children: [
@@ -166,7 +167,13 @@ class _SearchScreenState extends State<SearchScreen> {
                         }),
                       ),
                       SizedBox(width: 12.w),
-                      ...['Football', 'Padel', 'Basketball', 'Tennis', 'Volleyball'].map((sport) {
+                      ...[
+                        'Football',
+                        'Padel',
+                        'Basketball',
+                        'Tennis',
+                        'Volleyball',
+                      ].map((sport) {
                         final value = sport.toLowerCase();
                         return Padding(
                           padding: EdgeInsets.only(right: 12.w),
@@ -223,7 +230,8 @@ class _SearchScreenState extends State<SearchScreen> {
           Expanded(
             child: BlocBuilder<SearchCubit, SearchState>(
               builder: (context, state) {
-                if (state.status == SearchStatus.loading && state.results.isEmpty) {
+                if (state.status == SearchStatus.loading &&
+                    state.results.isEmpty) {
                   return Skeletonizer(
                     enabled: true,
                     child: ListView.builder(
@@ -274,11 +282,17 @@ class _SearchScreenState extends State<SearchScreen> {
                     }
                     final pitch = results[index];
                     return SearchResultCard(
-                      pitch: pitch,
-                      onTap: () => context.push(
-                        AppRoutes.pitchDetails.replaceFirst(':id', pitch.id),
-                      ),
-                    ).animate().fadeIn(duration: 400.ms).slideY(begin: 0.1, end: 0);
+                          pitch: pitch,
+                          onTap: () => context.push(
+                            AppRoutes.pitchDetails.replaceFirst(
+                              ':id',
+                              pitch.id,
+                            ),
+                          ),
+                        )
+                        .animate()
+                        .fadeIn(duration: 400.ms)
+                        .slideY(begin: 0.1, end: 0);
                   },
                 );
               },

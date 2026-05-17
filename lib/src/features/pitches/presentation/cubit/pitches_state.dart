@@ -39,8 +39,13 @@ class PitchesState extends Equatable {
   }
 
   @override
-  List<Object?> get props =>
-      [status, pitches, result, errorMessage, isLoadingMore];
+  List<Object?> get props => [
+    status,
+    pitches,
+    result,
+    errorMessage,
+    isLoadingMore,
+  ];
 }
 
 // ─── Single Pitch Detail State ────────────────────────────────────────────────

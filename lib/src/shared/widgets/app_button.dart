@@ -88,7 +88,11 @@ class AppButton extends StatelessWidget {
       ),
       ButtonVariant.ghost => (Colors.transparent, cs.primary, null),
       ButtonVariant.danger => (cs.error, cs.onError, null),
-      ButtonVariant.success => (context.semanticColors.success, context.semanticColors.onSuccess, null),
+      ButtonVariant.success => (
+        context.semanticColors.success,
+        context.semanticColors.onSuccess,
+        null,
+      ),
     };
 
     final child = AnimatedSwitcher(
@@ -131,10 +135,7 @@ class AppButton extends StatelessWidget {
       color: bg,
       gradient: variant == ButtonVariant.primary && !isDisabled
           ? LinearGradient(
-              colors: [
-                cs.primary,
-                cs.primary.withValues(alpha: 0.8),
-              ],
+              colors: [cs.primary, cs.primary.withValues(alpha: 0.8)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             )

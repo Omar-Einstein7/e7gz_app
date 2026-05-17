@@ -232,7 +232,12 @@ class LoyaltyRewardsScreen extends StatelessWidget {
                                   ),
                                 ),
                                 content: Text(
-                                  'profile.redeem_confirm_desc'.tr(namedArgs: {'title': reward.title, 'cost': reward.pointsCost.toString()}),
+                                  'profile.redeem_confirm_desc'.tr(
+                                    namedArgs: {
+                                      'title': reward.title,
+                                      'cost': reward.pointsCost.toString(),
+                                    },
+                                  ),
                                   style: const TextStyle(
                                     color: Color(0xFFBCC7DE),
                                   ),
@@ -242,7 +247,9 @@ class LoyaltyRewardsScreen extends StatelessWidget {
                                     onPressed: () => Navigator.pop(ctx),
                                     child: Text(
                                       'profile.cancel'.tr(),
-                                      style: const TextStyle(color: Colors.white54),
+                                      style: const TextStyle(
+                                        color: Colors.white54,
+                                      ),
                                     ),
                                   ),
                                   AppButton(
@@ -258,7 +265,11 @@ class LoyaltyRewardsScreen extends StatelessWidget {
                                       ).showSnackBar(
                                         SnackBar(
                                           content: Text(
-                                            'profile.redeem_success'.tr(namedArgs: {'title': reward.title}),
+                                            'profile.redeem_success'.tr(
+                                              namedArgs: {
+                                                'title': reward.title,
+                                              },
+                                            ),
                                           ),
                                         ),
                                       );

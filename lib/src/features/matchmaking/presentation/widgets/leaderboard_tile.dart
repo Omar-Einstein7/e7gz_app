@@ -1,4 +1,5 @@
 import 'package:e7gz/src/imports/imports.dart';
+
 class LeaderboardTile extends StatelessWidget {
   final String rank;
   final String name;
@@ -49,7 +50,10 @@ class LeaderboardTile extends StatelessWidget {
                 ),
                 Text(
                   progress,
-                  style: TextStyle(color: const Color(0xFFBCC7DE), fontSize: 12.sp),
+                  style: TextStyle(
+                    color: const Color(0xFFBCC7DE),
+                    fontSize: 12.sp,
+                  ),
                 ),
               ],
             ),

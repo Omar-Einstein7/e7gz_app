@@ -30,7 +30,11 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
   final List<_TabConfig> _tabs = const [
     _TabConfig('Home', IconsaxPlusBold.element_3, IconsaxPlusLinear.element_3),
     _TabConfig('Pitches', IconsaxPlusBold.ranking, IconsaxPlusLinear.ranking),
-    _TabConfig('Revenue', IconsaxPlusBold.empty_wallet_tick, IconsaxPlusLinear.empty_wallet_tick),
+    _TabConfig(
+      'Revenue',
+      IconsaxPlusBold.empty_wallet_tick,
+      IconsaxPlusLinear.empty_wallet_tick,
+    ),
     _TabConfig('Profile', IconsaxPlusBold.user, IconsaxPlusLinear.user),
   ];
 
@@ -42,9 +46,7 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
       builder: (context, state) {
         return Scaffold(
           backgroundColor: cs.background,
-          body: SafeArea(
-            child: _buildBody(context, state),
-          ),
+          body: SafeArea(child: _buildBody(context, state)),
           bottomNavigationBar: _buildBottomNav(context),
         );
       },
@@ -56,14 +58,19 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
     final tt = context.textTheme;
 
     // Global loading (first load, no data yet)
-    if (state.status == OwnerStatus.loading && state.stats.isEmpty && state.myPitches.isEmpty) {
+    if (state.status == OwnerStatus.loading &&
+        state.stats.isEmpty &&
+        state.myPitches.isEmpty) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CircularProgressIndicator(color: cs.primary),
             SizedBox(height: AppSpacing.md.h),
-            Text('Loading dashboard...', style: tt.bodyMedium?.copyWith(color: cs.onSurfaceVariant)),
+            Text(
+              'Loading dashboard...',
+              style: tt.bodyMedium?.copyWith(color: cs.onSurfaceVariant),
+            ),
           ],
         ),
       );
@@ -164,7 +171,10 @@ class _HomeTab extends StatelessWidget {
                 ),
                 const Spacer(),
                 IconButton(
-                  icon: Icon(IconsaxPlusLinear.notification, color: cs.onSurface),
+                  icon: Icon(
+                    IconsaxPlusLinear.notification,
+                    color: cs.onSurface,
+                  ),
                   onPressed: () => context.push(AppRoutes.notifications),
                 ),
               ],
@@ -175,23 +185,37 @@ class _HomeTab extends StatelessWidget {
             sliver: SliverList(
               delegate: SliverChildListDelegate([
                 // Error banner
-                if (state.status == OwnerStatus.failure && state.errorMessage != null)
+                if (state.status == OwnerStatus.failure &&
+                    state.errorMessage != null)
                   Container(
                     margin: EdgeInsets.only(bottom: AppSpacing.md.h),
                     padding: EdgeInsets.all(AppSpacing.md.w),
                     decoration: BoxDecoration(
                       color: cs.errorContainer,
                       borderRadius: AppRadius.blg.r,
-                      border: Border.all(color: cs.error.withValues(alpha: 0.3)),
+                      border: Border.all(
+                        color: cs.error.withValues(alpha: 0.3),
+                      ),
                     ),
                     child: Row(
                       children: [
                         Icon(Icons.error_outline, color: cs.error, size: 18),
                         SizedBox(width: AppSpacing.xs.w),
-                        Expanded(child: Text(state.errorMessage!, style: tt.bodySmall?.copyWith(color: cs.onErrorContainer))),
+                        Expanded(
+                          child: Text(
+                            state.errorMessage!,
+                            style: tt.bodySmall?.copyWith(
+                              color: cs.onErrorContainer,
+                            ),
+                          ),
+                        ),
                         TextButton(
-                          onPressed: () => context.read<OwnerCubit>().loadDashboardData(),
-                          child: Text('RETRY', style: TextStyle(color: cs.primary)),
+                          onPressed: () =>
+                              context.read<OwnerCubit>().loadDashboardData(),
+                          child: Text(
+                            'RETRY',
+                            style: TextStyle(color: cs.primary),
+                          ),
                         ),
                       ],
                     ),
@@ -204,7 +228,10 @@ class _HomeTab extends StatelessWidget {
                 ),
                 Text(
                   'Dashboard Overview',
-                  style: tt.headlineMedium?.copyWith(color: cs.onSurface, fontWeight: FontWeight.w900),
+                  style: tt.headlineMedium?.copyWith(
+                    color: cs.onSurface,
+                    fontWeight: FontWeight.w900,
+                  ),
                 ),
                 SizedBox(height: AppSpacing.xl.h),
 
@@ -219,10 +246,28 @@ class _HomeTab extends StatelessWidget {
                   crossAxisSpacing: AppSpacing.md.w,
                   childAspectRatio: 1.6,
                   children: [
-                    _StatCard('Total Revenue', _fmt(stats['totalRevenue']), 'EGP'),
-                    _StatCard('Net Earnings', _fmt(stats['netEarnings']), 'EGP'),
-                    _StatCard('Active Bookings', _fmt(stats['activeBookingsCount']), '', accent: false),
-                    _StatCard('My Pitches', _fmt(stats['pitchesCount']), '', accent: false),
+                    _StatCard(
+                      'Total Revenue',
+                      _fmt(stats['totalRevenue']),
+                      'EGP',
+                    ),
+                    _StatCard(
+                      'Net Earnings',
+                      _fmt(stats['netEarnings']),
+                      'EGP',
+                    ),
+                    _StatCard(
+                      'Active Bookings',
+                      _fmt(stats['activeBookingsCount']),
+                      '',
+                      accent: false,
+                    ),
+                    _StatCard(
+                      'My Pitches',
+                      _fmt(stats['pitchesCount']),
+                      '',
+                      accent: false,
+                    ),
                   ],
                 ),
                 SizedBox(height: AppSpacing.xl.h),
@@ -234,7 +279,10 @@ class _HomeTab extends StatelessWidget {
                     const _SectionLabel('MY PITCHES'),
                     TextButton(
                       onPressed: () {},
-                      child: Text('See All', style: TextStyle(color: cs.primary)),
+                      child: Text(
+                        'See All',
+                        style: TextStyle(color: cs.primary),
+                      ),
                     ),
                   ],
                 ),
@@ -244,10 +292,14 @@ class _HomeTab extends StatelessWidget {
                 else if (state.myPitches.isEmpty)
                   _EmptyPitches(onAdd: () => context.push(AppRoutes.addPitch))
                 else
-                  ...state.myPitches.take(3).map((p) => Padding(
-                        padding: EdgeInsets.only(bottom: AppSpacing.md.h),
-                        child: _PitchCard(pitch: p),
-                      )),
+                  ...state.myPitches
+                      .take(3)
+                      .map(
+                        (p) => Padding(
+                          padding: EdgeInsets.only(bottom: AppSpacing.md.h),
+                          child: _PitchCard(pitch: p),
+                        ),
+                      ),
                 SizedBox(height: 100.h),
               ]),
             ),
@@ -286,28 +338,44 @@ class _PitchesTab extends StatelessWidget {
             backgroundColor: cs.background,
             floating: true,
             automaticallyImplyLeading: false,
-            title: Text('My Pitches', style: tt.titleLarge?.copyWith(color: cs.onSurface, fontWeight: FontWeight.bold)),
+            title: Text(
+              'My Pitches',
+              style: tt.titleLarge?.copyWith(
+                color: cs.onSurface,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             actions: [
               Padding(
                 padding: EdgeInsets.only(right: AppSpacing.md.w),
                 child: FilledButton.icon(
                   onPressed: () async {
                     await context.push(AppRoutes.addPitch);
-                    if (context.mounted) context.read<OwnerCubit>().refreshPitches();
+                    if (context.mounted)
+                      context.read<OwnerCubit>().refreshPitches();
                   },
                   icon: const Icon(Icons.add, size: 18),
                   label: const Text('Add'),
-                  style: FilledButton.styleFrom(backgroundColor: cs.primary, foregroundColor: cs.onPrimary),
+                  style: FilledButton.styleFrom(
+                    backgroundColor: cs.primary,
+                    foregroundColor: cs.onPrimary,
+                  ),
                 ),
               ),
             ],
           ),
           if (state.status == OwnerStatus.loading && state.myPitches.isEmpty)
             SliverFillRemaining(
-              child: Center(child: CircularProgressIndicator(color: cs.primary)),
+              child: Center(
+                child: CircularProgressIndicator(color: cs.primary),
+              ),
             )
           else if (state.myPitches.isEmpty)
-            SliverFillRemaining(child: _EmptyPitches(onAdd: () => context.push(AppRoutes.addPitch)))
+            SliverFillRemaining(
+              child: _EmptyPitches(
+                onAdd: () => context.push(AppRoutes.addPitch),
+              ),
+            )
           else
             SliverPadding(
               padding: EdgeInsets.all(AppSpacing.lg.w),
@@ -315,7 +383,10 @@ class _PitchesTab extends StatelessWidget {
                 delegate: SliverChildBuilderDelegate(
                   (ctx, i) => Padding(
                     padding: EdgeInsets.only(bottom: AppSpacing.md.h),
-                    child: _PitchCard(pitch: state.myPitches[i], showActions: true),
+                    child: _PitchCard(
+                      pitch: state.myPitches[i],
+                      showActions: true,
+                    ),
                   ),
                   childCount: state.myPitches.length,
                 ),
@@ -351,9 +422,18 @@ class _RevenueTab extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.all(AppSpacing.lg.w),
         children: [
-          Text('Revenue', style: tt.headlineMedium?.copyWith(color: cs.onSurface, fontWeight: FontWeight.w900)),
+          Text(
+            'Revenue',
+            style: tt.headlineMedium?.copyWith(
+              color: cs.onSurface,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
           SizedBox(height: AppSpacing.xs.h),
-          Text('Financial overview of your pitches', style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant)),
+          Text(
+            'Financial overview of your pitches',
+            style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant),
+          ),
           SizedBox(height: AppSpacing.xl.h),
 
           // Big revenue card
@@ -371,18 +451,30 @@ class _RevenueTab extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Total Lifetime Revenue', style: tt.labelSmall?.copyWith(color: cs.onSurfaceVariant)),
+                Text(
+                  'Total Lifetime Revenue',
+                  style: tt.labelSmall?.copyWith(color: cs.onSurfaceVariant),
+                ),
                 SizedBox(height: AppSpacing.xs.h),
                 Text(
                   '${total.toStringAsFixed(0)} EGP',
-                  style: tt.displaySmall?.copyWith(color: cs.primary, fontWeight: FontWeight.w900),
+                  style: tt.displaySmall?.copyWith(
+                    color: cs.primary,
+                    fontWeight: FontWeight.w900,
+                  ),
                 ),
                 SizedBox(height: AppSpacing.md.h),
                 Row(
                   children: [
-                    _MiniStat('This Month', '${monthly.toStringAsFixed(0)} EGP'),
+                    _MiniStat(
+                      'This Month',
+                      '${monthly.toStringAsFixed(0)} EGP',
+                    ),
                     SizedBox(width: AppSpacing.lg.w),
-                    _MiniStat('Commission', '${commission.toStringAsFixed(0)} EGP'),
+                    _MiniStat(
+                      'Commission',
+                      '${commission.toStringAsFixed(0)} EGP',
+                    ),
                     SizedBox(width: AppSpacing.lg.w),
                     _MiniStat('Net Payout', '${net.toStringAsFixed(0)} EGP'),
                   ],
@@ -439,7 +531,13 @@ class _ProfileTabState extends State<_ProfileTab> {
         return ListView(
           padding: EdgeInsets.all(AppSpacing.lg.w),
           children: [
-            Text('Profile', style: tt.headlineMedium?.copyWith(color: cs.onSurface, fontWeight: FontWeight.w900)),
+            Text(
+              'Profile',
+              style: tt.headlineMedium?.copyWith(
+                color: cs.onSurface,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
             SizedBox(height: AppSpacing.lg.h),
             Container(
               padding: EdgeInsets.all(AppSpacing.lg.w),
@@ -452,11 +550,15 @@ class _ProfileTabState extends State<_ProfileTab> {
                   GestureDetector(
                     onTap: () async {
                       final picker = ImagePicker();
-                      final image = await picker.pickImage(source: ImageSource.gallery);
+                      final image = await picker.pickImage(
+                        source: ImageSource.gallery,
+                      );
                       if (image != null && context.mounted) {
                         final bytes = await image.readAsBytes();
                         setState(() => _localPhotoBytes = bytes);
-                        context.read<AuthCubit>().updateProfile(photoPath: image.path);
+                        context.read<AuthCubit>().updateProfile(
+                          photoPath: image.path,
+                        );
                       }
                     },
                     child: BlocBuilder<AuthCubit, AuthState>(
@@ -469,34 +571,70 @@ class _ProfileTabState extends State<_ProfileTab> {
                               height: 80.w,
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
-                                  colors: [cs.primary, cs.primary.withValues(alpha: 0.7)],
+                                  colors: [
+                                    cs.primary,
+                                    cs.primary.withValues(alpha: 0.7),
+                                  ],
                                 ),
                                 shape: BoxShape.circle,
                               ),
                               child: ClipOval(
                                 child: authState.isLoading
-                                    ? Center(child: CircularProgressIndicator(color: cs.onPrimary, strokeWidth: 2))
+                                    ? Center(
+                                        child: CircularProgressIndicator(
+                                          color: cs.onPrimary,
+                                          strokeWidth: 2,
+                                        ),
+                                      )
                                     : _localPhotoBytes != null
-                                        ? Image.memory(
-                                            _localPhotoBytes!,
-                                            fit: BoxFit.cover,
-                                            errorBuilder: (_, __, ___) => Icon(IconsaxPlusBold.user, color: cs.onPrimary, size: 36),
-                                          )
-                                        : (user?.photoUrl != null && user!.photoUrl!.isNotEmpty)
-                                            ? AppCachedImage(
-                                                imageUrl: user.photoUrl!,
-                                                fit: BoxFit.cover,
-                                                placeholder: Center(child: CircularProgressIndicator(color: cs.onPrimary, strokeWidth: 2)),
-                                                errorWidget: Container(color: cs.surfaceContainerHighest, child: Icon(IconsaxPlusBold.user, color: cs.onPrimary, size: 36)),
-                                              )
-                                            : Icon(IconsaxPlusBold.user, color: cs.onPrimary, size: 36),
+                                    ? Image.memory(
+                                        _localPhotoBytes!,
+                                        fit: BoxFit.cover,
+                                        errorBuilder: (_, __, ___) => Icon(
+                                          IconsaxPlusBold.user,
+                                          color: cs.onPrimary,
+                                          size: 36,
+                                        ),
+                                      )
+                                    : (user?.photoUrl != null &&
+                                          user!.photoUrl!.isNotEmpty)
+                                    ? AppCachedImage(
+                                        imageUrl: user.photoUrl!,
+                                        fit: BoxFit.cover,
+                                        placeholder: Center(
+                                          child: CircularProgressIndicator(
+                                            color: cs.onPrimary,
+                                            strokeWidth: 2,
+                                          ),
+                                        ),
+                                        errorWidget: Container(
+                                          color: cs.surfaceContainerHighest,
+                                          child: Icon(
+                                            IconsaxPlusBold.user,
+                                            color: cs.onPrimary,
+                                            size: 36,
+                                          ),
+                                        ),
+                                      )
+                                    : Icon(
+                                        IconsaxPlusBold.user,
+                                        color: cs.onPrimary,
+                                        size: 36,
+                                      ),
                               ),
                             ),
                             if (!authState.isLoading)
                               Container(
                                 padding: EdgeInsets.all(AppSpacing.xxs.w),
-                                decoration: BoxDecoration(color: cs.primary, shape: BoxShape.circle),
-                                child: Icon(Icons.camera_alt, color: cs.onPrimary, size: 14),
+                                decoration: BoxDecoration(
+                                  color: cs.primary,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  Icons.camera_alt,
+                                  color: cs.onPrimary,
+                                  size: 14,
+                                ),
                               ),
                           ],
                         );
@@ -506,36 +644,65 @@ class _ProfileTabState extends State<_ProfileTab> {
                   SizedBox(height: AppSpacing.md.h),
                   Text(
                     user?.name ?? 'Pitch Owner',
-                    style: tt.titleLarge?.copyWith(color: cs.onSurface, fontWeight: FontWeight.bold),
+                    style: tt.titleLarge?.copyWith(
+                      color: cs.onSurface,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   SizedBox(height: AppSpacing.xxs.h),
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: AppSpacing.md.w, vertical: AppSpacing.xs.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: AppSpacing.md.w,
+                      vertical: AppSpacing.xs.h,
+                    ),
                     decoration: BoxDecoration(
                       color: cs.primaryContainer.withValues(alpha: 0.1),
                       borderRadius: AppRadius.bxxl.r,
-                      border: Border.all(color: cs.primary.withValues(alpha: 0.3)),
+                      border: Border.all(
+                        color: cs.primary.withValues(alpha: 0.3),
+                      ),
                     ),
                     child: Text(
                       user?.role?.toUpperCase() ?? 'OWNER',
-                      style: tt.labelSmall?.copyWith(color: cs.primary, fontWeight: FontWeight.bold),
+                      style: tt.labelSmall?.copyWith(
+                        color: cs.primary,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
             SizedBox(height: AppSpacing.md.h),
-            _ProfileAction(icon: IconsaxPlusLinear.add_circle, label: 'Add New Pitch', onTap: () => context.push(AppRoutes.addPitch)),
-            _ProfileAction(icon: IconsaxPlusLinear.notification, label: 'Notifications', onTap: () => context.push(AppRoutes.notifications)),
-            
+            _ProfileAction(
+              icon: IconsaxPlusLinear.add_circle,
+              label: 'Add New Pitch',
+              onTap: () => context.push(AppRoutes.addPitch),
+            ),
+            _ProfileAction(
+              icon: IconsaxPlusLinear.notification,
+              label: 'Notifications',
+              onTap: () => context.push(AppRoutes.notifications),
+            ),
+
             // Theme Toggle
             BlocBuilder<ThemeCubit, ThemeMode>(
               builder: (context, mode) {
-                final isDark = mode == ThemeMode.dark || (mode == ThemeMode.system && MediaQuery.of(context).platformBrightness == Brightness.dark);
+                final isDark =
+                    mode == ThemeMode.dark ||
+                    (mode == ThemeMode.system &&
+                        MediaQuery.of(context).platformBrightness ==
+                            Brightness.dark);
                 return _ProfileAction(
-                  icon: isDark ? IconsaxPlusLinear.sun_1 : IconsaxPlusLinear.moon,
-                  label: isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode',
-                  onTap: () => context.read<ThemeCubit>().setTheme(isDark ? ThemeMode.light : ThemeMode.dark),
+                  icon: isDark
+                      ? IconsaxPlusLinear.sun_1
+                      : IconsaxPlusLinear.moon,
+                  label: isDark
+                      ? 'Switch to Light Mode'
+                      : 'Switch to Dark Mode',
+                  onTap: () => context.read<ThemeCubit>().setTheme(
+                    isDark ? ThemeMode.light : ThemeMode.dark,
+                  ),
                 );
               },
             ),
@@ -565,7 +732,11 @@ class _SectionLabel extends StatelessWidget {
     final tt = context.textTheme;
     return Text(
       text,
-      style: tt.labelSmall?.copyWith(color: cs.onSurfaceVariant, fontWeight: FontWeight.w900, letterSpacing: 1.5),
+      style: tt.labelSmall?.copyWith(
+        color: cs.onSurfaceVariant,
+        fontWeight: FontWeight.w900,
+        letterSpacing: 1.5,
+      ),
     );
   }
 }
@@ -593,7 +764,13 @@ class _StatCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(label, style: tt.labelSmall?.copyWith(color: cs.onSurfaceVariant, fontWeight: FontWeight.w600)),
+          Text(
+            label,
+            style: tt.labelSmall?.copyWith(
+              color: cs.onSurfaceVariant,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
           SizedBox(height: AppSpacing.xs.h),
           Text(
             unit.isNotEmpty ? '$value $unit' : value,
@@ -669,12 +846,18 @@ class _PitchCard extends StatelessWidget {
                 SizedBox(height: AppSpacing.xxs.h),
                 Row(
                   children: [
-                    Icon(IconsaxPlusLinear.location, color: cs.onSurfaceVariant, size: 14),
+                    Icon(
+                      IconsaxPlusLinear.location,
+                      color: cs.onSurfaceVariant,
+                      size: 14,
+                    ),
                     SizedBox(width: AppSpacing.xxs.w),
                     Expanded(
                       child: Text(
                         pitch.location.city,
-                        style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant),
+                        style: tt.bodySmall?.copyWith(
+                          color: cs.onSurfaceVariant,
+                        ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -683,7 +866,10 @@ class _PitchCard extends StatelessWidget {
                 ),
                 SizedBox(height: AppSpacing.xs.h),
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: AppSpacing.md.w, vertical: AppSpacing.xs.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppSpacing.md.w,
+                    vertical: AppSpacing.xs.h,
+                  ),
                   decoration: BoxDecoration(
                     color: cs.primaryContainer.withValues(alpha: 0.3),
                     borderRadius: AppRadius.bsm.r,
@@ -704,32 +890,54 @@ class _PitchCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 IconButton(
-                  icon: Icon(IconsaxPlusLinear.edit, color: cs.primary, size: 20),
+                  icon: Icon(
+                    IconsaxPlusLinear.edit,
+                    color: cs.primary,
+                    size: 20,
+                  ),
                   onPressed: () {
                     context.push(AppRoutes.addPitch, extra: pitch);
                   },
                   tooltip: 'Edit Pitch',
                 ),
                 IconButton(
-                  icon: Icon(IconsaxPlusLinear.trash, color: cs.error, size: 20),
+                  icon: Icon(
+                    IconsaxPlusLinear.trash,
+                    color: cs.error,
+                    size: 20,
+                  ),
                   onPressed: () {
                     showDialog(
                       context: context,
                       builder: (ctx) => AlertDialog(
                         backgroundColor: cs.surface,
-                        title: Text('Delete Pitch', style: tt.titleLarge?.copyWith(color: cs.onSurface)),
-                        content: Text('Are you sure you want to delete this pitch?', style: tt.bodyMedium?.copyWith(color: cs.onSurfaceVariant)),
+                        title: Text(
+                          'Delete Pitch',
+                          style: tt.titleLarge?.copyWith(color: cs.onSurface),
+                        ),
+                        content: Text(
+                          'Are you sure you want to delete this pitch?',
+                          style: tt.bodyMedium?.copyWith(
+                            color: cs.onSurfaceVariant,
+                          ),
+                        ),
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.pop(ctx),
-                            child: Text('Cancel', style: TextStyle(color: cs.onSurfaceVariant)),
+                            child: Text(
+                              'Cancel',
+                              style: TextStyle(color: cs.onSurfaceVariant),
+                            ),
                           ),
                           TextButton(
                             onPressed: () {
                               Navigator.pop(ctx);
                               context.read<OwnerCubit>().deletePitch(pitch.id);
                             },
-                            child: Text('Delete', style: TextStyle(color: cs.error)),
+                            child: Text(
+                              'Delete',
+                              style: TextStyle(color: cs.error),
+                            ),
                           ),
                         ],
                       ),
@@ -761,16 +969,25 @@ class _EmptyPitches extends StatelessWidget {
           SizedBox(height: 40.h),
           Container(
             padding: EdgeInsets.all(AppSpacing.xl.w),
-            decoration: BoxDecoration(color: cs.surfaceContainerLow, shape: BoxShape.circle),
+            decoration: BoxDecoration(
+              color: cs.surfaceContainerLow,
+              shape: BoxShape.circle,
+            ),
             child: Icon(Icons.stadium_outlined, color: cs.primary, size: 48),
           ),
           SizedBox(height: AppSpacing.md.h),
           Text(
             'No Pitches Yet',
-            style: tt.titleLarge?.copyWith(color: cs.onSurface, fontWeight: FontWeight.bold),
+            style: tt.titleLarge?.copyWith(
+              color: cs.onSurface,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           SizedBox(height: AppSpacing.xs.h),
-          Text('Add your first pitch to get started', style: tt.bodyMedium?.copyWith(color: cs.onSurfaceVariant)),
+          Text(
+            'Add your first pitch to get started',
+            style: tt.bodyMedium?.copyWith(color: cs.onSurfaceVariant),
+          ),
           SizedBox(height: AppSpacing.xl.h),
           FilledButton.icon(
             onPressed: onAdd,
@@ -799,9 +1016,21 @@ class _MiniStat extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: tt.labelSmall?.copyWith(color: cs.onSurfaceVariant, fontSize: 10.sp)),
+        Text(
+          label,
+          style: tt.labelSmall?.copyWith(
+            color: cs.onSurfaceVariant,
+            fontSize: 10.sp,
+          ),
+        ),
         SizedBox(height: AppSpacing.xxs.h),
-        Text(value, style: tt.titleSmall?.copyWith(color: cs.onSurface, fontWeight: FontWeight.bold)),
+        Text(
+          value,
+          style: tt.titleSmall?.copyWith(
+            color: cs.onSurface,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ],
     );
   }
@@ -812,7 +1041,12 @@ class _ProfileAction extends StatelessWidget {
   final String label;
   final VoidCallback onTap;
   final bool isDestructive;
-  const _ProfileAction({required this.icon, required this.label, required this.onTap, this.isDestructive = false});
+  const _ProfileAction({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+    this.isDestructive = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -823,9 +1057,22 @@ class _ProfileAction extends StatelessWidget {
     return ListTile(
       onTap: onTap,
       leading: Icon(icon, color: color, size: 22),
-      title: Text(label, style: tt.bodyLarge?.copyWith(color: color, fontWeight: FontWeight.w500)),
-      trailing: Icon(Icons.arrow_forward_ios, color: cs.onSurfaceVariant, size: 14),
-      contentPadding: EdgeInsets.symmetric(horizontal: AppSpacing.md.w, vertical: AppSpacing.xs.h),
+      title: Text(
+        label,
+        style: tt.bodyLarge?.copyWith(
+          color: color,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      trailing: Icon(
+        Icons.arrow_forward_ios,
+        color: cs.onSurfaceVariant,
+        size: 14,
+      ),
+      contentPadding: EdgeInsets.symmetric(
+        horizontal: AppSpacing.md.w,
+        vertical: AppSpacing.xs.h,
+      ),
       shape: RoundedRectangleBorder(borderRadius: AppRadius.blg.r),
     );
   }

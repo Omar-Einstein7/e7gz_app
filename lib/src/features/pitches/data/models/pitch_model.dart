@@ -35,12 +35,22 @@ class PitchModel extends Pitch {
         city: loc['city']?.toString() ?? '',
         country: loc['country']?.toString() ?? 'Egypt',
         // ORS / GeoJSON: [longitude, latitude]
-        longitude: (coordsList.isNotEmpty ? (coordsList[0] as num?)?.toDouble() ?? 0.0 : 0.0),
-        latitude: (coordsList.length > 1 ? (coordsList[1] as num?)?.toDouble() ?? 0.0 : 0.0),
+        longitude: (coordsList.isNotEmpty
+            ? (coordsList[0] as num?)?.toDouble() ?? 0.0
+            : 0.0),
+        latitude: (coordsList.length > 1
+            ? (coordsList[1] as num?)?.toDouble() ?? 0.0
+            : 0.0),
       ),
       pricePerHour: (json['pricePerHour'] as num?)?.toDouble() ?? 0.0,
-      amenities: (json['amenities'] as List?)?.map((e) => e?.toString() ?? '').toList() ?? [],
-      images: (json['images'] as List?)?.map((e) => e?.toString() ?? '').toList() ?? [],
+      amenities:
+          (json['amenities'] as List?)
+              ?.map((e) => e?.toString() ?? '')
+              .toList() ??
+          [],
+      images:
+          (json['images'] as List?)?.map((e) => e?.toString() ?? '').toList() ??
+          [],
       rating: (json['rating'] as num?)?.toDouble() ?? 0.0,
       reviewsCount: (json['reviewsCount'] as num?)?.toInt() ?? 0,
       isAvailable: json['isAvailable'] ?? true,
@@ -58,23 +68,23 @@ class PitchModel extends Pitch {
   }
 
   Map<String, dynamic> toJson() => {
-        'name': name,
-        'description': description,
-        'sportType': sportType,
-        'location': {
-          'address': location.address,
-          'city': location.city,
-          'country': location.country,
-          'coordinates': {
-            'type': 'Point',
-            'coordinates': [location.longitude, location.latitude],
-          },
-        },
-        'pricePerHour': pricePerHour,
-        'amenities': amenities,
-        'images': images,
-        'openingTime': openingTime,
-        'closingTime': closingTime,
-        'slotDurationMinutes': slotDurationMinutes,
-      };
+    'name': name,
+    'description': description,
+    'sportType': sportType,
+    'location': {
+      'address': location.address,
+      'city': location.city,
+      'country': location.country,
+      'coordinates': {
+        'type': 'Point',
+        'coordinates': [location.longitude, location.latitude],
+      },
+    },
+    'pricePerHour': pricePerHour,
+    'amenities': amenities,
+    'images': images,
+    'openingTime': openingTime,
+    'closingTime': closingTime,
+    'slotDurationMinutes': slotDurationMinutes,
+  };
 }

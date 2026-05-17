@@ -1,9 +1,8 @@
-
 import 'package:e7gz/src/imports/imports.dart';
 
 class BrandHeader extends StatelessWidget {
   final double? fontSize;
-  
+
   const BrandHeader({super.key, this.fontSize});
 
   @override

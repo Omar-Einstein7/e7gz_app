@@ -19,10 +19,16 @@ class MatchmakingCard extends StatelessWidget {
     final typography = context.typography;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final theme = Theme.of(context);
-    final cardBg = isDark ? const Color(0xFF131B2E) : theme.colorScheme.surfaceContainerLow;
+    final cardBg = isDark
+        ? const Color(0xFF131B2E)
+        : theme.colorScheme.surfaceContainerLow;
     final textColor = isDark ? Colors.white : theme.colorScheme.onSurface;
-    final subtitleColor = isDark ? const Color(0xFFBCC7DE) : theme.colorScheme.onSurfaceVariant;
-    final shadowColor = isDark ? Colors.black.withValues(alpha: 0.2) : theme.colorScheme.shadow.withValues(alpha: 0.05);
+    final subtitleColor = isDark
+        ? const Color(0xFFBCC7DE)
+        : theme.colorScheme.onSurfaceVariant;
+    final shadowColor = isDark
+        ? Colors.black.withValues(alpha: 0.2)
+        : theme.colorScheme.shadow.withValues(alpha: 0.05);
 
     return GestureDetector(
       onTap: onTap,
@@ -30,12 +36,7 @@ class MatchmakingCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: cardBg,
           borderRadius: BorderRadius.circular(40.r),
-          boxShadow: [
-            BoxShadow(
-              color: shadowColor,
-              blurRadius: 20,
-            ),
-          ],
+          boxShadow: [BoxShadow(color: shadowColor, blurRadius: 20)],
         ),
         child: Column(
           children: [
@@ -43,9 +44,12 @@ class MatchmakingCard extends StatelessWidget {
             Stack(
               children: [
                 ClipRRect(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(40.r)),
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(40.r),
+                  ),
                   child: AppCachedImage(
-                    imageUrl: match.pitchImage ??
+                    imageUrl:
+                        match.pitchImage ??
                         'https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80',
                     height: 160.h,
                     width: double.infinity,
@@ -56,9 +60,16 @@ class MatchmakingCard extends StatelessWidget {
                   top: 16.h,
                   right: 16.w,
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 12.w,
+                      vertical: 6.h,
+                    ),
                     decoration: BoxDecoration(
-                      color: match.isFull ? Colors.red : (isDark ? const Color(0xFF4BE277) : theme.colorScheme.primary),
+                      color: match.isFull
+                          ? Colors.red
+                          : (isDark
+                                ? const Color(0xFF4BE277)
+                                : theme.colorScheme.primary),
                       borderRadius: BorderRadius.circular(100.r),
                     ),
                     child: Text(
@@ -119,7 +130,9 @@ class MatchmakingCard extends StatelessWidget {
                           Text(
                             '${match.pricePerPlayer.toInt()}',
                             style: typography.titleLarge?.copyWith(
-                              color: isDark ? const Color(0xFF4BE277) : theme.colorScheme.primary,
+                              color: isDark
+                                  ? const Color(0xFF4BE277)
+                                  : theme.colorScheme.primary,
                               fontWeight: FontWeight.w900,
                             ),
                           ),
@@ -143,7 +156,10 @@ class MatchmakingCard extends StatelessWidget {
                         width: 80.w,
                         child: Stack(
                           children: [
-                            CircleAvatar(radius: 14.r, backgroundColor: Colors.grey),
+                            CircleAvatar(
+                              radius: 14.r,
+                              backgroundColor: Colors.grey,
+                            ),
                             if (match.participantIds.length > 1)
                               Positioned(
                                 left: 20.w,
@@ -196,7 +212,9 @@ class MatchmakingCard extends StatelessWidget {
                     suffixIcon: match.isFull
                         ? const Icon(Icons.hourglass_empty, size: 18)
                         : const Icon(Icons.arrow_forward),
-                    variant: match.isFull ? ButtonVariant.secondary : ButtonVariant.primary,
+                    variant: match.isFull
+                        ? ButtonVariant.secondary
+                        : ButtonVariant.primary,
                   ),
                 ],
               ),

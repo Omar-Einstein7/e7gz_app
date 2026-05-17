@@ -93,9 +93,9 @@ class _BookingSlotsScreenState extends State<BookingSlotsScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               PitchMiniHero(extraPitch: widget.extraPitch),
-              
+
               SizedBox(height: AppSpacing.md.h),
-              
+
               CalendarStrip(
                 weekDates: _weekDates,
                 selectedDateIndex: _selectedDateIndex,
@@ -104,26 +104,27 @@ class _BookingSlotsScreenState extends State<BookingSlotsScreen> {
                   _loadSlotsForDate(date);
                 },
               ),
-              
+
               SizedBox(height: AppSpacing.xxl.h),
-              
+
               const SlotsGrid(),
-              
+
               SizedBox(height: AppSpacing.xxl.h),
-              
+
               PaymentPlanSelector(
                 isFullPayment: _isFullPayment,
-                onPlanChanged: (isFull) => setState(() => _isFullPayment = isFull),
+                onPlanChanged: (isFull) =>
+                    setState(() => _isFullPayment = isFull),
               ),
-              
+
               SizedBox(height: AppSpacing.xxl.h),
-              
+
               BookingCheckoutBar(
                 pitchId: widget.pitchId,
                 extraPitch: widget.extraPitch,
                 isFullPayment: _isFullPayment,
               ),
-              
+
               SizedBox(height: AppSpacing.xl.h),
             ],
           ),

@@ -39,7 +39,9 @@ class MatchRepositoryImpl implements MatchRepository {
   }
 
   @override
-  Future<Either<Failure, MatchmakingMatch>> createMatch(MatchModel match) async {
+  Future<Either<Failure, MatchmakingMatch>> createMatch(
+    MatchModel match,
+  ) async {
     try {
       final result = await remoteDataSource.createMatch(match);
       return right(result);

@@ -6,7 +6,8 @@ class MockData {
     const Pitch(
       id: '1',
       name: 'Anfield Arena',
-      description: 'Featuring high-grade FIFA certified artificial turf, Anfield Arena offers a premium playing surface...',
+      description:
+          'Featuring high-grade FIFA certified artificial turf, Anfield Arena offers a premium playing surface...',
       ownerId: 'owner_1',
       sportType: 'Football',
       location: PitchLocation(
@@ -18,7 +19,9 @@ class MockData {
       ),
       pricePerHour: 450,
       amenities: ['Showers', 'Parking', 'Free WiFi', 'Cafeteria'],
-      images: ['https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80'],
+      images: [
+        'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80',
+      ],
       rating: 4.8,
       reviewsCount: 120,
       isAvailable: true,
@@ -29,7 +32,8 @@ class MockData {
     const Pitch(
       id: '2',
       name: 'Camp Nou Cairo',
-      description: 'One of the best pitches in Maadi with professional lighting for night matches.',
+      description:
+          'One of the best pitches in Maadi with professional lighting for night matches.',
       ownerId: 'owner_2',
       sportType: 'Football',
       location: PitchLocation(
@@ -41,7 +45,9 @@ class MockData {
       ),
       pricePerHour: 500,
       amenities: ['Showers', 'Parking', 'Lockers'],
-      images: ['https://images.unsplash.com/photo-1556056504-5c7696c4c28d?auto=format&fit=crop&q=80'],
+      images: [
+        'https://images.unsplash.com/photo-1556056504-5c7696c4c28d?auto=format&fit=crop&q=80',
+      ],
       rating: 4.9,
       reviewsCount: 85,
       isAvailable: true,
@@ -64,7 +70,9 @@ class MockData {
       ),
       pricePerHour: 350,
       amenities: ['Parking', 'Cafeteria'],
-      images: ['https://images.unsplash.com/photo-1518605336397-90db31631e84?auto=format&fit=crop&q=80'],
+      images: [
+        'https://images.unsplash.com/photo-1518605336397-90db31631e84?auto=format&fit=crop&q=80',
+      ],
       rating: 4.7,
       reviewsCount: 200,
       isAvailable: true,
@@ -89,7 +97,9 @@ class MockData {
       skillLevel: 'Intermediate',
       status: 'open',
       pitchName: 'Maadi Arena',
-      pitchImage: 'https://images.unsplash.com/photo-1556056504-5c7696c4c28d?auto=format&fit=crop&q=80', sportType: '',
+      pitchImage:
+          'https://images.unsplash.com/photo-1556056504-5c7696c4c28d?auto=format&fit=crop&q=80',
+      sportType: '',
     ),
     MatchmakingMatch(
       id: 'm2',
@@ -105,7 +115,9 @@ class MockData {
       skillLevel: 'Advanced',
       status: 'open',
       pitchName: 'Anfield Arena',
-      pitchImage: 'https://images.unsplash.com/photo-1518605336397-90db31631e84?auto=format&fit=crop&q=80', sportType: '',
+      pitchImage:
+          'https://images.unsplash.com/photo-1518605336397-90db31631e84?auto=format&fit=crop&q=80',
+      sportType: '',
     ),
   ];
 }

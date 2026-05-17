@@ -12,9 +12,9 @@ class Booking extends Equatable {
   final String? pitchImage;
   final double? pitchLatitude;
   final double? pitchLongitude;
-  final String date;        // "YYYY-MM-DD"
-  final String startTime;   // "HH:MM"
-  final String endTime;     // "HH:MM"
+  final String date; // "YYYY-MM-DD"
+  final String startTime; // "HH:MM"
+  final String endTime; // "HH:MM"
   final double totalPrice;
   final BookingStatus status;
   final String? paymentStatus;
@@ -43,24 +43,23 @@ class Booking extends Equatable {
   });
 
   factory Booking.empty() => Booking(
-        id: '',
-        userId: '',
-        pitchId: '',
-        pitchName: 'Stadium Name Placeholder',
-        pitchAddress: 'Address Placeholder',
-        date: '2025-01-01',
-        startTime: '00:00',
-        endTime: '00:00',
-        totalPrice: 0,
-        status: BookingStatus.confirmed,
-        createdAt: DateTime.now(),
-      );
+    id: '',
+    userId: '',
+    pitchId: '',
+    pitchName: 'Stadium Name Placeholder',
+    pitchAddress: 'Address Placeholder',
+    date: '2025-01-01',
+    startTime: '00:00',
+    endTime: '00:00',
+    totalPrice: 0,
+    status: BookingStatus.confirmed,
+    createdAt: DateTime.now(),
+  );
 
   String get timeRange => '$startTime - $endTime';
 
   @override
-  List<Object?> get props =>
-      [id, pitchId, date, startTime, endTime, status];
+  List<Object?> get props => [id, pitchId, date, startTime, endTime, status];
 }
 
 enum BookingStatus { pending, confirmed, cancelled, completed }

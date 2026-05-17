@@ -40,7 +40,9 @@ class BookingCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      booking.pitchName.isNotEmpty ? booking.pitchName : 'Pitch Details',
+                      booking.pitchName.isNotEmpty
+                          ? booking.pitchName
+                          : 'Pitch Details',
                       style: typography.titleMedium?.copyWith(
                         color: cs.onSurface,
                         fontWeight: FontWeight.bold,
@@ -49,7 +51,9 @@ class BookingCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
-                      booking.pitchAddress.isNotEmpty ? booking.pitchAddress : 'Unknown Location',
+                      booking.pitchAddress.isNotEmpty
+                          ? booking.pitchAddress
+                          : 'Unknown Location',
                       style: typography.bodySmall?.copyWith(
                         color: cs.onSurfaceVariant,
                       ),
@@ -59,10 +63,7 @@ class BookingCard extends StatelessWidget {
                   ],
                 ),
               ),
-              BookingStatusChip(
-                status: booking.status,
-                isUpcoming: isUpcoming,
-              ),
+              BookingStatusChip(status: booking.status, isUpcoming: isUpcoming),
             ],
           ),
           SizedBox(height: AppSpacing.lg.h),
@@ -70,7 +71,10 @@ class BookingCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _DetailItem(label: 'DATE', value: booking.date),
-              _DetailItem(label: 'TIME', value: '${booking.startTime} - ${booking.endTime}'),
+              _DetailItem(
+                label: 'TIME',
+                value: '${booking.startTime} - ${booking.endTime}',
+              ),
               _DetailItem(
                 label: 'PRICE',
                 value: '${booking.totalPrice.toInt()} EGP',
@@ -107,9 +111,7 @@ class BookingCard extends StatelessWidget {
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: cs.surfaceContainerHigh,
-        shape: RoundedRectangleBorder(
-          borderRadius: AppRadius.bxxl.r,
-        ),
+        shape: RoundedRectangleBorder(borderRadius: AppRadius.bxxl.r),
         title: Text(
           'Cancel Booking?',
           style: TextStyle(color: cs.onSurface, fontWeight: FontWeight.bold),
@@ -133,10 +135,7 @@ class BookingCard extends StatelessWidget {
             },
             child: Text(
               'YES, CANCEL',
-              style: TextStyle(
-                color: cs.error,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(color: cs.error, fontWeight: FontWeight.bold),
             ),
           ),
         ],
@@ -217,11 +216,7 @@ class _LocationActionButton extends StatelessWidget {
           color: cs.surfaceContainerHigh,
           borderRadius: BorderRadius.circular(100.r),
         ),
-        child: Icon(
-          IconsaxPlusLinear.location,
-          color: cs.onSurface,
-          size: 20,
-        ),
+        child: Icon(IconsaxPlusLinear.location, color: cs.onSurface, size: 20),
       ),
     );
   }

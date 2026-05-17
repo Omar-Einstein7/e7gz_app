@@ -1,4 +1,3 @@
-
 import 'package:e7gz/src/imports/imports.dart';
 
 class HomeCategoryChip extends StatelessWidget {
@@ -16,7 +15,7 @@ class HomeCategoryChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20.w),
       decoration: BoxDecoration(

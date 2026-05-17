@@ -7,12 +7,12 @@ abstract final class Validators {
     if (value == null || value.isEmpty) {
       return 'Email is required';
     }
-    
+
     final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
     if (!emailRegex.hasMatch(value)) {
       return 'Please enter a valid email address';
     }
-    
+
     return null;
   }
 
@@ -40,12 +40,12 @@ abstract final class Validators {
     if (value == null || value.isEmpty) {
       return 'Phone number is required';
     }
-    
+
     final phoneRegex = RegExp(r'^01[0125][0-9]{8}$');
     if (!phoneRegex.hasMatch(value)) {
       return 'Please enter a valid Egyptian phone number';
     }
-    
+
     return null;
   }
 }

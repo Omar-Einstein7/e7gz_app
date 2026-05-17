@@ -2,7 +2,6 @@ import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:e7gz/src/features/auth/presentation/providers/session_cubit.dart';
 
-
 // Import Cubits for data triggering
 import 'package:e7gz/src/features/home/presentation/cubit/home_cubit.dart';
 import 'package:e7gz/src/features/profile/presentation/cubit/profile_cubit.dart';
@@ -19,15 +18,19 @@ class SessionListenerWrapper extends StatelessWidget {
     return BlocListener<SessionCubit, SessionState>(
       listenWhen: (prev, next) => prev.status != next.status,
       listener: (context, state) {
-        AppLogger.info('🔄 SessionListenerWrapper: Status changed to ${state.status}');
-        
+        AppLogger.info(
+          '🔄 SessionListenerWrapper: Status changed to ${state.status}',
+        );
+
         if (state.status != SessionStatus.unknown) {
           FlutterNativeSplash.remove();
-          
+
           if (state.status == SessionStatus.authenticated) {
             final user = state.user;
-            AppLogger.info('👤 User authenticated: ${user?.email} (Role: ${user?.role})');
-            
+            AppLogger.info(
+              '👤 User authenticated: ${user?.email} (Role: ${user?.role})',
+            );
+
             // Trigger common data loads for all roles
             context.read<ProfileCubit>().loadProfileData();
             context.read<NotificationsCubit>().loadNotifications();
@@ -47,13 +50,17 @@ class SessionListenerWrapper extends StatelessWidget {
                 appRouter.go(AppRoutes.home);
               }
             } else {
-              AppLogger.warning('⚠️ User is null but status is authenticated. Fallback to home.');
+              AppLogger.warning(
+                '⚠️ User is null but status is authenticated. Fallback to home.',
+              );
               // Fallback for null user (should not happen if authenticated)
               context.read<HomeCubit>().loadHomeData();
               appRouter.go(AppRoutes.home);
             }
           } else if (state.status == SessionStatus.unauthenticated) {
-            AppLogger.info('🚪 User unauthenticated. Staying/Redirecting to onboarding if necessary.');
+            AppLogger.info(
+              '🚪 User unauthenticated. Staying/Redirecting to onboarding if necessary.',
+            );
             appRouter.go(AppRoutes.onboarding);
           }
         }

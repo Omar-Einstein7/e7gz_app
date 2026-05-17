@@ -20,7 +20,6 @@ class SearchResultCard extends StatelessWidget {
           color: cs.surface,
           borderRadius: AppRadius.bxxl.r,
           boxShadow: AppShadows.card,
-
         ),
         child: Column(
           children: [
@@ -137,11 +136,7 @@ class SearchResultCard extends StatelessWidget {
                         ),
                         child: Row(
                           children: [
-                            Icon(
-                              Icons.star,
-                              color: cs.primary,
-                              size: 14,
-                            ),
+                            Icon(Icons.star, color: cs.primary, size: 14),
                             SizedBox(width: AppSpacing.xs.w),
                             Text(
                               pitch.rating.toString(),

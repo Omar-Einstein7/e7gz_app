@@ -19,7 +19,11 @@ class _SplashScreenState extends State<SplashScreen> {
     // Navigation is handled by the BlocListener in build
   }
 
-  void _handleNavigation(BuildContext context, SessionStatus status, AppUser? user) {
+  void _handleNavigation(
+    BuildContext context,
+    SessionStatus status,
+    AppUser? user,
+  ) {
     if (status == SessionStatus.unknown) return;
 
     if (status == SessionStatus.authenticated && user != null) {
@@ -65,14 +69,17 @@ class _SplashScreenState extends State<SplashScreen> {
                 ),
               ),
             ),
-            
+
             Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   // Center Card
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 40.w, vertical: 60.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 40.w,
+                      vertical: 60.h,
+                    ),
                     decoration: BoxDecoration(
                       color: const Color(0xFF131B2E),
                       borderRadius: BorderRadius.circular(48.r),
@@ -108,9 +115,9 @@ class _SplashScreenState extends State<SplashScreen> {
                       ],
                     ),
                   ),
-                  
+
                   SizedBox(height: 100.h),
-                  
+
                   // Loading indicator section
                   Column(
                     children: [
@@ -142,7 +149,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 ],
               ),
             ),
-            
+
             // Bottom branding
             Positioned(
               bottom: 50.h,

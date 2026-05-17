@@ -36,11 +36,7 @@ class PaymentPlanSelector extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg.w),
           child: Row(
             children: [
-              Icon(
-                IconsaxPlusBold.card,
-                color: cs.primary,
-                size: 24,
-              ),
+              Icon(IconsaxPlusBold.card, color: cs.primary, size: 24),
               SizedBox(width: AppSpacing.md.w),
               Text(
                 'booking_slots.payment_plan'.tr(),
@@ -64,7 +60,9 @@ class PaymentPlanSelector extends StatelessWidget {
             children: [
               _PaymentOption(
                 title: 'booking_slots.full_payment'.tr(),
-                subtitle: 'booking_slots.full_desc_param'.tr(namedArgs: {'total': totalAmount.toString()}),
+                subtitle: 'booking_slots.full_desc_param'.tr(
+                  namedArgs: {'total': totalAmount.toString()},
+                ),
                 price: totalAmount.toString(),
                 isSelected: isFullPayment,
                 onTap: () => onPlanChanged(true),
@@ -74,10 +72,12 @@ class PaymentPlanSelector extends StatelessWidget {
               SizedBox(height: AppSpacing.lg.h),
               _PaymentOption(
                 title: 'booking_slots.deposit_payment'.tr(),
-                subtitle: 'booking_slots.deposit_desc_param'.tr(namedArgs: {
-                  'deposit': depositAmount.toString(),
-                  'remaining': remainingAmount.toString(),
-                }),
+                subtitle: 'booking_slots.deposit_desc_param'.tr(
+                  namedArgs: {
+                    'deposit': depositAmount.toString(),
+                    'remaining': remainingAmount.toString(),
+                  },
+                ),
                 price: depositAmount.toString(),
                 isSelected: !isFullPayment,
                 onTap: () => onPlanChanged(false),
@@ -117,7 +117,9 @@ class _PaymentOption extends StatelessWidget {
         decoration: BoxDecoration(
           border: isSelected ? Border.all(color: cs.primary, width: 2) : null,
           borderRadius: AppRadius.blg.r,
-          color: isSelected ? cs.primary.withValues(alpha: 0.05) : Colors.transparent,
+          color: isSelected
+              ? cs.primary.withValues(alpha: 0.05)
+              : Colors.transparent,
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -153,7 +155,7 @@ class _PaymentOption extends StatelessWidget {
                         fontSize: 20.sp,
                       ),
                       children: [
-                         TextSpan(
+                        TextSpan(
                           text: 'pitch_details.egp'.tr(),
                           style: TextStyle(
                             color: cs.onSurfaceVariant,

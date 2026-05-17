@@ -188,7 +188,9 @@ class AdminRemoteDataSource {
       return response.statusCode == 200 || response.statusCode == 204;
     } catch (e) {
       if (e is DioException) {
-        AppLogger.error('Failed to delete pitch: ${e.response?.data ?? e.message}');
+        AppLogger.error(
+          'Failed to delete pitch: ${e.response?.data ?? e.message}',
+        );
       } else {
         AppLogger.error('Failed to delete pitch: $e');
       }
@@ -208,13 +210,19 @@ class AdminRemoteDataSource {
 
       if (imageBytes != null) {
         final Map<String, dynamic> mappedData = Map.from(pitchData);
-        if (mappedData['location'] != null) mappedData['location'] = jsonEncode(mappedData['location']);
-        if (mappedData['amenities'] != null) mappedData['amenities'] = jsonEncode(mappedData['amenities']);
-        if (mappedData['pricePerHour'] != null) mappedData['pricePerHour'] = mappedData['pricePerHour'].toString();
+        if (mappedData['location'] != null)
+          mappedData['location'] = jsonEncode(mappedData['location']);
+        if (mappedData['amenities'] != null)
+          mappedData['amenities'] = jsonEncode(mappedData['amenities']);
+        if (mappedData['pricePerHour'] != null)
+          mappedData['pricePerHour'] = mappedData['pricePerHour'].toString();
 
         data = FormData.fromMap({
           ...mappedData,
-          'images': MultipartFile.fromBytes(imageBytes, filename: fileName ?? 'pitch.jpg'),
+          'images': MultipartFile.fromBytes(
+            imageBytes,
+            filename: fileName ?? 'pitch.jpg',
+          ),
         });
       } else {
         data = pitchData;
@@ -223,13 +231,17 @@ class AdminRemoteDataSource {
       final response = await _dio.put(
         'pitches/$id',
         data: data,
-        options: imageBytes != null ? Options(contentType: 'multipart/form-data') : null,
+        options: imageBytes != null
+            ? Options(contentType: 'multipart/form-data')
+            : null,
       );
 
       return response.statusCode == 200;
     } catch (e) {
       if (e is DioException) {
-        AppLogger.error('Failed to update pitch: ${e.response?.data ?? e.message}');
+        AppLogger.error(
+          'Failed to update pitch: ${e.response?.data ?? e.message}',
+        );
       } else {
         AppLogger.error('Failed to update pitch: $e');
       }

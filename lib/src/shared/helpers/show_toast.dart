@@ -54,8 +54,8 @@ void showToast(
             (toastStatus == 'success'
                 ? IconsaxPlusBold.tick_circle
                 : toastStatus == 'error'
-                    ? IconsaxPlusBold.danger
-                    : IconsaxPlusBold.info_circle),
+                ? IconsaxPlusBold.danger
+                : IconsaxPlusBold.info_circle),
         color: iconColor,
         size: 22.sp,
       ),

@@ -21,9 +21,9 @@ class ServerFailure extends Failure {
   factory ServerFailure.fromDio(DioException error) {
     final response = error.response;
     final statusCode = response?.statusCode;
-    
+
     String message = 'An unexpected server error occurred';
-    
+
     if (response != null && response.data != null) {
       final data = response.data;
       if (data is Map && data.containsKey('message')) {
@@ -53,7 +53,8 @@ class CacheFailure extends Failure {
 }
 
 class NetworkFailure extends Failure {
-  const NetworkFailure([String? message]) : super(message ?? 'No internet connection');
+  const NetworkFailure([String? message])
+    : super(message ?? 'No internet connection');
 }
 
 class AuthFailure extends Failure {

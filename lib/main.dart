@@ -3,9 +3,9 @@ import 'src/imports/packages_imports.dart';
 import 'src/app.dart';
 import 'src/di/injection_container.dart';
 
-
 Future<void> main() async {
-  final WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  final WidgetsBinding widgetsBinding =
+      WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await EasyLocalization.ensureInitialized();
   await dotenv.load(fileName: '.env');
@@ -22,11 +22,5 @@ Future<void> main() async {
 
   await sl<AuthService>().loadSavedToken();
 
-  runApp(
-    const LocalizationWrapper(
-      child: StateWrapper(
-        child: App(),
-      ),
-    ),
-  );
+  runApp(const LocalizationWrapper(child: StateWrapper(child: App())));
 }

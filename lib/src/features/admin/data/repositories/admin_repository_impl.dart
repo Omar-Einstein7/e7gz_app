@@ -18,19 +18,21 @@ class AdminRepositoryImpl implements AdminRepository {
   final AdminRemoteDataSource _dataSource;
 
   AdminRepositoryImpl({required AdminRemoteDataSource dataSource})
-      : _dataSource = dataSource;
+    : _dataSource = dataSource;
 
   @override
   FutureEither<AdminStats> getDashboardStats() async {
     try {
       final statsMap = await _dataSource.getDashboardStats();
       final data = statsMap['data'] ?? statsMap;
-      return right(AdminStats(
-        totalRevenue: (data['totalRevenue'] ?? 0).toDouble(),
-        totalBookings: data['totalBookings'] ?? 0,
-        pitchCount: data['pitchCount'] ?? 0,
-        userCount: data['userCount'] ?? 0,
-      ));
+      return right(
+        AdminStats(
+          totalRevenue: (data['totalRevenue'] ?? 0).toDouble(),
+          totalBookings: data['totalBookings'] ?? 0,
+          pitchCount: data['pitchCount'] ?? 0,
+          userCount: data['userCount'] ?? 0,
+        ),
+      );
     } catch (e) {
       return left(ServerFailure('Failed to fetch dashboard stats: $e'));
     }
@@ -40,7 +42,9 @@ class AdminRepositoryImpl implements AdminRepository {
   FutureEither<List<Pitch>> getAllPitches() async {
     try {
       final rawList = await _dataSource.getAllPitches();
-      final pitches = rawList.map((p) => PitchModel.fromJson(p as Map<String, dynamic>)).toList();
+      final pitches = rawList
+          .map((p) => PitchModel.fromJson(p as Map<String, dynamic>))
+          .toList();
       return right(pitches);
     } catch (e) {
       return left(ServerFailure('Failed to fetch all pitches: $e'));
@@ -51,7 +55,9 @@ class AdminRepositoryImpl implements AdminRepository {
   FutureEither<List<Pitch>> getMyPitches() async {
     try {
       final rawList = await _dataSource.getMyPitches();
-      final pitches = rawList.map((p) => PitchModel.fromJson(p as Map<String, dynamic>)).toList();
+      final pitches = rawList
+          .map((p) => PitchModel.fromJson(p as Map<String, dynamic>))
+          .toList();
       return right(pitches);
     } catch (e) {
       return left(ServerFailure('Failed to fetch my pitches: $e'));
@@ -62,7 +68,9 @@ class AdminRepositoryImpl implements AdminRepository {
   FutureEither<List<Booking>> getMyBookings() async {
     try {
       final rawList = await _dataSource.getMyBookings();
-      final bookings = rawList.map((b) => BookingModel.fromJson(b as Map<String, dynamic>)).toList();
+      final bookings = rawList
+          .map((b) => BookingModel.fromJson(b as Map<String, dynamic>))
+          .toList();
       return right(bookings);
     } catch (e) {
       return left(ServerFailure('Failed to fetch bookings: $e'));
@@ -73,7 +81,9 @@ class AdminRepositoryImpl implements AdminRepository {
   FutureEither<List<MatchmakingMatch>> getAllMatches() async {
     try {
       final rawList = await _dataSource.getAllMatches();
-      final matches = rawList.map((m) => MatchModel.fromJson(m as Map<String, dynamic>)).toList();
+      final matches = rawList
+          .map((m) => MatchModel.fromJson(m as Map<String, dynamic>))
+          .toList();
       return right(matches);
     } catch (e) {
       return left(ServerFailure('Failed to fetch matches: $e'));
@@ -84,7 +94,9 @@ class AdminRepositoryImpl implements AdminRepository {
   FutureEither<List<AppNotification>> getNotifications() async {
     try {
       final rawList = await _dataSource.getNotifications();
-      final notifications = rawList.map((n) => AppNotification.fromJson(n as Map<String, dynamic>)).toList();
+      final notifications = rawList
+          .map((n) => AppNotification.fromJson(n as Map<String, dynamic>))
+          .toList();
       return right(notifications);
     } catch (e) {
       return left(ServerFailure('Failed to fetch notifications: $e'));

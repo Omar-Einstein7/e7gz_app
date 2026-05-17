@@ -18,7 +18,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     final cs = context.colorScheme;
     final typography = context.textTheme;
-    
+
     return BlocBuilder<SessionCubit, SessionState>(
       builder: (context, state) {
         final user = state.user;

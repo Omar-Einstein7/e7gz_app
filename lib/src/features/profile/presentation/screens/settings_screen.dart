@@ -73,7 +73,7 @@ class SettingsScreen extends StatelessWidget {
         elevation: 0,
         leading: IconButton(
           icon: Icon(
-            isArabic ? Icons.arrow_back_ios_new : Icons.arrow_back_ios, 
+            isArabic ? Icons.arrow_back_ios_new : Icons.arrow_back_ios,
             color: cs.onSurface,
           ),
           onPressed: () => context.pop(),
@@ -105,8 +105,12 @@ class SettingsScreen extends StatelessWidget {
                 final isDarkMode = context.isDarkMode;
                 return ProfileTile(
                   title: 'settings.app_theme'.tr(),
-                  subtitle: isDarkMode ? 'settings.theme_dark'.tr() : 'settings.theme_light'.tr(),
-                  icon: isDarkMode ? IconsaxPlusBold.moon : IconsaxPlusBold.sun_1,
+                  subtitle: isDarkMode
+                      ? 'settings.theme_dark'.tr()
+                      : 'settings.theme_light'.tr(),
+                  icon: isDarkMode
+                      ? IconsaxPlusBold.moon
+                      : IconsaxPlusBold.sun_1,
                   onTap: () => context.read<ThemeCubit>().setTheme(
                     isDarkMode ? ThemeMode.light : ThemeMode.dark,
                   ),
@@ -193,7 +197,9 @@ class _LanguageOption extends StatelessWidget {
       child: Ink(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
         decoration: BoxDecoration(
-          color: isSelected ? cs.primary.withOpacity(0.05) : cs.surfaceContainerLow,
+          color: isSelected
+              ? cs.primary.withOpacity(0.05)
+              : cs.surfaceContainerLow,
           borderRadius: BorderRadius.circular(16.r),
           border: isSelected ? Border.all(color: cs.primary, width: 2) : null,
         ),
@@ -209,11 +215,7 @@ class _LanguageOption extends StatelessWidget {
               ),
             ),
             if (isSelected)
-              Icon(
-                IconsaxPlusBold.tick_circle,
-                color: cs.primary,
-                size: 22,
-              ),
+              Icon(IconsaxPlusBold.tick_circle, color: cs.primary, size: 22),
           ],
         ),
       ),

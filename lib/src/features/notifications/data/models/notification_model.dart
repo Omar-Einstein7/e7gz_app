@@ -17,8 +17,8 @@ class NotificationModel extends AppNotification {
       body: json['body'] ?? '',
       type: json['type'] ?? 'system',
       isRead: json['isRead'] ?? false,
-      createdAt: json['createdAt'] != null 
-          ? DateTime.parse(json['createdAt']) 
+      createdAt: json['createdAt'] != null
+          ? DateTime.parse(json['createdAt'])
           : DateTime.now(),
     );
   }

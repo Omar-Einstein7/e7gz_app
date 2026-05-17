@@ -33,10 +33,14 @@ class OwnerRemoteDataSourceImpl implements OwnerRemoteDataSource {
       final inner = data['data'];
       if (inner is Map<String, dynamic>) {
         final pitchesData = inner['pitches'] as List<dynamic>? ?? [];
-        return pitchesData.map((p) => PitchModel.fromJson(p as Map<String, dynamic>)).toList();
+        return pitchesData
+            .map((p) => PitchModel.fromJson(p as Map<String, dynamic>))
+            .toList();
       }
       if (inner is List<dynamic>) {
-        return inner.map((p) => PitchModel.fromJson(p as Map<String, dynamic>)).toList();
+        return inner
+            .map((p) => PitchModel.fromJson(p as Map<String, dynamic>))
+            .toList();
       }
     }
     return [];

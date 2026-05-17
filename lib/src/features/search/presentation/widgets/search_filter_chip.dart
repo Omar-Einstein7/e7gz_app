@@ -1,4 +1,5 @@
 import 'package:e7gz/src/imports/imports.dart';
+
 class SearchFilterChip extends StatelessWidget {
   final String label;
   final bool isSelected;

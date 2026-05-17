@@ -12,40 +12,40 @@ class BookingsCubit extends Cubit<BookingsState> {
   BookingsCubit({
     required GetMyBookingsUseCase getMyBookings,
     required CancelBookingUseCase cancelBooking,
-  })  : _getMyBookings = getMyBookings,
-        _cancelBooking = cancelBooking,
-        super(const BookingsState());
+  }) : _getMyBookings = getMyBookings,
+       _cancelBooking = cancelBooking,
+       super(const BookingsState());
 
   Future<void> loadBookings({BookingStatus? status}) async {
     emit(state.copyWith(status: BookingsStatus.loading));
     final result = await _getMyBookings(status: status);
     result.fold(
-      (failure) => emit(state.copyWith(
-        status: BookingsStatus.failure,
-        errorMessage: failure.message,
-      )),
-      (bookings) => emit(state.copyWith(
-        status: BookingsStatus.success,
-        bookings: bookings,
-      )),
+      (failure) => emit(
+        state.copyWith(
+          status: BookingsStatus.failure,
+          errorMessage: failure.message,
+        ),
+      ),
+      (bookings) => emit(
+        state.copyWith(status: BookingsStatus.success, bookings: bookings),
+      ),
     );
   }
 
   Future<void> cancelBooking(String bookingId) async {
     final result = await _cancelBooking(bookingId);
     result.fold(
-      (failure) => emit(state.copyWith(
-        status: BookingsStatus.failure,
-        errorMessage: failure.message,
-      )),
+      (failure) => emit(
+        state.copyWith(
+          status: BookingsStatus.failure,
+          errorMessage: failure.message,
+        ),
+      ),
       (cancelled) {
         final updated = state.bookings.map((b) {
           return b.id == bookingId ? cancelled : b;
         }).toList();
-        emit(state.copyWith(
-          status: BookingsStatus.success,
-          bookings: updated,
-        ));
+        emit(state.copyWith(status: BookingsStatus.success, bookings: updated));
       },
     );
   }
@@ -60,26 +60,27 @@ class SlotsCubit extends Cubit<SlotsState> {
   SlotsCubit({
     required GetAvailableSlotsUseCase getAvailableSlots,
     required this.pitchId,
-  })  : _getAvailableSlots = getAvailableSlots,
-        super(const SlotsState());
+  }) : _getAvailableSlots = getAvailableSlots,
+       super(const SlotsState());
 
   Future<void> loadSlots(String date) async {
-    emit(state.copyWith(
-      status: SlotsStatus.loading,
-      selectedDate: date,
-      selectedSlot: null,
-    ));
-    final result =
-        await _getAvailableSlots(pitchId: pitchId, date: date);
+    emit(
+      state.copyWith(
+        status: SlotsStatus.loading,
+        selectedDate: date,
+        selectedSlot: null,
+      ),
+    );
+    final result = await _getAvailableSlots(pitchId: pitchId, date: date);
     result.fold(
-      (failure) => emit(state.copyWith(
-        status: SlotsStatus.failure,
-        errorMessage: failure.message,
-      )),
-      (slots) => emit(state.copyWith(
-        status: SlotsStatus.success,
-        slots: slots,
-      )),
+      (failure) => emit(
+        state.copyWith(
+          status: SlotsStatus.failure,
+          errorMessage: failure.message,
+        ),
+      ),
+      (slots) =>
+          emit(state.copyWith(status: SlotsStatus.success, slots: slots)),
     );
   }
 
@@ -95,8 +96,8 @@ class CreateBookingCubit extends Cubit<CreateBookingState> {
   final CreateBookingUseCase _createBooking;
 
   CreateBookingCubit({required CreateBookingUseCase createBooking})
-      : _createBooking = createBooking,
-        super(const CreateBookingState());
+    : _createBooking = createBooking,
+      super(const CreateBookingState());
 
   Future<void> createBooking({
     required String pitchId,
@@ -114,14 +115,18 @@ class CreateBookingCubit extends Cubit<CreateBookingState> {
       notes: notes,
     );
     result.fold(
-      (failure) => emit(state.copyWith(
-        status: CreateBookingStatus.failure,
-        errorMessage: failure.message,
-      )),
-      (booking) => emit(state.copyWith(
-        status: CreateBookingStatus.success,
-        createdBooking: booking,
-      )),
+      (failure) => emit(
+        state.copyWith(
+          status: CreateBookingStatus.failure,
+          errorMessage: failure.message,
+        ),
+      ),
+      (booking) => emit(
+        state.copyWith(
+          status: CreateBookingStatus.success,
+          createdBooking: booking,
+        ),
+      ),
     );
   }
 

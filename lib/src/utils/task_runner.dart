@@ -23,8 +23,10 @@ FutureEither<T> runTask<T>(
         return left(const NetworkFailure());
       }
     } catch (e) {
-      AppLogger.warning('Network check failed or timed out, proceeding anyway: $e');
-      // If network check fails or times out, we still attempt the task 
+      AppLogger.warning(
+        'Network check failed or timed out, proceeding anyway: $e',
+      );
+      // If network check fails or times out, we still attempt the task
       // and let Dio handle actual network errors.
     }
   }
@@ -34,13 +36,15 @@ FutureEither<T> runTask<T>(
     return right(result);
   } catch (error, stackTrace) {
     AppLogger.error('Task execution failed', [error, stackTrace]);
-    
+
     if (error is DioException) {
       return left(ServerFailure.fromDio(error));
     }
-    
+
     if (error is TypeError) {
-      return left(UnknownFailure('Data parsing error: ${error.toString()}', error: error));
+      return left(
+        UnknownFailure('Data parsing error: ${error.toString()}', error: error),
+      );
     }
 
     return left(UnknownFailure(error.toString(), error: error));

@@ -28,7 +28,11 @@ class HomeModel extends HomeData {
 }
 
 class HomeBannerModel extends HomeBanner {
-  const HomeBannerModel({required super.id, required super.imageUrl, super.link});
+  const HomeBannerModel({
+    required super.id,
+    required super.imageUrl,
+    super.link,
+  });
 
   factory HomeBannerModel.fromJson(Map<String, dynamic> json) {
     return HomeBannerModel(
@@ -40,7 +44,11 @@ class HomeBannerModel extends HomeBanner {
 }
 
 class HomeCategoryModel extends HomeCategory {
-  const HomeCategoryModel({required super.id, required super.name, required super.icon});
+  const HomeCategoryModel({
+    required super.id,
+    required super.name,
+    required super.icon,
+  });
 
   factory HomeCategoryModel.fromJson(Map<String, dynamic> json) {
     return HomeCategoryModel(

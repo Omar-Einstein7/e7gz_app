@@ -33,11 +33,7 @@ extension ContextExtension on BuildContext {
     ScaffoldMessenger.of(this)
       ..clearSnackBars()
       ..showSnackBar(
-        SnackBar(
-          content: Text(message),
-          action: action,
-          duration: duration,
-        ),
+        SnackBar(content: Text(message), action: action, duration: duration),
       );
   }
 
@@ -56,10 +52,7 @@ extension ContextExtension on BuildContext {
     ScaffoldMessenger.of(this)
       ..clearSnackBars()
       ..showSnackBar(
-        SnackBar(
-          content: Text(message),
-          backgroundColor: colors.error,
-        ),
+        SnackBar(content: Text(message), backgroundColor: colors.error),
       );
   }
 
@@ -77,10 +70,7 @@ extension ContextExtension on BuildContext {
   }
 
   Future<T?> showAppDialog<T>({required WidgetBuilder builder}) {
-    return showDialog<T>(
-      context: this,
-      builder: builder,
-    );
+    return showDialog<T>(context: this, builder: builder);
   }
 
   /// Shows a snackbar with a colour driven by [SnackBarType].
@@ -96,8 +86,8 @@ extension ContextExtension on BuildContext {
     final bg = switch (type) {
       SnackBarType.success => semanticColors.success,
       SnackBarType.warning => semanticColors.warning,
-      SnackBarType.error   => colorScheme.error,
-      SnackBarType.info    => colorScheme.inverseSurface,
+      SnackBarType.error => colorScheme.error,
+      SnackBarType.info => colorScheme.inverseSurface,
     };
     ScaffoldMessenger.of(this)
       ..clearSnackBars()
@@ -113,11 +103,11 @@ extension ContextExtension on BuildContext {
   // ── Routing shortcuts ────────────────────────────────────────────────────
   String get currentRoute {
     final router = GoRouter.of(this);
-    final RouteMatch lastMatch = router.routerDelegate.currentConfiguration.last;
+    final RouteMatch lastMatch =
+        router.routerDelegate.currentConfiguration.last;
     final RouteMatchList matchList = lastMatch is ImperativeRouteMatch
         ? lastMatch.matches
         : router.routerDelegate.currentConfiguration;
     return matchList.uri.toString();
   }
-
 }

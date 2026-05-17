@@ -59,9 +59,11 @@ abstract final class AppColors {
   static const Color darkBackground = AppPalette.darkBlue950;
   static const Color darkSurface = AppPalette.darkBlue900;
   static const Color darkOnSurface = Colors.white;
-  static const Color darkOnSurfaceVariant = Color(0xFFBCC7DE); // subtitleColor from research
+  static const Color darkOnSurfaceVariant = Color(
+    0xFFBCC7DE,
+  ); // subtitleColor from research
   static const Color darkOutline = AppPalette.darkBlue600;
-  
+
   // --- Shared Semantic ---
   static const Color success = AppPalette.emerald500;
   static const Color error = AppPalette.red500;

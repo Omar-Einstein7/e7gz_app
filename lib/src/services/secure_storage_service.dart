@@ -2,18 +2,14 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../utils/utils.dart';
 
 /// A service to securely store sensitive data like JWT tokens or API keys.
-/// 
+///
 /// Uses [FlutterSecureStorage] which utilizes Keychain (iOS) and Keystore (Android).
 class SecureStorageService {
   SecureStorageService();
 
   final _storage = const FlutterSecureStorage(
-    aOptions: AndroidOptions(
-      encryptedSharedPreferences: true,
-    ),
-    iOptions: IOSOptions(
-      accessibility: KeychainAccessibility.first_unlock,
-    ),
+    aOptions: AndroidOptions(encryptedSharedPreferences: true),
+    iOptions: IOSOptions(accessibility: KeychainAccessibility.first_unlock),
   );
 
   /// Write a sensitive value to secure storage.

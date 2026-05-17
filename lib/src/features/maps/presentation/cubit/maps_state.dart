@@ -35,6 +35,11 @@ class MapsState extends Equatable {
   }
 
   @override
-  List<Object?> get props =>
-      [routeStatus, route, geocodeStatus, geocodeResults, errorMessage];
+  List<Object?> get props => [
+    routeStatus,
+    route,
+    geocodeStatus,
+    geocodeResults,
+    errorMessage,
+  ];
 }

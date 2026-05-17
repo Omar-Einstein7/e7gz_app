@@ -12,14 +12,13 @@ class GetRouteUseCase {
     required double toLat,
     required double toLng,
     String profile = 'driving-car',
-  }) =>
-      _repository.getRoute(
-        fromLat: fromLat,
-        fromLng: fromLng,
-        toLat: toLat,
-        toLng: toLng,
-        profile: profile,
-      );
+  }) => _repository.getRoute(
+    fromLat: fromLat,
+    fromLng: fromLng,
+    toLat: toLat,
+    toLng: toLng,
+    profile: profile,
+  );
 }
 
 class GeocodeUseCase {
@@ -37,6 +36,5 @@ class ReverseGeocodeUseCase {
   FutureEither<GeocodedPlace?> call({
     required double lat,
     required double lng,
-  }) =>
-      _repository.reverseGeocode(lat: lat, lng: lng);
+  }) => _repository.reverseGeocode(lat: lat, lng: lng);
 }

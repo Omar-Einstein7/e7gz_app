@@ -22,15 +22,22 @@ class NotificationsScreen extends StatelessWidget {
         ),
         title: Text(
           'Notifications',
-          style: tt.headlineSmall?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+          style: tt.headlineSmall?.copyWith(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         centerTitle: true,
         actions: [
           TextButton(
             onPressed: () => context.read<NotificationsCubit>().markAllRead(),
             child: Text(
-              'Mark as read', 
-              style: TextStyle(color: cs.primary, fontSize: 12.sp, fontWeight: FontWeight.bold)
+              'Mark as read',
+              style: TextStyle(
+                color: cs.primary,
+                fontSize: 12.sp,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
           SizedBox(width: 12.w),
@@ -38,7 +45,8 @@ class NotificationsScreen extends StatelessWidget {
       ),
       body: BlocBuilder<NotificationsCubit, NotificationsState>(
         builder: (context, state) {
-          if (state.status == NotificationsStatus.loading && state.notifications.isEmpty) {
+          if (state.status == NotificationsStatus.loading &&
+              state.notifications.isEmpty) {
             return const Center(child: CircularProgressIndicator());
           }
 
@@ -47,16 +55,27 @@ class NotificationsScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(IconsaxPlusLinear.notification, color: Color(0xFFBCC7DE), size: 64),
+                  const Icon(
+                    IconsaxPlusLinear.notification,
+                    color: Color(0xFFBCC7DE),
+                    size: 64,
+                  ),
                   SizedBox(height: 16.h),
-                  Text('No notifications yet', style: TextStyle(color: const Color(0xFFBCC7DE), fontSize: 14.sp)),
+                  Text(
+                    'No notifications yet',
+                    style: TextStyle(
+                      color: const Color(0xFFBCC7DE),
+                      fontSize: 14.sp,
+                    ),
+                  ),
                 ],
               ),
             );
           }
 
           return RefreshIndicator(
-            onRefresh: () => context.read<NotificationsCubit>().loadNotifications(),
+            onRefresh: () =>
+                context.read<NotificationsCubit>().loadNotifications(),
             child: ListView.builder(
               padding: EdgeInsets.all(24.w),
               itemCount: state.notifications.length,
@@ -90,13 +109,16 @@ class NotificationsScreen extends StatelessWidget {
 
   IconData _getIconForType(String type) {
     switch (type) {
-      case 'booking': return IconsaxPlusBold.calendar_1;
-      case 'match': return IconsaxPlusBold.user_octagon;
-      case 'loyalty': return IconsaxPlusBold.medal_star;
-      default: return IconsaxPlusBold.info_circle;
+      case 'booking':
+        return IconsaxPlusBold.calendar_1;
+      case 'match':
+        return IconsaxPlusBold.user_octagon;
+      case 'loyalty':
+        return IconsaxPlusBold.medal_star;
+      default:
+        return IconsaxPlusBold.info_circle;
     }
   }
-
 
   Widget sectionHeader(String title) {
     return Text(
@@ -124,7 +146,9 @@ class NotificationsScreen extends StatelessWidget {
         color: isUnread ? const Color(0xFF131B2E) : Colors.transparent,
         borderRadius: BorderRadius.circular(24.r),
         border: Border.all(
-          color: isUnread ? cs.primary.withValues(alpha: 0.1) : Colors.white.withValues(alpha: 0.05)
+          color: isUnread
+              ? cs.primary.withValues(alpha: 0.1)
+              : Colors.white.withValues(alpha: 0.05),
         ),
       ),
       child: Row(
@@ -137,7 +161,11 @@ class NotificationsScreen extends StatelessWidget {
               color: const Color(0xFF171F33),
               borderRadius: BorderRadius.circular(16.r),
             ),
-            child: Icon(icon, color: isUnread ? cs.primary : const Color(0xFFBCC7DE), size: 24),
+            child: Icon(
+              icon,
+              color: isUnread ? cs.primary : const Color(0xFFBCC7DE),
+              size: 24,
+            ),
           ),
           SizedBox(width: 16.w),
           Expanded(
@@ -148,23 +176,31 @@ class NotificationsScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      title, 
+                      title,
                       style: TextStyle(
-                        color: Colors.white, 
-                        fontWeight: isUnread ? FontWeight.bold : FontWeight.w600,
+                        color: Colors.white,
+                        fontWeight: isUnread
+                            ? FontWeight.bold
+                            : FontWeight.w600,
                         fontSize: 14.sp,
-                      )
+                      ),
                     ),
-                    Text(time, style: const TextStyle(color: Color(0xFFBCC7DE), fontSize: 10)),
+                    Text(
+                      time,
+                      style: const TextStyle(
+                        color: Color(0xFFBCC7DE),
+                        fontSize: 10,
+                      ),
+                    ),
                   ],
                 ),
                 SizedBox(height: 6.h),
                 Text(
                   body,
                   style: TextStyle(
-                    color: const Color(0xFFBCC7DE).withValues(alpha: 0.8), 
-                    fontSize: 12.sp, 
-                    height: 1.4
+                    color: const Color(0xFFBCC7DE).withValues(alpha: 0.8),
+                    fontSize: 12.sp,
+                    height: 1.4,
                   ),
                 ),
               ],
@@ -175,7 +211,10 @@ class NotificationsScreen extends StatelessWidget {
               width: 8.w,
               height: 8.w,
               margin: EdgeInsets.only(left: 12.w, top: 4.h),
-              decoration: BoxDecoration(color: cs.primary, shape: BoxShape.circle),
+              decoration: BoxDecoration(
+                color: cs.primary,
+                shape: BoxShape.circle,
+              ),
             ),
         ],
       ),

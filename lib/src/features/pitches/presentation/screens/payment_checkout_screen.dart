@@ -48,14 +48,21 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
           children: [
             Text(
               'e7gzz',
-              style: tt.headlineSmall?.copyWith(color: cs.primary, fontWeight: FontWeight.w900),
+              style: tt.headlineSmall?.copyWith(
+                color: cs.primary,
+                fontWeight: FontWeight.w900,
+              ),
             ),
             SizedBox(width: AppSpacing.sm.w),
             Icon(Icons.verified_user, color: cs.primary, size: 16),
             SizedBox(width: AppSpacing.xs.w),
             Text(
               'SECURE CHECKOUT',
-              style: tt.labelSmall?.copyWith(color: cs.primary, fontWeight: FontWeight.bold, letterSpacing: 1),
+              style: tt.labelSmall?.copyWith(
+                color: cs.primary,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1,
+              ),
             ),
           ],
         ),
@@ -67,11 +74,14 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
           children: [
             Text(
               'Payment Method',
-              style: tt.headlineMedium?.copyWith(color: cs.onSurface, fontWeight: FontWeight.bold),
+              style: tt.headlineMedium?.copyWith(
+                color: cs.onSurface,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            
+
             SizedBox(height: AppSpacing.lg.h),
-            
+
             // Methods
             paymentCard(
               method: PaymentMethod.instapay,
@@ -79,22 +89,24 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
               subtitle: 'Instant bank transfer via IPA',
               icon: Icons.account_balance_outlined,
               isSelected: _selectedMethod == PaymentMethod.instapay,
-              onTap: () => setState(() => _selectedMethod = PaymentMethod.instapay),
+              onTap: () =>
+                  setState(() => _selectedMethod = PaymentMethod.instapay),
             ),
-            
+
             SizedBox(height: AppSpacing.md.h),
-            
+
             paymentCard(
               method: PaymentMethod.wallet,
               title: 'Vodafone Cash / Wallets',
               subtitle: 'Any mobile wallet in Egypt',
               icon: IconsaxPlusBold.wallet,
               isSelected: _selectedMethod == PaymentMethod.wallet,
-              onTap: () => setState(() => _selectedMethod = PaymentMethod.wallet),
+              onTap: () =>
+                  setState(() => _selectedMethod = PaymentMethod.wallet),
             ),
-            
+
             SizedBox(height: AppSpacing.md.h),
-            
+
             paymentCard(
               method: PaymentMethod.card,
               title: 'Credit / Debit Card',
@@ -103,9 +115,9 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
               isSelected: _selectedMethod == PaymentMethod.card,
               onTap: () => setState(() => _selectedMethod = PaymentMethod.card),
             ),
-            
+
             SizedBox(height: AppSpacing.xl.h),
-            
+
             // Buyer Protection
             Container(
               padding: EdgeInsets.all(AppSpacing.lg.w),
@@ -124,12 +136,18 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
                       children: [
                         Text(
                           'Buyer Protection',
-                          style: tt.titleMedium?.copyWith(color: cs.onSurface, fontWeight: FontWeight.bold),
+                          style: tt.titleMedium?.copyWith(
+                            color: cs.onSurface,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         SizedBox(height: AppSpacing.xs.h),
                         Text(
                           'Your payment is secured with end-to-end encryption. Funds are held in escrow until your booking is confirmed by the stadium manager.',
-                          style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant, height: 1.5),
+                          style: tt.bodySmall?.copyWith(
+                            color: cs.onSurfaceVariant,
+                            height: 1.5,
+                          ),
                         ),
                       ],
                     ),
@@ -137,9 +155,9 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
                 ],
               ),
             ),
-            
+
             SizedBox(height: AppSpacing.xl.h),
-            
+
             // Booking Summary
             Container(
               padding: EdgeInsets.all(AppSpacing.xl.w),
@@ -153,13 +171,18 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
                 children: [
                   Text(
                     'Booking Summary',
-                    style: tt.titleLarge?.copyWith(color: cs.onSurface, fontWeight: FontWeight.bold),
+                    style: tt.titleLarge?.copyWith(
+                      color: cs.onSurface,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   SizedBox(height: AppSpacing.lg.h),
                   Row(
                     children: [
                       AppCachedImage(
-                        imageUrl: widget.pitchImage ?? 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80',
+                        imageUrl:
+                            widget.pitchImage ??
+                            'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80',
                         width: 80.w,
                         height: 80.w,
                         fit: BoxFit.cover,
@@ -171,22 +194,45 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
                         children: [
                           Text(
                             widget.pitchName,
-                            style: tt.titleMedium?.copyWith(color: cs.primary, fontWeight: FontWeight.bold),
+                            style: tt.titleMedium?.copyWith(
+                              color: cs.primary,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                           Text(
                             widget.bookingDetails,
-                            style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant),
+                            style: tt.bodySmall?.copyWith(
+                              color: cs.onSurfaceVariant,
+                            ),
                           ),
                         ],
                       ),
                     ],
                   ),
                   SizedBox(height: AppSpacing.xl.h),
-                  summaryRow('Subtotal', '${widget.amount.toInt()} EGP', tt, cs.onSurfaceVariant, cs.onSurface),
+                  summaryRow(
+                    'Subtotal',
+                    '${widget.amount.toInt()} EGP',
+                    tt,
+                    cs.onSurfaceVariant,
+                    cs.onSurface,
+                  ),
                   SizedBox(height: AppSpacing.sm.h),
-                  summaryRow('Service Fee', '0 EGP', tt, cs.onSurfaceVariant, cs.onSurface),
+                  summaryRow(
+                    'Service Fee',
+                    '0 EGP',
+                    tt,
+                    cs.onSurfaceVariant,
+                    cs.onSurface,
+                  ),
                   SizedBox(height: AppSpacing.sm.h),
-                  summaryRow('Discount', '0 EGP', tt, cs.onSurfaceVariant, cs.onSurface),
+                  summaryRow(
+                    'Discount',
+                    '0 EGP',
+                    tt,
+                    cs.onSurfaceVariant,
+                    cs.onSurface,
+                  ),
                   SizedBox(height: AppSpacing.xl.h),
                   Divider(color: cs.outlineVariant),
                   SizedBox(height: AppSpacing.xl.h),
@@ -198,56 +244,83 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
                         children: [
                           Text(
                             'TOTAL AMOUNT',
-                            style: tt.labelSmall?.copyWith(color: cs.onSurfaceVariant, fontWeight: FontWeight.bold),
+                            style: tt.labelSmall?.copyWith(
+                              color: cs.onSurfaceVariant,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                           RichText(
                             text: TextSpan(
                               text: '${widget.amount.toInt()} ',
-                              style: tt.displaySmall?.copyWith(color: cs.onSurface, fontWeight: FontWeight.w900, fontSize: 32.sp),
+                              style: tt.displaySmall?.copyWith(
+                                color: cs.onSurface,
+                                fontWeight: FontWeight.w900,
+                                fontSize: 32.sp,
+                              ),
                               children: [
-                                TextSpan(text: 'EGP', style: TextStyle(color: cs.primary, fontSize: 16.sp, fontWeight: FontWeight.bold)),
+                                TextSpan(
+                                  text: 'EGP',
+                                  style: TextStyle(
+                                    color: cs.primary,
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                               ],
                             ),
                           ),
                         ],
                       ),
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: AppSpacing.md.w, vertical: AppSpacing.xs.h),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: AppSpacing.md.w,
+                          vertical: AppSpacing.xs.h,
+                        ),
                         decoration: BoxDecoration(
                           color: cs.primaryContainer,
                           borderRadius: BorderRadius.circular(100.r),
                         ),
                         child: Text(
                           'PAY NOW',
-                          style: TextStyle(color: cs.onPrimaryContainer, fontSize: 10.sp, fontWeight: FontWeight.bold, letterSpacing: 1),
+                          style: TextStyle(
+                            color: cs.onPrimaryContainer,
+                            fontSize: 10.sp,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 1,
+                          ),
                         ),
                       ),
                     ],
                   ),
-                  
+
                   SizedBox(height: AppSpacing.xl.h),
-                  
+
                   AppButton(
                     label: _isLoading ? 'Processing...' : 'Confirm & Pay',
                     isFullWidth: true,
                     isLoading: _isLoading,
                     height: ButtonSize.large,
-                    suffixIcon: _isLoading ? null : const Icon(Icons.arrow_forward),
+                    suffixIcon: _isLoading
+                        ? null
+                        : const Icon(Icons.arrow_forward),
                     onPressed: _isLoading ? null : _handlePayment,
                   ),
-                  
+
                   SizedBox(height: AppSpacing.md.h),
                   Center(
                     child: Text(
                       'By clicking confirm, you agree to our Terms of\nService and Pitch Cancellation Policy.',
                       textAlign: TextAlign.center,
-                      style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant.withValues(alpha: 0.5), fontSize: 10.sp),
+                      style: tt.bodySmall?.copyWith(
+                        color: cs.onSurfaceVariant.withValues(alpha: 0.5),
+                        fontSize: 10.sp,
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
-            
+
             SizedBox(height: AppSpacing.xxl.h),
           ],
         ),
@@ -265,7 +338,7 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
   }) {
     final cs = context.colorScheme;
     final typography = context.textTheme;
-    
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -274,7 +347,9 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
           color: cs.surfaceContainerHigh,
           borderRadius: AppRadius.blg.r,
           border: Border.all(
-            color: isSelected ? cs.primary.withValues(alpha: 0.5) : Colors.transparent,
+            color: isSelected
+                ? cs.primary.withValues(alpha: 0.5)
+                : Colors.transparent,
             width: 2,
           ),
         ),
@@ -296,11 +371,16 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
                 children: [
                   Text(
                     title,
-                    style: typography.titleMedium?.copyWith(color: cs.onSurface, fontWeight: FontWeight.bold),
+                    style: typography.titleMedium?.copyWith(
+                      color: cs.onSurface,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   Text(
                     subtitle,
-                    style: typography.bodySmall?.copyWith(color: cs.onSurfaceVariant),
+                    style: typography.bodySmall?.copyWith(
+                      color: cs.onSurfaceVariant,
+                    ),
                   ),
                 ],
               ),
@@ -315,13 +395,18 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
                   width: 2,
                 ),
               ),
-              child: isSelected ? Center(
-                child: Container(
-                  width: 12.w,
-                  height: 12.w,
-                  decoration: BoxDecoration(color: cs.primary, shape: BoxShape.circle),
-                ),
-              ) : null,
+              child: isSelected
+                  ? Center(
+                      child: Container(
+                        width: 12.w,
+                        height: 12.w,
+                        decoration: BoxDecoration(
+                          color: cs.primary,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    )
+                  : null,
             ),
           ],
         ),
@@ -329,19 +414,31 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
     );
   }
 
-  Widget summaryRow(String label, String value, TextTheme tt, Color subtitleColor, Color textColor) {
+  Widget summaryRow(
+    String label,
+    String value,
+    TextTheme tt,
+    Color subtitleColor,
+    Color textColor,
+  ) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(label, style: tt.bodyMedium?.copyWith(color: subtitleColor)),
-        Text(value, style: tt.titleMedium?.copyWith(color: textColor, fontWeight: FontWeight.bold)),
+        Text(
+          value,
+          style: tt.titleMedium?.copyWith(
+            color: textColor,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ],
     );
   }
 
   Future<void> _handlePayment() async {
     setState(() => _isLoading = true);
-    
+
     try {
       final response = await sl<DioService>().post(
         '/payments/checkout',
@@ -358,7 +455,10 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
           if (!mounted) return;
           setState(() => _isLoading = false);
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(failure.message), backgroundColor: context.colorScheme.error),
+            SnackBar(
+              content: Text(failure.message),
+              backgroundColor: context.colorScheme.error,
+            ),
           );
         },
         (success) {
@@ -371,7 +471,10 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
       if (!mounted) return;
       setState(() => _isLoading = false);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: const Text('Payment failed. Please try again.'), backgroundColor: context.colorScheme.error),
+        SnackBar(
+          content: const Text('Payment failed. Please try again.'),
+          backgroundColor: context.colorScheme.error,
+        ),
       );
     }
   }
@@ -395,13 +498,19 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
               Container(
                 width: 80.w,
                 height: 80.w,
-                decoration: BoxDecoration(color: cs.primary, shape: BoxShape.circle),
+                decoration: BoxDecoration(
+                  color: cs.primary,
+                  shape: BoxShape.circle,
+                ),
                 child: Icon(Icons.check, color: cs.onPrimary, size: 40),
               ),
               SizedBox(height: AppSpacing.xl.h),
               Text(
                 'Booking Confirmed!',
-                style: tt.headlineSmall?.copyWith(color: cs.onSurface, fontWeight: FontWeight.bold),
+                style: tt.headlineSmall?.copyWith(
+                  color: cs.onSurface,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               SizedBox(height: AppSpacing.md.h),
               Text(

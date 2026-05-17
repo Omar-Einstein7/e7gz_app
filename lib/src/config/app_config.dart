@@ -54,17 +54,23 @@ class AppConfig {
     authDio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) {
-          AppLogger.info('🌐 [AUTH] REQUEST[${options.method}] => PATH: ${options.path}');
+          AppLogger.info(
+            '🌐 [AUTH] REQUEST[${options.method}] => PATH: ${options.path}',
+          );
           // Note: We don't log the request body here to prevent leaking credentials in logs
           return handler.next(options);
         },
         onResponse: (response, handler) {
-          AppLogger.info('✅ [AUTH] RESPONSE[${response.statusCode}] => PATH: ${response.requestOptions.path}');
+          AppLogger.info(
+            '✅ [AUTH] RESPONSE[${response.statusCode}] => PATH: ${response.requestOptions.path}',
+          );
           return handler.next(response);
         },
         onError: (e, handler) {
           // Log only the status code and path, avoiding the body which might contain sensitive info
-          AppLogger.error('❌ [AUTH] ERROR[${e.response?.statusCode}] => PATH: ${e.requestOptions.path}');
+          AppLogger.error(
+            '❌ [AUTH] ERROR[${e.response?.statusCode}] => PATH: ${e.requestOptions.path}',
+          );
           return handler.next(e);
         },
       ),
@@ -74,7 +80,9 @@ class AppConfig {
     dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
-          AppLogger.info('🌐 [DIO] REQUEST[${options.method}] => PATH: ${options.path}');
+          AppLogger.info(
+            '🌐 [DIO] REQUEST[${options.method}] => PATH: ${options.path}',
+          );
 
           final tokenResult = await secureStorage.read('jwt_token');
           tokenResult.fold((_) {}, (token) {
@@ -86,12 +94,16 @@ class AppConfig {
           return handler.next(options);
         },
         onResponse: (response, handler) {
-          AppLogger.info('✅ [DIO] RESPONSE[${response.statusCode}] => PATH: ${response.requestOptions.path}');
+          AppLogger.info(
+            '✅ [DIO] RESPONSE[${response.statusCode}] => PATH: ${response.requestOptions.path}',
+          );
           return handler.next(response);
         },
         onError: (DioException e, handler) async {
           final errorBody = e.response?.data;
-          AppLogger.error('❌ [DIO] ERROR[${e.response?.statusCode}] => PATH: ${e.requestOptions.path} => BODY: $errorBody');
+          AppLogger.error(
+            '❌ [DIO] ERROR[${e.response?.statusCode}] => PATH: ${e.requestOptions.path} => BODY: $errorBody',
+          );
 
           if (e.response?.statusCode == 401) {
             try {
@@ -102,7 +114,8 @@ class AppConfig {
                 tokenResult.fold((_) => null, (v) => newToken = v);
 
                 if (newToken != null && newToken!.isNotEmpty) {
-                  e.requestOptions.headers['Authorization'] = 'Bearer $newToken';
+                  e.requestOptions.headers['Authorization'] =
+                      'Bearer $newToken';
                   final response = await dio.request<dynamic>(
                     e.requestOptions.path,
                     data: e.requestOptions.data,

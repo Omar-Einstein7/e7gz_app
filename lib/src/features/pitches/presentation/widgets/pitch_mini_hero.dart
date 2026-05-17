@@ -15,7 +15,10 @@ class PitchMiniHero extends StatelessWidget {
 
     return Container(
       height: 180.h,
-      margin: EdgeInsets.symmetric(horizontal: AppSpacing.lg.w, vertical: AppSpacing.md.h),
+      margin: EdgeInsets.symmetric(
+        horizontal: AppSpacing.lg.w,
+        vertical: AppSpacing.md.h,
+      ),
       decoration: BoxDecoration(
         borderRadius: AppRadius.bxxl.r,
         image: DecorationImage(
@@ -76,7 +79,10 @@ class _PremiumBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     final pc = context.pitchColors;
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: AppSpacing.sm.w, vertical: AppSpacing.xs.h),
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSpacing.sm.w,
+        vertical: AppSpacing.xs.h,
+      ),
       decoration: BoxDecoration(
         color: pc.accentGreen.withValues(alpha: 0.8),
         borderRadius: AppRadius.bsm.r,
@@ -102,19 +108,12 @@ class _LocationInfo extends StatelessWidget {
     final cs = context.colorScheme;
     return Row(
       children: [
-        Icon(
-          Icons.location_on,
-          color: cs.onSurfaceVariant,
-          size: 14,
-        ),
+        Icon(Icons.location_on, color: cs.onSurfaceVariant, size: 14),
         SizedBox(width: AppSpacing.xs.w),
         Expanded(
           child: Text(
             city ?? '',
-            style: TextStyle(
-              color: cs.onSurfaceVariant,
-              fontSize: 13.sp,
-            ),
+            style: TextStyle(color: cs.onSurfaceVariant, fontSize: 13.sp),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),

@@ -21,14 +21,16 @@ class Review {
     final user = json['userId'] as Map<String, dynamic>?;
     return Review(
       id: json['_id']?.toString() ?? json['id']?.toString() ?? '',
-      userId: user != null 
-          ? (user['_id']?.toString() ?? user['id']?.toString() ?? '') 
+      userId: user != null
+          ? (user['_id']?.toString() ?? user['id']?.toString() ?? '')
           : (json['userId']?.toString() ?? ''),
       userName: user?['name']?.toString() ?? 'User',
       userPhoto: user?['photoUrl']?.toString(),
       rating: (json['rating'] as num?)?.toDouble() ?? 0.0,
       comment: json['comment']?.toString() ?? '',
-      createdAt: DateTime.tryParse(json['createdAt']?.toString() ?? '') ?? DateTime.now(),
+      createdAt:
+          DateTime.tryParse(json['createdAt']?.toString() ?? '') ??
+          DateTime.now(),
     );
   }
 }

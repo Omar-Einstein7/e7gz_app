@@ -9,27 +9,33 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   Future<void> loadProfileData() async {
     emit(state.copyWith(status: ProfileStatus.loading));
-    
+
     final rewardsResult = await repository.getAvailableRewards();
     final tierResult = await repository.getTierStatus();
 
     rewardsResult.fold(
-      (failure) => emit(state.copyWith(
-        status: ProfileStatus.failure,
-        errorMessage: failure.message,
-      )),
+      (failure) => emit(
+        state.copyWith(
+          status: ProfileStatus.failure,
+          errorMessage: failure.message,
+        ),
+      ),
       (rewards) {
         tierResult.fold(
-          (failure) => emit(state.copyWith(
-            status: ProfileStatus.failure,
-            errorMessage: failure.message,
-            rewards: rewards,
-          )),
-          (tierStatus) => emit(state.copyWith(
-            status: ProfileStatus.success,
-            rewards: rewards,
-            tierStatus: tierStatus,
-          )),
+          (failure) => emit(
+            state.copyWith(
+              status: ProfileStatus.failure,
+              errorMessage: failure.message,
+              rewards: rewards,
+            ),
+          ),
+          (tierStatus) => emit(
+            state.copyWith(
+              status: ProfileStatus.success,
+              rewards: rewards,
+              tierStatus: tierStatus,
+            ),
+          ),
         );
       },
     );
@@ -37,7 +43,7 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   Future<void> redeemReward(String rewardId) async {
     final result = await repository.redeemReward(rewardId);
-    
+
     result.fold(
       (failure) {
         // Handle failure

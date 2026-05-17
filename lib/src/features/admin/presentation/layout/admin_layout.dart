@@ -57,7 +57,7 @@ class _AdminLayoutState extends State<AdminLayout>
     final w = MediaQuery.sizeOf(context).width;
     final isDesktop = w >= _breakpoint;
 
-    return SafeArea  (
+    return SafeArea(
       child: Scaffold(
         backgroundColor: AdminColors.bg,
         drawer: isDesktop

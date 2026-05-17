@@ -1,8 +1,7 @@
 import '../../imports/imports.dart';
 
-
 /// A multi-purpose image widget that handles network images, SVGs, and local assets.
-/// 
+///
 /// Automatically uses [CachedNetworkImage] if enabled for web images.
 /// Automatically uses [SvgPicture] if enabled for SVG files.
 class CommonImage extends StatelessWidget {
@@ -51,7 +50,9 @@ class CommonImage extends StatelessWidget {
         width: adjustedWidth,
         height: adjustedHeight,
         fit: fit,
-        colorFilter: color != null ? ColorFilter.mode(color!, BlendMode.srcIn) : null,
+        colorFilter: color != null
+            ? ColorFilter.mode(color!, BlendMode.srcIn)
+            : null,
       );
     } else {
       image = Image.asset(
@@ -60,15 +61,13 @@ class CommonImage extends StatelessWidget {
         height: adjustedHeight,
         fit: fit,
         color: color,
-        errorBuilder: (context, error, stackTrace) => errorWidget ?? _buildDefaultErrorWidget(),
+        errorBuilder: (context, error, stackTrace) =>
+            errorWidget ?? _buildDefaultErrorWidget(),
       );
     }
 
     if (borderRadius != null) {
-      return ClipRRect(
-        borderRadius: borderRadius!,
-        child: image,
-      );
+      return ClipRRect(borderRadius: borderRadius!, child: image);
     }
 
     return image;
@@ -79,11 +78,7 @@ class CommonImage extends StatelessWidget {
       width: width,
       height: height,
       color: Colors.grey[200],
-      child:           const Icon(
-            IconsaxPlusBold.image,
-            color: Colors.grey,
-          )
-,
+      child: const Icon(IconsaxPlusBold.image, color: Colors.grey),
     );
   }
 }

@@ -93,7 +93,8 @@ class AppCard extends StatelessWidget {
             ),
           ),
         Padding(
-          padding: padding ??
+          padding:
+              padding ??
               EdgeInsets.fromLTRB(
                 AppSpacing.md,
                 title == null ? AppSpacing.md : 0,
@@ -117,11 +118,7 @@ class AppCard extends StatelessWidget {
       ),
       clipBehavior: Clip.antiAlias,
       child: onTap != null
-          ? InkWell(
-              onTap: onTap,
-              borderRadius: AppBorders.card,
-              child: content,
-            )
+          ? InkWell(onTap: onTap, borderRadius: AppBorders.card, child: content)
           : content,
     );
   }

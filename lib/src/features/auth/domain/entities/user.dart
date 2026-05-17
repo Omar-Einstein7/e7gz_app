@@ -28,5 +28,13 @@ class AppUser extends Equatable {
   bool get isAdmin => role.toLowerCase() == 'admin';
 
   @override
-  List<Object?> get props => [id, email, name, photoUrl, role, loyaltyPoints, phone];
+  List<Object?> get props => [
+    id,
+    email,
+    name,
+    photoUrl,
+    role,
+    loyaltyPoints,
+    phone,
+  ];
 }

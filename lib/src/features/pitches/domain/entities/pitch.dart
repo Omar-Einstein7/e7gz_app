@@ -36,28 +36,28 @@ class Pitch extends Equatable {
   });
 
   factory Pitch.empty() => const Pitch(
-        id: '',
-        name: 'Pitch Name Placeholder',
-        description: '',
-        ownerId: '',
-        sportType: '',
-        location: PitchLocation(
-          address: 'Address',
-          city: 'City',
-          country: 'Country',
-          latitude: 0,
-          longitude: 0,
-        ),
-        pricePerHour: 0,
-        amenities: [],
-        images: [],
-        rating: 0,
-        reviewsCount: 0,
-        isAvailable: true,
-        openingTime: '',
-        closingTime: '',
-        slotDurationMinutes: 60,
-      );
+    id: '',
+    name: 'Pitch Name Placeholder',
+    description: '',
+    ownerId: '',
+    sportType: '',
+    location: PitchLocation(
+      address: 'Address',
+      city: 'City',
+      country: 'Country',
+      latitude: 0,
+      longitude: 0,
+    ),
+    pricePerHour: 0,
+    amenities: [],
+    images: [],
+    rating: 0,
+    reviewsCount: 0,
+    isAvailable: true,
+    openingTime: '',
+    closingTime: '',
+    slotDurationMinutes: 60,
+  );
 
   String get imageUrl => images.isNotEmpty ? images.first : '';
 

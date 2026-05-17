@@ -51,9 +51,15 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
     } catch (e) {
       if (mounted) {
         setState(() => _isLoadingPitches = false);
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('matchmaking.error_loading_pitches'.tr(namedArgs: {'error': e.toString()}))));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'matchmaking.error_loading_pitches'.tr(
+                namedArgs: {'error': e.toString()},
+              ),
+            ),
+          ),
+        );
       }
     }
   }
@@ -91,7 +97,9 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
               TextFormField(
                 controller: _titleController,
                 style: const TextStyle(color: Colors.white),
-                decoration: _inputDecoration('matchmaking.match_title_hint'.tr()),
+                decoration: _inputDecoration(
+                  'matchmaking.match_title_hint'.tr(),
+                ),
                 validator: (v) => v!.isEmpty ? 'auth.required'.tr() : null,
               ),
               SizedBox(height: 24.h),
@@ -103,7 +111,9 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                       value: _selectedPitchId,
                       dropdownColor: const Color(0xFF131B2E),
                       style: const TextStyle(color: Colors.white),
-                      decoration: _inputDecoration('matchmaking.choose_location'.tr()),
+                      decoration: _inputDecoration(
+                        'matchmaking.choose_location'.tr(),
+                      ),
                       items: _availablePitches
                           .map(
                             (p) => DropdownMenuItem(
@@ -126,7 +136,10 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildFieldLabel('bookings.date'.tr().toUpperCase(), tt),
+                        _buildFieldLabel(
+                          'bookings.date'.tr().toUpperCase(),
+                          tt,
+                        ),
                         InkWell(
                           onTap: _pickDate,
                           child: Container(
@@ -218,7 +231,8 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                           keyboardType: TextInputType.number,
                           style: const TextStyle(color: Colors.white),
                           decoration: _inputDecoration('10'),
-                          validator: (v) => v!.isEmpty ? 'auth.required'.tr() : null,
+                          validator: (v) =>
+                              v!.isEmpty ? 'auth.required'.tr() : null,
                         ),
                       ],
                     ),
@@ -237,7 +251,8 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                           onChanged: (v) => setState(
                             () => _pricePerPlayer = double.tryParse(v) ?? 0,
                           ),
-                          validator: (v) => v!.isEmpty ? 'auth.required'.tr() : null,
+                          validator: (v) =>
+                              v!.isEmpty ? 'auth.required'.tr() : null,
                         ),
                       ],
                     ),
@@ -405,7 +420,9 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
       final endTimeStr =
           '${_endTime!.hour.toString().padLeft(2, '0')}:${_endTime!.minute.toString().padLeft(2, '0')}';
 
-      final selectedPitch = _availablePitches.firstWhere((p) => p.id == _selectedPitchId);
+      final selectedPitch = _availablePitches.firstWhere(
+        (p) => p.id == _selectedPitchId,
+      );
       final sportType = selectedPitch.sportType;
 
       final match = MatchModel(

@@ -78,7 +78,9 @@ class _LoginScreenState extends State<LoginScreen> {
               child: BlocListener<AuthCubit, AuthState>(
                 listener: (context, state) {
                   if (state.isFailure) {
-                    context.showErrorSnackBar(state.errorMessage ?? 'Authentication failed');
+                    context.showErrorSnackBar(
+                      state.errorMessage ?? 'Authentication failed',
+                    );
                   }
                   if (state.isSuccess) {
                     context.showSuccessSnackBar('Login successful!');
@@ -151,7 +153,10 @@ class _LoginScreenState extends State<LoginScreen> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  _inputLabel(context, 'auth.email'.tr().toUpperCase()),
+                                  _inputLabel(
+                                    context,
+                                    'auth.email'.tr().toUpperCase(),
+                                  ),
                                   AppTextField(
                                     controller: _emailController,
                                     hint: 'name@example.com',
@@ -166,7 +171,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      _inputLabel(context, 'auth.password'.tr().toUpperCase()),
+                                      _inputLabel(
+                                        context,
+                                        'auth.password'.tr().toUpperCase(),
+                                      ),
                                       TextButton(
                                         onPressed: () => context.push(
                                           AppRoutes.forgotPassword,
@@ -177,10 +185,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                         ),
                                         child: Text(
                                           'auth.forgot_password'.tr(),
-                                          style: typography.labelSmall?.copyWith(
-                                            color: cs.primary,
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                          style: typography.labelSmall
+                                              ?.copyWith(
+                                                color: cs.primary,
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                         ),
                                       ),
                                     ],
@@ -189,7 +198,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                     controller: _passwordController,
                                     hint: '••••••••',
                                     obscureText: _obscurePassword,
-                                    prefixIcon: const Icon(IconsaxPlusBold.lock),
+                                    prefixIcon: const Icon(
+                                      IconsaxPlusBold.lock,
+                                    ),
                                     validator: Validators.password,
                                     suffixIcon: IconButton(
                                       icon: Icon(
@@ -199,8 +210,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                         size: 20,
                                       ),
                                       onPressed: () => setState(
-                                        () =>
-                                            _obscurePassword = !_obscurePassword,
+                                        () => _obscurePassword =
+                                            !_obscurePassword,
                                       ),
                                     ),
                                   ),
@@ -215,11 +226,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                         height: ButtonSize.large,
                                         isLoading: state.isLoading,
                                         onPressed: () {
-                                          if (_formKey.currentState?.validate() ??
+                                          if (_formKey.currentState
+                                                  ?.validate() ??
                                               false) {
                                             context.read<AuthCubit>().login(
-                                              email: _emailController.text.trim(),
-                                              password: _passwordController.text,
+                                              email: _emailController.text
+                                                  .trim(),
+                                              password:
+                                                  _passwordController.text,
                                             );
                                           }
                                         },
@@ -230,114 +244,114 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
 
-                          // Divider
-                          SizedBox(height: AppSpacing.xl.h),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Divider(
-                                  color: cs.outlineVariant,
+                            // Divider
+                            SizedBox(height: AppSpacing.xl.h),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Divider(color: cs.outlineVariant),
                                 ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: AppSpacing.md.w),
-                                child: Text(
-                                  'auth.or_continue_with'.tr().toUpperCase(),
-                                  style: typography.labelSmall?.copyWith(
-                                    color: cs.onSurfaceVariant.withValues(alpha: 0.5),
-                                    fontWeight: FontWeight.w900,
-                                    letterSpacing: 1.5,
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: AppSpacing.md.w,
                                   ),
-                                ),
-                              ),
-                              Expanded(
-                                child: Divider(
-                                  color: cs.outlineVariant,
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: AppSpacing.xl.h),
-
-                          // Social Logins
-                          Row(
-                            children: [
-                              Expanded(
-                                child: SocialLoginButton(
-                                  label: 'Google',
-                                  iconPath: AppAssets.googleIcon,
-                                  onPressed: () => context.showSnackBar(
-                                    'Google Login coming soon!',
-                                  ),
-                                ),
-                              ),
-                              SizedBox(width: AppSpacing.md.w),
-                              Expanded(
-                                child: SocialLoginButton(
-                                  label: 'Facebook',
-                                  iconPath: AppAssets.facebookIcon,
-                                  onPressed: () => context.showSnackBar(
-                                    'Facebook Login coming soon!',
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-
-                          SizedBox(height: AppSpacing.xl.h),
-
-                          // Footer Action
-                          Center(
-                            child: TextButton(
-                              onPressed: () => context.push(AppRoutes.signup),
-                              child: RichText(
-                                textAlign: TextAlign.center,
-                                text: TextSpan(
-                                  text: 'auth.dont_have_account'.tr(),
-                                  style: typography.bodySmall?.copyWith(
-                                    color: cs.onSurfaceVariant,
-                                  ),
-                                  children: [
-                                    TextSpan(
-                                      text: 'auth.sign_up'.tr(),
-                                      style: TextStyle(
-                                        color: cs.primary,
-                                        fontWeight: FontWeight.bold,
-                                        decoration: TextDecoration.underline,
+                                  child: Text(
+                                    'auth.or_continue_with'.tr().toUpperCase(),
+                                    style: typography.labelSmall?.copyWith(
+                                      color: cs.onSurfaceVariant.withValues(
+                                        alpha: 0.5,
                                       ),
+                                      fontWeight: FontWeight.w900,
+                                      letterSpacing: 1.5,
                                     ),
-                                  ],
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Divider(color: cs.outlineVariant),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: AppSpacing.xl.h),
+
+                            // Social Logins
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: SocialLoginButton(
+                                    label: 'Google',
+                                    iconPath: AppAssets.googleIcon,
+                                    onPressed: () => context.showSnackBar(
+                                      'Google Login coming soon!',
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: AppSpacing.md.w),
+                                Expanded(
+                                  child: SocialLoginButton(
+                                    label: 'Facebook',
+                                    iconPath: AppAssets.facebookIcon,
+                                    onPressed: () => context.showSnackBar(
+                                      'Facebook Login coming soon!',
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                            SizedBox(height: AppSpacing.xl.h),
+
+                            // Footer Action
+                            Center(
+                              child: TextButton(
+                                onPressed: () => context.push(AppRoutes.signup),
+                                child: RichText(
+                                  textAlign: TextAlign.center,
+                                  text: TextSpan(
+                                    text: 'auth.dont_have_account'.tr(),
+                                    style: typography.bodySmall?.copyWith(
+                                      color: cs.onSurfaceVariant,
+                                    ),
+                                    children: [
+                                      TextSpan(
+                                        text: 'auth.sign_up'.tr(),
+                                        style: TextStyle(
+                                          color: cs.primary,
+                                          fontWeight: FontWeight.bold,
+                                          decoration: TextDecoration.underline,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
+                          ],
+                        ),
+                      ),
+
+                      SizedBox(height: AppSpacing.xxl.h),
+
+                      // Legal/Footer
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          _legalLink(context, 'PRIVACY POLICY'),
+                          SizedBox(width: AppSpacing.sm.w),
+                          _legalLink(context, 'TERMS OF SERVICE'),
+                          SizedBox(width: AppSpacing.sm.w),
+                          _legalLink(context, 'SUPPORT'),
                         ],
                       ),
-                    ),
-
-                    SizedBox(height: AppSpacing.xxl.h),
-
-                    // Legal/Footer
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        _legalLink(context, 'PRIVACY POLICY'),
-                        SizedBox(width: AppSpacing.sm.w),
-                        _legalLink(context, 'TERMS OF SERVICE'),
-                        SizedBox(width: AppSpacing.sm.w),
-                        _legalLink(context, 'SUPPORT'),
-                      ],
-                    ),
-                    SizedBox(height: AppSpacing.lg.h),
-                  ],
+                      SizedBox(height: AppSpacing.lg.h),
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      ],
-    ),
-  );
+        ],
+      ),
+    );
   }
 
   Widget _inputLabel(BuildContext context, String text) {

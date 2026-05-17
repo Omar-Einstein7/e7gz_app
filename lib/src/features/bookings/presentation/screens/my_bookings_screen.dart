@@ -104,14 +104,8 @@ class _MyBookingsScreenState extends State<MyBookingsScreen>
           return TabBarView(
             controller: _tabController,
             children: [
-              _BookingsList(
-                bookings: upcomingBookings,
-                isUpcoming: true,
-              ),
-              _BookingsList(
-                bookings: pastBookings,
-                isUpcoming: false,
-              ),
+              _BookingsList(bookings: upcomingBookings, isUpcoming: true),
+              _BookingsList(bookings: pastBookings, isUpcoming: false),
             ],
           );
         },
@@ -124,10 +118,7 @@ class _BookingsList extends StatelessWidget {
   final List<Booking> bookings;
   final bool isUpcoming;
 
-  const _BookingsList({
-    required this.bookings,
-    required this.isUpcoming,
-  });
+  const _BookingsList({required this.bookings, required this.isUpcoming});
 
   @override
   Widget build(BuildContext context) {
@@ -135,7 +126,10 @@ class _BookingsList extends StatelessWidget {
       return Center(
         child: Text(
           isUpcoming ? 'bookings.no_upcoming'.tr() : 'bookings.no_past'.tr(),
-          style: TextStyle(color: context.colorScheme.onSurfaceVariant, fontSize: 14.sp),
+          style: TextStyle(
+            color: context.colorScheme.onSurfaceVariant,
+            fontSize: 14.sp,
+          ),
         ),
       );
     }
@@ -151,4 +145,3 @@ class _BookingsList extends StatelessWidget {
     );
   }
 }
-
