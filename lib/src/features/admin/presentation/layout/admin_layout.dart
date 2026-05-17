@@ -57,49 +57,51 @@ class _AdminLayoutState extends State<AdminLayout>
     final w = MediaQuery.sizeOf(context).width;
     final isDesktop = w >= _breakpoint;
 
-    return Scaffold(
-      backgroundColor: AdminColors.bg,
-      drawer: isDesktop
-          ? null
-          : Drawer(
-              backgroundColor: AdminColors.surface,
-              child: AdminSidebar(
-                selectedIndex: widget.selectedIndex,
-                onIndexChanged: (i) {
-                  widget.onIndexChanged(i);
-                  Navigator.pop(context);
-                },
-              ),
-            ),
-      body: Row(
-        children: [
-          // ── Fixed sidebar (desktop only) ──────────────────────────
-          if (isDesktop)
-            SizedBox(
-              width: _sidebarWidth,
-              child: AdminSidebar(
-                selectedIndex: widget.selectedIndex,
-                onIndexChanged: widget.onIndexChanged,
-              ),
-            ),
-          // ── Main content ──────────────────────────────────────────
-          Expanded(
-            child: Column(
-              children: [
-                AdminTopBar(
+    return SafeArea  (
+      child: Scaffold(
+        backgroundColor: AdminColors.bg,
+        drawer: isDesktop
+            ? null
+            : Drawer(
+                backgroundColor: AdminColors.surface,
+                child: AdminSidebar(
                   selectedIndex: widget.selectedIndex,
-                  isDesktop: isDesktop,
+                  onIndexChanged: (i) {
+                    widget.onIndexChanged(i);
+                    Navigator.pop(context);
+                  },
                 ),
-                Expanded(
-                  child: FadeTransition(
-                    opacity: _fadeAnim,
-                    child: widget.child,
+              ),
+        body: Row(
+          children: [
+            // ── Fixed sidebar (desktop only) ──────────────────────────
+            if (isDesktop)
+              SizedBox(
+                width: _sidebarWidth,
+                child: AdminSidebar(
+                  selectedIndex: widget.selectedIndex,
+                  onIndexChanged: widget.onIndexChanged,
+                ),
+              ),
+            // ── Main content ──────────────────────────────────────────
+            Expanded(
+              child: Column(
+                children: [
+                  AdminTopBar(
+                    selectedIndex: widget.selectedIndex,
+                    isDesktop: isDesktop,
                   ),
-                ),
-              ],
+                  Expanded(
+                    child: FadeTransition(
+                      opacity: _fadeAnim,
+                      child: widget.child,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

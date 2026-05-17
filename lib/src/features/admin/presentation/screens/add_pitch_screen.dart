@@ -14,7 +14,8 @@ import '../../data/datasources/admin_remote_datasource.dart';
 import '../../../../di/injection_container.dart';
 
 class AdminAddPitchScreen extends StatefulWidget {
-  const AdminAddPitchScreen({super.key});
+  final Map<String, dynamic>? pitchData;
+  const AdminAddPitchScreen({super.key, this.pitchData});
 
   @override
   State<AdminAddPitchScreen> createState() => _AdminAddPitchScreenState();
@@ -38,6 +39,41 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
 
   final AdminRemoteDataSource _dataSource = sl<AdminRemoteDataSource>();
   final ImagePicker _picker = ImagePicker();
+  bool get _isEdit => widget.pitchData != null;
+
+  bool get _hasValidNetworkImage {
+    if (!_isEdit) return false;
+    final images = widget.pitchData!['images'];
+    if (images == null || images is! List || images.isEmpty) return false;
+    final firstImage = images[0];
+    return firstImage != null && firstImage.toString().isNotEmpty;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (_isEdit) {
+      final data = widget.pitchData!;
+      _nameController.text = data['name'] ?? '';
+      _descriptionController.text = data['description'] ?? '';
+      _sportType = data['sportType'] ?? 'football';
+      _priceController.text = (data['pricePerHour'] ?? 0).toString();
+      
+      final location = data['location'];
+      if (location != null) {
+        _addressController.text = location['address'] ?? '';
+        _cityController.text = location['city'] ?? '';
+        final coords = location['coordinates']?['coordinates'];
+        if (coords != null && coords.length >= 2) {
+          _selectedLocation = LatLng(coords[1], coords[0]);
+        }
+      }
+      
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _mapController.move(_selectedLocation, 15);
+      });
+    }
+  }
 
   Future<void> _getCurrentLocation() async {
     bool serviceEnabled;
@@ -106,45 +142,55 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
     setState(() => _isLoading = true);
 
     try {
-      final success = await _dataSource.createPitch(
-        {
-          "name": _nameController.text,
-          "description": _descriptionController.text,
-          "sportType": _sportType,
-          "location": {
-            "address": _addressController.text,
-            "city": _cityController.text,
-            "coordinates": {
-              "type": "Point",
-              "coordinates": [
-                _selectedLocation.longitude,
-                _selectedLocation.latitude,
-              ],
-            },
+      final payload = {
+        "name": _nameController.text,
+        "description": _descriptionController.text,
+        "sportType": _sportType,
+        "location": {
+          "address": _addressController.text,
+          "city": _cityController.text,
+          "coordinates": {
+            "type": "Point",
+            "coordinates": [
+              _selectedLocation.longitude,
+              _selectedLocation.latitude,
+            ],
           },
-          "pricePerHour": int.tryParse(_priceController.text) ?? 0,
-          "openingTime": "08:00",
-          "closingTime": "23:00",
         },
-        imageBytes: _pickedImage != null
-            ? await _pickedImage!.readAsBytes()
-            : null,
-        fileName: _pickedImage?.name,
-      );
+        "pricePerHour": int.tryParse(_priceController.text) ?? 0,
+        "openingTime": "08:00",
+        "closingTime": "23:00",
+      };
+
+      bool success;
+      if (_isEdit) {
+        success = await _dataSource.updatePitch(
+          widget.pitchData!['_id'] ?? widget.pitchData!['id'],
+          payload,
+          imageBytes: _pickedImage != null ? await _pickedImage!.readAsBytes() : null,
+          fileName: _pickedImage?.name,
+        );
+      } else {
+        success = await _dataSource.createPitch(
+          payload,
+          imageBytes: _pickedImage != null ? await _pickedImage!.readAsBytes() : null,
+          fileName: _pickedImage?.name,
+        );
+      }
 
       if (mounted) {
         if (success) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Pitch added successfully!'),
+            SnackBar(
+              content: Text(_isEdit ? 'Pitch updated successfully!' : 'Pitch added successfully!'),
               backgroundColor: AdminColors.accent,
             ),
           );
-          context.pop();
+          context.pop(true);
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Failed to add pitch'),
+            SnackBar(
+              content: Text(_isEdit ? 'Failed to update pitch' : 'Failed to add pitch'),
               backgroundColor: Colors.redAccent,
             ),
           );
@@ -170,7 +216,7 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
           ),
           onPressed: () => context.pop(),
         ),
-        title: const Text('Add New Pitch', style: AdminTextStyles.pageTitle),
+        title: Text(_isEdit ? 'Edit Pitch' : 'Add New Pitch', style: AdminTextStyles.pageTitle),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -206,7 +252,7 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
                           )
                         : null,
                   ),
-                  child: _pickedImage == null
+                  child: _pickedImage == null && !_hasValidNetworkImage
                       ? Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -231,7 +277,18 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
                             ),
                           ],
                         )
-                      : Align(
+                      : _pickedImage == null && _hasValidNetworkImage
+                          ? ClipRRect(
+                              borderRadius: BorderRadius.circular(16),
+                              child: Image.network(
+                                widget.pitchData!['images'][0],
+                                width: double.infinity,
+                                height: 180,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) => const Icon(Icons.broken_image),
+                              ),
+                            )
+                          : Align(
                           alignment: Alignment.topRight,
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
@@ -399,9 +456,9 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
                             strokeWidth: 2,
                           ),
                         )
-                      : const Text(
-                          'CREATE PITCH',
-                          style: TextStyle(
+                      : Text(
+                          _isEdit ? 'UPDATE PITCH' : 'CREATE PITCH',
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 15,
                           ),

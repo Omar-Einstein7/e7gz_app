@@ -2,7 +2,7 @@ import 'dart:ui';
 import 'package:e7gz/src/features/auth/presentation/providers/auth_bloc.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
-import 'package:e7gz/src/theme/app_colors.dart';
+
 import 'package:e7gz/src/utils/validators.dart';
 
 class SignupScreen extends StatefulWidget {

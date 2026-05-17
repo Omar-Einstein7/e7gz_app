@@ -22,6 +22,7 @@ abstract final class AppRoutes {
   static const String myBookings = '/my-bookings';
   static const String loyalty = '/loyalty';
   static const String notifications = '/notifications';
+  static const String settings = '/settings';
   static const String profile = '/profile';
   static const String matchmaking = '/matchmaking';
   static const String createMatch = '/matchmaking/create';

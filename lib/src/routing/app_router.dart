@@ -5,6 +5,7 @@ import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/shared/wrappers/main_wrapper.dart';
 import 'package:e7gz/src/features/admin/presentation/screens/add_pitch_screen.dart';
 import 'package:e7gz/src/features/admin/presentation/screens/admin_dashboard_screen.dart';
+import 'package:e7gz/src/features/profile/presentation/screens/settings_screen.dart';
 
 import 'package:go_router/go_router.dart';
 
@@ -162,6 +163,11 @@ final GoRouter appRouter = GoRouter(
       path: AppRoutes.notifications,
       name: 'notifications',
       builder: (context, state) => const NotificationsScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.settings,
+      name: 'settings',
+      builder: (context, state) => const SettingsScreen(),
     ),
     GoRoute(
       path: AppRoutes.ownerDashboard,

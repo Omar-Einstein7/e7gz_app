@@ -107,15 +107,10 @@ class _SearchScreenState extends State<SearchScreen> {
           style: typography.headlineSmall?.copyWith(
             color: cs.primary,
             fontWeight: FontWeight.w900,
+       
           ),
         ),
-        actions: [
-          IconButton(
-            icon: Icon(IconsaxPlusLinear.map, color: cs.onSurface),
-            onPressed: () => context.push(AppRoutes.search),
-          ),
-          SizedBox(width: AppSpacing.sm.w),
-        ],
+      
       ),
       body: Column(
         children: [

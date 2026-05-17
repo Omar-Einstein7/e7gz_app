@@ -139,13 +139,55 @@ class _AdminPitchesTabState extends State<AdminPitchesTab> with AutomaticKeepAli
                             TableIconBtn(
                               icon: IconsaxPlusBold.edit_2,
                               color: AdminColors.accentBlue,
-                              onTap: () {},
+                              onTap: () async {
+                                final result = await Navigator.push<bool>(
+                                  context,
+                                  MaterialPageRoute<bool>(
+                                    builder: (_) => AdminAddPitchScreen(pitchData: p),
+                                  ),
+                                );
+                                if (result == true && context.mounted) {
+                                  setState(() {
+                                    _pitchesFuture = widget.dataSource.getAllPitches();
+                                  });
+                                }
+                              },
                             ),
                             const SizedBox(width: 6),
                             TableIconBtn(
                               icon: IconsaxPlusBold.trash,
                               color: const Color(0xFFEF4444),
-                              onTap: () {},
+                              onTap: () async {
+                                final confirm = await showDialog<bool>(
+                                  context: context,
+                                  builder: (c) => AlertDialog(
+                                    backgroundColor: AdminColors.surface,
+                                    title: const Text('Delete Pitch?', style: TextStyle(color: AdminColors.textPrimary)),
+                                    content: const Text('Are you sure you want to delete this pitch?', style: TextStyle(color: AdminColors.textSecondary)),
+                                    actions: [
+                                      TextButton(onPressed: () => Navigator.pop(c, false), child: const Text('Cancel', style: TextStyle(color: AdminColors.textSecondary))),
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(c, true), 
+                                        child: const Text('Delete', style: TextStyle(color: Colors.redAccent)),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                                if (confirm == true) {
+                                  final id = p['_id'] ?? p['id'];
+                                  if (id != null) {
+                                    final success = await widget.dataSource.deletePitch(id);
+                                    if (success && context.mounted) {
+                                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Pitch deleted successfully'), backgroundColor: AdminColors.accent));
+                                      setState(() {
+                                        _pitchesFuture = widget.dataSource.getAllPitches();
+                                      });
+                                    } else if (context.mounted) {
+                                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Failed to delete pitch'), backgroundColor: Colors.redAccent));
+                                    }
+                                  }
+                                }
+                              },
                             ),
                           ],
                         ),

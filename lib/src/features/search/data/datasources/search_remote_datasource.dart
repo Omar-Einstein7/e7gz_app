@@ -30,7 +30,6 @@ class SearchRemoteDataSourceImpl implements SearchRemoteDataSource {
   }) async {
     final params = {
       if (query != null && query.isNotEmpty) 'search': query,
-      if (query != null && query.isNotEmpty) 'city': query,
       if (sportType != null && sportType.isNotEmpty) 'sportType': sportType,
       if (minPrice != null) 'minPrice': minPrice,
       if (maxPrice != null) 'maxPrice': maxPrice,

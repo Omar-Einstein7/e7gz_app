@@ -49,10 +49,7 @@ class _MatchmakingViewState extends State<_MatchmakingView> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: IconButton(
-          icon: Icon(IconsaxPlusLinear.menu_1, color: textColor),
-          onPressed: () {},
-        ),
+       
         title: Text(
           'e7gzz',
           style: typography.headlineSmall?.copyWith(
@@ -61,27 +58,7 @@ class _MatchmakingViewState extends State<_MatchmakingView> {
           ),
         ),
         centerTitle: true,
-        actions: [
-          IconButton(
-            icon: Icon(
-              IconsaxPlusLinear.notification,
-              color: textColor,
-            ),
-            onPressed: () {},
-          ),
-          Padding(
-            padding: EdgeInsets.only(right: 16.w),
-            child: CircleAvatar(
-              radius: 18.r,
-              backgroundColor: isDark ? const Color(0xFF2D3449) : theme.colorScheme.surfaceContainerHighest,
-              child: Icon(
-                IconsaxPlusBold.user,
-                size: 20,
-                color: isDark ? Colors.white : theme.colorScheme.onSurfaceVariant,
-              ),
-            ),
-          ),
-        ],
+     
       ),
       body: BlocListener<MatchmakingCubit, MatchmakingState>(
         listenWhen: (prev, curr) =>

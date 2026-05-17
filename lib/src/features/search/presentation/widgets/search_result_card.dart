@@ -18,8 +18,9 @@ class SearchResultCard extends StatelessWidget {
         margin: EdgeInsets.only(bottom: AppSpacing.lg.h),
         decoration: BoxDecoration(
           color: cs.surface,
-          borderRadius: AppRadius.bxl.r,
+          borderRadius: AppRadius.bxxl.r,
           boxShadow: AppShadows.card,
+
         ),
         child: Column(
           children: [
@@ -27,7 +28,7 @@ class SearchResultCard extends StatelessWidget {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(40.r),
+                    top: Radius.circular(32.r),
                   ),
                   child: Hero(
                     tag: 'pitch_image_${pitch.id}',

@@ -31,10 +31,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         return Scaffold(
           backgroundColor: cs.background,
           appBar: AppBar(
-            leading: IconButton(
-              icon: Icon(IconsaxPlusLinear.menu_1, color: cs.onSurface),
-              onPressed: () => Scaffold.of(context).openDrawer(),
-            ),
+            // leading: IconButton(
+            //   icon: Icon(IconsaxPlusLinear.menu_1, color: cs.onSurface),
+            //   onPressed: () => Scaffold.of(context).openDrawer(),
+            // ),
             title: Text(
               'e7gzz',
               style: typography.headlineSmall?.copyWith(
@@ -42,20 +42,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 fontWeight: FontWeight.w900,
               ),
             ),
-            actions: [
-              Padding(
-                padding: EdgeInsets.only(right: AppSpacing.md.w),
-                child: CircleAvatar(
-                  radius: 18.r,
-                  backgroundColor: cs.surfaceContainerHigh,
-                  child: Icon(
-                    IconsaxPlusBold.user,
-                    size: 20,
-                    color: cs.onSurfaceVariant,
-                  ),
-                ),
-              ),
-            ],
+            // actions: [
+            //   Padding(
+            //     padding: EdgeInsets.only(right: AppSpacing.md.w),
+            //     child: CircleAvatar(
+            //       radius: 18.r,
+            //       backgroundColor: cs.surfaceContainerHigh,
+            //       child: Icon(
+            //         IconsaxPlusBold.user,
+            //         size: 20,
+            //         color: cs.onSurfaceVariant,
+            //       ),
+            //     ),
+            //   ),
+            // ],
           ),
           body: SingleChildScrollView(
             padding: EdgeInsets.all(AppSpacing.lg.w),
@@ -187,7 +187,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   title: 'Booking History',
                   subtitle: 'Manage your upcoming and past matches',
                   icon: IconsaxPlusBold.calendar_1,
-                  onTap: () => context.push(AppRoutes.myBookings),
+                  onTap: () => context.go(AppRoutes.myBookings),
                 ),
                 SizedBox(height: AppSpacing.md.h),
                 ProfileTile(
@@ -214,24 +214,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   SizedBox(height: AppSpacing.md.h),
                 ],
 
-                // Theme Switcher integrated directly into Settings
-                BlocBuilder<ThemeCubit, ThemeMode>(
-                  builder: (context, mode) {
-                    final isDarkMode = context.isDarkMode;
-                    return ProfileTile(
-                      title: isDarkMode ? 'Switch to Light Theme' : 'Switch to Dark Theme',
-                      subtitle: 'Change app appearance',
-                      icon: isDarkMode ? IconsaxPlusBold.sun_1 : IconsaxPlusBold.moon,
-                      onTap: () => context.read<ThemeCubit>().setTheme(isDarkMode ? ThemeMode.light : ThemeMode.dark),
-                    );
-                  },
-                ),
-                
-                SizedBox(height: AppSpacing.md.h),
-                const ProfileTile(
+                ProfileTile(
                   title: 'Settings',
                   subtitle: 'Privacy, notifications, and app preferences',
                   icon: IconsaxPlusBold.setting_2,
+                  onTap: () => context.push(AppRoutes.settings),
                 ),
                 SizedBox(height: AppSpacing.md.h),
                 ProfileTile(

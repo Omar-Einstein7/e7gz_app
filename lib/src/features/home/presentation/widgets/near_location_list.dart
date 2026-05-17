@@ -1,26 +1,61 @@
 import 'dart:ui';
-
 import 'package:e7gz/src/imports/imports.dart';
-import 'package:e7gz/src/features/home/presentation/cubit/home_cubit.dart';
-import 'package:e7gz/src/features/home/presentation/cubit/home_state.dart';
+import 'package:e7gz/src/features/pitches/presentation/cubit/pitches_cubit.dart';
+import 'package:e7gz/src/features/pitches/presentation/cubit/pitches_state.dart';
+import 'package:e7gz/src/di/injection_container.dart';
 
-
-class NearLocationList extends StatelessWidget {
+class NearLocationList extends StatefulWidget {
   const NearLocationList({super.key});
 
   @override
+  State<NearLocationList> createState() => _NearLocationListState();
+}
+
+class _NearLocationListState extends State<NearLocationList> {
+  Position? _userPosition;
+  bool _isLoadingLocation = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchLocation();
+  }
+
+  Future<void> _fetchLocation() async {
+    try {
+      final locationService = sl <LocationService>();
+      final result = await locationService.getCurrentPosition();
+      result.fold(
+        (failure) {
+          if (mounted) setState(() => _isLoadingLocation = false);
+        },
+        (position) {
+          if (mounted) {
+            setState(() {
+              _userPosition = position;
+              _isLoadingLocation = false;
+            });
+          }
+        },
+      );
+    } catch (_) {
+      if (mounted) setState(() => _isLoadingLocation = false);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final pitchTheme = context.pitchTheme;
+ 
 
     return SizedBox(
       height: 285.h,
-      child: BlocBuilder<HomeCubit, HomeState>(
+      child: BlocBuilder<PitchesCubit, PitchesState>(
         builder: (context, state) {
-          if (state.status == HomeStatus.loading && state.data == null) {
+          if (state.status == PitchesStatus.loading && state.pitches.isEmpty) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          if (state.status == HomeStatus.failure) {
+          if (state.status == PitchesStatus.failure) {
             return Center(
               child: Text(
                 state.errorMessage ?? 'Failed to load pitches',
@@ -29,7 +64,7 @@ class NearLocationList extends StatelessWidget {
             );
           }
 
-          final pitches = state.data?.nearbyPitches ?? [];
+          final pitches = state.pitches.reversed.toList();
           if (pitches.isEmpty) {
             return Center(
               child: Text(
@@ -50,7 +85,11 @@ class NearLocationList extends StatelessWidget {
             itemCount: pitches.length > 5 ? 5 : pitches.length,
             itemBuilder: (context, index) {
               final pitch = pitches[index];
-              return _NearPitchCard(pitch: pitch, index: index)
+              return _NearPitchCard(
+                pitch: pitch,
+                userPosition: _userPosition,
+                isLoadingLocation: _isLoadingLocation,
+              )
                   .animate(delay: (index * 100).ms)
                   .fadeIn(duration: 500.ms)
                   .moveX(begin: 30, end: 0, curve: Curves.easeOutCubic);
@@ -64,8 +103,14 @@ class NearLocationList extends StatelessWidget {
 
 class _NearPitchCard extends StatelessWidget {
   final dynamic pitch;
-  final int index;
-  const _NearPitchCard({required this.pitch, required this.index});
+  final Position? userPosition;
+  final bool isLoadingLocation;
+
+  const _NearPitchCard({
+    required this.pitch,
+    this.userPosition,
+    this.isLoadingLocation = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -149,15 +194,22 @@ class _NearPitchCard extends StatelessWidget {
                                 size: 12,
                               ),
                               SizedBox(width: 4.w),
-                              Text(
-                                '${((index + 1) * 0.4).toStringAsFixed(2)} KM',
-                                style: TextStyle(
-                                  fontFamily: 'Chewy',
-                                  color: Colors.white,
-                                  fontSize: 10.sp,
-                                  fontWeight: FontWeight.w800,
+                              if (isLoadingLocation)
+                                SizedBox(
+                                  width: 12.w,
+                                  height: 12.h,
+                                  child: const CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                                )
+                              else
+                                Text(
+                                  _getDistanceText(),
+                                  style: TextStyle(
+                                    fontFamily: 'Chewy',
+                                    color: Colors.white,
+                                    fontSize: 10.sp,
+                                    fontWeight: FontWeight.w800,
+                                  ),
                                 ),
-                              ),
                             ],
                           ),
                         ),
@@ -248,6 +300,24 @@ class _NearPitchCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String _getDistanceText() {
+    if (userPosition == null) return '-- KM';
+    
+    try {
+      final distanceInMeters = Geolocator.distanceBetween(
+        userPosition!.latitude,
+        userPosition!.longitude,
+        pitch.location.latitude,
+        pitch.location.longitude,
+      );
+      
+      final km = distanceInMeters / 1000;
+      return '${km.toStringAsFixed(1)} KM';
+    } catch (_) {
+      return '-- KM';
+    }
   }
 }
 
