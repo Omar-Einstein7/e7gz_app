@@ -2,9 +2,9 @@ name: Flutter CI Pipeline
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "feature/cicd" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "feature/cicd" ]
 
 jobs:
   # 1. ANALYSIS & TESTING JOB
