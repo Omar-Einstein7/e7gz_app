@@ -1,10 +1,7 @@
 import 'package:e7gz/src/imports/core_imports.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:e7gz/src/features/auth/presentation/providers/session_cubit.dart';
-import 'package:e7gz/src/routing/app_router.dart';
-import 'package:e7gz/src/routing/app_routes.dart';
+
 
 // Import Cubits for data triggering
 import 'package:e7gz/src/features/home/presentation/cubit/home_cubit.dart';
