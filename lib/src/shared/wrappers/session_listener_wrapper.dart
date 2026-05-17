@@ -10,7 +10,7 @@ import 'package:e7gz/src/routing/app_routes.dart';
 import 'package:e7gz/src/features/home/presentation/cubit/home_cubit.dart';
 import 'package:e7gz/src/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:e7gz/src/features/notifications/presentation/cubit/notifications_cubit.dart';
-import 'package:e7gz/src/features/pitches/presentation/cubit/pitches_cubit.dart';
+
 import 'package:e7gz/src/features/matchmaking/presentation/cubit/matchmaking_cubit.dart';
 
 class SessionListenerWrapper extends StatelessWidget {
