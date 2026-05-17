@@ -1,6 +1,6 @@
 import 'dart:ui';
 import 'package:e7gz/src/features/auth/domain/entities/user.dart';
-import 'package:e7gz/src/features/auth/presentation/providers/session_bloc.dart';
+import 'package:e7gz/src/features/auth/presentation/providers/session_cubit.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
 
@@ -40,7 +40,7 @@ class _SplashScreenState extends State<SplashScreen> {
     final cs = context.theme.colorScheme;
     final tt = context.theme.textTheme;
 
-    return BlocListener<SessionBloc, SessionState>(
+    return BlocListener<SessionCubit, SessionState>(
       listener: (context, state) {
         _handleNavigation(context, state.status, state.user);
       },

@@ -2,7 +2,7 @@ import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:e7gz/src/features/auth/presentation/providers/session_bloc.dart';
+import 'package:e7gz/src/features/auth/presentation/providers/session_cubit.dart';
 import 'package:e7gz/src/routing/app_router.dart';
 import 'package:e7gz/src/routing/app_routes.dart';
 
@@ -19,7 +19,7 @@ class SessionListenerWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<SessionBloc, SessionState>(
+    return BlocListener<SessionCubit, SessionState>(
       listenWhen: (prev, next) => prev.status != next.status,
       listener: (context, state) {
         AppLogger.info('🔄 SessionListenerWrapper: Status changed to ${state.status}');

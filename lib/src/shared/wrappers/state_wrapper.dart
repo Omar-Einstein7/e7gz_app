@@ -2,8 +2,8 @@ import '../../imports/imports.dart';
 import '../../di/injection_container.dart';
 
 // Auth
-import '../../features/auth/presentation/providers/session_bloc.dart';
-import '../../features/auth/presentation/providers/auth_bloc.dart';
+import '../../features/auth/presentation/providers/session_cubit.dart';
+import '../../features/auth/presentation/providers/auth_cubit.dart';
 
 // Pitches
 import '../../features/pitches/presentation/cubit/pitches_cubit.dart';
@@ -50,8 +50,8 @@ class StateWrapper extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         // Auth / Session
-        BlocProvider(create: (_) => sl<SessionBloc>()),
-        BlocProvider(create: (_) => sl<AuthBloc>()),
+        BlocProvider(create: (_) => sl<SessionCubit>()),
+        BlocProvider(create: (_) => sl<AuthCubit>()),
 
         // Home
         BlocProvider(create: (_) => sl<HomeCubit>()),

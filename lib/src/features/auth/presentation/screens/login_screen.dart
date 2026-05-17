@@ -1,6 +1,6 @@
 import 'dart:ui';
-import 'package:e7gz/src/features/auth/presentation/providers/auth_bloc.dart';
-import 'package:e7gz/src/features/auth/presentation/providers/session_bloc.dart';
+import 'package:e7gz/src/features/auth/presentation/providers/auth_cubit.dart';
+import 'package:e7gz/src/features/auth/presentation/providers/session_cubit.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
 import 'package:e7gz/src/theme/app_colors.dart';
@@ -75,14 +75,14 @@ class _LoginScreenState extends State<LoginScreen> {
 
           SafeArea(
             child: Center(
-              child: BlocListener<AuthBloc, AuthState>(
+              child: BlocListener<AuthCubit, AuthState>(
                 listener: (context, state) {
                   if (state.isFailure) {
                     context.showErrorSnackBar(state.errorMessage ?? 'Authentication failed');
                   }
                   if (state.isSuccess) {
                     context.showSuccessSnackBar('Login successful!');
-                    final session = context.read<SessionBloc>().state;
+                    final session = context.read<SessionCubit>().state;
                     final user = session.user;
                     if (user != null) {
                       if (user.isAdmin) {
@@ -207,7 +207,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                                   SizedBox(height: AppSpacing.xl.h),
 
-                                  BlocBuilder<AuthBloc, AuthState>(
+                                  BlocBuilder<AuthCubit, AuthState>(
                                     builder: (context, state) {
                                       return AppButton(
                                         label: 'auth.login_button'.tr(),
@@ -217,13 +217,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                         onPressed: () {
                                           if (_formKey.currentState?.validate() ??
                                               false) {
-                                            context.read<AuthBloc>().add(
-                                              LoginRequested(
-                                                email: _emailController.text
-                                                    .trim(),
-                                                password:
-                                                    _passwordController.text,
-                                              ),
+                                            context.read<AuthCubit>().login(
+                                              email: _emailController.text.trim(),
+                                              password: _passwordController.text,
                                             );
                                           }
                                         },

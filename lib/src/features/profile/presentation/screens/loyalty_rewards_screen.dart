@@ -1,4 +1,4 @@
-import 'package:e7gz/src/features/auth/presentation/providers/session_bloc.dart';
+import 'package:e7gz/src/features/auth/presentation/providers/session_cubit.dart';
 import 'package:e7gz/src/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:e7gz/src/features/profile/presentation/cubit/profile_state.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
@@ -81,7 +81,7 @@ class LoyaltyRewardsScreen extends StatelessWidget {
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              BlocBuilder<SessionBloc, SessionState>(
+                              BlocBuilder<SessionCubit, SessionState>(
                                 builder: (context, sessionState) {
                                   final points =
                                       sessionState.user?.loyaltyPoints ?? 0;

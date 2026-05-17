@@ -1,4 +1,4 @@
-import 'package:e7gz/src/features/auth/presentation/providers/session_bloc.dart';
+import 'package:e7gz/src/features/auth/presentation/providers/session_cubit.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
@@ -136,9 +136,7 @@ class AdminSidebar extends StatelessWidget {
               label: 'Logout',
               selected: false,
               danger: true,
-              onTap: () => context.read<SessionBloc>().add(
-                const SessionLogoutRequested(),
-              ),
+              onTap: () => context.read<SessionCubit>().logout(),
             ),
           ),
           const SizedBox(height: 20),

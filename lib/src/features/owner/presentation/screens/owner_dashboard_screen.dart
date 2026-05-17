@@ -1,6 +1,6 @@
 import 'dart:typed_data';
-import 'package:e7gz/src/features/auth/presentation/providers/auth_bloc.dart';
-import 'package:e7gz/src/features/auth/presentation/providers/session_bloc.dart';
+import 'package:e7gz/src/features/auth/presentation/providers/auth_cubit.dart';
+import 'package:e7gz/src/features/auth/presentation/providers/session_cubit.dart';
 import 'package:e7gz/src/features/owner/presentation/cubit/owner_cubit.dart';
 import 'package:e7gz/src/features/owner/presentation/cubit/owner_state.dart';
 import 'package:e7gz/src/features/pitches/domain/entities/pitch.dart';
@@ -433,7 +433,7 @@ class _ProfileTabState extends State<_ProfileTab> {
     final cs = context.colorScheme;
     final tt = context.textTheme;
 
-    return BlocBuilder<SessionBloc, SessionState>(
+    return BlocBuilder<SessionCubit, SessionState>(
       builder: (context, sessionState) {
         final user = sessionState.user;
         return ListView(
@@ -456,10 +456,10 @@ class _ProfileTabState extends State<_ProfileTab> {
                       if (image != null && context.mounted) {
                         final bytes = await image.readAsBytes();
                         setState(() => _localPhotoBytes = bytes);
-                        context.read<AuthBloc>().add(UpdateProfileRequested(photoPath: image.path));
+                        context.read<AuthCubit>().updateProfile(photoPath: image.path);
                       }
                     },
-                    child: BlocBuilder<AuthBloc, AuthState>(
+                    child: BlocBuilder<AuthCubit, AuthState>(
                       builder: (context, authState) {
                         return Stack(
                           alignment: Alignment.bottomRight,
@@ -544,7 +544,7 @@ class _ProfileTabState extends State<_ProfileTab> {
               icon: IconsaxPlusLinear.logout,
               label: 'Log Out',
               isDestructive: true,
-              onTap: () => context.read<SessionBloc>().add(const SessionLogoutRequested()),
+              onTap: () => context.read<SessionCubit>().logout(),
             ),
             SizedBox(height: 100.h),
           ],

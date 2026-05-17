@@ -21,8 +21,8 @@ import '../services/version_update_service.dart';
 // ── Auth ─────────────────────────────────────────────────────────────────────
 import '../features/auth/domain/repositories/auth_repository.dart';
 import '../features/auth/data/repositories/auth_repository_impl.dart';
-import '../features/auth/presentation/providers/session_bloc.dart';
-import '../features/auth/presentation/providers/auth_bloc.dart';
+import '../features/auth/presentation/providers/session_cubit.dart';
+import '../features/auth/presentation/providers/auth_cubit.dart';
 
 // ── Pitches ──────────────────────────────────────────────────────────────────
 import '../features/pitches/data/datasources/pitch_remote_datasource.dart';
@@ -247,8 +247,8 @@ Future<void> initDependencies() async {
   // pattern for BLoC + get_it.
   // ────────────────────────────────────────────────────────────────────────────
 
-  sl.registerFactory(() => SessionBloc(repository: sl<AuthRepository>()));
-  sl.registerFactory(() => AuthBloc(repository: sl<AuthRepository>()));
+  sl.registerFactory(() => SessionCubit(repository: sl<AuthRepository>()));
+  sl.registerFactory(() => AuthCubit(repository: sl<AuthRepository>()));
   sl.registerFactory(
     () => PitchesCubit(
       getPitches: sl<GetPitchesUseCase>(),

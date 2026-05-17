@@ -1,5 +1,5 @@
 import 'dart:ui';
-import 'package:e7gz/src/features/auth/presentation/providers/auth_bloc.dart';
+import 'package:e7gz/src/features/auth/presentation/providers/auth_cubit.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -60,7 +60,7 @@ class _SignupScreenState extends State<SignupScreen> {
           ),
 
           SafeArea(
-            child: BlocListener<AuthBloc, AuthState>(
+            child: BlocListener<AuthCubit, AuthState>(
               listener: (context, state) {
                 if (state.isFailure) {
                   context.showErrorSnackBar(state.errorMessage ?? 'Signup failed');
@@ -178,7 +178,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               
                               SizedBox(height: AppSpacing.xl.h),
                               
-                              BlocBuilder<AuthBloc, AuthState>(
+                              BlocBuilder<AuthCubit, AuthState>(
                                 builder: (context, state) {
                                   return AppButton(
                                     label: 'auth.create_account_button'.tr(),
@@ -188,14 +188,12 @@ class _SignupScreenState extends State<SignupScreen> {
                                     suffixIcon: const Icon(Icons.arrow_forward),
                                     onPressed: _selectedRole == null ? null : () {
                                       if (_formKey.currentState?.validate() ?? false) {
-                                        context.read<AuthBloc>().add(
-                                        SignUpRequested(
+                                        context.read<AuthCubit>().signUp(
                                           name: _nameController.text.trim(),
                                           email: _emailController.text.trim(),
                                           password: _passwordController.text,
                                           role: _selectedRole ?? 'player',
                                           phone: _phoneController.text,
-                                        ),
                                         );
                                       }
                                     },

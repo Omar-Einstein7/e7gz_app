@@ -1,4 +1,4 @@
-import 'package:e7gz/src/features/auth/presentation/providers/session_bloc.dart';
+import 'package:e7gz/src/features/auth/presentation/providers/session_cubit.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
 import 'package:e7gz/src/theme/cubit/theme_cubit.dart';
@@ -19,7 +19,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final cs = context.colorScheme;
     final typography = context.textTheme;
     
-    return BlocBuilder<SessionBloc, SessionState>(
+    return BlocBuilder<SessionCubit, SessionState>(
       builder: (context, state) {
         final user = state.user;
         final name = user?.name ?? 'profile.guest'.tr();
@@ -227,9 +227,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   subtitle: 'profile.tile_logout_sub'.tr(),
                   icon: IconsaxPlusBold.logout,
                   isLogout: true,
-                  onTap: () => context.read<SessionBloc>().add(
-                    const SessionLogoutRequested(),
-                  ),
+                  onTap: () => context.read<SessionCubit>().logout(),
                 ),
 
                 SizedBox(height: AppSpacing.xxl.h),
