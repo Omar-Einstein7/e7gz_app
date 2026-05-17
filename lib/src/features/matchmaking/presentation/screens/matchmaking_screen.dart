@@ -1,6 +1,7 @@
 import 'package:e7gz/src/features/matchmaking/presentation/cubit/matchmaking_state.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../widgets/matchmaking_card.dart';
 import '../widgets/leaderboard_tile.dart';
 import '../cubit/matchmaking_cubit.dart';
@@ -92,7 +93,7 @@ class _MatchmakingViewState extends State<_MatchmakingView> {
                   children: [
                     // Header
                     Text(
-                      'Find Team',
+                      'matchmaking.title'.tr(),
                       style: typography.displaySmall?.copyWith(
                         color: textColor,
                         fontWeight: FontWeight.w900,
@@ -101,7 +102,7 @@ class _MatchmakingViewState extends State<_MatchmakingView> {
                     ),
                     SizedBox(height: 8.h),
                     Text(
-                      "Join open matches across Cairo's premium pitches. The field is waiting for its next star.",
+                      'matchmaking.subtitle'.tr(),
                       style: typography.bodyMedium?.copyWith(
                         color: secondaryTextColor,
                         height: 1.5,
@@ -124,7 +125,7 @@ class _MatchmakingViewState extends State<_MatchmakingView> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'PUBLIC MATCHES',
+                            'matchmaking.public_matches'.tr().toUpperCase(),
                             style: typography.labelSmall?.copyWith(
                               color: secondaryTextColor,
                               fontWeight: FontWeight.bold,
@@ -149,14 +150,14 @@ class _MatchmakingViewState extends State<_MatchmakingView> {
                         state.matches.isEmpty)
                       Center(
                         child: Text(
-                          state.errorMessage ?? 'Error loading matches',
+                          state.errorMessage ?? 'matchmaking.error_loading'.tr(),
                           style: TextStyle(color: textColor),
                         ),
                       )
                     else if (state.matches.isEmpty)
                       Center(
                         child: Text(
-                          'No matches available at the moment',
+                          'matchmaking.no_matches'.tr(),
                           style: TextStyle(color: secondaryTextColor),
                         ),
                       )
@@ -187,14 +188,14 @@ class _MatchmakingViewState extends State<_MatchmakingView> {
                       child: Column(
                         children: [
                           Text(
-                            'Weekly Leaderboard',
+                            'matchmaking.weekly_leaderboard'.tr(),
                             style: typography.headlineSmall?.copyWith(
                               color: textColor,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           Text(
-                            'Top individual match contributors',
+                            'matchmaking.leaderboard_subtitle'.tr(),
                             style: typography.bodySmall?.copyWith(
                               color: secondaryTextColor,
                             ),
@@ -204,17 +205,17 @@ class _MatchmakingViewState extends State<_MatchmakingView> {
                     ),
                     SizedBox(height: 24.h),
 
-                    const LeaderboardTile(
+                    LeaderboardTile(
                       rank: '01',
                       name: 'Amira Khaled',
-                      progress: '12 Matches Won',
+                      progress: 'matchmaking.matches_won'.tr(namedArgs: {'count': '12'}),
                       isMvp: true,
                     ),
                     SizedBox(height: 12.h),
-                    const LeaderboardTile(
+                    LeaderboardTile(
                       rank: '02',
                       name: 'Youssef Tarek',
-                      progress: '10 Matches Won',
+                      progress: 'matchmaking.matches_won'.tr(namedArgs: {'count': '10'}),
                     ),
 
                     SizedBox(height: 100.h),

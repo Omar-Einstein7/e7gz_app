@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});
@@ -21,21 +22,18 @@ class _OnboardingPageState extends State<OnboardingPage> {
     _pageController = PageController();
     _onboardingData = [
       {
-        'title': 'The Stadium\nis Calling',
-        'subtitle':
-            'Experience the roar of the crowd and the thrill of the pitch. Your next match starts here.',
+        'titleKey': 'onboarding.title_1',
+        'subtitleKey': 'onboarding.subtitle_1',
         'image': AppAssets.onboardingPitch,
       },
       {
-        'title': 'Book Your Pitch\nin Seconds',
-        'subtitle':
-            'Browse premium stadiums across Egypt. Choose your slot, pay securely, and get ready to play.',
+        'titleKey': 'onboarding.title_2',
+        'subtitleKey': 'onboarding.subtitle_2',
         'image': AppAssets.onboardingStadium,
       },
       {
-        'title': 'The Ultimate\nSports Community',
-        'subtitle':
-            'Connect with players, join matchmaking games, and earn rewards for every goal you score.',
+        'titleKey': 'onboarding.title_3',
+        'subtitleKey': 'onboarding.subtitle_3',
         'image': AppAssets.onboardingPlayers,
       },
     ];
@@ -151,7 +149,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Text(
-                                          item['title'] as String,
+                                          (item['titleKey'] as String).tr(),
                                           style: textTheme.displayMedium?.copyWith(
                                             color: Colors.white,
                                             fontWeight: FontWeight.w900,
@@ -166,7 +164,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                                     SizedBox(height: 16.h),
 
                                     Text(
-                                          item['subtitle'] as String,
+                                          (item['subtitleKey'] as String).tr(),
                                           style: textTheme.bodyLarge?.copyWith(
                                             color: const Color(
                                               0xFFBCC7DE,
@@ -215,7 +213,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                         // Navigation Button
                         if (_currentIndex == _onboardingData.length - 1)
                           AppButton(
-                            label: 'Get Started',
+                            label: 'shared.get_started'.tr(),
                             onPressed: _onGetStarted,
                             width: ButtonSize.medium,
                             suffixIcon: const Icon(Icons.arrow_forward),

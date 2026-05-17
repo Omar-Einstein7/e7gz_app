@@ -3,6 +3,7 @@ import 'package:e7gz/src/features/search/presentation/cubit/search_cubit.dart';
 import 'package:e7gz/src/features/search/presentation/cubit/search_state.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../widgets/search_filter_chip.dart';
 import '../widgets/search_result_card.dart';
 
@@ -134,7 +135,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     controller: _searchController,
                     style: TextStyle(color: cs.onSurface),
                     decoration: InputDecoration(
-                      hintText: 'Search stadium or location...',
+                      hintText: 'search.search_placeholder'.tr(),
                       hintStyle: TextStyle(
                         color: cs.onSurfaceVariant.withValues(alpha: 0.5),
                       ),
@@ -157,7 +158,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     scrollDirection: Axis.horizontal,
                     children: [
                       SearchFilterChip(
-                        label: 'All',
+                        label: 'search.all'.tr(),
                         isSelected: _selectedSport == null,
                         onTap: () => setState(() {
                           _selectedSport = null;
@@ -170,7 +171,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         return Padding(
                           padding: EdgeInsets.only(right: 12.w),
                           child: SearchFilterChip(
-                            label: sport,
+                            label: 'search.$value'.tr(),
                             isSelected: _selectedSport == value,
                             onTap: () => setState(() {
                               _selectedSport = value;
@@ -180,7 +181,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         );
                       }),
                       SearchFilterChip(
-                        label: 'Price',
+                        label: 'search.price'.tr(),
                         icon: IconsaxPlusLinear.arrow_down_1,
                         isSelected: _minPrice != null || _maxPrice != null,
                         onTap: () {
@@ -197,7 +198,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       ),
                       SizedBox(width: 12.w),
                       SearchFilterChip(
-                        label: 'Rating',
+                        label: 'search.rating'.tr(),
                         icon: IconsaxPlusLinear.star,
                         isSelected: _selectedRating != null,
                         onTap: () {
@@ -241,7 +242,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 if (state.status == SearchStatus.failure) {
                   return Center(
                     child: Text(
-                      state.errorMessage ?? 'An error occurred',
+                      state.errorMessage ?? 'search.error_occurred'.tr(),
                       style: TextStyle(color: cs.error),
                     ),
                   );
@@ -252,7 +253,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 if (results.isEmpty) {
                   return Center(
                     child: Text(
-                      'No stadiums found',
+                      'search.no_stadiums_found'.tr(),
                       style: TextStyle(color: cs.onSurfaceVariant),
                     ),
                   );

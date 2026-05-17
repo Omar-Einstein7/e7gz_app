@@ -1,5 +1,6 @@
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:e7gz/src/features/bookings/presentation/cubit/booking_cubit.dart';
 import 'package:e7gz/src/features/bookings/presentation/cubit/booking_state.dart';
 import 'package:e7gz/src/features/bookings/domain/entities/booking.dart';
@@ -41,7 +42,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen>
       backgroundColor: cs.background,
       appBar: AppBar(
         title: Text(
-          'My Bookings',
+          'bookings.title'.tr(),
           style: typography.headlineSmall?.copyWith(
             color: cs.onSurface,
             fontWeight: FontWeight.bold,
@@ -59,9 +60,9 @@ class _MyBookingsScreenState extends State<MyBookingsScreen>
             fontWeight: FontWeight.w900,
             letterSpacing: 1,
           ),
-          tabs: const [
-            Tab(text: 'UPCOMING'),
-            Tab(text: 'PAST'),
+          tabs: [
+            Tab(text: 'bookings.upcoming'.tr().toUpperCase()),
+            Tab(text: 'bookings.past'.tr().toUpperCase()),
           ],
         ),
       ),
@@ -80,7 +81,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen>
           if (state.status == BookingsStatus.failure) {
             return Center(
               child: Text(
-                state.errorMessage ?? 'Failed to load bookings',
+                state.errorMessage ?? 'bookings.failed_load'.tr(),
                 style: TextStyle(color: cs.error, fontSize: 14.sp),
               ),
             );
@@ -133,7 +134,7 @@ class _BookingsList extends StatelessWidget {
     if (bookings.isEmpty) {
       return Center(
         child: Text(
-          isUpcoming ? 'No upcoming bookings' : 'No past bookings',
+          isUpcoming ? 'bookings.no_upcoming'.tr() : 'bookings.no_past'.tr(),
           style: TextStyle(color: context.colorScheme.onSurfaceVariant, fontSize: 14.sp),
         ),
       );

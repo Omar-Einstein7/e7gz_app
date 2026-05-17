@@ -1,5 +1,6 @@
 
 import 'package:e7gz/src/imports/imports.dart';
+import 'package:easy_localization/easy_localization.dart';
 class HomeSectionHeader extends StatelessWidget {
   final String title;
   final String subtitle;
@@ -59,7 +60,7 @@ class HomeSectionHeader extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
                 child: Text(
-                  'View All',
+                  'home.view_all'.tr(),
                   style: TextStyle(
                     color: colors.primary,
                     fontWeight: FontWeight.bold,

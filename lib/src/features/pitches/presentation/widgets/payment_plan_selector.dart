@@ -1,7 +1,11 @@
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/theme/app_colors.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
+import 'package:e7gz/src/features/bookings/presentation/cubit/booking_cubit.dart';
+import 'package:e7gz/src/features/bookings/presentation/cubit/booking_state.dart';
 
 class PaymentPlanSelector extends StatelessWidget {
   final bool isFullPayment;
@@ -18,6 +22,14 @@ class PaymentPlanSelector extends StatelessWidget {
     final cs = context.colorScheme;
     final typography = context.textTheme;
 
+    final slotsState = context.watch<SlotsCubit>().state;
+    final selectedSlot = slotsState.selectedSlot;
+
+    final double basePrice = selectedSlot?.price ?? 350.0;
+    final int totalAmount = basePrice.toInt();
+    final int depositAmount = (totalAmount * 0.3).toInt(); // 30% deposit
+    final int remainingAmount = totalAmount - depositAmount;
+
     return Column(
       children: [
         Padding(
@@ -31,7 +43,7 @@ class PaymentPlanSelector extends StatelessWidget {
               ),
               SizedBox(width: AppSpacing.md.w),
               Text(
-                'Payment Plan',
+                'booking_slots.payment_plan'.tr(),
                 style: typography.titleLarge?.copyWith(
                   color: cs.onSurface,
                   fontWeight: FontWeight.bold,
@@ -51,9 +63,9 @@ class PaymentPlanSelector extends StatelessWidget {
           child: Column(
             children: [
               _PaymentOption(
-                title: 'Full Payment',
-                subtitle: 'Pay the total amount now to secure your pitch immediately. No hassle at the venue.',
-                price: '500',
+                title: 'booking_slots.full_payment'.tr(),
+                subtitle: 'booking_slots.full_desc_param'.tr(namedArgs: {'total': totalAmount.toString()}),
+                price: totalAmount.toString(),
                 isSelected: isFullPayment,
                 onTap: () => onPlanChanged(true),
               ),
@@ -61,9 +73,12 @@ class PaymentPlanSelector extends StatelessWidget {
               Divider(color: cs.outlineVariant),
               SizedBox(height: AppSpacing.lg.h),
               _PaymentOption(
-                title: 'Deposit',
-                subtitle: 'Pay only 150 EGP now. The remaining 350 EGP will be paid at the stadium entrance.',
-                price: '150',
+                title: 'booking_slots.deposit_payment'.tr(),
+                subtitle: 'booking_slots.deposit_desc_param'.tr(namedArgs: {
+                  'deposit': depositAmount.toString(),
+                  'remaining': remainingAmount.toString(),
+                }),
+                price: depositAmount.toString(),
                 isSelected: !isFullPayment,
                 onTap: () => onPlanChanged(false),
               ),
@@ -139,7 +154,7 @@ class _PaymentOption extends StatelessWidget {
                       ),
                       children: [
                          TextSpan(
-                          text: 'EGP',
+                          text: 'pitch_details.egp'.tr(),
                           style: TextStyle(
                             color: cs.onSurfaceVariant,
                             fontSize: 12.sp,

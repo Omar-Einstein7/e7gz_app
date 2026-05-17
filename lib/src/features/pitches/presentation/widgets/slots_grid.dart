@@ -134,63 +134,91 @@ class _SlotBox extends StatelessWidget {
     final isBooked = !slot.isAvailable;
 
     final bgColor = isBooked
-        ? cs.surfaceContainer.withValues(alpha: 0.5)
+        ? cs.surfaceVariant.withOpacity(0.3)
         : (isSelected ? cs.primary : cs.surfaceContainerHigh);
     
     final onColor = isBooked
-        ? cs.onSurfaceVariant.withValues(alpha: 0.3)
+        ? cs.onSurfaceVariant.withOpacity(0.4)
         : (isSelected ? cs.onPrimary : cs.onSurfaceVariant);
     
     final timeColor = isBooked
-        ? cs.onSurfaceVariant.withValues(alpha: 0.5)
+        ? cs.onSurfaceVariant.withOpacity(0.5)
         : (isSelected ? cs.onPrimary : cs.onSurface);
 
-    return GestureDetector(
-      onTap: isBooked ? null : onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        decoration: BoxDecoration(
-          color: bgColor,
-          borderRadius: AppRadius.blg.r,
-          boxShadow: isSelected
-              ? [
-                  BoxShadow(
-                    color: cs.primary.withValues(alpha: 0.2),
-                    blurRadius: 10,
-                  ),
-                ]
-              : [],
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'SLOT',
-              style: TextStyle(
-                color: onColor,
-                fontSize: 10.sp,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              slot.startTime,
-              style: TextStyle(
-                color: timeColor,
-                fontSize: 20.sp,
-                fontWeight: FontWeight.w900,
-              ),
-            ),
-            Text(
-              isBooked ? 'Booked' : '${slot.price.toInt()} EGP',
-              style: TextStyle(
-                color: isBooked ? onColor : (isSelected ? cs.onPrimary : cs.primary),
-                fontSize: 10.sp,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
+    Widget content = AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: AppRadius.blg.r,
+        border: isBooked
+            ? Border.all(color: cs.outlineVariant.withOpacity(0.2), width: 1)
+            : null,
+        boxShadow: isSelected
+            ? [
+                BoxShadow(
+                  color: cs.primary.withOpacity(0.2),
+                  blurRadius: 10,
+                ),
+              ]
+            : [],
       ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (isBooked) ...[
+                Icon(
+                  IconsaxPlusBold.lock,
+                  color: onColor,
+                  size: 10.sp,
+                ),
+                SizedBox(width: 4.w),
+              ],
+              Text(
+                'SLOT',
+                style: TextStyle(
+                  color: onColor,
+                  fontSize: 10.sp,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          Text(
+            slot.startTime,
+            style: TextStyle(
+              color: timeColor,
+              fontSize: 20.sp,
+              fontWeight: FontWeight.w900,
+              decoration: isBooked ? TextDecoration.lineThrough : null,
+            ),
+          ),
+          Text(
+            isBooked ? 'BOOKED' : '${slot.price.toInt()} EGP',
+            style: TextStyle(
+              color: isBooked ? cs.error.withOpacity(0.6) : (isSelected ? cs.onPrimary : cs.primary),
+              fontSize: 10.sp,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (isBooked) {
+      return AbsorbPointer(
+        child: Opacity(
+          opacity: 0.5,
+          child: content,
+        ),
+      );
+    }
+
+    return GestureDetector(
+      onTap: onTap,
+      child: content,
     );
   }
 }

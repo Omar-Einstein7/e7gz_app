@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 
 /// The main application scaffold that handles bottom navigation with [StatefulNavigationShell].
@@ -61,59 +62,59 @@ class CustomBottomNavBar extends StatelessWidget {
       child: ClipRRect(
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: AppSpacing.md.w, vertical: AppSpacing.sm.h),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Expanded(
-                  child: _NavItem(
-                    label: 'Home',
-                    icon: IconsaxPlusLinear.home,
-                    activeIcon: IconsaxPlusBold.home,
-                    isSelected: currentIndex == 0,
-                    onTap: () => onTap(0),
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: AppSpacing.md.w, vertical: AppSpacing.sm.h),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Expanded(
+                    child: _NavItem(
+                      label: 'nav.home'.tr(),
+                      icon: IconsaxPlusLinear.home,
+                      activeIcon: IconsaxPlusBold.home,
+                      isSelected: currentIndex == 0,
+                      onTap: () => onTap(0),
+                    ),
                   ),
-                ),
-                Expanded(
-                  child: _NavItem(
-                    label: 'Search',
-                    icon: IconsaxPlusLinear.search_normal_1,
-                    activeIcon: IconsaxPlusBold.search_normal_1,
-                    isSelected: currentIndex == 1,
-                    onTap: () => onTap(1),
+                  Expanded(
+                    child: _NavItem(
+                      label: 'nav.search'.tr(),
+                      icon: IconsaxPlusLinear.search_normal_1,
+                      activeIcon: IconsaxPlusBold.search_normal_1,
+                      isSelected: currentIndex == 1,
+                      onTap: () => onTap(1),
+                    ),
                   ),
-                ),
-                Expanded(
-                  child: _NavItem(
-                    label: 'Matches',
-                    icon: IconsaxPlusLinear.user_octagon,
-                    activeIcon: IconsaxPlusBold.user_octagon,
-                    isSelected: currentIndex == 2,
-                    onTap: () => onTap(2),
+                  Expanded(
+                    child: _NavItem(
+                      label: 'nav.matches'.tr(),
+                      icon: IconsaxPlusLinear.user_octagon,
+                      activeIcon: IconsaxPlusBold.user_octagon,
+                      isSelected: currentIndex == 2,
+                      onTap: () => onTap(2),
+                    ),
                   ),
-                ),
-                Expanded(
-                  child: _NavItem(
-                    label: 'Bookings',
-                    icon: IconsaxPlusLinear.calendar_1,
-                    activeIcon: IconsaxPlusBold.calendar_1,
-                    isSelected: currentIndex == 3,
-                    onTap: () => onTap(3),
+                  Expanded(
+                    child: _NavItem(
+                      label: 'nav.bookings'.tr(),
+                      icon: IconsaxPlusLinear.calendar_1,
+                      activeIcon: IconsaxPlusBold.calendar_1,
+                      isSelected: currentIndex == 3,
+                      onTap: () => onTap(3),
+                    ),
                   ),
-                ),
-                Expanded(
-                  child: _NavItem(
-                    label: 'Profile',
-                    icon: IconsaxPlusLinear.user,
-                    activeIcon: IconsaxPlusBold.user,
-                    isSelected: currentIndex == 4,
-                    onTap: () => onTap(4),
+                  Expanded(
+                    child: _NavItem(
+                      label: 'nav.profile'.tr(),
+                      icon: IconsaxPlusLinear.user,
+                      activeIcon: IconsaxPlusBold.user,
+                      isSelected: currentIndex == 4,
+                      onTap: () => onTap(4),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
         ),
       ),
     );

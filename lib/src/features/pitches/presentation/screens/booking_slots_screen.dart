@@ -121,6 +121,7 @@ class _BookingSlotsScreenState extends State<BookingSlotsScreen> {
               BookingCheckoutBar(
                 pitchId: widget.pitchId,
                 extraPitch: widget.extraPitch,
+                isFullPayment: _isFullPayment,
               ),
               
               SizedBox(height: AppSpacing.xl.h),

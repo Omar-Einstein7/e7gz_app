@@ -7,6 +7,7 @@ import 'package:e7gz/src/features/search/data/datasources/search_remote_datasour
 import 'package:e7gz/src/di/injection_container.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class CreateMatchScreen extends StatefulWidget {
   const CreateMatchScreen({super.key});
@@ -52,7 +53,7 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
         setState(() => _isLoadingPitches = false);
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Error loading pitches: $e')));
+        ).showSnackBar(SnackBar(content: Text('matchmaking.error_loading_pitches'.tr(namedArgs: {'error': e.toString()}))));
       }
     }
   }
@@ -72,7 +73,7 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
           onPressed: () => context.pop(),
         ),
         title: Text(
-          'Host Match',
+          'matchmaking.host_title'.tr(),
           style: tt.titleLarge?.copyWith(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -86,23 +87,23 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildFieldLabel('MATCH TITLE', tt),
+              _buildFieldLabel('matchmaking.match_title_label'.tr(), tt),
               TextFormField(
                 controller: _titleController,
                 style: const TextStyle(color: Colors.white),
-                decoration: _inputDecoration('e.g. Friday Night Friendly'),
-                validator: (v) => v!.isEmpty ? 'Required' : null,
+                decoration: _inputDecoration('matchmaking.match_title_hint'.tr()),
+                validator: (v) => v!.isEmpty ? 'auth.required'.tr() : null,
               ),
               SizedBox(height: 24.h),
 
-              _buildFieldLabel('SELECT PITCH', tt),
+              _buildFieldLabel('matchmaking.select_pitch'.tr(), tt),
               _isLoadingPitches
                   ? const Center(child: CircularProgressIndicator())
                   : DropdownButtonFormField<String>(
                       value: _selectedPitchId,
                       dropdownColor: const Color(0xFF131B2E),
                       style: const TextStyle(color: Colors.white),
-                      decoration: _inputDecoration('Choose a location'),
+                      decoration: _inputDecoration('matchmaking.choose_location'.tr()),
                       items: _availablePitches
                           .map(
                             (p) => DropdownMenuItem(
@@ -115,7 +116,7 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                           )
                           .toList(),
                       onChanged: (v) => setState(() => _selectedPitchId = v),
-                      validator: (v) => v == null ? 'Required' : null,
+                      validator: (v) => v == null ? 'auth.required'.tr() : null,
                     ),
               SizedBox(height: 24.h),
 
@@ -125,7 +126,7 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildFieldLabel('DATE', tt),
+                        _buildFieldLabel('bookings.date'.tr().toUpperCase(), tt),
                         InkWell(
                           onTap: _pickDate,
                           child: Container(
@@ -147,7 +148,7 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                                 SizedBox(width: 12.w),
                                 Text(
                                   _selectedDate == null
-                                      ? 'Select Date'
+                                      ? 'matchmaking.select_date'.tr()
                                       : DateFormat(
                                           'MMM dd, yyyy',
                                         ).format(_selectedDate!),
@@ -174,7 +175,7 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildFieldLabel('START TIME', tt),
+                        _buildFieldLabel('matchmaking.start_time'.tr(), tt),
                         InkWell(
                           onTap: () => _pickTime(true),
                           child: _timeBox(
@@ -190,7 +191,7 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildFieldLabel('END TIME', tt),
+                        _buildFieldLabel('matchmaking.end_time'.tr(), tt),
                         InkWell(
                           onTap: () => _pickTime(false),
                           child: _timeBox(
@@ -211,13 +212,13 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildFieldLabel('MAX PLAYERS', tt),
+                        _buildFieldLabel('matchmaking.max_players'.tr(), tt),
                         TextFormField(
                           controller: _maxPlayersController,
                           keyboardType: TextInputType.number,
                           style: const TextStyle(color: Colors.white),
                           decoration: _inputDecoration('10'),
-                          validator: (v) => v!.isEmpty ? 'Required' : null,
+                          validator: (v) => v!.isEmpty ? 'auth.required'.tr() : null,
                         ),
                       ],
                     ),
@@ -227,7 +228,7 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildFieldLabel('PRICE / PLAYER', tt),
+                        _buildFieldLabel('matchmaking.price_player'.tr(), tt),
                         TextFormField(
                           initialValue: '150',
                           keyboardType: TextInputType.number,
@@ -236,7 +237,7 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                           onChanged: (v) => setState(
                             () => _pricePerPlayer = double.tryParse(v) ?? 0,
                           ),
-                          validator: (v) => v!.isEmpty ? 'Required' : null,
+                          validator: (v) => v!.isEmpty ? 'auth.required'.tr() : null,
                         ),
                       ],
                     ),
@@ -248,7 +249,7 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildFieldLabel('SKILL LEVEL', tt),
+                  _buildFieldLabel('matchmaking.skill_level'.tr(), tt),
                   DropdownButtonFormField<String>(
                     value: _skillLevel,
                     dropdownColor: const Color(0xFF131B2E),
@@ -276,8 +277,8 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                 builder: (context, state) {
                   return AppButton(
                     label: state.status == MatchmakingStatus.loading
-                        ? 'CREATING...'
-                        : 'PUBLISH MATCH',
+                        ? 'booking_slots.creating'.tr().toUpperCase()
+                        : 'matchmaking.publish_match'.tr(),
                     isFullWidth: true,
                     isLoading: state.status == MatchmakingStatus.loading,
                     onPressed: _submit,
@@ -394,7 +395,7 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
     if (_formKey.currentState!.validate()) {
       if (_selectedDate == null || _startTime == null || _endTime == null) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please select date and time')),
+          SnackBar(content: Text('matchmaking.select_date_time_warning'.tr())),
         );
         return;
       }
@@ -424,7 +425,7 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
       cubit.createMatch(match).then((_) {
         if (mounted && cubit.state.status == MatchmakingStatus.success) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Match created successfully!')),
+            SnackBar(content: Text('matchmaking.create_success'.tr())),
           );
           context.pop();
         }

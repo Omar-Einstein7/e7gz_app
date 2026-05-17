@@ -2,7 +2,7 @@ import 'dart:ui';
 import 'package:e7gz/src/features/auth/presentation/providers/auth_bloc.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
-
+import 'package:easy_localization/easy_localization.dart';
 import 'package:e7gz/src/utils/validators.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -83,14 +83,13 @@ class _SignupScreenState extends State<SignupScreen> {
                   roleSelectionHeader(typography, cs),
                   
                   SizedBox(height: AppSpacing.lg.h),
-                  
-                  Row(
+                                    Row(
                     children: [
                       Expanded(
                         child: roleCard(
                           role: 'player',
-                          title: 'Player',
-                          subtitle: 'Book pitches, find teammates, and join matches.',
+                          title: 'auth.player'.tr(),
+                          subtitle: 'auth.player_desc'.tr(),
                           icon: Icons.sports_soccer,
                           isSelected: _selectedRole == 'player',
                           onTap: () => setState(() => _selectedRole = 'player'),
@@ -100,8 +99,8 @@ class _SignupScreenState extends State<SignupScreen> {
                       Expanded(
                         child: roleCard(
                           role: 'owner',
-                          title: 'Pitch Owner',
-                          subtitle: 'List your stadium, manage bookings, and grow business.',
+                          title: 'auth.owner'.tr(),
+                          subtitle: 'auth.owner_desc'.tr(),
                           icon: Icons.stadium,
                           isSelected: _selectedRole == 'owner',
                           onTap: () => setState(() => _selectedRole = 'owner'),
@@ -131,7 +130,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              inputLabel("Full Name"),
+                              inputLabel("auth.full_name".tr()),
                               AppTextField(
                                 controller: _nameController,
                                 hint: "Mohamed Ahmed",
@@ -140,7 +139,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               ),
                               SizedBox(height: AppSpacing.lg.h),
                               
-                              inputLabel("Email Address"),
+                              inputLabel("auth.email".tr()),
                               AppTextField(
                                 controller: _emailController,
                                 hint: "mohamed@example.com",
@@ -150,7 +149,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               ),
                               SizedBox(height: AppSpacing.lg.h),
                               
-                              inputLabel("Mobile Number"),
+                              inputLabel("auth.mobile_number".tr()),
                               AppTextField(
                                 controller: _phoneController,
                                 hint: "01X XXXX XXXX",
@@ -161,7 +160,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               ),
                               SizedBox(height: AppSpacing.lg.h),
                               
-                              inputLabel("Create Password"),
+                              inputLabel("auth.create_password".tr()),
                               AppTextField(
                                 controller: _passwordController,
                                 hint: "••••••••",
@@ -182,7 +181,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               BlocBuilder<AuthBloc, AuthState>(
                                 builder: (context, state) {
                                   return AppButton(
-                                    label: 'Create Account',
+                                    label: 'auth.create_account_button'.tr(),
                                     isFullWidth: true,
                                     height: ButtonSize.large,
                                     isLoading: state.isLoading,
@@ -211,11 +210,11 @@ class _SignupScreenState extends State<SignupScreen> {
                                   onPressed: () => context.go(AppRoutes.login),
                                   child: RichText(
                                     text: TextSpan(
-                                      text: "Already have an account? ",
+                                      text: "auth.already_have_account".tr(),
                                       style: typography.bodyMedium?.copyWith(color: cs.onSurfaceVariant),
                                       children: [
                                         TextSpan(
-                                          text: "Sign in",
+                                          text: "auth.sign_in".tr(),
                                           style: TextStyle(
                                             color: cs.primary,
                                             fontWeight: FontWeight.bold,
@@ -237,7 +236,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   
                   // Footer
                   Text(
-                    'By creating an account, you agree to our Terms of Service and Privacy Policy. Experience the game, managed professionally.',
+                    'auth.agree_terms'.tr(),
                     textAlign: TextAlign.center,
                     style: typography.bodySmall?.copyWith(
                       color: cs.onSurfaceVariant.withValues(alpha: 0.6),
@@ -268,7 +267,7 @@ class _SignupScreenState extends State<SignupScreen> {
         ),
         SizedBox(height: AppSpacing.xs.h),
         Text(
-          'Join the Arena',
+          'auth.join_arena'.tr(),
           style: tt.headlineSmall?.copyWith(
             color: cs.onSurface,
             fontWeight: FontWeight.bold,
@@ -276,7 +275,7 @@ class _SignupScreenState extends State<SignupScreen> {
         ),
         SizedBox(height: AppSpacing.xs.h),
         Text(
-          'Choose your path and start your sports journey in Egypt.',
+          'auth.join_arena_subtitle'.tr(),
           textAlign: TextAlign.center,
           style: tt.bodyMedium?.copyWith(
             color: cs.onSurfaceVariant,
@@ -288,7 +287,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
   Widget roleSelectionHeader(TextTheme tt, ColorScheme cs) {
     return Text(
-      'SELECT YOUR ROLE',
+      'auth.select_role'.tr().toUpperCase(),
       style: tt.labelSmall?.copyWith(
         color: cs.onSurfaceVariant,
         fontWeight: FontWeight.w900,

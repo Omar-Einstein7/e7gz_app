@@ -2,6 +2,7 @@ import 'package:e7gz/src/features/auth/presentation/providers/session_bloc.dart'
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
 import 'package:e7gz/src/theme/cubit/theme_cubit.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../widgets/profile_tile.dart';
 import '../widgets/support_action.dart';
 
@@ -21,7 +22,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return BlocBuilder<SessionBloc, SessionState>(
       builder: (context, state) {
         final user = state.user;
-        final name = user?.name ?? 'Guest';
+        final name = user?.name ?? 'profile.guest'.tr();
         final email = user?.email ?? '';
         final points = user?.loyaltyPoints ?? 0;
         final photoUrl =
@@ -142,7 +143,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'E7GZZ POINTS',
+                            'profile.points_title'.tr().toUpperCase(),
                             style: typography.labelSmall?.copyWith(
                               color: cs.onSurfaceVariant,
                               fontWeight: FontWeight.bold,
@@ -159,7 +160,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                               children: [
                                 TextSpan(
-                                  text: 'PTS',
+                                  text: 'profile.pts'.tr(),
                                   style: TextStyle(
                                     color: cs.primary,
                                     fontSize: 18.sp,
@@ -171,7 +172,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           SizedBox(height: AppSpacing.lg.h),
                           AppButton(
-                            label: 'Redeem Rewards',
+                            label: 'profile.redeem_rewards'.tr(),
                             onPressed: () => context.push(AppRoutes.loyalty),
                           ),
                         ],
@@ -184,30 +185,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                 // Tiles
                 ProfileTile(
-                  title: 'Booking History',
-                  subtitle: 'Manage your upcoming and past matches',
+                  title: 'profile.tile_bookings'.tr(),
+                  subtitle: 'profile.tile_bookings_sub'.tr(),
                   icon: IconsaxPlusBold.calendar_1,
                   onTap: () => context.go(AppRoutes.myBookings),
                 ),
                 SizedBox(height: AppSpacing.md.h),
                 ProfileTile(
-                  title: 'Loyalty Program',
-                  subtitle: 'Check your tier status and benefits',
+                  title: 'profile.tile_loyalty'.tr(),
+                  subtitle: 'profile.tile_loyalty_sub'.tr(),
                   icon: IconsaxPlusBold.medal,
                   onTap: () => context.push(AppRoutes.loyalty),
                 ),
                 SizedBox(height: AppSpacing.md.h),
                 if ((user?.isAdmin ?? false) || (user?.isOwner ?? false)) ...[
                   ProfileTile(
-                    title: 'Owner Dashboard',
-                    subtitle: 'Manage your stadiums and revenue',
+                    title: 'profile.tile_owner'.tr(),
+                    subtitle: 'profile.tile_owner_sub'.tr(),
                     icon: IconsaxPlusBold.element_3,
                     onTap: () => context.push(AppRoutes.ownerDashboard),
                   ),
                   SizedBox(height: AppSpacing.md.h),
                   ProfileTile(
-                    title: 'Admin Panel',
-                    subtitle: 'Full system management and reports',
+                    title: 'profile.tile_admin'.tr(),
+                    subtitle: 'profile.tile_admin_sub'.tr(),
                     icon: IconsaxPlusBold.shield_tick,
                     onTap: () => context.push(AppRoutes.admin),
                   ),
@@ -215,15 +216,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ],
 
                 ProfileTile(
-                  title: 'Settings',
-                  subtitle: 'Privacy, notifications, and app preferences',
+                  title: 'profile.tile_settings'.tr(),
+                  subtitle: 'profile.tile_settings_sub'.tr(),
                   icon: IconsaxPlusBold.setting_2,
                   onTap: () => context.push(AppRoutes.settings),
                 ),
                 SizedBox(height: AppSpacing.md.h),
                 ProfileTile(
-                  title: 'Logout',
-                  subtitle: 'Sign out of your account',
+                  title: 'profile.tile_logout'.tr(),
+                  subtitle: 'profile.tile_logout_sub'.tr(),
                   icon: IconsaxPlusBold.logout,
                   isLogout: true,
                   onTap: () => context.read<SessionBloc>().add(
@@ -234,7 +235,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 SizedBox(height: AppSpacing.xxl.h),
 
                 Text(
-                  'Need help with your booking?',
+                  'profile.need_help'.tr(),
                   style: typography.bodySmall?.copyWith(
                     color: cs.onSurfaceVariant,
                   ),
@@ -243,13 +244,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const SupportAction(
-                      label: 'SUPPORT',
+                    SupportAction(
+                      label: 'profile.support'.tr().toUpperCase(),
                       icon: IconsaxPlusBold.headphone,
                     ),
                     SizedBox(width: AppSpacing.xxl.w),
-                    const SupportAction(
-                      label: 'FAQ',
+                    SupportAction(
+                      label: 'profile.faq'.tr().toUpperCase(),
                       icon: IconsaxPlusBold.info_circle,
                     ),
                   ],

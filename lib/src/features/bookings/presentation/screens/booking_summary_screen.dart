@@ -1,5 +1,6 @@
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/imports.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:e7gz/src/features/pitches/domain/entities/pitch.dart';
 import 'package:e7gz/src/features/pitches/presentation/cubit/pitches_cubit.dart';
 import 'package:e7gz/src/features/pitches/presentation/cubit/pitches_state.dart';
@@ -43,7 +44,7 @@ class _BookingSummaryView extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: Text(
-          'Review Booking',
+          'bookings.review_title'.tr(),
           style: typography.titleLarge?.copyWith(color: Colors.white),
         ),
         leading: IconButton(
@@ -59,7 +60,7 @@ class _BookingSummaryView extends StatelessWidget {
           if (state.status == PitchDetailStatus.failure) {
             return Center(
               child: Text(
-                state.errorMessage ?? 'Error',
+                state.errorMessage ?? 'bookings.failed_load'.tr(),
                 style: const TextStyle(color: Colors.redAccent),
               ),
             );
@@ -67,10 +68,10 @@ class _BookingSummaryView extends StatelessWidget {
 
           final pitch = state.pitch;
           if (pitch == null)
-            return const Center(
+            return Center(
               child: Text(
-                'Pitch not found',
-                style: TextStyle(color: Colors.white),
+                'bookings.pitch_not_found'.tr(),
+                style: const TextStyle(color: Colors.white),
               ),
             );
 
@@ -81,24 +82,24 @@ class _BookingSummaryView extends StatelessWidget {
               children: [
                 _buildPitchCard(pitch, typography),
                 SizedBox(height: 32.h),
-                _buildSectionTitle('Booking Details', typography),
+                _buildSectionTitle('bookings.details_title'.tr(), typography),
                 SizedBox(height: 16.h),
-                _buildDetailTile('Date', date, Icons.calendar_today, colors),
-                _buildDetailTile('Time', time, Icons.access_time, colors),
-                _buildDetailTile('Duration', '60 Minutes', Icons.timer, colors),
+                _buildDetailTile('bookings.date'.tr(), date, Icons.calendar_today, colors),
+                _buildDetailTile('bookings.time'.tr(), time, Icons.access_time, colors),
+                _buildDetailTile('bookings.duration'.tr(), 'bookings.duration_value'.tr(), Icons.timer, colors),
                 SizedBox(height: 32.h),
-                _buildSectionTitle('Payment Summary', typography),
+                _buildSectionTitle('bookings.payment_summary'.tr(), typography),
                 SizedBox(height: 16.h),
                 _buildPriceRow(
-                  'Court Price',
-                  '${pitch.pricePerHour} EGP',
+                  'bookings.court_price'.tr(),
+                  '${pitch.pricePerHour} ${'pitch_details.egp'.tr()}',
                   typography,
                 ),
-                _buildPriceRow('Service Fee', '20 EGP', typography),
+                _buildPriceRow('bookings.service_fee'.tr(), '20 ${'pitch_details.egp'.tr()}', typography),
                 const Divider(color: Colors.white10),
                 _buildPriceRow(
-                  'Total Amount',
-                  '${pitch.pricePerHour + 20} EGP',
+                  'bookings.total_amount'.tr(),
+                  '${pitch.pricePerHour + 20} ${'pitch_details.egp'.tr()}',
                   typography,
                   isTotal: true,
                 ),
@@ -120,7 +121,7 @@ class _BookingSummaryView extends StatelessWidget {
               ),
             ),
             child: AppButton(
-              label: 'Proceed to Payment',
+              label: 'bookings.proceed_payment'.tr(),
               onPressed: () => context.push(
                 AppRoutes.paymentCheckout,
                 extra: {

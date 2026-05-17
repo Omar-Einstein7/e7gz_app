@@ -2,6 +2,7 @@ import 'package:e7gz/src/features/pitches/presentation/cubit/pitches_cubit.dart'
 import 'package:e7gz/src/features/pitches/presentation/cubit/pitches_state.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../widgets/widgets.dart';
 
 class HomePage extends StatefulWidget {
@@ -77,7 +78,7 @@ class _HomePageState extends State<HomePage> {
                     padding: EdgeInsets.symmetric(horizontal: 24.w),
                     child: RichText(
                       text: TextSpan(
-                        text: 'The Pitch\n',
+                        text: 'home.headline_start'.tr(),
                         style: typography.displaySmall?.copyWith(
                           color: textColor,
                           fontWeight: FontWeight.w900,
@@ -86,7 +87,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                         children: [
                           TextSpan(
-                            text: 'is Calling.',
+                            text: 'home.headline_end'.tr(),
                             style: TextStyle(
                               color: colors.primary,
                               fontStyle: FontStyle.italic,
@@ -120,7 +121,7 @@ class _HomePageState extends State<HomePage> {
                             SizedBox(width: 12.w),
                             Expanded(
                               child: Text(
-                                'Search stadium or location...',
+                                'home.search_placeholder'.tr(),
                                 style: TextStyle(
                                   color: searchHint,
                                   fontSize: 14.sp,
@@ -141,7 +142,7 @@ class _HomePageState extends State<HomePage> {
 
                   // Featured Section
                   HomeSectionHeader(
-                    title: 'Featured Pitches',
+                    title: 'home.featured_pitches'.tr(),
                     onViewAllPressed: () => _onViewAll(null),
                   ),
                   SizedBox(height: 24.h),
@@ -151,7 +152,7 @@ class _HomePageState extends State<HomePage> {
 
                   // Near Location Section
                   HomeSectionHeader(
-                    title: 'Near Your Location',
+                    title: 'home.near_location'.tr(),
                     onViewAllPressed: () => _onViewAll(null),
                   ),
                   SizedBox(height: 24.h),

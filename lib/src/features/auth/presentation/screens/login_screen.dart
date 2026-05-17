@@ -5,6 +5,7 @@ import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
 import 'package:e7gz/src/theme/app_colors.dart';
 import 'package:e7gz/src/utils/validators.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../widgets/brand_header.dart';
 import '../widgets/social_login_button.dart';
 
@@ -126,7 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           children: [
                             // Section Header
                             Text(
-                              'Welcome Back',
+                              'auth.log_in'.tr(),
                               style: typography.headlineSmall?.copyWith(
                                 color: cs.onSurface,
                                 fontWeight: FontWeight.bold,
@@ -135,7 +136,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             SizedBox(height: AppSpacing.xs.h),
                             Text(
-                              'Securely log in to manage your bookings.',
+                              'auth.log_in_subtitle'.tr(),
                               style: typography.bodySmall?.copyWith(
                                 color: cs.onSurfaceVariant,
                                 fontSize: 14.sp,
@@ -150,7 +151,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  _inputLabel(context, 'EMAIL ADDRESS'),
+                                  _inputLabel(context, 'auth.email'.tr().toUpperCase()),
                                   AppTextField(
                                     controller: _emailController,
                                     hint: 'name@example.com',
@@ -165,7 +166,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      _inputLabel(context, 'PASSWORD'),
+                                      _inputLabel(context, 'auth.password'.tr().toUpperCase()),
                                       TextButton(
                                         onPressed: () => context.push(
                                           AppRoutes.forgotPassword,
@@ -175,7 +176,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                           minimumSize: Size.zero,
                                         ),
                                         child: Text(
-                                          'Forgot Password?',
+                                          'auth.forgot_password'.tr(),
                                           style: typography.labelSmall?.copyWith(
                                             color: cs.primary,
                                             fontWeight: FontWeight.bold,
@@ -209,7 +210,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   BlocBuilder<AuthBloc, AuthState>(
                                     builder: (context, state) {
                                       return AppButton(
-                                        label: 'Login to Account',
+                                        label: 'auth.login_button'.tr(),
                                         isFullWidth: true,
                                         height: ButtonSize.large,
                                         isLoading: state.isLoading,
@@ -245,7 +246,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               Padding(
                                 padding: EdgeInsets.symmetric(horizontal: AppSpacing.md.w),
                                 child: Text(
-                                  'OR CONTINUE WITH',
+                                  'auth.or_continue_with'.tr().toUpperCase(),
                                   style: typography.labelSmall?.copyWith(
                                     color: cs.onSurfaceVariant.withValues(alpha: 0.5),
                                     fontWeight: FontWeight.w900,
@@ -296,13 +297,13 @@ class _LoginScreenState extends State<LoginScreen> {
                               child: RichText(
                                 textAlign: TextAlign.center,
                                 text: TextSpan(
-                                  text: 'New to the pitch? ',
+                                  text: 'auth.dont_have_account'.tr(),
                                   style: typography.bodySmall?.copyWith(
                                     color: cs.onSurfaceVariant,
                                   ),
                                   children: [
                                     TextSpan(
-                                      text: 'Create an account',
+                                      text: 'auth.sign_up'.tr(),
                                       style: TextStyle(
                                         color: cs.primary,
                                         fontWeight: FontWeight.bold,
@@ -337,9 +338,10 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
           ),
-       ) ],
-      ),
-    );
+        ),
+      ],
+    ),
+  );
   }
 
   Widget _inputLabel(BuildContext context, String text) {

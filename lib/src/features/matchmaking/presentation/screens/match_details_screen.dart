@@ -1,6 +1,7 @@
 import 'package:e7gz/src/features/matchmaking/presentation/cubit/matchmaking_cubit.dart';
 import 'package:e7gz/src/features/matchmaking/presentation/cubit/matchmaking_state.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:e7gz/src/imports/imports.dart';
 
 class MatchDetailsScreen extends StatefulWidget {
@@ -40,7 +41,7 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: Text(
-          'Match Details',
+          'matchmaking.details_title'.tr(),
           style: typography.titleLarge?.copyWith(color: textColor),
         ),
         leading: IconButton(
@@ -60,7 +61,7 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
           if (state.singleMatchStatus == MatchmakingStatus.failure) {
             return Center(
               child: Text(
-                state.errorMessage ?? 'Error loading match',
+                state.errorMessage ?? 'matchmaking.error_loading_match'.tr(),
                 style: const TextStyle(color: Colors.redAccent),
               ),
             );
@@ -70,7 +71,7 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
           if (match == null) {
             return Center(
               child: Text(
-                'Match not found',
+                'matchmaking.match_not_found'.tr(),
                 style: TextStyle(color: textColor),
               ),
             );
@@ -126,10 +127,10 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _infoCard('Date', match.date, Icons.calendar_today, cs, isDark, cardBg, subtitleColor, textColor),
-                    _infoCard('Time', match.startTime, Icons.timer, cs, isDark, cardBg, subtitleColor, textColor),
+                    _infoCard('bookings.date'.tr(), match.date, Icons.calendar_today, cs, isDark, cardBg, subtitleColor, textColor),
+                    _infoCard('bookings.time'.tr(), match.startTime, Icons.timer, cs, isDark, cardBg, subtitleColor, textColor),
                     _infoCard(
-                      'Level',
+                      'matchmaking.level'.tr(),
                       match.skillLevel.toUpperCase(),
                       Icons.bolt,
                       cs, isDark, cardBg, subtitleColor, textColor
@@ -141,19 +142,19 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     _infoCard(
-                      'Slots',
+                      'matchmaking.slots'.tr(),
                       '${match.participantIds.length}/${match.maxPlayers}',
                       Icons.group,
                       cs, isDark, cardBg, subtitleColor, textColor
                     ),
                     _infoCard(
-                      'Price',
-                      '${match.pricePerPlayer.toInt()} EGP',
+                      'matchmaking.price'.tr(),
+                      '${match.pricePerPlayer.toInt()} ${'pitch_details.egp'.tr()}',
                       Icons.payments,
                       cs, isDark, cardBg, subtitleColor, textColor
                     ),
                     _infoCard(
-                      'Status',
+                      'matchmaking.status'.tr(),
                       match.status.toUpperCase(),
                       Icons.info,
                       cs, isDark, cardBg, subtitleColor, textColor
@@ -162,7 +163,7 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
                 ),
                 SizedBox(height: 48.h),
                 Text(
-                  'Participants',
+                  'matchmaking.participants'.tr(),
                   style: typography.titleLarge?.copyWith(
                     color: textColor,
                     fontWeight: FontWeight.bold,
@@ -171,7 +172,7 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
                 SizedBox(height: 16.h),
                 if (match.participants.isEmpty && match.participantIds.isEmpty)
                   Text(
-                    'No participants yet',
+                    'matchmaking.no_participants'.tr(),
                     style: TextStyle(color: subtitleColor),
                   )
                 else if (match.participants.isEmpty)
@@ -180,7 +181,7 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
                     match.participantIds.length,
                     (index) => _participantTile(
                       index,
-                      'Player ${match.participantIds[index]}',
+                      '${'matchmaking.player'.tr()} ${match.participantIds[index]}',
                       null,
                       isDark, cs, cardBg, textColor, primaryAccent
                     ),
@@ -215,7 +216,7 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
               ),
             ),
             child: AppButton(
-              label: match.isFull ? 'Match Full' : 'Join This Match',
+              label: match.isFull ? 'matchmaking.match_full'.tr() : 'matchmaking.join_match'.tr(),
               onPressed: match.isFull
                   ? null
                   : () => context.read<MatchmakingCubit>().joinMatch(match.id),

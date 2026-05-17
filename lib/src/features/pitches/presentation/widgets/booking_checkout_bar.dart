@@ -3,22 +3,33 @@ import 'package:e7gz/src/features/bookings/presentation/cubit/booking_state.dart
 import 'package:e7gz/src/features/pitches/domain/entities/pitch.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:e7gz/src/theme/app_colors.dart';
 
 class BookingCheckoutBar extends StatelessWidget {
   final String pitchId;
   final dynamic extraPitch;
+  final bool isFullPayment;
 
   const BookingCheckoutBar({
     super.key,
     required this.pitchId,
     this.extraPitch,
+    required this.isFullPayment,
   });
 
   @override
   Widget build(BuildContext context) {
     final cs = context.colorScheme;
     final typography = context.textTheme;
+
+    final slotsState = context.watch<SlotsCubit>().state;
+    final selectedSlot = slotsState.selectedSlot;
+
+    final double basePrice = selectedSlot?.price ?? 0.0;
+    final int totalAmount = basePrice.toInt();
+    final int depositAmount = (totalAmount * 0.3).toInt();
+    final int amountToPayNow = isFullPayment ? totalAmount : depositAmount;
 
     return Container(
       margin: EdgeInsets.symmetric(horizontal: AppSpacing.lg.w),
@@ -38,7 +49,9 @@ class BookingCheckoutBar extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'TOTAL PRICE',
+                    isFullPayment
+                        ? 'booking_slots.total_price'.tr().toUpperCase()
+                        : 'booking_slots.deposit_to_pay_now'.tr().toUpperCase(),
                     style: TextStyle(
                       color: cs.onSurfaceVariant,
                       fontSize: 10.sp,
@@ -46,7 +59,9 @@ class BookingCheckoutBar extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    '500 EGP',
+                    selectedSlot == null
+                        ? '-- ${'pitch_details.egp'.tr()}'
+                        : '$amountToPayNow ${'pitch_details.egp'.tr()}',
                     style: typography.titleLarge?.copyWith(
                       color: cs.onSurface,
                       fontWeight: FontWeight.w900,
@@ -57,7 +72,11 @@ class BookingCheckoutBar extends StatelessWidget {
             ],
           ),
           SizedBox(height: AppSpacing.lg.h),
-          _ConfirmButton(pitchId: pitchId, extraPitch: extraPitch),
+          _ConfirmButton(
+            pitchId: pitchId, 
+            extraPitch: extraPitch,
+            isFullPayment: isFullPayment,
+          ),
         ],
       ),
     );
@@ -83,8 +102,13 @@ class _TicketIcon extends StatelessWidget {
 class _ConfirmButton extends StatelessWidget {
   final String pitchId;
   final dynamic extraPitch;
+  final bool isFullPayment;
 
-  const _ConfirmButton({required this.pitchId, this.extraPitch});
+  const _ConfirmButton({
+    required this.pitchId, 
+    this.extraPitch,
+    required this.isFullPayment,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -95,11 +119,13 @@ class _ConfirmButton extends StatelessWidget {
           final booking = state.createdBooking!;
           final pitch = extraPitch is Pitch ? extraPitch as Pitch : null;
           
+          final amountToPayNow = isFullPayment ? booking.totalPrice : (booking.totalPrice * 0.3);
+          
           context.push(
             AppRoutes.paymentCheckout,
             extra: {
               'bookingId': booking.id,
-              'amount': booking.totalPrice,
+              'amount': amountToPayNow,
               'pitchName': pitch?.name ?? 'Premium Pitch',
               'pitchImage': pitch?.imageUrl,
               'bookingDetails': '${booking.date} at ${booking.startTime}',
@@ -108,7 +134,7 @@ class _ConfirmButton extends StatelessWidget {
         } else if (state.status == CreateBookingStatus.failure) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(state.errorMessage ?? 'Failed to create booking'),
+              content: Text(state.errorMessage ?? 'booking_slots.failed_booking'.tr()),
               backgroundColor: cs.error,
             ),
           );
@@ -119,7 +145,9 @@ class _ConfirmButton extends StatelessWidget {
           final slotsCubit = context.read<SlotsCubit>();
           
           return AppButton(
-            label: state.status == CreateBookingStatus.loading ? 'Creating...' : 'Confirm Booking',
+            label: state.status == CreateBookingStatus.loading
+                ? 'booking_slots.creating'.tr()
+                : 'booking_slots.confirm_booking'.tr(),
             isFullWidth: true,
             isLoading: state.status == CreateBookingStatus.loading,
             height: ButtonSize.large,
@@ -127,7 +155,7 @@ class _ConfirmButton extends StatelessWidget {
               final selectedSlot = slotsCubit.state.selectedSlot;
               if (selectedSlot == null) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Please select a time slot')),
+                  SnackBar(content: Text('booking_slots.select_slot_warning'.tr())),
                 );
                 return;
               }

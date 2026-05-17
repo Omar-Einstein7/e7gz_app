@@ -3,6 +3,7 @@ import 'package:e7gz/src/features/profile/presentation/cubit/profile_cubit.dart'
 import 'package:e7gz/src/features/profile/presentation/cubit/profile_state.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class LoyaltyRewardsScreen extends StatelessWidget {
   const LoyaltyRewardsScreen({super.key});
@@ -22,7 +23,7 @@ class LoyaltyRewardsScreen extends StatelessWidget {
           onPressed: () => context.pop(),
         ),
         title: Text(
-          'Loyalty Program',
+          'profile.loyalty_program'.tr(),
           style: tt.headlineSmall?.copyWith(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -68,7 +69,7 @@ class LoyaltyRewardsScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'E7GZZ POINTS',
+                            'profile.e7gzz_points'.tr().toUpperCase(),
                             style: TextStyle(
                               color: const Color(0xFFBCC7DE),
                               fontSize: 10.sp,
@@ -102,7 +103,7 @@ class LoyaltyRewardsScreen extends StatelessWidget {
                                   left: 8.w,
                                 ),
                                 child: Text(
-                                  'PTS',
+                                  'profile.pts'.tr(),
                                   style: TextStyle(
                                     color: cs.primary,
                                     fontWeight: FontWeight.bold,
@@ -114,7 +115,7 @@ class LoyaltyRewardsScreen extends StatelessWidget {
                           ),
                           SizedBox(height: 24.h),
                           AppButton(
-                            label: 'REDEEM REWARDS',
+                            label: 'profile.redeem_rewards'.tr().toUpperCase(),
                             height: ButtonSize.small,
                             onPressed: () {},
                           ),
@@ -154,7 +155,7 @@ class LoyaltyRewardsScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              tier['currentTier'] ?? 'Gold Tier Status',
+                              tier['currentTier'] ?? 'profile.gold_tier'.tr(),
                               style: tt.titleMedium?.copyWith(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -162,7 +163,7 @@ class LoyaltyRewardsScreen extends StatelessWidget {
                             ),
                             Text(
                               tier['nextTierInfo'] ??
-                                  'You are 550 points away from Platinum',
+                                  'profile.next_tier_desc'.tr(),
                               style: TextStyle(
                                 color: const Color(0xFFBCC7DE),
                                 fontSize: 12.sp,
@@ -182,7 +183,7 @@ class LoyaltyRewardsScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'AVAILABLE REWARDS',
+                      'profile.available_rewards'.tr().toUpperCase(),
                       style: TextStyle(
                         color: const Color(0xFFBCC7DE),
                         fontSize: 10.sp,
@@ -191,7 +192,7 @@ class LoyaltyRewardsScreen extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'View All',
+                      'profile.view_all'.tr(),
                       style: TextStyle(
                         color: const Color(0xFF4BE277),
                         fontSize: 12.sp,
@@ -203,10 +204,10 @@ class LoyaltyRewardsScreen extends StatelessWidget {
                 SizedBox(height: 20.h),
 
                 if (state.rewards.isEmpty)
-                  const Center(
+                  Center(
                     child: Text(
-                      'No rewards available at the moment',
-                      style: TextStyle(color: Color(0xFFBCC7DE)),
+                      'profile.no_rewards'.tr(),
+                      style: const TextStyle(color: Color(0xFFBCC7DE)),
                     ),
                   ),
 
@@ -225,13 +226,13 @@ class LoyaltyRewardsScreen extends StatelessWidget {
                               builder: (ctx) => AlertDialog(
                                 backgroundColor: const Color(0xFF131B2E),
                                 title: Text(
-                                  'Redeem Reward',
+                                  'profile.redeem_dialog_title'.tr(),
                                   style: tt.titleLarge?.copyWith(
                                     color: Colors.white,
                                   ),
                                 ),
                                 content: Text(
-                                  'Are you sure you want to redeem "${reward.title}" for ${reward.pointsCost} points?',
+                                  'profile.redeem_confirm_desc'.tr(namedArgs: {'title': reward.title, 'cost': reward.pointsCost.toString()}),
                                   style: const TextStyle(
                                     color: Color(0xFFBCC7DE),
                                   ),
@@ -239,13 +240,13 @@ class LoyaltyRewardsScreen extends StatelessWidget {
                                 actions: [
                                   TextButton(
                                     onPressed: () => Navigator.pop(ctx),
-                                    child: const Text(
-                                      'Cancel',
-                                      style: TextStyle(color: Colors.white54),
+                                    child: Text(
+                                      'profile.cancel'.tr(),
+                                      style: const TextStyle(color: Colors.white54),
                                     ),
                                   ),
                                   AppButton(
-                                    label: 'Redeem',
+                                    label: 'profile.redeem'.tr(),
                                     height: ButtonSize.small,
                                     onPressed: () {
                                       Navigator.pop(ctx);
@@ -257,7 +258,7 @@ class LoyaltyRewardsScreen extends StatelessWidget {
                                       ).showSnackBar(
                                         SnackBar(
                                           content: Text(
-                                            'Successfully redeemed ${reward.title}!',
+                                            'profile.redeem_success'.tr(namedArgs: {'title': reward.title}),
                                           ),
                                         ),
                                       );

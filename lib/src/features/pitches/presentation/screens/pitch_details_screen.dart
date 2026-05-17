@@ -1,5 +1,6 @@
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import '../widgets/amenity_item.dart';
@@ -72,7 +73,7 @@ class _PitchDetailsView extends StatelessWidget {
                         .fadeIn(duration: 600.ms, delay: 200.ms)
                         .moveY(begin: 20, end: 0),
                     SizedBox(height: AppSpacing.xxl.h),
-                    _ShiftsSection()
+                    _ShiftsSection(pitch: pitch)
                         .animate()
                         .fadeIn(duration: 600.ms, delay: 400.ms)
                         .moveY(begin: 20, end: 0),
@@ -273,7 +274,7 @@ class _PremiumBadge extends StatelessWidget {
         ],
       ),
       child: Text(
-        'PREMIUM ARENA',
+        'pitch_details.premium_arena'.tr().toUpperCase(),
         style: context.textTheme.labelSmall?.copyWith(
           color: Colors.white,
           fontWeight: FontWeight.w800,
@@ -330,7 +331,7 @@ class _AmenitiesSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _SectionHeader(title: 'VENUE AMENITIES'),
+        _SectionHeader(title: 'pitch_details.amenities'.tr().toUpperCase()),
         SizedBox(height: 20.h),
         Wrap(
           spacing: 12.w,
@@ -350,26 +351,60 @@ class _AmenitiesSection extends StatelessWidget {
 }
 
 class _ShiftsSection extends StatelessWidget {
+  final dynamic pitch;
+  const _ShiftsSection({required this.pitch});
+
+  String _formatTo12Hour(String time24) {
+    try {
+      final parts = time24.split(':');
+      final hour = int.parse(parts[0]);
+      final minute = parts.length > 1 ? parts[1] : '00';
+      final period = hour >= 12 ? 'PM' : 'AM';
+      final hour12 = hour > 12 ? hour - 12 : (hour == 0 ? 12 : hour);
+      final hourStr = hour12.toString().padLeft(2, '0');
+      return '$hourStr:$minute $period';
+    } catch (e) {
+      return time24;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final opening = pitch.openingTime ?? '08:00';
+    final closing = pitch.closingTime ?? '23:00';
+    final price = pitch.pricePerHour.toInt().toString();
+    final eveningPrice = (pitch.pricePerHour * 1.3).toInt().toString();
+
+    final opening12 = _formatTo12Hour(opening);
+    final closing12 = _formatTo12Hour(closing);
+
+    int openingHour = 8;
+    try {
+      openingHour = int.parse(opening.split(':')[0]);
+    } catch (_) {}
+
+    final showMorning = openingHour < 16;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _SectionHeader(title: 'AVAILABLE SHIFTS'),
+        _SectionHeader(title: 'pitch_details.shifts_title'.tr().toUpperCase()),
         SizedBox(height: 20.h),
-        const ShiftCard(
-          title: 'Sunlight Play',
-          subtitle: 'MORNING SHIFT',
-          price: '350',
-          timeRange: '08:00 AM - 04:00 PM',
-          icon: IconsaxPlusLinear.sun_1,
-        ),
-        SizedBox(height: 16.h),
-        const ShiftCard(
-          title: 'Under the Lights',
-          subtitle: 'EVENING SHIFT',
-          price: '550',
-          timeRange: '05:00 PM - 02:00 AM',
+        if (showMorning) ...[
+          ShiftCard(
+            title: 'pitch_details.sunlight_play'.tr(),
+            subtitle: 'pitch_details.morning_shift'.tr().toUpperCase(),
+            price: price,
+            timeRange: '$opening12 - 04:00 PM',
+            icon: IconsaxPlusLinear.sun_1,
+          ),
+          SizedBox(height: 16.h),
+        ],
+        ShiftCard(
+          title: 'pitch_details.under_lights'.tr(),
+          subtitle: 'pitch_details.evening_shift'.tr().toUpperCase(),
+          price: eveningPrice,
+          timeRange: '${showMorning ? '04:00 PM' : opening12} - $closing12',
           icon: IconsaxPlusLinear.moon,
           isSelected: true,
         ),
@@ -382,72 +417,130 @@ class _LocationSection extends StatelessWidget {
   final dynamic pitch;
   const _LocationSection({required this.pitch});
 
+  Future<void> _openMap(double latitude, double longitude) async {
+    final Uri googleMapUrl = Uri.parse("https://www.google.com/maps/search/?api=1&query=$latitude,$longitude");
+    try {
+      await launchUrl(googleMapUrl, mode: LaunchMode.externalApplication);
+    } catch (e) {
+      debugPrint('Could not open map: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final pc = context.pitchColors;
     final cs = context.colorScheme;
+    final lat = pitch.location.latitude;
+    final lng = pitch.location.longitude;
     
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _SectionHeader(title: 'LOCATION & ACCESS'),
+        _SectionHeader(title: 'pitch_details.location_title'.tr().toUpperCase()),
         SizedBox(height: AppSpacing.md.h),
-        Text(
-          pitch.location.fullAddress,
-          style: context.textTheme.bodyLarge?.copyWith(
-            color: cs.onSurfaceVariant,
-            height: 1.6,
+        InkWell(
+          onTap: () => _openMap(lat, lng),
+          borderRadius: AppRadius.bmd.r,
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: AppSpacing.xs.h),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    pitch.location.fullAddress,
+                    style: context.textTheme.bodyLarge?.copyWith(
+                      color: cs.onSurfaceVariant,
+                      height: 1.6,
+                    ),
+                  ),
+                ),
+                SizedBox(width: AppSpacing.sm.w),
+                Icon(
+                  IconsaxPlusBold.map_1,
+                  color: pc.accentGreen,
+                  size: 20,
+                ),
+              ],
+            ),
           ),
         ),
         SizedBox(height: AppSpacing.lg.h),
-        ClipRRect(
-          borderRadius: AppRadius.bxxl.r,
-          child: Container(
-            height: 220.h,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              border: Border.all(color: cs.outlineVariant),
-            ),
-            child: FlutterMap(
-              options: MapOptions(
-                initialCenter: LatLng(
-                  pitch.location.latitude,
-                  pitch.location.longitude,
-                ),
-                initialZoom: 15.0,
+        GestureDetector(
+          onTap: () => _openMap(lat, lng),
+          child: ClipRRect(
+            borderRadius: AppRadius.bxxl.r,
+            child: Container(
+              height: 220.h,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                border: Border.all(color: cs.outlineVariant),
               ),
-              children: [
-                TileLayer(
-                  urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                  userAgentPackageName: 'com.e7gz.app',
-                ),
-                MarkerLayer(
-                  markers: [
-                    Marker(
-                      point: LatLng(
-                        pitch.location.latitude,
-                        pitch.location.longitude,
+              child: Stack(
+                children: [
+                  AbsorbPointer(
+                    child: FlutterMap(
+                      options: MapOptions(
+                        initialCenter: LatLng(lat, lng),
+                        initialZoom: 15.0,
                       ),
-                      width: 60,
-                      height: 60,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: pc.accentGreen.withValues(alpha: 0.2),
-                          shape: BoxShape.circle,
+                      children: [
+                        TileLayer(
+                          urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                          userAgentPackageName: 'com.e7gz.app',
                         ),
-                        child: Icon(
-                          IconsaxPlusBold.location,
-                          color: pc.accentGreen,
-                          size: 32,
+                        MarkerLayer(
+                          markers: [
+                            Marker(
+                              point: LatLng(lat, lng),
+                              width: 60,
+                              height: 60,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: pc.accentGreen.withValues(alpha: 0.2),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  IconsaxPlusBold.location,
+                                  color: pc.accentGreen,
+                                  size: 32,
+                                ),
+                              ).animate(onPlay: (controller) => controller.repeat())
+                               .scale(begin: const Offset(0.8, 0.8), end: const Offset(1.2, 1.2), duration: 1000.ms, curve: Curves.easeInOut)
+                               .then()
+                               .scale(begin: const Offset(1.2, 1.2), end: const Offset(0.8, 0.8), duration: 1000.ms, curve: Curves.easeInOut),
+                            ),
+                          ],
                         ),
-                      ).animate(onPlay: (controller) => controller.repeat())
-                       .scale(begin: const Offset(0.8, 0.8), end: const Offset(1.2, 1.2), duration: 1000.ms, curve: Curves.easeInOut)
-                       .then()
-                       .scale(begin: const Offset(1.2, 1.2), end: const Offset(0.8, 0.8), duration: 1000.ms, curve: Curves.easeInOut),
+                      ],
                     ),
-                  ],
-                ),
-              ],
+                  ),
+                  Positioned(
+                    bottom: 12.h,
+                    right: 12.w,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.6),
+                        borderRadius: BorderRadius.circular(20.r),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(Icons.directions_rounded, color: Colors.white, size: 14.sp),
+                          SizedBox(width: 4.w),
+                          Text(
+                            'pitch_details.open_in_maps'.tr(),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 11.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -466,7 +559,7 @@ class _AboutSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _SectionHeader(title: 'ABOUT THIS ARENA'),
+        _SectionHeader(title: 'pitch_details.description'.tr().toUpperCase()),
         SizedBox(height: AppSpacing.md.h),
         Text(
           description.isNotEmpty
@@ -529,7 +622,7 @@ class _BookingBottomSheet extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'PRICE / HOUR',
+                          'pitch_details.price_per_hour'.tr().toUpperCase(),
                           style: context.textTheme.labelSmall?.copyWith(
                             color: cs.onSurfaceVariant,
                             fontWeight: FontWeight.w700,
@@ -546,7 +639,7 @@ class _BookingBottomSheet extends StatelessWidget {
                             ),
                             children: [
                               TextSpan(
-                                text: 'EGP',
+                                text: 'pitch_details.egp'.tr(),
                                 style: context.textTheme.labelMedium?.copyWith(
                                   color: pc.accentGreen,
                                   fontWeight: FontWeight.bold,
@@ -609,7 +702,7 @@ class _BookNowButton extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'BOOK NOW',
+              'pitch_details.book_now'.tr().toUpperCase(),
               style: context.textTheme.labelLarge?.copyWith(
                 fontWeight: FontWeight.w800,
                 letterSpacing: 1,
