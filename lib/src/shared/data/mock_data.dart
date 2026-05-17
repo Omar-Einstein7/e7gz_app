@@ -89,7 +89,7 @@ class MockData {
       skillLevel: 'Intermediate',
       status: 'open',
       pitchName: 'Maadi Arena',
-      pitchImage: 'https://images.unsplash.com/photo-1556056504-5c7696c4c28d?auto=format&fit=crop&q=80',
+      pitchImage: 'https://images.unsplash.com/photo-1556056504-5c7696c4c28d?auto=format&fit=crop&q=80', sportType: '',
     ),
     MatchmakingMatch(
       id: 'm2',
@@ -105,7 +105,7 @@ class MockData {
       skillLevel: 'Advanced',
       status: 'open',
       pitchName: 'Anfield Arena',
-      pitchImage: 'https://images.unsplash.com/photo-1518605336397-90db31631e84?auto=format&fit=crop&q=80',
+      pitchImage: 'https://images.unsplash.com/photo-1518605336397-90db31631e84?auto=format&fit=crop&q=80', sportType: '',
     ),
   ];
 }

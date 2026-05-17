@@ -405,6 +405,9 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
       final endTimeStr =
           '${_endTime!.hour.toString().padLeft(2, '0')}:${_endTime!.minute.toString().padLeft(2, '0')}';
 
+      final selectedPitch = _availablePitches.firstWhere((p) => p.id == _selectedPitchId);
+      final sportType = selectedPitch.sportType;
+
       final match = MatchModel(
         id: '', // Backend generates it
         title: _titleController.text,
@@ -419,6 +422,7 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
         pricePerPlayer: _pricePerPlayer,
         skillLevel: _skillLevel,
         status: 'open',
+        sportType: sportType,
       );
 
       final cubit = context.read<MatchmakingCubit>();

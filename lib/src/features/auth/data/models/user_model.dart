@@ -11,6 +11,7 @@ class UserModel extends AppUser {
     super.photoUrl,
     super.role,
     super.loyaltyPoints,
+    super.phone,
   });
 
   /// Maps API response to [UserModel].
@@ -29,6 +30,7 @@ class UserModel extends AppUser {
       photoUrl: data['photoUrl']?.toString() ?? data['avatar']?.toString(),
       role: data['role']?.toString().toLowerCase() ?? 'player',
       loyaltyPoints: (data['loyaltyPoints'] as num?)?.toInt() ?? 0,
+      phone: data['phone']?.toString(),
     );
   }
 
@@ -40,6 +42,7 @@ class UserModel extends AppUser {
       'photoUrl': photoUrl,
       'role': role,
       'loyaltyPoints': loyaltyPoints,
+      'phone': phone,
     };
   }
 }

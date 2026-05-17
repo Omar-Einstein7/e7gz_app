@@ -7,6 +7,7 @@ class AppUser extends Equatable {
   final String? photoUrl;
   final String role;
   final int loyaltyPoints;
+  final String? phone;
 
   const AppUser({
     required this.id,
@@ -15,6 +16,7 @@ class AppUser extends Equatable {
     this.photoUrl,
     this.role = 'player',
     this.loyaltyPoints = 0,
+    this.phone,
   });
 
   factory AppUser.empty() => const AppUser(id: '', email: '');
@@ -26,5 +28,5 @@ class AppUser extends Equatable {
   bool get isAdmin => role.toLowerCase() == 'admin';
 
   @override
-  List<Object?> get props => [id, email, name, photoUrl, role, loyaltyPoints];
+  List<Object?> get props => [id, email, name, photoUrl, role, loyaltyPoints, phone];
 }

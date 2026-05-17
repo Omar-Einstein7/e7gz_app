@@ -1,24 +1,23 @@
 import 'package:e7gz/src/features/admin/presentation/layout/admin_layout.dart';
 import 'package:e7gz/src/features/admin/presentation/widgets/admin_data_table.dart';
 import 'package:flutter/material.dart';
-import 'package:e7gz/src/features/admin/data/datasources/admin_remote_datasource.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
+import '../../cubit/admin_cubit.dart';
+import '../../cubit/admin_state.dart';
 
 class AdminMatchesTab extends StatefulWidget {
-  final AdminRemoteDataSource dataSource;
-
-  const AdminMatchesTab({super.key, required this.dataSource});
+  const AdminMatchesTab({super.key});
 
   @override
   State<AdminMatchesTab> createState() => _AdminMatchesTabState();
 }
 
 class _AdminMatchesTabState extends State<AdminMatchesTab> with AutomaticKeepAliveClientMixin {
-  late Future<List<dynamic>> _matchesFuture;
-
   @override
   void initState() {
     super.initState();
-    _matchesFuture = widget.dataSource.getAllMatches();
+    context.read<AdminCubit>().loadAllMatches();
   }
 
   @override
@@ -39,10 +38,9 @@ class _AdminMatchesTabState extends State<AdminMatchesTab> with AutomaticKeepAli
             style: AdminTextStyles.label,
           ),
           const SizedBox(height: 24),
-          FutureBuilder<List<dynamic>>(
-            future: _matchesFuture,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
+          BlocBuilder<AdminCubit, AdminState>(
+            builder: (context, state) {
+              if (state.matchesStatus == AdminStatus.loading || state.matchesStatus == AdminStatus.initial) {
                 return const Center(
                   child: CircularProgressIndicator(
                     color: AdminColors.accent,
@@ -50,7 +48,25 @@ class _AdminMatchesTabState extends State<AdminMatchesTab> with AutomaticKeepAli
                   ),
                 );
               }
-              final matches = snapshot.data ?? [];
+
+              if (state.matchesStatus == AdminStatus.failure) {
+                return Center(
+                  child: Column(
+                    children: [
+                      const Icon(IconsaxPlusBold.warning_2, color: Colors.red, size: 40),
+                      const SizedBox(height: 12),
+                      Text('Failed to load matches: ${state.matchesError}', style: const TextStyle(color: AdminColors.textSecondary)),
+                      const SizedBox(height: 16),
+                      TextButton(
+                        onPressed: () => context.read<AdminCubit>().loadAllMatches(),
+                        child: const Text('Retry'),
+                      ),
+                    ],
+                  ),
+                );
+              }
+
+              final matches = state.matches;
               return AdminDataTable(
                 title: 'All Matches',
                 columns: const [
@@ -61,14 +77,14 @@ class _AdminMatchesTabState extends State<AdminMatchesTab> with AutomaticKeepAli
                   DataColumn(label: Text('STATUS')),
                 ],
                 rows: matches.map((m) {
-                  final players = m['players']?.length ?? 0;
-                  final max = m['maxPlayers'] ?? 10;
-                  final isFull = players >= max;
+                  final players = m.participantIds.length;
+                  final max = m.maxPlayers;
+                  final isFull = m.isFull;
                   return DataRow(
                     cells: [
                       DataCell(
                         Text(
-                          m['title'] ?? 'Friendly Match',
+                          m.title.isEmpty ? 'Friendly Match' : m.title,
                           style: const TextStyle(
                             color: AdminColors.textPrimary,
                             fontWeight: FontWeight.w500,
@@ -77,13 +93,11 @@ class _AdminMatchesTabState extends State<AdminMatchesTab> with AutomaticKeepAli
                       ),
                       DataCell(
                         Text(
-                          (m['sportType'] ?? 'Football')
-                              .toString()
-                              .toUpperCase(),
+                          m.sportType.toUpperCase(),
                         ),
                       ),
                       DataCell(Text('$players / $max')),
-                      DataCell(Text('EGP ${m['pricePerPlayer'] ?? '0'}')),
+                      DataCell(Text('EGP ${m.pricePerPlayer}')),
                       DataCell(
                         StatusChip(
                           label: isFull ? 'FULL' : 'OPEN',

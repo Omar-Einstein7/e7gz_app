@@ -4,10 +4,14 @@ import 'package:equatable/equatable.dart';
 class Booking extends Equatable {
   final String id;
   final String userId;
+  final String? userName;
+  final String? userPhone;
   final String pitchId;
   final String pitchName;
   final String pitchAddress;
   final String? pitchImage;
+  final double? pitchLatitude;
+  final double? pitchLongitude;
   final String date;        // "YYYY-MM-DD"
   final String startTime;   // "HH:MM"
   final String endTime;     // "HH:MM"
@@ -20,10 +24,14 @@ class Booking extends Equatable {
   const Booking({
     required this.id,
     required this.userId,
+    this.userName,
+    this.userPhone,
     required this.pitchId,
     required this.pitchName,
     required this.pitchAddress,
     this.pitchImage,
+    this.pitchLatitude,
+    this.pitchLongitude,
     required this.date,
     required this.startTime,
     required this.endTime,

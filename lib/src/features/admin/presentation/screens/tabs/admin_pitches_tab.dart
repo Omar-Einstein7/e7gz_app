@@ -1,27 +1,25 @@
 import 'package:e7gz/src/features/admin/presentation/layout/admin_layout.dart';
 import 'package:e7gz/src/features/admin/presentation/widgets/admin_data_table.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
-import 'package:e7gz/src/features/admin/data/datasources/admin_remote_datasource.dart';
 import 'package:e7gz/src/imports/imports.dart';
 import '../add_pitch_screen.dart';
+import '../../cubit/admin_cubit.dart';
+import '../../cubit/admin_state.dart';
 
 class AdminPitchesTab extends StatefulWidget {
-  final AdminRemoteDataSource dataSource;
-
-  const AdminPitchesTab({super.key, required this.dataSource});
+  const AdminPitchesTab({super.key});
 
   @override
   State<AdminPitchesTab> createState() => _AdminPitchesTabState();
 }
 
 class _AdminPitchesTabState extends State<AdminPitchesTab> with AutomaticKeepAliveClientMixin {
-  late Future<List<dynamic>> _pitchesFuture;
-
   @override
   void initState() {
     super.initState();
-    _pitchesFuture = widget.dataSource.getAllPitches();
+    context.read<AdminCubit>().loadAllPitches();
   }
 
   @override
@@ -48,12 +46,20 @@ class _AdminPitchesTabState extends State<AdminPitchesTab> with AutomaticKeepAli
               ),
               const Spacer(),
               FilledButton.icon(
-                onPressed: () => Navigator.push<void>(
-                  context,
-                  MaterialPageRoute<void>(
-                    builder: (_) => const AdminAddPitchScreen(),
-                  ),
-                ),
+                onPressed: () async {
+                  final result = await Navigator.push<bool>(
+                    context,
+                    MaterialPageRoute<bool>(
+                      builder: (_) => BlocProvider.value(
+                        value: context.read<AdminCubit>(),
+                        child: const AdminAddPitchScreen(),
+                      ),
+                    ),
+                  );
+                  if (result == true && mounted) {
+                    context.read<AdminCubit>().loadAllPitches();
+                  }
+                },
                 icon: const Icon(IconsaxPlusBold.add, size: 16),
                 label: const Text('Add Pitch'),
                 style: FilledButton.styleFrom(
@@ -72,10 +78,9 @@ class _AdminPitchesTabState extends State<AdminPitchesTab> with AutomaticKeepAli
           ),
           const SizedBox(height: 24),
           // ── Table ─────────────────────────────────────────────
-          FutureBuilder<List<dynamic>>(
-            future: _pitchesFuture,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
+          BlocBuilder<AdminCubit, AdminState>(
+            builder: (context, state) {
+              if (state.pitchesStatus == AdminStatus.loading || state.pitchesStatus == AdminStatus.initial) {
                 return const Center(
                   child: CircularProgressIndicator(
                     color: AdminColors.accent,
@@ -84,18 +89,16 @@ class _AdminPitchesTabState extends State<AdminPitchesTab> with AutomaticKeepAli
                 );
               }
               
-              if (snapshot.hasError) {
+              if (state.pitchesStatus == AdminStatus.failure) {
                 return Center(
                   child: Column(
                     children: [
                       const Icon(IconsaxPlusBold.warning_2, color: Colors.red, size: 40),
                       const SizedBox(height: 12),
-                      Text('Failed to load pitches: ${snapshot.error}', style: const TextStyle(color: AdminColors.textSecondary)),
+                      Text('Failed to load pitches: ${state.pitchesError}', style: const TextStyle(color: AdminColors.textSecondary)),
                       const SizedBox(height: 16),
                       TextButton(
-                        onPressed: () => setState(() {
-                          _pitchesFuture = widget.dataSource.getAllPitches();
-                        }),
+                        onPressed: () => context.read<AdminCubit>().loadAllPitches(),
                         child: const Text('Retry'),
                       ),
                     ],
@@ -103,7 +106,7 @@ class _AdminPitchesTabState extends State<AdminPitchesTab> with AutomaticKeepAli
                 );
               }
 
-              final pitches = snapshot.data ?? [];
+              final pitches = state.pitches;
               return AdminDataTable(
                 title: 'All Pitches',
                 columns: const [
@@ -118,17 +121,17 @@ class _AdminPitchesTabState extends State<AdminPitchesTab> with AutomaticKeepAli
                     cells: [
                       DataCell(
                         Text(
-                          p['name'] ?? 'Unknown',
+                          p.name,
                           style: const TextStyle(
                             color: AdminColors.textPrimary,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
                       ),
-                      DataCell(Text(p['location']?['city'] ?? 'Cairo')),
-                      DataCell(Text('EGP ${p['pricePerHour'] ?? '—'}')),
-                      DataCell(
-                        const StatusChip(
+                      DataCell(Text(p.location.city)),
+                      DataCell(Text('EGP ${p.pricePerHour}')),
+                      const DataCell(
+                        StatusChip(
                           label: 'Active',
                           color: AdminColors.accent,
                         ),
@@ -143,13 +146,14 @@ class _AdminPitchesTabState extends State<AdminPitchesTab> with AutomaticKeepAli
                                 final result = await Navigator.push<bool>(
                                   context,
                                   MaterialPageRoute<bool>(
-                                    builder: (_) => AdminAddPitchScreen(pitchData: p),
+                                    builder: (_) => BlocProvider.value(
+                                      value: context.read<AdminCubit>(),
+                                      child: AdminAddPitchScreen(pitch: p),
+                                    ),
                                   ),
                                 );
-                                if (result == true && context.mounted) {
-                                  setState(() {
-                                    _pitchesFuture = widget.dataSource.getAllPitches();
-                                  });
+                                if (result == true && mounted) {
+                                  context.read<AdminCubit>().loadAllPitches();
                                 }
                               },
                             ),
@@ -173,19 +177,8 @@ class _AdminPitchesTabState extends State<AdminPitchesTab> with AutomaticKeepAli
                                     ],
                                   ),
                                 );
-                                if (confirm == true) {
-                                  final id = p['_id'] ?? p['id'];
-                                  if (id != null) {
-                                    final success = await widget.dataSource.deletePitch(id);
-                                    if (success && context.mounted) {
-                                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Pitch deleted successfully'), backgroundColor: AdminColors.accent));
-                                      setState(() {
-                                        _pitchesFuture = widget.dataSource.getAllPitches();
-                                      });
-                                    } else if (context.mounted) {
-                                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Failed to delete pitch'), backgroundColor: Colors.redAccent));
-                                    }
-                                  }
+                                if (confirm == true && mounted) {
+                                  context.read<AdminCubit>().deletePitch(p.id);
                                 }
                               },
                             ),

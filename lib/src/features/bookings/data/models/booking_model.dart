@@ -4,10 +4,14 @@ class BookingModel extends Booking {
   const BookingModel({
     required super.id,
     required super.userId,
+    super.userName,
+    super.userPhone,
     required super.pitchId,
     required super.pitchName,
     required super.pitchAddress,
     super.pitchImage,
+    super.pitchLatitude,
+    super.pitchLongitude,
     required super.date,
     required super.startTime,
     required super.endTime,
@@ -25,6 +29,8 @@ class BookingModel extends Booking {
     final String pitchName;
     final String pitchAddress;
     String? pitchImage;
+    double? pitchLatitude;
+    double? pitchLongitude;
 
     if (pitchRaw is Map<String, dynamic>) {
       pitchId = pitchRaw['_id']?.toString() ?? '';
@@ -33,19 +39,39 @@ class BookingModel extends Booking {
       pitchAddress = loc['address'] ?? '';
       final images = pitchRaw['images'] as List<dynamic>? ?? [];
       pitchImage = images.isNotEmpty ? images.first.toString() : null;
+      final coords = loc['coordinates']?['coordinates'];
+      if (coords is List && coords.length >= 2) {
+        pitchLongitude = (coords[0] as num?)?.toDouble();
+        pitchLatitude = (coords[1] as num?)?.toDouble();
+      }
     } else {
       pitchId = pitchRaw?.toString() ?? '';
       pitchName = '';
       pitchAddress = '';
     }
 
+    final userRaw = json['user'] ?? json['userId'];
+    final String? userName;
+    final String? userPhone;
+    if (userRaw is Map<String, dynamic>) {
+      userName = userRaw['name']?.toString();
+      userPhone = userRaw['phone']?.toString();
+    } else {
+      userName = null;
+      userPhone = null;
+    }
+
     return BookingModel(
       id: json['_id']?.toString() ?? json['id']?.toString() ?? '',
       userId: _extractId(json['userId']),
+      userName: userName,
+      userPhone: userPhone,
       pitchId: pitchId,
       pitchName: pitchName,
       pitchAddress: pitchAddress,
       pitchImage: pitchImage,
+      pitchLatitude: pitchLatitude,
+      pitchLongitude: pitchLongitude,
       date: json['date']?.toString() ?? '',
       startTime: json['startTime']?.toString() ?? '',
       endTime: json['endTime']?.toString() ?? '',

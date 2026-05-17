@@ -2,25 +2,23 @@ import 'package:e7gz/src/features/admin/presentation/layout/admin_layout.dart';
 import 'package:e7gz/src/features/admin/presentation/widgets/chart_placeholder.dart';
 import 'package:e7gz/src/features/admin/presentation/widgets/stat_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
-import 'package:e7gz/src/features/admin/data/datasources/admin_remote_datasource.dart';
+import '../../cubit/admin_cubit.dart';
+import '../../cubit/admin_state.dart';
 
 class AdminDashboardTab extends StatefulWidget {
-  final AdminRemoteDataSource dataSource;
-
-  const AdminDashboardTab({super.key, required this.dataSource});
+  const AdminDashboardTab({super.key});
 
   @override
   State<AdminDashboardTab> createState() => _AdminDashboardTabState();
 }
 
 class _AdminDashboardTabState extends State<AdminDashboardTab> with AutomaticKeepAliveClientMixin {
-  late Future<Map<String, dynamic>> _statsFuture;
-
   @override
   void initState() {
     super.initState();
-    _statsFuture = widget.dataSource.getDashboardStats();
+    context.read<AdminCubit>().loadDashboardStats();
   }
 
   @override
@@ -29,10 +27,9 @@ class _AdminDashboardTabState extends State<AdminDashboardTab> with AutomaticKee
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return FutureBuilder<Map<String, dynamic>>(
-      future: _statsFuture,
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
+    return BlocBuilder<AdminCubit, AdminState>(
+      builder: (context, state) {
+        if (state.statsStatus == AdminStatus.failure) {
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -40,15 +37,13 @@ class _AdminDashboardTabState extends State<AdminDashboardTab> with AutomaticKee
                 const Icon(IconsaxPlusBold.warning_2, color: Colors.red, size: 48),
                 const SizedBox(height: 16),
                 Text(
-                  'Error loading dashboard: ${snapshot.error}',
+                  'Error loading dashboard: ${state.statsError}',
                   textAlign: TextAlign.center,
                   style: const TextStyle(color: AdminColors.textSecondary),
                 ),
                 const SizedBox(height: 24),
                 ElevatedButton(
-                  onPressed: () => setState(() {
-                    _statsFuture = widget.dataSource.getDashboardStats();
-                  }),
+                  onPressed: () => context.read<AdminCubit>().loadDashboardStats(),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AdminColors.accent,
                     foregroundColor: Colors.white,
@@ -60,8 +55,8 @@ class _AdminDashboardTabState extends State<AdminDashboardTab> with AutomaticKee
           );
         }
 
-        final stats = snapshot.data?['data'] ?? snapshot.data ?? {};
-        final loading = snapshot.connectionState == ConnectionState.waiting;
+        final stats = state.stats;
+        final loading = state.statsStatus == AdminStatus.loading || state.statsStatus == AdminStatus.initial;
 
         return SingleChildScrollView(
           padding: const EdgeInsets.all(24),
@@ -86,7 +81,7 @@ class _AdminDashboardTabState extends State<AdminDashboardTab> with AutomaticKee
                         title: 'Total Revenue',
                         value: loading
                             ? '—'
-                            : 'EGP ${stats['totalRevenue'] ?? '0'}',
+                            : 'EGP ${stats?.totalRevenue ?? '0'}',
                         subtitle: '+12% this month',
                         icon: IconsaxPlusBold.wallet_3,
                         color: AdminColors.accent,
@@ -95,14 +90,14 @@ class _AdminDashboardTabState extends State<AdminDashboardTab> with AutomaticKee
                         title: 'Bookings',
                         value: loading
                             ? '—'
-                            : '${stats['totalBookings'] ?? '0'}',
+                            : '${stats?.totalBookings ?? '0'}',
                         subtitle: '+8 today',
                         icon: IconsaxPlusBold.calendar_tick,
                         color: AdminColors.accentBlue,
                       ),
                       StatCard(
                         title: 'Pitches',
-                        value: loading ? '—' : '${stats['pitchCount'] ?? '0'}',
+                        value: loading ? '—' : '${stats?.pitchCount ?? '0'}',
                         subtitle: '2 pending review',
                         icon: IconsaxPlusBold.location,
                         color: AdminColors.accentAmber,
@@ -111,7 +106,7 @@ class _AdminDashboardTabState extends State<AdminDashboardTab> with AutomaticKee
                         title: 'Total Users',
                         value: loading
                             ? '—'
-                            : '${stats['userCount'] ?? '0'}',
+                            : '${stats?.userCount ?? '0'}',
                         subtitle: '+24 this week',
                         icon: IconsaxPlusBold.user_square,
                         color: AdminColors.accentPurple,

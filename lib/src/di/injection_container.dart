@@ -59,6 +59,9 @@ import '../features/owner/presentation/cubit/owner_cubit.dart';
 
 // ── Admin ────────────────────────────────────────────────────────────────────
 import '../features/admin/data/datasources/admin_remote_datasource.dart';
+import '../features/admin/data/repositories/admin_repository_impl.dart';
+import '../features/admin/domain/repositories/admin_repository.dart';
+import '../features/admin/presentation/cubit/admin_cubit.dart';
 
 // ── Notifications ────────────────────────────────────────────────────────────
 import '../features/notifications/data/datasources/notification_remote_datasource.dart';
@@ -198,6 +201,9 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton<OwnerRepository>(
     () => OwnerRepositoryImpl(sl<OwnerRemoteDataSource>()),
   );
+  sl.registerLazySingleton<AdminRepository>(
+    () => AdminRepositoryImpl(dataSource: sl<AdminRemoteDataSource>()),
+  );
   sl.registerLazySingleton<NotificationRepository>(
     () => NotificationRepositoryImpl(sl<NotificationRemoteDataSource>()),
   );
@@ -274,6 +280,7 @@ Future<void> initDependencies() async {
   );
   sl.registerFactory(() => MatchmakingCubit(sl<MatchRepository>()));
   sl.registerFactory(() => OwnerCubit(repository: sl<OwnerRepository>()));
+  sl.registerFactory(() => AdminCubit(repository: sl<AdminRepository>()));
   sl.registerFactory(
     () => NotificationsCubit(repository: sl<NotificationRepository>()),
   );

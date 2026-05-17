@@ -17,6 +17,7 @@ class MatchModel extends MatchmakingMatch {
     required super.status,
     super.pitchName,
     super.pitchImage,
+    required super.sportType,
   });
 
   factory MatchModel.fromJson(Map<String, dynamic> json) {
@@ -64,6 +65,7 @@ class MatchModel extends MatchmakingMatch {
       pitchImage: (pitch?['images'] as List<dynamic>?)?.isNotEmpty == true
           ? pitch!['images'][0]
           : null,
+      sportType: json['sportType']?.toString() ?? 'football',
     );
   }
 
@@ -83,5 +85,6 @@ class MatchModel extends MatchmakingMatch {
     'maxPlayers': maxPlayers,
     'skillLevel': skillLevel,
     'pricePerPlayer': pricePerPlayer,
+    'sportType': sportType,
   };
 }

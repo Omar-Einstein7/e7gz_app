@@ -1,25 +1,23 @@
 import 'package:e7gz/src/features/admin/presentation/layout/admin_layout.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:go_router/go_router.dart';
-import 'package:e7gz/src/features/admin/data/datasources/admin_remote_datasource.dart';
+import '../../cubit/admin_cubit.dart';
+import '../../cubit/admin_state.dart';
 
 class AdminProfileTab extends StatefulWidget {
-  final AdminRemoteDataSource dataSource;
-
-  const AdminProfileTab({super.key, required this.dataSource});
+  const AdminProfileTab({super.key});
 
   @override
   State<AdminProfileTab> createState() => _AdminProfileTabState();
 }
 
 class _AdminProfileTabState extends State<AdminProfileTab> with AutomaticKeepAliveClientMixin {
-  late Future<Map<String, dynamic>> _profileFuture;
-
   @override
   void initState() {
     super.initState();
-    _profileFuture = widget.dataSource.getProfile();
+    context.read<AdminCubit>().loadProfile();
   }
 
   @override
@@ -33,10 +31,9 @@ class _AdminProfileTabState extends State<AdminProfileTab> with AutomaticKeepAli
       child: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 600),
-          child: FutureBuilder<Map<String, dynamic>>(
-            future: _profileFuture,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
+          child: BlocBuilder<AdminCubit, AdminState>(
+            builder: (context, state) {
+              if (state.profileStatus == AdminStatus.loading || state.profileStatus == AdminStatus.initial) {
                 return const Center(
                   child: CircularProgressIndicator(
                     color: AdminColors.accent,
@@ -44,7 +41,36 @@ class _AdminProfileTabState extends State<AdminProfileTab> with AutomaticKeepAli
                   ),
                 );
               }
-              final profile = snapshot.data ?? {};
+
+              if (state.profileStatus == AdminStatus.failure) {
+                return Center(
+                  child: Column(
+                    children: [
+                      const Icon(IconsaxPlusBold.warning_2, color: Colors.red, size: 40),
+                      const SizedBox(height: 12),
+                      Text('Failed to load profile: ${state.profileError}', style: const TextStyle(color: AdminColors.textSecondary)),
+                      const SizedBox(height: 16),
+                      TextButton(
+                        onPressed: () => context.read<AdminCubit>().loadProfile(),
+                        child: const Text('Retry'),
+                      ),
+                    ],
+                  ),
+                );
+              }
+
+              final profile = state.profile;
+              if (profile == null) {
+                return const Center(
+                  child: Text('No profile found', style: TextStyle(color: AdminColors.textSecondary)),
+                );
+              }
+
+              final userName = profile.name ?? 'Admin User';
+              final userEmail = profile.email;
+              final userRole = profile.role.toUpperCase();
+              final userPhone = profile.phone ?? '+20 123 456 7890';
+
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -86,12 +112,12 @@ class _AdminProfileTabState extends State<AdminProfileTab> with AutomaticKeepAli
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          profile['name'] ?? 'Admin User',
+                          userName,
                           style: AdminTextStyles.pageTitle,
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          profile['email'] ?? 'admin@e7gz.com',
+                          userEmail,
                           style: AdminTextStyles.label,
                         ),
                         const SizedBox(height: 4),
@@ -108,9 +134,7 @@ class _AdminProfileTabState extends State<AdminProfileTab> with AutomaticKeepAli
                             ),
                           ),
                           child: Text(
-                            (profile['role'] ?? 'ADMINISTRATOR')
-                                .toString()
-                                .toUpperCase(),
+                            userRole,
                             style: const TextStyle(
                               color: AdminColors.accentPurple,
                               fontSize: 11,
@@ -126,16 +150,14 @@ class _AdminProfileTabState extends State<AdminProfileTab> with AutomaticKeepAli
                         _InfoRow(
                           icon: IconsaxPlusBold.mobile,
                           label: 'Phone',
-                          value: profile['phone'] ?? '+20 123 456 7890',
+                          value: userPhone,
                         ),
                         _InfoRow(
                           icon: IconsaxPlusBold.verify,
                           label: 'Account Type',
-                          value: (profile['role'] ?? 'Administrator')
-                              .toString()
-                              .toUpperCase(),
+                          value: userRole,
                         ),
-                        _InfoRow(
+                        const _InfoRow(
                           icon: IconsaxPlusBold.calendar_circle,
                           label: 'Member Since',
                           value: 'January 2024',

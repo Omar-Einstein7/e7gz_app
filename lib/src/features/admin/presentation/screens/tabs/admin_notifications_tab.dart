@@ -1,24 +1,24 @@
 import 'package:e7gz/src/features/admin/presentation/layout/admin_layout.dart';
+import 'package:e7gz/src/features/notifications/domain/entities/notification.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
-import 'package:e7gz/src/features/admin/data/datasources/admin_remote_datasource.dart';
+import '../../cubit/admin_cubit.dart';
+import '../../cubit/admin_state.dart';
+
 
 class AdminNotificationsTab extends StatefulWidget {
-  final AdminRemoteDataSource dataSource;
-
-  const AdminNotificationsTab({super.key, required this.dataSource});
+  const AdminNotificationsTab({super.key});
 
   @override
   State<AdminNotificationsTab> createState() => _AdminNotificationsTabState();
 }
 
 class _AdminNotificationsTabState extends State<AdminNotificationsTab> with AutomaticKeepAliveClientMixin {
-  late Future<List<dynamic>> _notificationsFuture;
-
   @override
   void initState() {
     super.initState();
-    _notificationsFuture = widget.dataSource.getNotifications();
+    context.read<AdminCubit>().loadNotifications();
   }
 
   @override
@@ -45,7 +45,7 @@ class _AdminNotificationsTabState extends State<AdminNotificationsTab> with Auto
               ),
               const Spacer(),
               TextButton.icon(
-                onPressed: () => widget.dataSource.markNotificationsAsRead(),
+                onPressed: () => context.read<AdminCubit>().markNotificationsAsRead(),
                 icon: const Icon(
                   IconsaxPlusBold.tick_square,
                   color: AdminColors.accent,
@@ -60,10 +60,9 @@ class _AdminNotificationsTabState extends State<AdminNotificationsTab> with Auto
           ),
           const SizedBox(height: 20),
           // ── List ─────────────────────────────────────────────
-          FutureBuilder<List<dynamic>>(
-            future: _notificationsFuture,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
+          BlocBuilder<AdminCubit, AdminState>(
+            builder: (context, state) {
+              if (state.notificationsStatus == AdminStatus.loading || state.notificationsStatus == AdminStatus.initial) {
                 return const Center(
                   child: CircularProgressIndicator(
                     color: AdminColors.accent,
@@ -72,18 +71,16 @@ class _AdminNotificationsTabState extends State<AdminNotificationsTab> with Auto
                 );
               }
 
-              if (snapshot.hasError) {
+              if (state.notificationsStatus == AdminStatus.failure) {
                 return Center(
                   child: Column(
                     children: [
                       const Icon(IconsaxPlusBold.warning_2, color: Colors.red, size: 40),
                       const SizedBox(height: 12),
-                      Text('Failed to load alerts: ${snapshot.error}', style: const TextStyle(color: AdminColors.textSecondary)),
+                      Text('Failed to load alerts: ${state.notificationsError}', style: const TextStyle(color: AdminColors.textSecondary)),
                       const SizedBox(height: 16),
                       TextButton(
-                        onPressed: () => setState(() {
-                          _notificationsFuture = widget.dataSource.getNotifications();
-                        }),
+                        onPressed: () => context.read<AdminCubit>().loadNotifications(),
                         child: const Text('Retry'),
                       ),
                     ],
@@ -91,7 +88,7 @@ class _AdminNotificationsTabState extends State<AdminNotificationsTab> with Auto
                 );
               }
 
-              final notifications = snapshot.data ?? [];
+              final notifications = state.notifications;
               if (notifications.isEmpty) {
                 return _EmptyNotifications();
               }
@@ -101,11 +98,10 @@ class _AdminNotificationsTabState extends State<AdminNotificationsTab> with Auto
                   children: [
                     ...List.generate(notifications.length, (i) {
                       final n = notifications[i];
-                      final isRead = n['read'] ?? false;
                       final isLast = i == notifications.length - 1;
                       return Column(
                         children: [
-                          _NotificationTile(notification: n, isRead: isRead),
+                          _NotificationTile(notification: n),
                           if (!isLast)
                             const Divider(color: AdminColors.border, height: 1),
                         ],
@@ -123,13 +119,24 @@ class _AdminNotificationsTabState extends State<AdminNotificationsTab> with Auto
 }
 
 class _NotificationTile extends StatelessWidget {
-  final Map<String, dynamic> notification;
-  final bool isRead;
+  final AppNotification notification;
 
-  const _NotificationTile({required this.notification, required this.isRead});
+  const _NotificationTile({required this.notification});
+
+  String _timeAgo(DateTime dateTime) {
+    final diff = DateTime.now().difference(dateTime);
+    if (diff.isNegative) return 'just now';
+    if (diff.inDays > 365) return '${(diff.inDays / 365).floor()}y ago';
+    if (diff.inDays > 30) return '${(diff.inDays / 30).floor()}mo ago';
+    if (diff.inDays > 0) return '${diff.inDays}d ago';
+    if (diff.inHours > 0) return '${diff.inHours}h ago';
+    if (diff.inMinutes > 0) return '${diff.inMinutes}m ago';
+    return 'just now';
+  }
 
   @override
   Widget build(BuildContext context) {
+    final isRead = notification.isRead;
     final color = isRead ? AdminColors.textMuted : AdminColors.accent;
 
     return Padding(
@@ -158,7 +165,7 @@ class _NotificationTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  notification['title'] ?? 'System Update',
+                  notification.title.isEmpty ? 'System Update' : notification.title,
                   style: TextStyle(
                     color: AdminColors.textPrimary,
                     fontWeight: isRead ? FontWeight.w400 : FontWeight.w600,
@@ -167,7 +174,7 @@ class _NotificationTile extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  notification['message'] ?? '',
+                  notification.body,
                   style: const TextStyle(
                     color: AdminColors.textSecondary,
                     fontSize: 12,
@@ -180,9 +187,9 @@ class _NotificationTile extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              const Text(
-                '2h ago',
-                style: TextStyle(color: AdminColors.textMuted, fontSize: 11),
+              Text(
+                _timeAgo(notification.createdAt),
+                style: const TextStyle(color: AdminColors.textMuted, fontSize: 11),
               ),
               if (!isRead) ...[
                 const SizedBox(height: 6),

@@ -22,6 +22,7 @@ class MatchmakingMatch {
   final String status;
   final String? pitchName;
   final String? pitchImage;
+  final String sportType;
 
   const MatchmakingMatch({
     required this.id,
@@ -39,6 +40,7 @@ class MatchmakingMatch {
     required this.status,
     this.pitchName,
     this.pitchImage,
+    required this.sportType,
   });
 
   bool get isFull => participantIds.length >= maxPlayers;
