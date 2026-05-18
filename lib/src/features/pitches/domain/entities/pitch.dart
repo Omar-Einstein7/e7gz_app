@@ -62,7 +62,23 @@ class Pitch extends Equatable {
   String get imageUrl => images.isNotEmpty ? images.first : '';
 
   @override
-  List<Object?> get props => [id, name, location, rating, isAvailable];
+  List<Object?> get props => [
+    id,
+    name,
+    description,
+    ownerId,
+    sportType,
+    location,
+    pricePerHour,
+    amenities,
+    images,
+    rating,
+    reviewsCount,
+    isAvailable,
+    openingTime,
+    closingTime,
+    slotDurationMinutes,
+  ];
 }
 
 class PitchLocation extends Equatable {
@@ -83,5 +99,5 @@ class PitchLocation extends Equatable {
   String get fullAddress => '$address, $city, $country';
 
   @override
-  List<Object?> get props => [latitude, longitude];
+  List<Object?> get props => [address, city, country, latitude, longitude];
 }

@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'dart:typed_data';
 import 'package:e7gz/src/features/auth/presentation/providers/auth_cubit.dart';
 import 'package:e7gz/src/features/auth/presentation/providers/session_cubit.dart';
@@ -92,39 +93,115 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
 
   Widget _buildBottomNav(BuildContext context) {
     final cs = context.colorScheme;
+    final bottomPadding = MediaQuery.paddingOf(context).bottom;
 
-    return BottomNavigationBar(
-      currentIndex: _currentTab,
-      onTap: (index) => setState(() => _currentTab = index),
-      backgroundColor: cs.surface,
-      type: BottomNavigationBarType.fixed,
-      selectedItemColor: cs.primary,
-      unselectedItemColor: cs.onSurfaceVariant,
-      showSelectedLabels: true,
-      showUnselectedLabels: true,
-      selectedLabelStyle: TextStyle(
-        fontSize: 10.sp,
-        fontWeight: FontWeight.bold,
+    return Container(
+      padding: EdgeInsets.only(
+        bottom: bottomPadding > 0 ? bottomPadding : AppSpacing.sm.h,
       ),
-      unselectedLabelStyle: TextStyle(
-        fontSize: 10.sp,
-        fontWeight: FontWeight.normal,
+      decoration: BoxDecoration(
+        color: cs.background,
+        border: Border(top: BorderSide(color: cs.outlineVariant, width: 1)),
       ),
-      items: List.generate(_tabs.length, (i) {
-        final tab = _tabs[i];
-        return BottomNavigationBarItem(
-          icon: Icon(tab.inactiveIcon, size: 22),
-          activeIcon: Container(
-            padding: EdgeInsets.all(AppSpacing.xs.w),
-            decoration: BoxDecoration(
-              color: cs.primary.withValues(alpha: 0.1),
-              shape: BoxShape.circle,
+      child: ClipRRect(
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: AppSpacing.md.w,
+              vertical: AppSpacing.sm.h,
             ),
-            child: Icon(tab.activeIcon, size: 22),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: List.generate(_tabs.length, (index) {
+                final tab = _tabs[index];
+                return Expanded(
+                  child: _OwnerNavItem(
+                    label: tab.label,
+                    icon: tab.inactiveIcon,
+                    activeIcon: tab.activeIcon,
+                    isSelected: _currentTab == index,
+                    onTap: () => setState(() => _currentTab = index),
+                  ),
+                );
+              }),
+            ),
           ),
-          label: tab.label,
-        );
-      }),
+        ),
+      ),
+    );
+  }
+}
+
+class _OwnerNavItem extends StatelessWidget {
+  final String label;
+  final IconData icon;
+  final IconData activeIcon;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  const _OwnerNavItem({
+    required this.label,
+    required this.icon,
+    required this.activeIcon,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = context.colorScheme;
+
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: AnimatedContainer(
+        duration: 300.ms,
+        curve: Curves.easeInOut,
+        padding: EdgeInsets.symmetric(
+          horizontal: AppSpacing.xs.w,
+          vertical: AppSpacing.sm.h,
+        ),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? cs.primary.withValues(alpha: 0.1)
+              : Colors.transparent,
+          borderRadius: AppRadius.bxxl.r,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+                  isSelected ? activeIcon : icon,
+                  color: isSelected ? cs.primary : cs.onSurfaceVariant,
+                  size: 24.sp,
+                )
+                .animate(target: isSelected ? 1 : 0)
+                .scale(
+                  begin: const Offset(1, 1),
+                  end: const Offset(1.2, 1.2),
+                  duration: 200.ms,
+                )
+                .shimmer(
+                  delay: 200.ms,
+                  duration: 1000.ms,
+                  color: Colors.white.withValues(alpha: 0.2),
+                ),
+            SizedBox(height: AppSpacing.xs.h),
+            Text(
+              label,
+              style: TextStyle(
+                color: isSelected ? cs.primary : cs.onSurfaceVariant,
+                fontSize: 10.sp,
+                fontWeight: isSelected ? FontWeight.w900 : FontWeight.w500,
+                letterSpacing: 0.5,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -795,6 +872,8 @@ class _PitchCard extends StatelessWidget {
     final cs = context.colorScheme;
     final tt = context.textTheme;
 
+    final refreshKey = context.read<OwnerCubit>().state.refreshKey;
+
     return Container(
       padding: EdgeInsets.all(AppSpacing.sm.w),
       decoration: BoxDecoration(
@@ -817,6 +896,9 @@ class _PitchCard extends StatelessWidget {
               imageUrl: pitch.imageUrl.isNotEmpty
                   ? pitch.imageUrl
                   : 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80',
+              cacheKey: pitch.imageUrl.isNotEmpty
+                  ? '${pitch.imageUrl}_$refreshKey'
+                  : null,
               width: 80.w,
               height: 80.w,
               fit: BoxFit.cover,
@@ -895,8 +977,14 @@ class _PitchCard extends StatelessWidget {
                     color: cs.primary,
                     size: 20,
                   ),
-                  onPressed: () {
-                    context.push(AppRoutes.addPitch, extra: pitch);
+                  onPressed: () async {
+                    final result = await context.push(
+                      AppRoutes.addPitch,
+                      extra: pitch,
+                    );
+                    if (result == true && context.mounted) {
+                      context.read<OwnerCubit>().refreshPitches();
+                    }
                   },
                   tooltip: 'Edit Pitch',
                 ),

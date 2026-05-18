@@ -124,49 +124,59 @@ class AdminRemoteDataSource {
   /// POST /api/pitches
   Future<bool> createPitch(
     Map<String, dynamic> pitchData, {
-    List<int>? imageBytes,
-    String? fileName,
+    List<List<int>>? multipleImageBytes,
+    List<String>? multipleFileNames,
   }) async {
     try {
       dynamic data;
 
-      if (imageBytes != null) {
+      if (multipleImageBytes != null && multipleImageBytes.isNotEmpty) {
         final Map<String, dynamic> mappedData = Map.from(pitchData);
 
-        // Stringify nested objects for multipart compatibility
+        if (mappedData['images'] != null) {
+          mappedData.remove(
+            'images',
+          ); // Don't send JSON images if we have files here
+        }
         if (mappedData['location'] != null) {
           mappedData['location'] = jsonEncode(mappedData['location']);
         }
         if (mappedData['amenities'] != null) {
           mappedData['amenities'] = jsonEncode(mappedData['amenities']);
         }
-        // Ensure primitive numbers are strings in FormData
         if (mappedData['pricePerHour'] != null) {
           mappedData['pricePerHour'] = mappedData['pricePerHour'].toString();
         }
 
-        data = FormData.fromMap({
-          ...mappedData,
-          'images': MultipartFile.fromBytes(
-            imageBytes,
-            filename: fileName ?? 'pitch.jpg',
-          ),
-        });
-        AppLogger.info('Sending pitch with images (Multipart)');
+        final List<MultipartFile> files = [];
+        for (int i = 0; i < multipleImageBytes.length; i++) {
+          files.add(
+            MultipartFile.fromBytes(
+              multipleImageBytes[i],
+              filename:
+                  (multipleFileNames != null && multipleFileNames.length > i)
+                  ? multipleFileNames[i]
+                  : 'pitch_$i.jpg',
+              contentType: DioMediaType('image', 'jpeg'),
+            ),
+          );
+        }
+
+        data = FormData.fromMap({...mappedData, 'images': files});
+        AppLogger.info('--- Create Pitch Multipart Payload ---');
+        AppLogger.info('Keys: ${mappedData.keys.toList()}');
+        AppLogger.info('Files: ${files.length}');
+        AppLogger.info('Sending pitch with ${files.length} images (Multipart)');
       } else {
         data = pitchData;
+        AppLogger.info('--- Create Pitch JSON Payload ---');
+        AppLogger.info('Keys: ${pitchData.keys.toList()}');
         AppLogger.info('Sending pitch (JSON)');
       }
 
       // IMPORTANT: Intercepts or BaseOptions might force application/json.
       // We must explicitly override it to multipart/form-data when sending FormData.
-      final response = await _dio.post(
-        'pitches',
-        data: data,
-        options: imageBytes != null
-            ? Options(contentType: 'multipart/form-data')
-            : null,
-      );
+      final response = await _dio.post('pitches', data: data, options: null);
 
       return response.statusCode == 201 || response.statusCode == 200;
     } catch (e) {
@@ -202,14 +212,19 @@ class AdminRemoteDataSource {
   Future<bool> updatePitch(
     String id,
     Map<String, dynamic> pitchData, {
-    List<int>? imageBytes,
-    String? fileName,
+    List<List<int>>? multipleImageBytes,
+    List<String>? multipleFileNames,
   }) async {
     try {
       dynamic data;
 
-      if (imageBytes != null) {
+      if (multipleImageBytes != null && multipleImageBytes.isNotEmpty) {
         final Map<String, dynamic> mappedData = Map.from(pitchData);
+        if (mappedData['images'] != null) {
+          // Rename to avoid collision with 'images' file field
+          mappedData['existingImages'] = jsonEncode(mappedData['images']);
+          mappedData.remove('images');
+        }
         if (mappedData['location'] != null)
           mappedData['location'] = jsonEncode(mappedData['location']);
         if (mappedData['amenities'] != null)
@@ -217,26 +232,30 @@ class AdminRemoteDataSource {
         if (mappedData['pricePerHour'] != null)
           mappedData['pricePerHour'] = mappedData['pricePerHour'].toString();
 
-        data = FormData.fromMap({
-          ...mappedData,
-          'images': MultipartFile.fromBytes(
-            imageBytes,
-            filename: fileName ?? 'pitch.jpg',
-          ),
-        });
+        final List<MultipartFile> files = [];
+        for (int i = 0; i < multipleImageBytes.length; i++) {
+          files.add(
+            MultipartFile.fromBytes(
+              multipleImageBytes[i],
+              filename:
+                  (multipleFileNames != null && multipleFileNames.length > i)
+                  ? multipleFileNames[i]
+                  : 'pitch_$i.jpg',
+              contentType: DioMediaType('image', 'jpeg'),
+            ),
+          );
+        }
+
+        data = FormData.fromMap({...mappedData, 'images': files});
       } else {
         data = pitchData;
       }
 
-      final response = await _dio.put(
-        'pitches/$id',
-        data: data,
-        options: imageBytes != null
-            ? Options(contentType: 'multipart/form-data')
-            : null,
-      );
+      AppLogger.info('🚀 Sending PUT request to pitches/$id');
+      final response = await _dio.put('pitches/$id', data: data, options: null);
+      AppLogger.info('✅ PUT response received: ${response.statusCode}');
 
-      return response.statusCode == 200;
+      return response.statusCode == 200 || response.statusCode == 204;
     } catch (e) {
       if (e is DioException) {
         AppLogger.error(

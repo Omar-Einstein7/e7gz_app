@@ -1,11 +1,15 @@
 import 'package:e7gz/src/features/matchmaking/presentation/screens/create_match_screen.dart';
 import 'package:e7gz/src/features/matchmaking/presentation/screens/match_details_screen.dart';
 import 'package:e7gz/src/features/bookings/presentation/screens/booking_summary_screen.dart';
+import 'package:e7gz/src/features/pitches/domain/entities/pitch.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/shared/wrappers/main_wrapper.dart';
 import 'package:e7gz/src/features/admin/presentation/screens/add_pitch_screen.dart';
 import 'package:e7gz/src/features/admin/presentation/screens/admin_dashboard_screen.dart';
+import 'package:e7gz/src/features/admin/presentation/cubit/admin_cubit.dart';
+import 'package:e7gz/src/di/injection_container.dart';
 import 'package:e7gz/src/features/profile/presentation/screens/settings_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:go_router/go_router.dart';
 
@@ -177,7 +181,10 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: AppRoutes.addPitch,
       name: 'addPitch',
-      builder: (context, state) => const AdminAddPitchScreen(),
+      builder: (context, state) => BlocProvider(
+        create: (_) => sl<AdminCubit>(),
+        child: AdminAddPitchScreen(pitch: state.extra as Pitch?),
+      ),
     ),
     GoRoute(
       path: AppRoutes.createMatch,

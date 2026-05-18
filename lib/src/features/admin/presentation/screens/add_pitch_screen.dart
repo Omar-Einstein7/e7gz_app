@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:convert';
 import 'package:e7gz/src/features/admin/presentation/cubit/admin_cubit.dart';
 import 'package:e7gz/src/features/admin/presentation/cubit/admin_state.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
@@ -33,7 +34,8 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
   final _descriptionController = TextEditingController();
 
   String _sportType = 'football';
-  XFile? _pickedImage;
+  final List<XFile> _pickedImages = [];
+  List<String> _existingUrls = [];
 
   LatLng _selectedLocation = const LatLng(30.0444, 31.2357); // Cairo
   final MapController _mapController = MapController();
@@ -41,14 +43,6 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
 
   final ImagePicker _picker = ImagePicker();
   bool get _isEdit => widget.pitch != null;
-
-  bool get _hasValidNetworkImage {
-    if (!_isEdit) return false;
-    final images = widget.pitch!.images;
-    if (images.isEmpty) return false;
-    final firstImage = images[0];
-    return firstImage.isNotEmpty;
-  }
 
   @override
   void initState() {
@@ -64,6 +58,7 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
       _addressController.text = location.address;
       _cityController.text = location.city;
       _selectedLocation = LatLng(location.latitude, location.longitude);
+      _existingUrls = List.from(pitch.images);
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _mapController.move(_selectedLocation, 15);
@@ -97,24 +92,55 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
 
   Future<void> _searchLocation(String query) async {
     if (query.isEmpty) return;
-    final url = Uri.parse(
-      'https://nominatim.openstreetmap.org/search?q=$query&format=json&limit=1',
-    );
+
+    // Nominatim REQUIRES a User-Agent and prefers descriptive ones
+    final url =
+        'https://nominatim.openstreetmap.org/search?q=${Uri.encodeComponent(query)}&format=json&limit=1';
+
     try {
-      final response = await Dio().get<dynamic>(url.toString());
-      final List results = response.data;
+      AppLogger.info('Searching location for: $query');
+
+      final response = await Dio().get<dynamic>(
+        url,
+        options: Options(
+          headers: {
+            'User-Agent': 'e7gzz_flutter_app_location_picker',
+            'Accept-Language': 'en',
+          },
+          sendTimeout: const Duration(seconds: 5),
+          receiveTimeout: const Duration(seconds: 5),
+        ),
+      );
+
+      final List results = response.data is String
+          ? jsonDecode(response.data)
+          : response.data;
+
       if (results.isNotEmpty) {
-        final lat = double.parse(results[0]['lat']);
-        final lon = double.parse(results[0]['lon']);
-        final newPos = LatLng(lat, lon);
-        setState(() {
-          _selectedLocation = newPos;
-          _addressController.text = results[0]['display_name'];
-        });
-        _mapController.move(newPos, 15);
+        final lat = double.tryParse(results[0]['lat'].toString()) ?? 0.0;
+        final lon = double.tryParse(results[0]['lon'].toString()) ?? 0.0;
+
+        if (lat != 0 && lon != 0) {
+          final newPos = LatLng(lat, lon);
+          setState(() {
+            _selectedLocation = newPos;
+            _addressController.text = results[0]['display_name'] ?? query;
+          });
+          _mapController.move(newPos, 15);
+          AppLogger.info('Location found: $lat, $lon');
+        }
+      } else {
+        showGlobalToast(
+          message: 'No locations found for this address',
+          status: 'error',
+        );
       }
     } catch (e) {
       AppLogger.error('Location search failed: $e');
+      showGlobalToast(
+        message: 'Could not find location. Please try different keywords.',
+        status: 'error',
+      );
     }
   }
 
@@ -122,14 +148,25 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
     setState(() => _selectedLocation = point);
   }
 
-  Future<void> _pickImage() async {
-    final XFile? image = await _picker.pickImage(
-      source: ImageSource.gallery,
-      imageQuality: 70,
-    );
-    if (image != null) {
-      setState(() => _pickedImage = image);
+  Future<void> _pickImages() async {
+    final List<XFile> images = await _picker.pickMultiImage(imageQuality: 70);
+    if (images.isNotEmpty) {
+      setState(() {
+        _pickedImages.addAll(images);
+      });
     }
+  }
+
+  void _removeImage(int index) {
+    setState(() {
+      _pickedImages.removeAt(index);
+    });
+  }
+
+  void _removeExistingImage(int index) {
+    setState(() {
+      _existingUrls.removeAt(index);
+    });
   }
 
   Future<void> _submit() async {
@@ -153,24 +190,29 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
       "pricePerHour": int.tryParse(_priceController.text) ?? 0,
       "openingTime": "08:00",
       "closingTime": "23:00",
+      "images": _existingUrls,
     };
+
+    final List<List<int>> imageBytesList = [];
+    final List<String> fileNames = [];
+
+    for (var image in _pickedImages) {
+      imageBytesList.add(await image.readAsBytes());
+      fileNames.add(image.name);
+    }
 
     if (_isEdit) {
       context.read<AdminCubit>().updatePitch(
         widget.pitch!.id,
         payload,
-        imageBytes: _pickedImage != null
-            ? await _pickedImage!.readAsBytes()
-            : null,
-        fileName: _pickedImage?.name,
+        multipleImageBytes: imageBytesList.isNotEmpty ? imageBytesList : null,
+        multipleFileNames: fileNames.isNotEmpty ? fileNames : null,
       );
     } else {
       context.read<AdminCubit>().createPitch(
         payload,
-        imageBytes: _pickedImage != null
-            ? await _pickedImage!.readAsBytes()
-            : null,
-        fileName: _pickedImage?.name,
+        multipleImageBytes: imageBytesList.isNotEmpty ? imageBytesList : null,
+        multipleFileNames: fileNames.isNotEmpty ? fileNames : null,
       );
     }
   }
@@ -233,86 +275,123 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // ── Image Picker ──────────────────────────────────────
                   const Text('PITCH MEDIA', style: AdminTextStyles.label),
                   const SizedBox(height: 12),
-                  GestureDetector(
-                    onTap: _pickImage,
-                    child: Container(
-                      height: 180,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: AdminColors.surface,
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: AdminColors.border,
-                          width: 2,
-                          style: BorderStyle.none,
-                        ),
-                        image: _pickedImage != null
-                            ? DecorationImage(
-                                image: kIsWeb
-                                    ? NetworkImage(_pickedImage!.path)
-                                          as ImageProvider
-                                    : FileImage(File(_pickedImage!.path)),
-                                fit: BoxFit.cover,
-                              )
-                            : null,
-                      ),
-                      child: _pickedImage == null && !_hasValidNetworkImage
-                          ? Column(
+                  SizedBox(
+                    height: 120,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: [
+                        // Add Button
+                        GestureDetector(
+                          onTap: _pickImages,
+                          child: Container(
+                            width: 120,
+                            margin: const EdgeInsets.only(right: 12),
+                            decoration: BoxDecoration(
+                              color: AdminColors.surface,
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(
+                                color: AdminColors.accent.withOpacity(0.3),
+                                width: 2,
+                                style: BorderStyle.solid,
+                              ),
+                            ),
+                            child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Container(
-                                  padding: const EdgeInsets.all(12),
-                                  decoration: BoxDecoration(
-                                    color: AdminColors.accent.withOpacity(0.1),
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: const Icon(
-                                    IconsaxPlusBold.camera,
-                                    color: AdminColors.accent,
-                                  ),
+                                const Icon(
+                                  IconsaxPlusBold.add_square,
+                                  color: AdminColors.accent,
                                 ),
-                                const SizedBox(height: 12),
+                                const SizedBox(height: 8),
                                 const Text(
-                                  'Click to upload pitch photo',
+                                  'Add Pix',
                                   style: TextStyle(
                                     color: AdminColors.textSecondary,
-                                    fontSize: 13,
+                                    fontSize: 12,
                                   ),
                                 ),
                               ],
-                            )
-                          : _pickedImage == null && _hasValidNetworkImage
-                          ? ClipRRect(
+                            ),
+                          ),
+                        ),
+                        // Existing Images (if editing)
+                        ..._existingUrls.asMap().entries.map((entry) {
+                          final idx = entry.key;
+                          final url = entry.value;
+                          return Container(
+                            width: 120,
+                            margin: const EdgeInsets.only(right: 12),
+                            decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(16),
-                              child: Image.network(
-                                widget.pitch!.images[0],
-                                width: double.infinity,
-                                height: 180,
+                              image: DecorationImage(
+                                image: NetworkImage(url),
                                 fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) =>
-                                    const Icon(Icons.broken_image),
-                              ),
-                            )
-                          : Align(
-                              alignment: Alignment.topRight,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: CircleAvatar(
-                                  backgroundColor: Colors.black54,
-                                  child: IconButton(
-                                    icon: const Icon(
-                                      Icons.edit,
-                                      color: Colors.white,
-                                      size: 18,
-                                    ),
-                                    onPressed: _pickImage,
-                                  ),
-                                ),
                               ),
                             ),
+                            child: Stack(
+                              children: [
+                                Positioned(
+                                  right: 4,
+                                  top: 4,
+                                  child: GestureDetector(
+                                    onTap: () => _removeExistingImage(idx),
+                                    child: CircleAvatar(
+                                      radius: 12,
+                                      backgroundColor: Colors.redAccent
+                                          .withOpacity(0.8),
+                                      child: const Icon(
+                                        Icons.close,
+                                        size: 14,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }),
+                        // Picked Images
+                        ..._pickedImages.asMap().entries.map((entry) {
+                          final idx = entry.key;
+                          final img = entry.value;
+                          return Container(
+                            width: 120,
+                            margin: const EdgeInsets.only(right: 12),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16),
+                              image: DecorationImage(
+                                image: kIsWeb
+                                    ? NetworkImage(img.path) as ImageProvider
+                                    : FileImage(File(img.path)),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            child: Stack(
+                              children: [
+                                Positioned(
+                                  right: 4,
+                                  top: 4,
+                                  child: GestureDetector(
+                                    onTap: () => _removeImage(idx),
+                                    child: CircleAvatar(
+                                      radius: 12,
+                                      backgroundColor: Colors.black54,
+                                      child: const Icon(
+                                        Icons.close,
+                                        size: 14,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }),
+                      ],
                     ),
                   ),
                   const SizedBox(height: 32),

@@ -132,8 +132,8 @@ class AdminCubit extends Cubit<AdminState> {
 
   Future<void> createPitch(
     Map<String, dynamic> pitchData, {
-    List<int>? imageBytes,
-    String? fileName,
+    List<List<int>>? multipleImageBytes,
+    List<String>? multipleFileNames,
   }) async {
     emit(
       state.copyWith(
@@ -144,8 +144,8 @@ class AdminCubit extends Cubit<AdminState> {
     );
     final result = await _repository.createPitch(
       pitchData,
-      imageBytes: imageBytes,
-      fileName: fileName,
+      multipleImageBytes: multipleImageBytes,
+      multipleFileNames: multipleFileNames,
     );
     result.fold(
       (failure) => emit(
@@ -157,7 +157,6 @@ class AdminCubit extends Cubit<AdminState> {
       ),
       (success) {
         emit(state.copyWith(isMutating: false, mutationSuccess: true));
-        loadAllPitches(); // Refresh the list
       },
     );
   }
@@ -181,7 +180,6 @@ class AdminCubit extends Cubit<AdminState> {
       ),
       (success) {
         emit(state.copyWith(isMutating: false, mutationSuccess: true));
-        loadAllPitches(); // Refresh the list
       },
     );
   }
@@ -189,8 +187,8 @@ class AdminCubit extends Cubit<AdminState> {
   Future<void> updatePitch(
     String id,
     Map<String, dynamic> pitchData, {
-    List<int>? imageBytes,
-    String? fileName,
+    List<List<int>>? multipleImageBytes,
+    List<String>? multipleFileNames,
   }) async {
     emit(
       state.copyWith(
@@ -202,8 +200,8 @@ class AdminCubit extends Cubit<AdminState> {
     final result = await _repository.updatePitch(
       id,
       pitchData,
-      imageBytes: imageBytes,
-      fileName: fileName,
+      multipleImageBytes: multipleImageBytes,
+      multipleFileNames: multipleFileNames,
     );
     result.fold(
       (failure) => emit(
@@ -215,7 +213,6 @@ class AdminCubit extends Cubit<AdminState> {
       ),
       (success) {
         emit(state.copyWith(isMutating: false, mutationSuccess: true));
-        loadAllPitches(); // Refresh the list
       },
     );
   }

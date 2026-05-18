@@ -1,4 +1,5 @@
 import 'package:e7gz/src/features/pitches/domain/entities/pitch.dart';
+import 'package:e7gz/src/config/app_config.dart';
 
 class PitchModel extends Pitch {
   const PitchModel({
@@ -24,6 +25,18 @@ class PitchModel extends Pitch {
     final coords = loc['coordinates'] as Map<String, dynamic>? ?? {};
     final coordsList = coords['coordinates'] as List<dynamic>? ?? [0.0, 0.0];
 
+    final List<String> images =
+        (json['images'] as List?)?.map((e) {
+          final url = e?.toString() ?? '';
+          if (url.isEmpty || url.startsWith('http')) return url;
+          // Prepend base URL for relative paths
+          final baseUrl = AppConfig.baseUrl.split('/api')[0];
+          return '$baseUrl/$url'
+              .replaceAll('//', '/')
+              .replaceFirst(':/', '://');
+        }).toList() ??
+        [];
+
     return PitchModel(
       id: json['_id']?.toString() ?? json['id']?.toString() ?? '',
       name: json['name']?.toString() ?? '',
@@ -48,9 +61,7 @@ class PitchModel extends Pitch {
               ?.map((e) => e?.toString() ?? '')
               .toList() ??
           [],
-      images:
-          (json['images'] as List?)?.map((e) => e?.toString() ?? '').toList() ??
-          [],
+      images: images,
       rating: (json['rating'] as num?)?.toDouble() ?? 0.0,
       reviewsCount: (json['reviewsCount'] as num?)?.toInt() ?? 0,
       isAvailable: json['isAvailable'] ?? true,

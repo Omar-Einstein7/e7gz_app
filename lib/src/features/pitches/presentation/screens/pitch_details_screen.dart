@@ -102,14 +102,28 @@ class _PitchDetailsView extends StatelessWidget {
   }
 }
 
-class _HeaderSection extends StatelessWidget {
+class _HeaderSection extends StatefulWidget {
   final dynamic pitch;
   const _HeaderSection({required this.pitch});
+
+  @override
+  State<_HeaderSection> createState() => _HeaderSectionState();
+}
+
+class _HeaderSectionState extends State<_HeaderSection> {
+  final PageController _pageController = PageController();
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final pc = context.pitchColors;
     final cs = context.colorScheme;
+    final pitch = widget.pitch;
 
     return SliverAppBar(
       expandedHeight: 500.h,
@@ -143,15 +157,59 @@ class _HeaderSection extends StatelessWidget {
           children: [
             Hero(
               tag: 'pitch_image_${pitch.id}',
-              child: AppCachedImage(
-                imageUrl: pitch.imageUrl.isNotEmpty
-                    ? pitch.imageUrl
-                    : 'https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80',
-                fit: BoxFit.cover,
+              child: pitch.images.isNotEmpty
+                  ? PageView.builder(
+                      controller: _pageController,
+                      itemCount: pitch.images.length,
+                      itemBuilder: (context, index) {
+                        return AppCachedImage(
+                          imageUrl: pitch.images[index],
+                          fit: BoxFit.cover,
+                        );
+                      },
+                    )
+                  : AppCachedImage(
+                      imageUrl:
+                          'https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80',
+                      fit: BoxFit.cover,
+                    ),
+            ),
+            if (pitch.images.length > 1)
+              Positioned(
+                bottom: 180.h,
+                left: 0,
+                right: 0,
+                child: Center(
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 12.w,
+                      vertical: 8.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.3),
+                      borderRadius: BorderRadius.circular(20.r),
+                    ),
+                    child: SmoothPageIndicator(
+                      controller: _pageController,
+                      count: pitch.images.length,
+                      effect: ExpandingDotsEffect(
+                        dotHeight: 6.h,
+                        dotWidth: 6.w,
+                        activeDotColor: Colors.white,
+                        dotColor: Colors.white.withOpacity(0.5),
+                        expansionFactor: 4,
+                        spacing: 8.w,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            // Sophisticated Gradient Overlay from PitchColors extension
+            IgnorePointer(
+              child: DecoratedBox(
+                decoration: BoxDecoration(gradient: pc.heroGradient),
               ),
             ),
-            // Sophisticated Gradient Overlay from PitchColors extension
-            DecoratedBox(decoration: BoxDecoration(gradient: pc.heroGradient)),
             // Venue Info Card with Glassmorphism
             Positioned(
               bottom: AppSpacing.xl.h,

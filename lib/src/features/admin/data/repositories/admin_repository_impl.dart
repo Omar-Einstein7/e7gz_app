@@ -127,14 +127,14 @@ class AdminRepositoryImpl implements AdminRepository {
   @override
   FutureEither<bool> createPitch(
     Map<String, dynamic> pitchData, {
-    List<int>? imageBytes,
-    String? fileName,
+    List<List<int>>? multipleImageBytes,
+    List<String>? multipleFileNames,
   }) async {
     try {
       final success = await _dataSource.createPitch(
         pitchData,
-        imageBytes: imageBytes,
-        fileName: fileName,
+        multipleImageBytes: multipleImageBytes,
+        multipleFileNames: multipleFileNames,
       );
       if (success) return right(true);
       return left(const ServerFailure('Failed to create pitch'));
@@ -158,15 +158,15 @@ class AdminRepositoryImpl implements AdminRepository {
   FutureEither<bool> updatePitch(
     String id,
     Map<String, dynamic> pitchData, {
-    List<int>? imageBytes,
-    String? fileName,
+    List<List<int>>? multipleImageBytes,
+    List<String>? multipleFileNames,
   }) async {
     try {
       final success = await _dataSource.updatePitch(
         id,
         pitchData,
-        imageBytes: imageBytes,
-        fileName: fileName,
+        multipleImageBytes: multipleImageBytes,
+        multipleFileNames: multipleFileNames,
       );
       if (success) return right(true);
       return left(const ServerFailure('Failed to update pitch'));

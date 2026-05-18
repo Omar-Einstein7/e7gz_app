@@ -7,24 +7,47 @@ enum AuthStatus { initial, loading, success, failure }
 class AuthState extends Equatable {
   final AuthStatus status;
   final String? errorMessage;
+  final String? selectedRole;
+  final bool obscurePassword;
 
-  const AuthState({required this.status, this.errorMessage});
+  const AuthState({
+    required this.status,
+    this.errorMessage,
+    this.selectedRole,
+    this.obscurePassword = true,
+  });
 
-  const AuthState.initial() : status = AuthStatus.initial, errorMessage = null;
+  const AuthState.initial()
+    : status = AuthStatus.initial,
+      errorMessage = null,
+      selectedRole = null,
+      obscurePassword = true;
 
   bool get isLoading => status == AuthStatus.loading;
   bool get isSuccess => status == AuthStatus.success;
   bool get isFailure => status == AuthStatus.failure;
 
-  AuthState copyWith({AuthStatus? status, String? errorMessage}) {
+  AuthState copyWith({
+    AuthStatus? status,
+    String? errorMessage,
+    String? selectedRole,
+    bool? obscurePassword,
+  }) {
     return AuthState(
       status: status ?? this.status,
       errorMessage: errorMessage ?? this.errorMessage,
+      selectedRole: selectedRole ?? this.selectedRole,
+      obscurePassword: obscurePassword ?? this.obscurePassword,
     );
   }
 
   @override
-  List<Object?> get props => [status, errorMessage];
+  List<Object?> get props => [
+    status,
+    errorMessage,
+    selectedRole,
+    obscurePassword,
+  ];
 }
 
 class AuthCubit extends Cubit<AuthState> {
@@ -55,13 +78,27 @@ class AuthCubit extends Cubit<AuthState> {
     );
   }
 
+  void selectRole(String role) {
+    emit(state.copyWith(selectedRole: role));
+  }
+
+  void togglePasswordVisibility() {
+    emit(state.copyWith(obscurePassword: !state.obscurePassword));
+  }
+
   Future<void> signUp({
     required String name,
     required String email,
     required String password,
-    required String role,
     required String phone,
   }) async {
+    final role = state.selectedRole;
+    if (role == null) {
+      AppLogger.warning('🚩 signUp called but selectedRole is null');
+      return;
+    }
+
+    AppLogger.info('🚀 signing up as $role');
     emit(state.copyWith(status: AuthStatus.loading));
 
     final result = await _repository.signUp(

@@ -18,8 +18,8 @@ abstract class AdminRepository {
 
   FutureEither<bool> createPitch(
     Map<String, dynamic> pitchData, {
-    List<int>? imageBytes,
-    String? fileName,
+    List<List<int>>? multipleImageBytes,
+    List<String>? multipleFileNames,
   });
 
   FutureEither<bool> deletePitch(String id);
@@ -27,7 +27,7 @@ abstract class AdminRepository {
   FutureEither<bool> updatePitch(
     String id,
     Map<String, dynamic> pitchData, {
-    List<int>? imageBytes,
-    String? fileName,
+    List<List<int>>? multipleImageBytes,
+    List<String>? multipleFileNames,
   });
 }

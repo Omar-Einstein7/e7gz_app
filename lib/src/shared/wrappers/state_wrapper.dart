@@ -20,6 +20,9 @@ import '../../features/matchmaking/presentation/cubit/matchmaking_cubit.dart';
 // Owner
 import '../../features/owner/presentation/cubit/owner_cubit.dart';
 
+// Admin
+import '../../features/admin/presentation/cubit/admin_cubit.dart';
+
 // Notifications
 import '../../features/notifications/presentation/cubit/notifications_cubit.dart';
 
@@ -76,6 +79,9 @@ class StateWrapper extends StatelessWidget {
 
         // Owner
         BlocProvider(create: (_) => sl<OwnerCubit>()),
+
+        // Admin
+        BlocProvider(create: (_) => sl<AdminCubit>()),
 
         // Notifications
         BlocProvider(create: (_) => sl<NotificationsCubit>()),

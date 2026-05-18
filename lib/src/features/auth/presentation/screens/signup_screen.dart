@@ -14,14 +14,19 @@ class SignupScreen extends StatefulWidget {
 
 class _SignupScreenState extends State<SignupScreen> {
   final _formKey = GlobalKey<FormState>();
-  String? _selectedRole;
+  late final TextEditingController _nameController;
+  late final TextEditingController _emailController;
+  late final TextEditingController _phoneController;
+  late final TextEditingController _passwordController;
 
-  final _nameController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _phoneController = TextEditingController();
-  final _passwordController = TextEditingController();
-
-  bool _obscurePassword = true;
+  @override
+  void initState() {
+    super.initState();
+    _nameController = TextEditingController();
+    _emailController = TextEditingController();
+    _phoneController = TextEditingController();
+    _passwordController = TextEditingController();
+  }
 
   @override
   void dispose() {
@@ -74,65 +79,75 @@ class _SignupScreenState extends State<SignupScreen> {
               },
               child: SingleChildScrollView(
                 padding: EdgeInsets.all(AppSpacing.lg.w),
-                child: Column(
-                  children: [
-                    // Header
-                    headerBranding(typography, cs),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      // Header
+                      _HeaderBranding(typography: typography, cs: cs),
 
-                    SizedBox(height: AppSpacing.xxl.h),
+                      SizedBox(height: AppSpacing.xxl.h),
 
-                    // Role Selection
-                    roleSelectionHeader(typography, cs),
+                      // Role Selection
+                      _RoleSelectionHeader(typography: typography, cs: cs),
 
-                    SizedBox(height: AppSpacing.lg.h),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: roleCard(
-                            role: 'player',
-                            title: 'auth.player'.tr(),
-                            subtitle: 'auth.player_desc'.tr(),
-                            icon: Icons.sports_soccer,
-                            isSelected: _selectedRole == 'player',
-                            onTap: () =>
-                                setState(() => _selectedRole = 'player'),
-                          ),
-                        ),
-                        SizedBox(width: AppSpacing.md.w),
-                        Expanded(
-                          child: roleCard(
-                            role: 'owner',
-                            title: 'auth.owner'.tr(),
-                            subtitle: 'auth.owner_desc'.tr(),
-                            icon: Icons.stadium,
-                            isSelected: _selectedRole == 'owner',
-                            onTap: () =>
-                                setState(() => _selectedRole = 'owner'),
-                          ),
-                        ),
-                      ],
-                    ),
+                      SizedBox(height: AppSpacing.lg.h),
 
-                    SizedBox(height: AppSpacing.xxl.h),
-
-                    // Form Section
-                    Container(
-                      padding: EdgeInsets.all(AppSpacing.xl.w),
-                      decoration: BoxDecoration(
-                        color: cs.surfaceContainerLow.withValues(alpha: 0.4),
-                        borderRadius: AppRadius.bxxl.r,
-                        border: Border.all(color: cs.outlineVariant),
+                      // Role Cards — reactive via BlocBuilder
+                      BlocBuilder<AuthCubit, AuthState>(
+                        buildWhen: (prev, curr) =>
+                            prev.selectedRole != curr.selectedRole,
+                        builder: (context, state) {
+                          return Row(
+                            children: [
+                              Expanded(
+                                child: _RoleCard(
+                                  role: 'player',
+                                  title: 'auth.player'.tr(),
+                                  subtitle: 'auth.player_desc'.tr(),
+                                  icon: Icons.sports_soccer,
+                                  isSelected: state.selectedRole == 'player',
+                                  onTap: () => context
+                                      .read<AuthCubit>()
+                                      .selectRole('player'),
+                                ),
+                              ),
+                              SizedBox(width: AppSpacing.md.w),
+                              Expanded(
+                                child: _RoleCard(
+                                  role: 'owner',
+                                  title: 'auth.owner'.tr(),
+                                  subtitle: 'auth.owner_desc'.tr(),
+                                  icon: Icons.stadium,
+                                  isSelected: state.selectedRole == 'owner',
+                                  onTap: () => context
+                                      .read<AuthCubit>()
+                                      .selectRole('owner'),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
                       ),
-                      child: ClipRRect(
-                        borderRadius: AppRadius.bxxl.r,
-                        child: BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-                          child: Form(
-                            key: _formKey,
+
+                      SizedBox(height: AppSpacing.xxl.h),
+
+                      // Form Section
+                      Container(
+                        padding: EdgeInsets.all(AppSpacing.xl.w),
+                        decoration: BoxDecoration(
+                          color: cs.surfaceContainerLow.withValues(alpha: 0.4),
+                          borderRadius: AppRadius.bxxl.r,
+                          border: Border.all(color: cs.outlineVariant),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: AppRadius.bxxl.r,
+                          child: BackdropFilter(
+                            filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                inputLabel("auth.full_name".tr()),
+                                _inputLabel(context, "auth.full_name".tr()),
                                 AppTextField(
                                   controller: _nameController,
                                   hint: "Mohamed Ahmed",
@@ -143,7 +158,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                 ),
                                 SizedBox(height: AppSpacing.lg.h),
 
-                                inputLabel("auth.email".tr()),
+                                _inputLabel(context, "auth.email".tr()),
                                 AppTextField(
                                   controller: _emailController,
                                   hint: "mohamed@example.com",
@@ -153,36 +168,49 @@ class _SignupScreenState extends State<SignupScreen> {
                                 ),
                                 SizedBox(height: AppSpacing.lg.h),
 
-                                inputLabel("auth.mobile_number".tr()),
+                                _inputLabel(context, "auth.mobile_number".tr()),
                                 AppTextField(
                                   controller: _phoneController,
                                   hint: "01X XXXX XXXX",
                                   keyboardType: TextInputType.phone,
                                   prefixIcon: const Icon(IconsaxPlusBold.call),
-                                  suffixIcon: walletReadyChip(),
+                                  suffixIcon: _walletReadyChip(context),
                                   validator: Validators.phone,
                                 ),
                                 SizedBox(height: AppSpacing.lg.h),
 
-                                inputLabel("auth.create_password".tr()),
-                                AppTextField(
-                                  controller: _passwordController,
-                                  hint: "••••••••",
-                                  obscureText: _obscurePassword,
-                                  prefixIcon: const Icon(IconsaxPlusBold.lock),
-                                  validator: Validators.password,
-                                  suffixIcon: IconButton(
-                                    icon: Icon(
-                                      _obscurePassword
-                                          ? IconsaxPlusBold.eye_slash
-                                          : IconsaxPlusBold.eye,
-                                      size: 20,
-                                    ),
-                                    onPressed: () => setState(
-                                      () =>
-                                          _obscurePassword = !_obscurePassword,
-                                    ),
-                                  ),
+                                _inputLabel(
+                                  context,
+                                  "auth.create_password".tr(),
+                                ),
+
+                                // Password field — reactive to obscurePassword
+                                BlocBuilder<AuthCubit, AuthState>(
+                                  buildWhen: (prev, curr) =>
+                                      prev.obscurePassword !=
+                                      curr.obscurePassword,
+                                  builder: (context, state) {
+                                    return AppTextField(
+                                      controller: _passwordController,
+                                      hint: "••••••••",
+                                      obscureText: state.obscurePassword,
+                                      prefixIcon: const Icon(
+                                        IconsaxPlusBold.lock,
+                                      ),
+                                      validator: Validators.password,
+                                      suffixIcon: IconButton(
+                                        icon: Icon(
+                                          state.obscurePassword
+                                              ? IconsaxPlusBold.eye_slash
+                                              : IconsaxPlusBold.eye,
+                                          size: 20,
+                                        ),
+                                        onPressed: () => context
+                                            .read<AuthCubit>()
+                                            .togglePasswordVisibility(),
+                                      ),
+                                    );
+                                  },
                                 ),
 
                                 SizedBox(height: AppSpacing.xl.h),
@@ -197,7 +225,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                       suffixIcon: const Icon(
                                         Icons.arrow_forward,
                                       ),
-                                      onPressed: _selectedRole == null
+                                      onPressed: state.selectedRole == null
                                           ? null
                                           : () {
                                               if (_formKey.currentState
@@ -214,9 +242,6 @@ class _SignupScreenState extends State<SignupScreen> {
                                                       password:
                                                           _passwordController
                                                               .text,
-                                                      role:
-                                                          _selectedRole ??
-                                                          'player',
                                                       phone:
                                                           _phoneController.text,
                                                     );
@@ -256,22 +281,22 @@ class _SignupScreenState extends State<SignupScreen> {
                           ),
                         ),
                       ),
-                    ),
 
-                    SizedBox(height: AppSpacing.xl.h),
+                      SizedBox(height: AppSpacing.xl.h),
 
-                    // Footer
-                    Text(
-                      'auth.agree_terms'.tr(),
-                      textAlign: TextAlign.center,
-                      style: typography.bodySmall?.copyWith(
-                        color: cs.onSurfaceVariant.withValues(alpha: 0.6),
-                        height: 1.5,
+                      // Footer
+                      Text(
+                        'auth.agree_terms'.tr(),
+                        textAlign: TextAlign.center,
+                        style: typography.bodySmall?.copyWith(
+                          color: cs.onSurfaceVariant.withValues(alpha: 0.6),
+                          height: 1.5,
+                        ),
                       ),
-                    ),
 
-                    SizedBox(height: AppSpacing.xl.h),
-                  ],
+                      SizedBox(height: AppSpacing.xl.h),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -281,12 +306,78 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
-  Widget headerBranding(TextTheme tt, ColorScheme cs) {
+  Widget _inputLabel(BuildContext context, String text) {
+    return Padding(
+      padding: EdgeInsets.only(left: 8.w, bottom: 8.h),
+      child: Text(
+        text,
+        style: context.textTheme.labelMedium?.copyWith(
+          color: context.colorScheme.onSurface.withValues(alpha: 0.8),
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+
+  Widget _walletReadyChip(BuildContext context) {
+    final cs = context.colorScheme;
+    return Container(
+      margin: EdgeInsets.only(right: 8.w),
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+      decoration: BoxDecoration(
+        color: cs.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(100.r),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 16.w,
+            height: 16.w,
+            decoration: const BoxDecoration(
+              color: Color(0xFFEA4335),
+              shape: BoxShape.circle,
+            ),
+            child: Center(
+              child: Container(
+                width: 4.w,
+                height: 4.w,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(width: 6.w),
+          Text(
+            'Wallet Ready',
+            style: context.textTheme.labelSmall?.copyWith(
+              color: cs.onSurfaceVariant,
+              fontSize: 10.sp,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ─── Private extracted widgets ─────────────────────────────────────────────
+
+class _HeaderBranding extends StatelessWidget {
+  const _HeaderBranding({required this.typography, required this.cs});
+  final TextTheme typography;
+  final ColorScheme cs;
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       children: [
         Text(
           'e7gzz',
-          style: tt.displaySmall?.copyWith(
+          style: typography.displaySmall?.copyWith(
             color: cs.primary,
             fontWeight: FontWeight.w900,
             letterSpacing: -2,
@@ -295,7 +386,7 @@ class _SignupScreenState extends State<SignupScreen> {
         SizedBox(height: AppSpacing.xs.h),
         Text(
           'auth.join_arena'.tr(),
-          style: tt.headlineSmall?.copyWith(
+          style: typography.headlineSmall?.copyWith(
             color: cs.onSurface,
             fontWeight: FontWeight.bold,
           ),
@@ -304,31 +395,50 @@ class _SignupScreenState extends State<SignupScreen> {
         Text(
           'auth.join_arena_subtitle'.tr(),
           textAlign: TextAlign.center,
-          style: tt.bodyMedium?.copyWith(color: cs.onSurfaceVariant),
+          style: typography.bodyMedium?.copyWith(color: cs.onSurfaceVariant),
         ),
       ],
     );
   }
+}
 
-  Widget roleSelectionHeader(TextTheme tt, ColorScheme cs) {
+class _RoleSelectionHeader extends StatelessWidget {
+  const _RoleSelectionHeader({required this.typography, required this.cs});
+  final TextTheme typography;
+  final ColorScheme cs;
+
+  @override
+  Widget build(BuildContext context) {
     return Text(
       'auth.select_role'.tr().toUpperCase(),
-      style: tt.labelSmall?.copyWith(
+      style: typography.labelSmall?.copyWith(
         color: cs.onSurfaceVariant,
         fontWeight: FontWeight.w900,
         letterSpacing: 2,
       ),
     );
   }
+}
 
-  Widget roleCard({
-    required String role,
-    required String title,
-    required String subtitle,
-    required IconData icon,
-    required bool isSelected,
-    required VoidCallback onTap,
-  }) {
+class _RoleCard extends StatelessWidget {
+  const _RoleCard({
+    required this.role,
+    required this.title,
+    required this.subtitle,
+    required this.icon,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  final String role;
+  final String title;
+  final String subtitle;
+  final IconData icon;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
     final cs = context.colorScheme;
     final typography = context.textTheme;
 
@@ -418,63 +528,6 @@ class _SignupScreenState extends State<SignupScreen> {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget inputLabel(String text) {
-    return Padding(
-      padding: EdgeInsets.only(left: 8.w, bottom: 8.h),
-      child: Text(
-        text,
-        style: context.textTheme.labelMedium?.copyWith(
-          color: context.colorScheme.onSurface.withValues(alpha: 0.8),
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
-  }
-
-  Widget walletReadyChip() {
-    final cs = context.colorScheme;
-    return Container(
-      margin: EdgeInsets.only(right: 8.w),
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
-      decoration: BoxDecoration(
-        color: cs.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(100.r),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 16.w,
-            height: 16.w,
-            decoration: const BoxDecoration(
-              color: Color(0xFFEA4335),
-              shape: BoxShape.circle,
-            ),
-            child: Center(
-              child: Container(
-                width: 4.w,
-                height: 4.w,
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                ),
-              ),
-            ),
-          ),
-          SizedBox(width: 6.w),
-          Text(
-            'Wallet Ready',
-            style: context.textTheme.labelSmall?.copyWith(
-              color: cs.onSurfaceVariant,
-              fontSize: 10.sp,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
       ),
     );
   }

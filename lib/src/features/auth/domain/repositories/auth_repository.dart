@@ -17,7 +17,7 @@ abstract class AuthRepository {
     required String email,
     required String password,
     required String phone,
-    String? role,
+    required String role,
   });
 
   /// Send a password reset email

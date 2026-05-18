@@ -43,6 +43,7 @@ class OwnerCubit extends Cubit<OwnerState> {
         stats: finalStats,
         myPitches: finalPitches,
         errorMessage: error,
+        refreshKey: DateTime.now().millisecondsSinceEpoch.toString(),
       ),
     );
   }
@@ -51,8 +52,13 @@ class OwnerCubit extends Cubit<OwnerState> {
     final result = await repository.getOwnerPitches();
     result.fold(
       (failure) => emit(state.copyWith(errorMessage: failure.message)),
-      (pitches) =>
-          emit(state.copyWith(myPitches: pitches, status: OwnerStatus.success)),
+      (pitches) => emit(
+        state.copyWith(
+          myPitches: pitches,
+          status: OwnerStatus.success,
+          refreshKey: DateTime.now().millisecondsSinceEpoch.toString(),
+        ),
+      ),
     );
   }
 

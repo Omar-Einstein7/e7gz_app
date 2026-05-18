@@ -9,6 +9,7 @@ class OwnerState extends Equatable {
   final List<Pitch> myPitches;
   final String? errorMessage;
   final int selectedTab;
+  final String refreshKey;
 
   const OwnerState({
     this.status = OwnerStatus.initial,
@@ -16,6 +17,7 @@ class OwnerState extends Equatable {
     this.myPitches = const [],
     this.errorMessage,
     this.selectedTab = 0,
+    this.refreshKey = '',
   });
 
   OwnerState copyWith({
@@ -25,6 +27,7 @@ class OwnerState extends Equatable {
     String? errorMessage,
     bool clearError = false,
     int? selectedTab,
+    String? refreshKey,
   }) {
     return OwnerState(
       status: status ?? this.status,
@@ -32,6 +35,7 @@ class OwnerState extends Equatable {
       myPitches: myPitches ?? this.myPitches,
       errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
       selectedTab: selectedTab ?? this.selectedTab,
+      refreshKey: refreshKey ?? this.refreshKey,
     );
   }
 
@@ -42,5 +46,6 @@ class OwnerState extends Equatable {
     myPitches,
     errorMessage,
     selectedTab,
+    refreshKey,
   ];
 }
