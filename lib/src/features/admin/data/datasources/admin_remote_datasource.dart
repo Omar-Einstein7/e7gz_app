@@ -252,17 +252,26 @@ class AdminRemoteDataSource {
       }
 
       AppLogger.info('🚀 Sending PUT request to pitches/$id');
-      final response = await _dio.put('pitches/$id', data: data, options: null);
+      final response = await _dio.put(
+        'pitches/$id',
+        data: data,
+        options: Options(
+          sendTimeout: const Duration(seconds: 30),
+          receiveTimeout: const Duration(seconds: 30),
+        ),
+      );
       AppLogger.info('✅ PUT response received: ${response.statusCode}');
 
-      return response.statusCode == 200 || response.statusCode == 204;
+      return response.statusCode == 200 ||
+          response.statusCode == 201 ||
+          response.statusCode == 204;
     } catch (e) {
       if (e is DioException) {
         AppLogger.error(
-          'Failed to update pitch: ${e.response?.data ?? e.message}',
+          'Failed to update pitch (Dio): ${e.response?.data ?? e.message}',
         );
       } else {
-        AppLogger.error('Failed to update pitch: $e');
+        AppLogger.error('Failed to update pitch (Generic): $e');
       }
       return false;
     }

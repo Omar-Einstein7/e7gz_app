@@ -220,12 +220,15 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AdminCubit, AdminState>(
-      listenWhen: (previous, current) =>
-          previous.isMutating != current.isMutating ||
-          previous.mutationSuccess != current.mutationSuccess,
       listener: (context, state) {
+        AppLogger.info(
+          'AdminAddPitchScreen Listener: isMutating=${state.isMutating}, success=${state.mutationSuccess}',
+        );
         if (!state.isMutating) {
           if (state.mutationSuccess) {
+            AppLogger.info(
+              'AdminAddPitchScreen: Success detected, popping screen...',
+            );
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(
@@ -234,10 +237,15 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
                       : 'Pitch added successfully!',
                 ),
                 backgroundColor: AdminColors.accent,
+                duration: const Duration(seconds: 2),
               ),
             );
-            context.pop(true);
+            // Use Navigator.pop for compatibility across different push methods
+            Navigator.of(context).pop(true);
           } else if (state.mutationError != null) {
+            AppLogger.error(
+              'AdminAddPitchScreen: Error detected: ${state.mutationError}',
+            );
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.mutationError!),

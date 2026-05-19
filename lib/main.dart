@@ -1,9 +1,12 @@
+import 'package:flutter/rendering.dart';
+
 import 'src/imports/core_imports.dart';
 import 'src/imports/packages_imports.dart';
 import 'src/app.dart';
 import 'src/di/injection_container.dart';
 
 Future<void> main() async {
+  // debugRepaintRainbowEnabled = true;
   final WidgetsBinding widgetsBinding =
       WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);

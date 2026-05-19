@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:e7gz/src/features/admin/domain/repositories/admin_repository.dart';
 import 'package:e7gz/src/features/admin/presentation/cubit/admin_state.dart';
+import 'package:e7gz/src/imports/core_imports.dart';
 
 class AdminCubit extends Cubit<AdminState> {
   final AdminRepository _repository;
@@ -203,15 +204,26 @@ class AdminCubit extends Cubit<AdminState> {
       multipleImageBytes: multipleImageBytes,
       multipleFileNames: multipleFileNames,
     );
+
+    AppLogger.info(
+      'AdminCubit: updatePitch result received. Success: ${result.isRight()}',
+    );
+
     result.fold(
-      (failure) => emit(
-        state.copyWith(
-          isMutating: false,
-          mutationSuccess: false,
-          mutationError: failure.message,
-        ),
-      ),
+      (failure) {
+        AppLogger.error('AdminCubit: updatePitch failed: ${failure.message}');
+        emit(
+          state.copyWith(
+            isMutating: false,
+            mutationSuccess: false,
+            mutationError: failure.message,
+          ),
+        );
+      },
       (success) {
+        AppLogger.info(
+          'AdminCubit: updatePitch success! Emitting new state...',
+        );
         emit(state.copyWith(isMutating: false, mutationSuccess: true));
       },
     );

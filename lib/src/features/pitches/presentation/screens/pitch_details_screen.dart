@@ -1,3 +1,4 @@
+import 'package:e7gz/src/features/pitches/domain/entities/pitch.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -62,220 +63,313 @@ class _PitchDetailsView extends StatelessWidget {
           return CustomScrollView(
             physics: const BouncingScrollPhysics(),
             slivers: [
-              _HeaderSection(pitch: pitch),
-              SliverPadding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: AppSpacing.lg.w,
-                  vertical: AppSpacing.xl.h,
+              // 1. Custom Header that respects the 50% limit
+              SliverPersistentHeader(
+                pinned: true,
+                delegate: _PitchHeaderDelegate(
+                  pitch: pitch,
+                  expandedHeight: 0.8.sh,
+                  collapsedHeight: 0.5.sh,
+                  topPadding: MediaQuery.paddingOf(context).top,
                 ),
-                sliver: SliverList(
-                  delegate: SliverChildListDelegate([
-                    _AmenitiesSection(amenities: pitch.amenities)
-                        .animate()
-                        .fadeIn(duration: 600.ms, delay: 200.ms)
-                        .moveY(begin: 20, end: 0),
-                    SizedBox(height: AppSpacing.xxl.h),
-                    _ShiftsSection(pitch: pitch)
-                        .animate()
-                        .fadeIn(duration: 600.ms, delay: 400.ms)
-                        .moveY(begin: 20, end: 0),
-                    SizedBox(height: AppSpacing.xxl.h),
-                    _LocationSection(pitch: pitch)
-                        .animate()
-                        .fadeIn(duration: 600.ms, delay: 600.ms)
-                        .moveY(begin: 20, end: 0),
-                    SizedBox(height: AppSpacing.xxl.h),
-                    _AboutSection(description: pitch.description)
-                        .animate()
-                        .fadeIn(duration: 600.ms, delay: 800.ms)
-                        .moveY(begin: 20, end: 0),
-                    SizedBox(height: 140.h),
-                  ]),
+              ),
+
+              // 2. The "Sheet-like" Content
+              SliverToBoxAdapter(
+                child: Container(
+                  decoration: BoxDecoration(color: cs.background),
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      left: AppSpacing.lg.w,
+                      right: AppSpacing.lg.w,
+                      bottom: AppSpacing.xl.h,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        _BookingHeaderRow(pitch: pitch),
+                        SizedBox(height: AppSpacing.xl.h),
+                        Divider(color: cs.outlineVariant, height: 1),
+                        SizedBox(height: AppSpacing.xl.h),
+                        _AmenitiesSection(amenities: pitch.amenities)
+                            .animate()
+                            .fadeIn(duration: 600.ms, delay: 200.ms)
+                            .moveY(begin: 20, end: 0),
+                        SizedBox(height: AppSpacing.xxl.h),
+                        _ShiftsSection(pitch: pitch)
+                            .animate()
+                            .fadeIn(duration: 600.ms, delay: 400.ms)
+                            .moveY(begin: 20, end: 0),
+                        SizedBox(height: AppSpacing.xxl.h),
+                        _LocationSection(pitch: pitch)
+                            .animate()
+                            .fadeIn(duration: 600.ms, delay: 600.ms)
+                            .moveY(begin: 20, end: 0),
+                        SizedBox(height: AppSpacing.xxl.h),
+                        _AboutSection(description: pitch.description)
+                            .animate()
+                            .fadeIn(duration: 600.ms, delay: 800.ms)
+                            .moveY(begin: 20, end: 0),
+                        SizedBox(height: 140.h),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ],
           );
         },
       ),
-      bottomSheet: _BookingBottomSheet(),
     );
   }
 }
 
-class _HeaderSection extends StatefulWidget {
+class _PitchHeaderDelegate extends SliverPersistentHeaderDelegate {
   final dynamic pitch;
-  const _HeaderSection({required this.pitch});
+  final double expandedHeight;
+  final double collapsedHeight;
+  final double topPadding;
+
+  _PitchHeaderDelegate({
+    required this.pitch,
+    required this.expandedHeight,
+    required this.collapsedHeight,
+    required this.topPadding,
+  });
 
   @override
-  State<_HeaderSection> createState() => _HeaderSectionState();
+  double get minExtent => collapsedHeight;
+  @override
+  double get maxExtent => expandedHeight;
+
+  @override
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
+    final pc = context.pitchColors;
+    final cs = context.colorScheme;
+    final double percent = (shrinkOffset / (maxExtent - minExtent)).clamp(
+      0.0,
+      1.0,
+    );
+
+    // Zoom/Parallax calculation
+    final double imageScale = 1.0 + (percent * 0.1);
+
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        // 1. Background Image
+        Transform.scale(
+          scale: imageScale,
+          child: Hero(
+            tag: 'pitch_image_${pitch.id}',
+            child: pitch.images.isNotEmpty
+                ? ImagePageView(images: pitch.images, opacity: 1.0 - percent)
+                : AppCachedImage(
+                    imageUrl:
+                        'https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80',
+                    fit: BoxFit.cover,
+                  ),
+          ),
+        ),
+
+        // 2. Gradient
+        IgnorePointer(
+          child: DecoratedBox(
+            decoration: BoxDecoration(gradient: pc.heroGradient),
+          ),
+        ),
+
+        // 4. Venue Card (Moves up with the header)
+        Positioned(
+          bottom: 40.h, // Adjusted to sit above the white lip
+          left: AppSpacing.md.w,
+          right: AppSpacing.md.w,
+          child: ClipRRect(
+            borderRadius: AppRadius.bxxl.r,
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+              child: Container(
+                padding: EdgeInsets.all(AppSpacing.lg.w),
+                decoration: BoxDecoration(
+                  color: pc.glassSurface,
+                  borderRadius: AppRadius.bxxl.r,
+                  border: Border.all(color: pc.glassBorder, width: 1.5),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _PremiumBadge().animate().scale(
+                      delay: 400.ms,
+                      curve: Curves.elasticOut,
+                    ),
+                    SizedBox(height: AppSpacing.md.h),
+                    Text(
+                      pitch.name,
+                      style: context.textTheme.headlineLarge?.copyWith(
+                        color: cs.onSurface,
+                        fontWeight: FontWeight.w800,
+                        height: 1.1,
+                      ),
+                    ),
+                    SizedBox(height: AppSpacing.sm.h),
+                    Row(
+                      children: [
+                        Icon(
+                          IconsaxPlusBold.location,
+                          color: pc.accentGreen,
+                          size: 18,
+                        ),
+                        SizedBox(width: AppSpacing.xs.w),
+                        Expanded(
+                          child: Text(
+                            pitch.location.city,
+                            style: context.textTheme.bodyLarge?.copyWith(
+                              color: cs.onSurfaceVariant,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                        _RatingBadge(
+                          rating: pitch.rating,
+                          reviews: pitch.reviewsCount,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ).animate().fadeIn(delay: 300.ms).moveY(begin: 30, end: 0),
+        ),
+
+        // 5. White "Lip" (Seamless connection to body)
+        Positioned(
+          bottom: -1, // Overlap slightly to prevent pixel lines
+          left: 0,
+          right: 0,
+          child: Container(
+            height: 32.h,
+            decoration: BoxDecoration(
+              color: cs.background,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(32.r)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, -5),
+                ),
+              ],
+            ),
+          ),
+        ),
+
+        // 5. Back Button (Always at top)
+        Positioned(
+          top: topPadding + 8,
+          left: 16.w,
+          child: _CircleActionButton(
+            icon: Icons.arrow_back,
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ),
+
+        // 6. Right Actions
+        Positioned(
+          top: topPadding + 8,
+          right: 16.w,
+          child: Row(
+            children: [
+              _CircleActionButton(
+                icon: IconsaxPlusLinear.share,
+                onPressed: () {},
+              ),
+              _CircleActionButton(
+                icon: IconsaxPlusLinear.heart,
+                onPressed: () {},
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  @override
+  bool shouldRebuild(covariant _PitchHeaderDelegate oldDelegate) => true;
 }
 
-class _HeaderSectionState extends State<_HeaderSection> {
-  final PageController _pageController = PageController();
+// Separate stateful widget for the PageView to prevent rebuild issues
+class ImagePageView extends StatefulWidget {
+  final List<String> images;
+  final double opacity;
+  const ImagePageView({super.key, required this.images, required this.opacity});
+
+  @override
+  State<ImagePageView> createState() => _ImagePageViewState();
+}
+
+class _ImagePageViewState extends State<ImagePageView> {
+  final PageController _controller = PageController();
 
   @override
   void dispose() {
-    _pageController.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final pc = context.pitchColors;
-    final cs = context.colorScheme;
-    final pitch = widget.pitch;
-
-    return SliverAppBar(
-      expandedHeight: 500.h,
-      backgroundColor: Colors.transparent,
-      elevation: 0,
-      pinned: true,
-      stretch: true,
-      leading: Container(
-        margin: EdgeInsets.all(AppSpacing.sm.w),
-        decoration: BoxDecoration(
-          color: Colors.black.withValues(alpha: 0.3),
-          shape: BoxShape.circle,
+    return Stack(
+      children: [
+        PageView.builder(
+          controller: _controller,
+          itemCount: widget.images.length,
+          itemBuilder: (context, index) {
+            return AppCachedImage(
+              imageUrl: widget.images[index],
+              fit: BoxFit.cover,
+            );
+          },
         ),
-        child: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white, size: 20),
-          onPressed: () => context.pop(),
-        ),
-      ),
-      actions: [
-        _CircleActionButton(icon: IconsaxPlusLinear.share, onPressed: () {}),
-        _CircleActionButton(icon: IconsaxPlusLinear.heart, onPressed: () {}),
-        SizedBox(width: AppSpacing.md.w),
+        if (widget.images.length > 1)
+          Opacity(
+            opacity: widget.opacity,
+            child: Positioned(
+              bottom: 155.h, // Positioned within the PageView's space
+              left: 0,
+              right: 0,
+              child: Center(
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 12.w,
+                    vertical: 8.h,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.3),
+                    borderRadius: BorderRadius.circular(20.r),
+                  ),
+                  child: SmoothPageIndicator(
+                    controller: _controller,
+                    count: widget.images.length,
+                    effect: ExpandingDotsEffect(
+                      dotHeight: 6.h,
+                      dotWidth: 6.w,
+                      activeDotColor: Colors.white,
+                      dotColor: Colors.white.withOpacity(0.5),
+                      expansionFactor: 4,
+                      spacing: 8.w,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
       ],
-      flexibleSpace: FlexibleSpaceBar(
-        stretchModes: const [
-          StretchMode.zoomBackground,
-          StretchMode.blurBackground,
-        ],
-        background: Stack(
-          fit: StackFit.expand,
-          children: [
-            Hero(
-              tag: 'pitch_image_${pitch.id}',
-              child: pitch.images.isNotEmpty
-                  ? PageView.builder(
-                      controller: _pageController,
-                      itemCount: pitch.images.length,
-                      itemBuilder: (context, index) {
-                        return AppCachedImage(
-                          imageUrl: pitch.images[index],
-                          fit: BoxFit.cover,
-                        );
-                      },
-                    )
-                  : AppCachedImage(
-                      imageUrl:
-                          'https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80',
-                      fit: BoxFit.cover,
-                    ),
-            ),
-            if (pitch.images.length > 1)
-              Positioned(
-                bottom: 180.h,
-                left: 0,
-                right: 0,
-                child: Center(
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 12.w,
-                      vertical: 8.h,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.3),
-                      borderRadius: BorderRadius.circular(20.r),
-                    ),
-                    child: SmoothPageIndicator(
-                      controller: _pageController,
-                      count: pitch.images.length,
-                      effect: ExpandingDotsEffect(
-                        dotHeight: 6.h,
-                        dotWidth: 6.w,
-                        activeDotColor: Colors.white,
-                        dotColor: Colors.white.withOpacity(0.5),
-                        expansionFactor: 4,
-                        spacing: 8.w,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            // Sophisticated Gradient Overlay from PitchColors extension
-            IgnorePointer(
-              child: DecoratedBox(
-                decoration: BoxDecoration(gradient: pc.heroGradient),
-              ),
-            ),
-            // Venue Info Card with Glassmorphism
-            Positioned(
-              bottom: AppSpacing.xl.h,
-              left: AppSpacing.md.w,
-              right: AppSpacing.md.w,
-              child: ClipRRect(
-                borderRadius: AppRadius.bxxl.r,
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-                  child: Container(
-                    padding: EdgeInsets.all(AppSpacing.lg.w),
-                    decoration: BoxDecoration(
-                      color: pc.glassSurface,
-                      borderRadius: AppRadius.bxxl.r,
-                      border: Border.all(color: pc.glassBorder, width: 1.5),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        _PremiumBadge().animate().scale(
-                          delay: 400.ms,
-                          curve: Curves.elasticOut,
-                        ),
-                        SizedBox(height: AppSpacing.md.h),
-                        Text(
-                          pitch.name,
-                          style: context.textTheme.headlineLarge?.copyWith(
-                            color: cs.onSurface,
-                            fontWeight: FontWeight.w800,
-                            height: 1.1,
-                          ),
-                        ),
-                        SizedBox(height: AppSpacing.sm.h),
-                        Row(
-                          children: [
-                            Icon(
-                              IconsaxPlusBold.location,
-                              color: pc.accentGreen,
-                              size: 18,
-                            ),
-                            SizedBox(width: AppSpacing.xs.w),
-                            Expanded(
-                              child: Text(
-                                pitch.location.city,
-                                style: context.textTheme.bodyLarge?.copyWith(
-                                  color: cs.onSurfaceVariant,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                            _RatingBadge(
-                              rating: pitch.rating,
-                              reviews: pitch.reviewsCount,
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ).animate().fadeIn(delay: 300.ms).moveY(begin: 30, end: 0),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
@@ -678,93 +772,66 @@ class _SectionHeader extends StatelessWidget {
   }
 }
 
-class _BookingBottomSheet extends StatelessWidget {
+class _BookingHeaderRow extends StatelessWidget {
+  final Pitch pitch;
+  const _BookingHeaderRow({required this.pitch});
+
   @override
   Widget build(BuildContext context) {
     final pc = context.pitchColors;
     final cs = context.colorScheme;
 
-    return BlocBuilder<PitchDetailCubit, PitchDetailState>(
-      builder: (context, state) {
-        final pitch = state.pitch;
-        if (pitch == null) return const SizedBox.shrink();
-
-        return ClipRRect(
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-            child: Container(
-              padding: EdgeInsets.fromLTRB(
-                AppSpacing.xl.w,
-                AppSpacing.md.h,
-                AppSpacing.xl.w,
-                AppSpacing.xxl.h,
-              ),
-              decoration: BoxDecoration(
-                color: pc.glassSurface.withValues(alpha: 0.8),
-                borderRadius: BorderRadius.vertical(
-                  top: Radius.circular(AppRadius.xxl.r),
-                ),
-                border: Border.all(color: pc.glassBorder),
-              ),
-              child: Row(
+    return Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                  Text(
+                    'pitch_details.price_per_hour'.tr().toUpperCase(),
+                    style: context.textTheme.labelSmall?.copyWith(
+                      color: cs.onSurfaceVariant,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 1.2,
+                    ),
+                  ),
+                  SizedBox(height: AppSpacing.xs.h),
+                  RichText(
+                    text: TextSpan(
+                      text: '${pitch.pricePerHour.toInt()} ',
+                      style: context.textTheme.titleMedium?.copyWith(
+                        color: cs.onSurface,
+                        fontWeight: FontWeight.w900,
+                      ),
                       children: [
-                        Text(
-                          'pitch_details.price_per_hour'.tr().toUpperCase(),
-                          style: context.textTheme.labelSmall?.copyWith(
-                            color: cs.onSurfaceVariant,
-                            fontWeight: FontWeight.w700,
-                            letterSpacing: 1.2,
-                          ),
-                        ),
-                        SizedBox(height: AppSpacing.xs.h),
-                        RichText(
-                          text: TextSpan(
-                            text: '${pitch.pricePerHour.toInt()} ',
-                            style: context.textTheme.titleMedium?.copyWith(
-                              color: cs.onSurface,
-                              fontWeight: FontWeight.w900,
-                            ),
-                            children: [
-                              TextSpan(
-                                text: 'pitch_details.egp'.tr(),
-                                style: context.textTheme.labelMedium?.copyWith(
-                                  color: pc.accentGreen,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
+                        TextSpan(
+                          text: 'pitch_details.egp'.tr(),
+                          style: context.textTheme.labelMedium?.copyWith(
+                            color: pc.accentGreen,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(width: AppSpacing.md.w),
-                  _BookNowButton(
-                    onPressed: () {
-                      HapticFeedback.mediumImpact();
-                      context.push(
-                        AppRoutes.bookingSlots.replaceFirst(':id', pitch.id),
-                        extra: pitch,
-                      );
-                    },
-                  ),
                 ],
               ),
             ),
-          ),
-        ).animate().slideY(
-          begin: 1,
-          end: 0,
-          duration: 600.ms,
-          curve: Curves.easeOutCubic,
-        );
-      },
-    );
+            SizedBox(width: AppSpacing.md.w),
+            _BookNowButton(
+              onPressed: () {
+                HapticFeedback.mediumImpact();
+                context.push(
+                  AppRoutes.bookingSlots.replaceFirst(':id', pitch.id),
+                  extra: pitch,
+                );
+              },
+            ),
+          ],
+        )
+        .animate()
+        .fadeIn(duration: 600.ms, delay: 100.ms)
+        .moveY(begin: 10, end: 0);
   }
 }
 
