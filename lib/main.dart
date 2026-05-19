@@ -1,8 +1,8 @@
-
 import 'src/imports/core_imports.dart';
 import 'src/imports/packages_imports.dart';
 import 'src/app.dart';
 import 'src/di/injection_container.dart';
+import 'src/services/notification_service.dart';
 
 Future<void> main() async {
   // debugRepaintRainbowEnabled = true;
@@ -15,6 +15,9 @@ Future<void> main() async {
 
   // Register all dependencies with get_it (sync — no async registrations)
   await initDependencies();
+
+  // Initialize Local Notifications
+  await sl<NotificationService>().init();
 
   // Attach interceptors AFTER dependencies are registered
   AppConfig.attachInterceptors(

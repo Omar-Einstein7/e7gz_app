@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
 import 'package:easy_localization/easy_localization.dart';
+import '../widgets/widgets.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -43,29 +44,20 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.theme.colorScheme;
-    final tt = context.theme.textTheme;
+    final colors = context.colors;
+    final typography = context.typography;
 
     return Scaffold(
- 
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
+          icon: Icon(IconsaxPlusLinear.arrow_left, color: colors.onSurface),
+          onPressed: () => context.pop(),
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.help_outline, color: Color(0xFFBCC7DE)),
-            onPressed: () {},
-          ),
-          SizedBox(width: 8.w),
-        ],
       ),
       body: Stack(
         children: [
-          // Background Glow
           Positioned(
             top: -100.h,
             right: -100.w,
@@ -73,76 +65,54 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               width: 400.w,
               height: 400.h,
               decoration: BoxDecoration(
-                color: colors.primary.withValues(alpha: 0.05),
+                color: colors.primary.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 100, sigmaY: 100),
+                filter: ImageFilter.blur(sigmaX: 120, sigmaY: 120),
                 child: Container(color: Colors.transparent),
               ),
             ),
           ),
-
           SafeArea(
             child: SingleChildScrollView(
-              padding: EdgeInsets.symmetric(horizontal: 32.w),
+              padding: EdgeInsets.symmetric(horizontal: 24.w),
               child: Column(
                 children: [
-                  SizedBox(height: 20.h),
-                  // Brand
-                  Text(
-                    'e7gzz',
-                    style: tt.displaySmall?.copyWith(
-                      color: colors.primary,
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: -2,
-                    ),
-                  ),
-
+                  const HeaderBranding(),
                   SizedBox(height: 48.h),
-
-                  // Icon
                   Container(
                     width: 80.w,
                     height: 80.w,
                     decoration: BoxDecoration(
-                      color: const Color(0xFF171F33),
+                      color: colors.primary.withValues(alpha: 0.1),
                       shape: BoxShape.circle,
                     ),
-                    child: Center(
-                      child: Icon(
-                        IconsaxPlusBold.refresh_circle,
-                        color: colors.primary,
-                        size: 40,
-                      ),
+                    child: Icon(
+                      IconsaxPlusBold.refresh_circle,
+                      color: colors.primary,
+                      size: 40,
                     ),
                   ),
-
                   SizedBox(height: 32.h),
-
-                  // Text
                   Text(
                     'auth.forgot_password_title'.tr(),
-                    style: tt.headlineMedium?.copyWith(
-                      color: Colors.white,
+                    style: typography.headlineMedium?.copyWith(
+                      color: colors.onSurface,
                       fontWeight: FontWeight.w900,
-                      fontSize: 32.sp,
                     ),
                   ),
                   SizedBox(height: 16.h),
                   Text(
                     "auth.forgot_desc".tr(),
                     textAlign: TextAlign.center,
-                    style: tt.bodyMedium?.copyWith(
-                      color: const Color(0xFFBCC7DE),
+                    style: typography.bodyMedium?.copyWith(
+                      color: colors.onSurfaceVariant,
                       height: 1.5,
                     ),
                   ),
-
                   SizedBox(height: 40.h),
-
-                  // Method Cards
-                  methodCard(
+                  _MethodCard(
                     method: ResetMethod.email,
                     title: 'auth.via_email'.tr(),
                     value: 'a***n@domain.com',
@@ -151,10 +121,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     onTap: () =>
                         setState(() => _selectedMethod = ResetMethod.email),
                   ),
-
                   SizedBox(height: 16.h),
-
-                  methodCard(
+                  _MethodCard(
                     method: ResetMethod.sms,
                     title: 'auth.via_sms'.tr(),
                     value: '010 **** 5567',
@@ -163,26 +131,24 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     onTap: () =>
                         setState(() => _selectedMethod = ResetMethod.sms),
                   ),
-
                   SizedBox(height: 40.h),
-
-                  // Verification Section
                   Container(
-                    padding: EdgeInsets.all(32.w),
+                    padding: EdgeInsets.all(24.w),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF131B2E),
-                      borderRadius: BorderRadius.circular(32.r),
+                      color: colors.surfaceContainerLow,
+                      borderRadius: AppRadius.bxxl.r,
+                      border: Border.all(color: colors.outlineVariant),
                     ),
                     child: Column(
                       children: [
                         Text(
                           'auth.enter_verification_code'.tr(),
-                          style: tt.titleLarge?.copyWith(
-                            color: Colors.white,
+                          style: typography.titleLarge?.copyWith(
+                            color: colors.onSurface,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(height: 12.h),
+                        SizedBox(height: 8.h),
                         Text(
                           'auth.sent_verification_code'.tr(
                             namedArgs: {
@@ -192,39 +158,30 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                             },
                           ),
                           textAlign: TextAlign.center,
-                          style: tt.bodySmall?.copyWith(
-                            color: const Color(
-                              0xFFBCC7DE,
-                            ).withValues(alpha: 0.7),
+                          style: typography.bodySmall?.copyWith(
+                            color: colors.onSurfaceVariant,
                           ),
                         ),
-
                         SizedBox(height: 32.h),
-
-                        // OTP Inputs
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: List.generate(6, (index) => otpBox(index)),
+                          children: List.generate(
+                            6,
+                            (index) => _otpBox(index, context),
+                          ),
                         ),
-
                         SizedBox(height: 40.h),
-
                         AppButton(
                           label: 'auth.verify_continue'.tr(),
                           isFullWidth: true,
                           height: ButtonSize.large,
                           suffixIcon: const Icon(Icons.arrow_forward),
-                          onPressed: () {
-                            // Proceed to new password
-                            _showNewPasswordSheet();
-                          },
+                          onPressed: () => _showNewPasswordSheet(context),
                         ),
-
                         SizedBox(height: 24.h),
-
                         Text(
                           'auth.resend_code'.tr(namedArgs: {'time': '00:59'}),
-                          style: tt.labelSmall?.copyWith(
+                          style: typography.labelSmall?.copyWith(
                             color: colors.primary,
                             fontWeight: FontWeight.bold,
                             letterSpacing: 1,
@@ -233,33 +190,18 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       ],
                     ),
                   ),
-
                   SizedBox(height: 48.h),
-
-                  // Back to Login
                   TextButton.icon(
                     onPressed: () => context.go(AppRoutes.login),
                     icon: const Icon(Icons.arrow_back, size: 16),
                     label: Text(
                       'auth.back_to_login'.tr(),
-                      style: tt.labelLarge?.copyWith(
-                        color: Colors.white,
+                      style: typography.labelLarge?.copyWith(
+                        color: colors.primary,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
-
-                  SizedBox(height: 16.h),
-
-                  Text(
-                    'PITCH READY SECURITY',
-                    style: tt.labelSmall?.copyWith(
-                      color: const Color(0xFFBCC7DE).withValues(alpha: 0.2),
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: 2,
-                    ),
-                  ),
-
                   SizedBox(height: 40.h),
                 ],
               ),
@@ -270,99 +212,15 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     );
   }
 
-  Widget methodCard({
-    required ResetMethod method,
-    required String title,
-    required String value,
-    required IconData icon,
-    required bool isSelected,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.all(24.w),
-        decoration: BoxDecoration(
-          color: const Color(0xFF171F33),
-          borderRadius: BorderRadius.circular(24.r),
-          border: Border.all(
-            color: isSelected
-                ? const Color(0xFF4BE277).withValues(alpha: 0.5)
-                : Colors.transparent,
-            width: 2,
-          ),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 48.w,
-              height: 48.w,
-              decoration: BoxDecoration(
-                color: const Color(0xFF4BE277).withValues(alpha: 0.1),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(icon, color: const Color(0xFF4BE277), size: 24),
-            ),
-            SizedBox(width: 16.w),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: context.theme.textTheme.titleMedium?.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    value,
-                    style: context.theme.textTheme.bodySmall?.copyWith(
-                      color: const Color(0xFFBCC7DE),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              width: 24.w,
-              height: 24.w,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: isSelected
-                      ? const Color(0xFF4BE277)
-                      : const Color(0xFF31394D),
-                  width: 2,
-                ),
-              ),
-              child: isSelected
-                  ? Center(
-                      child: Container(
-                        width: 12.w,
-                        height: 12.w,
-                        decoration: const BoxDecoration(
-                          color: Color(0xFF4BE277),
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                    )
-                  : null,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget otpBox(int index) {
+  Widget _otpBox(int index, BuildContext context) {
+    final colors = context.colors;
     return Container(
       width: 45.w,
       height: 56.h,
       decoration: BoxDecoration(
-        color: const Color(0xFF171F33),
+        color: colors.surfaceContainerHigh,
         borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: const Color(0xFF31394D), width: 1),
+        border: Border.all(color: colors.outlineVariant),
       ),
       child: TextField(
         controller: _otpControllers[index],
@@ -371,8 +229,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         keyboardType: TextInputType.number,
         maxLength: 1,
         onChanged: (v) => _onOtpChanged(v, index),
-        style: context.theme.textTheme.headlineSmall?.copyWith(
-          color: Colors.white,
+        style: context.typography.headlineSmall?.copyWith(
+          color: colors.onSurface,
           fontWeight: FontWeight.bold,
         ),
         decoration: const InputDecoration(
@@ -384,19 +242,22 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     );
   }
 
-  void _showNewPasswordSheet() {
+  void _showNewPasswordSheet(BuildContext context) {
+    final colors = context.colors;
+    final typography = context.typography;
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: const Color(0xFF131B2E),
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+      backgroundColor: colors.surfaceContainerLow,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(32.r)),
       ),
       builder: (context) => Padding(
         padding: EdgeInsets.fromLTRB(
-          32.w,
+          24.w,
           32.h,
-          32.w,
+          24.w,
           MediaQuery.of(context).viewInsets.bottom + 48.h,
         ),
         child: Column(
@@ -405,62 +266,45 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           children: [
             Text(
               'auth.set_new_password'.tr(),
-              style: context.theme.textTheme.headlineSmall?.copyWith(
-                color: Colors.white,
+              style: typography.headlineSmall?.copyWith(
+                color: colors.onSurface,
                 fontWeight: FontWeight.bold,
               ),
             ),
             SizedBox(height: 8.h),
             Text(
               'auth.set_new_password_desc'.tr(),
-              style: context.theme.textTheme.bodySmall?.copyWith(
-                color: const Color(0xFFBCC7DE),
+              style: typography.bodySmall?.copyWith(
+                color: colors.onSurfaceVariant,
               ),
             ),
             SizedBox(height: 32.h),
-
-            Text(
-              'auth.new_password_label'.tr().toUpperCase(),
-              style: const TextStyle(
-                color: Color(0xFFBCC7DE),
-                fontSize: 10,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 1,
-              ),
+            const AuthInputLabel(
+              label: 'auth.new_password_label',
+              isCompact: true,
             ),
-            SizedBox(height: 8.h),
             const AppTextField(
               hint: '••••••••',
               obscureText: true,
               prefixIcon: Icon(IconsaxPlusBold.lock),
             ),
-
             SizedBox(height: 24.h),
-
-            Text(
-              'auth.confirm_new_password_label'.tr().toUpperCase(),
-              style: const TextStyle(
-                color: Color(0xFFBCC7DE),
-                fontSize: 10,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 1,
-              ),
+            const AuthInputLabel(
+              label: 'auth.confirm_new_password_label',
+              isCompact: true,
             ),
-            SizedBox(height: 8.h),
             const AppTextField(
               hint: '••••••••',
               obscureText: true,
               prefixIcon: Icon(IconsaxPlusBold.lock),
             ),
-
             SizedBox(height: 40.h),
-
             AppButton(
               label: 'auth.reset_password_button'.tr(),
               isFullWidth: true,
               height: ButtonSize.large,
               onPressed: () {
-                Navigator.pop(context); // Close sheet
+                Navigator.pop(context);
                 context.go(AppRoutes.login);
               },
             ),
@@ -471,3 +315,77 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   }
 }
 
+class _MethodCard extends StatelessWidget {
+  final ResetMethod method;
+  final String title;
+  final String value;
+  final IconData icon;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  const _MethodCard({
+    required this.method,
+    required this.title,
+    required this.value,
+    required this.icon,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final typography = context.typography;
+
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.all(20.w),
+        decoration: BoxDecoration(
+          color: colors.surfaceContainerLow,
+          borderRadius: BorderRadius.circular(24.r),
+          border: Border.all(
+            color: isSelected ? colors.primary : colors.outlineVariant,
+            width: isSelected ? 2 : 1,
+          ),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 48.w,
+              height: 48.w,
+              decoration: BoxDecoration(
+                color: colors.primary.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(icon, color: colors.primary, size: 24),
+            ),
+            SizedBox(width: 16.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: typography.titleMedium?.copyWith(
+                      color: colors.onSurface,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    value,
+                    style: typography.bodySmall?.copyWith(
+                      color: colors.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            if (isSelected)
+              Icon(IconsaxPlusBold.tick_circle, color: colors.primary),
+          ],
+        ),
+      ),
+    );
+  }
+}

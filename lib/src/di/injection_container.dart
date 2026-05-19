@@ -17,6 +17,7 @@ import '../services/secure_storage_service.dart';
 import '../services/storage_service.dart';
 import '../services/url_launcher_service.dart';
 import '../services/version_update_service.dart';
+import '../services/notification_service.dart';
 
 // ── Auth ─────────────────────────────────────────────────────────────────────
 import '../features/auth/domain/repositories/auth_repository.dart';
@@ -140,6 +141,7 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton<UrlLauncherService>(() => UrlLauncherService());
   sl.registerLazySingleton<DeviceInfoService>(() => DeviceInfoService());
   sl.registerLazySingleton<VersionUpdateService>(() => VersionUpdateService());
+  sl.registerLazySingleton<NotificationService>(() => NotificationService());
 
   // ════════════════════════════════════════════════════════════════════════════
   // ── 3. DATA SOURCES ───────────────────────────────────────────────────────

@@ -28,6 +28,8 @@ class MockData {
       openingTime: '08:00',
       closingTime: '00:00',
       slotDurationMinutes: 60,
+      morningPrice: 350,
+      nightPrice: 450,
     ),
     const Pitch(
       id: '2',
@@ -54,6 +56,8 @@ class MockData {
       openingTime: '09:00',
       closingTime: '02:00',
       slotDurationMinutes: 60,
+      morningPrice: 400,
+      nightPrice: 500,
     ),
     const Pitch(
       id: '3',
@@ -79,6 +83,8 @@ class MockData {
       openingTime: '07:00',
       closingTime: '23:00',
       slotDurationMinutes: 60,
+      morningPrice: 250,
+      nightPrice: 350,
     ),
   ];
 

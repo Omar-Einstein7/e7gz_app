@@ -1,10 +1,8 @@
 import 'package:e7gz/src/features/auth/presentation/providers/session_cubit.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
-import 'package:e7gz/src/theme/cubit/theme_cubit.dart';
 import 'package:easy_localization/easy_localization.dart';
-import '../widgets/profile_tile.dart';
-import '../widgets/support_action.dart';
+import '../widgets/widgets.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -31,10 +29,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
         return Scaffold(
           appBar: AppBar(
-            // leading: IconButton(
-            //   icon: Icon(IconsaxPlusLinear.menu_1, color: colors.onSurface),
-            //   onPressed: () => Scaffold.of(context).openDrawer(),
-            // ),
             title: Text(
               'e7gzz',
               style: typography.headlineSmall?.copyWith(
@@ -42,147 +36,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 fontWeight: FontWeight.w900,
               ),
             ),
-            // actions: [
-            //   Padding(
-            //     padding: EdgeInsets.only(right: AppSpacing.md.w),
-            //     child: CircleAvatar(
-            //       radius: 18.r,
-            //       backgroundColor: colors.surfaceContainerHigh,
-            //       child: Icon(
-            //         IconsaxPlusBold.user,
-            //         size: 20,
-            //         color: colors.onSurfaceVariant,
-            //       ),
-            //     ),
-            //   ),
-            // ],
           ),
           body: SingleChildScrollView(
             padding: EdgeInsets.all(AppSpacing.lg.w),
             child: Column(
               children: [
-                // Avatar
-                Center(
-                  child: Stack(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: colors.outlineVariant,
-                            width: 2,
-                          ),
-                        ),
-                        child: CircleAvatar(
-                          radius: 60.r,
-                          backgroundImage: NetworkImage(photoUrl),
-                        ),
-                      ),
-                      Positioned(
-                        bottom: 4,
-                        right: 4,
-                        child: Container(
-                          padding: const EdgeInsets.all(6),
-                          decoration: BoxDecoration(
-                            color: colors.primary,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(
-                            Icons.check,
-                            color: colors.onPrimary,
-                            size: 16,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                SizedBox(height: AppSpacing.md.h),
-
-                Text(
-                  name,
-                  style: typography.headlineSmall?.copyWith(
-                    color: colors.onSurface,
-                    fontWeight: FontWeight.w900,
-                    fontSize: 32.sp,
-                  ),
-                ),
-                Text(
-                  email,
-                  style: typography.bodyMedium?.copyWith(
-                    color: colors.onSurfaceVariant,
-                  ),
-                ),
-
+                ProfileHeader(name: name, email: email, photoUrl: photoUrl),
                 SizedBox(height: AppSpacing.xxl.h),
-
-                // Loyalty Card
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.all(AppSpacing.xl.w),
-                  decoration: BoxDecoration(
-                    color: colors.surfaceContainerLow,
-                    borderRadius: AppRadius.bxxl.r,
-                    boxShadow: AppShadows.card,
-                  ),
-                  child: Stack(
-                    children: [
-                      Positioned(
-                        right: -10,
-                        top: -10,
-                        child: Icon(
-                          Icons.star,
-                          color: colors.primary.withValues(alpha: 0.05),
-                          size: 120,
-                        ),
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'profile.points_title'.tr().toUpperCase(),
-                            style: typography.labelSmall?.copyWith(
-                              color: colors.onSurfaceVariant,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 1,
-                            ),
-                          ),
-                          SizedBox(height: AppSpacing.xs.h),
-                          RichText(
-                            text: TextSpan(
-                              text: '$points ',
-                              style: typography.displayMedium?.copyWith(
-                                color: colors.primary,
-                                fontWeight: FontWeight.w900,
-                              ),
-                              children: [
-                                TextSpan(
-                                  text: 'profile.pts'.tr(),
-                                  style: TextStyle(
-                                    color: colors.primary,
-                                    fontSize: 18.sp,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: AppSpacing.lg.h),
-                          AppButton(
-                            label: 'profile.redeem_rewards'.tr(),
-                            onPressed: () => context.push(AppRoutes.loyalty),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-
+                ProfileLoyaltyCard(points: points),
                 SizedBox(height: AppSpacing.xl.h),
-
-                // Tiles
                 ProfileTile(
                   title: 'profile.tile_bookings'.tr(),
                   subtitle: 'profile.tile_bookings_sub'.tr(),
@@ -213,7 +75,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   SizedBox(height: AppSpacing.md.h),
                 ],
-
                 ProfileTile(
                   title: 'profile.tile_settings'.tr(),
                   subtitle: 'profile.tile_settings_sub'.tr(),
@@ -228,9 +89,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   isLogout: true,
                   onTap: () => context.read<SessionCubit>().logout(),
                 ),
-
                 SizedBox(height: AppSpacing.xxl.h),
-
                 Text(
                   'profile.need_help'.tr(),
                   style: typography.bodySmall?.copyWith(
@@ -252,7 +111,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ],
                 ),
-
                 SizedBox(height: 100.h),
               ],
             ),
@@ -262,4 +120,3 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 }
-

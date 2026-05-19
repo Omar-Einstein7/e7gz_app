@@ -18,6 +18,8 @@ class PitchModel extends Pitch {
     required super.openingTime,
     required super.closingTime,
     required super.slotDurationMinutes,
+    required super.morningPrice,
+    required super.nightPrice,
   });
 
   factory PitchModel.fromJson(Map<String, dynamic> json) {
@@ -68,6 +70,8 @@ class PitchModel extends Pitch {
       openingTime: json['openingTime']?.toString() ?? '06:00',
       closingTime: json['closingTime']?.toString() ?? '24:00',
       slotDurationMinutes: (json['slotDurationMinutes'] as num?)?.toInt() ?? 60,
+      morningPrice: (json['morningPrice'] as num?)?.toDouble() ?? 0.0,
+      nightPrice: (json['nightPrice'] as num?)?.toDouble() ?? 0.0,
     );
   }
 
@@ -97,5 +101,7 @@ class PitchModel extends Pitch {
     'openingTime': openingTime,
     'closingTime': closingTime,
     'slotDurationMinutes': slotDurationMinutes,
+    'morningPrice': morningPrice,
+    'nightPrice': nightPrice,
   };
 }

@@ -30,8 +30,19 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
   final _nameController = TextEditingController();
   final _addressController = TextEditingController();
   final _cityController = TextEditingController();
-  final _priceController = TextEditingController();
+  final _morningPriceController = TextEditingController();
+  final _nightPriceController = TextEditingController();
   final _descriptionController = TextEditingController();
+
+  final List<String> _selectedAmenities = [];
+  final List<String> _availableAmenities = [
+    'Parking',
+    'Showers',
+    'Lights',
+    'WiFi',
+    'Cafeteria',
+    'Lockers',
+  ];
 
   String _sportType = 'football';
   final List<XFile> _pickedImages = [];
@@ -52,7 +63,9 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
       _nameController.text = pitch.name;
       _descriptionController.text = pitch.description;
       _sportType = pitch.sportType;
-      _priceController.text = pitch.pricePerHour.toInt().toString();
+      _morningPriceController.text = pitch.morningPrice.toInt().toString();
+      _nightPriceController.text = pitch.nightPrice.toInt().toString();
+      _selectedAmenities.addAll(pitch.amenities);
 
       final location = pitch.location;
       _addressController.text = location.address;
@@ -187,7 +200,10 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
           ],
         },
       },
-      "pricePerHour": int.tryParse(_priceController.text) ?? 0,
+      "pricePerHour": int.tryParse(_morningPriceController.text) ?? 0,
+      "morningPrice": int.tryParse(_morningPriceController.text) ?? 0,
+      "nightPrice": int.tryParse(_nightPriceController.text) ?? 0,
+      "amenities": _selectedAmenities,
       "openingTime": "08:00",
       "closingTime": "23:00",
       "images": _existingUrls,
@@ -415,21 +431,35 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
                   Row(
                     children: [
                       Expanded(
+                        child: _buildTextField(
+                          'MORNING PRICE (EGP)',
+                          _morningPriceController,
+                          '150',
+                          keyboardType: TextInputType.number,
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: _buildTextField(
+                          'NIGHT PRICE (EGP)',
+                          _nightPriceController,
+                          '200',
+                          keyboardType: TextInputType.number,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+
+                  Row(
+                    children: [
+                      Expanded(
                         child: _buildDropdown('SPORT TYPE', [
                           'football',
                           'padel',
                           'tennis',
                           'basketball',
                         ]),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: _buildTextField(
-                          'PRICE / HOUR (EGP)',
-                          _priceController,
-                          '350',
-                          keyboardType: TextInputType.number,
-                        ),
                       ),
                     ],
                   ),
@@ -470,6 +500,50 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
                     _descriptionController,
                     'Describe the pitch features...',
                     maxLines: 4,
+                  ),
+                  const SizedBox(height: 24),
+
+                  const Text('AMENITIES', style: AdminTextStyles.label),
+                  const SizedBox(height: 12),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: _availableAmenities.map((amenity) {
+                      final isSelected = _selectedAmenities.contains(amenity);
+                      return FilterChip(
+                        label: Text(amenity),
+                        selected: isSelected,
+                        onSelected: (selected) {
+                          setState(() {
+                            if (selected) {
+                              _selectedAmenities.add(amenity);
+                            } else {
+                              _selectedAmenities.remove(amenity);
+                            }
+                          });
+                        },
+                        selectedColor: AdminColors.accent.withOpacity(0.2),
+                        checkmarkColor: AdminColors.accent,
+                        labelStyle: TextStyle(
+                          color: isSelected
+                              ? AdminColors.accent
+                              : AdminColors.textSecondary,
+                          fontSize: 12,
+                          fontWeight: isSelected
+                              ? FontWeight.bold
+                              : FontWeight.normal,
+                        ),
+                        backgroundColor: AdminColors.surface,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          side: BorderSide(
+                            color: isSelected
+                                ? AdminColors.accent
+                                : AdminColors.border,
+                          ),
+                        ),
+                      );
+                    }).toList(),
                   ),
                   const SizedBox(height: 32),
 
@@ -658,4 +732,3 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
     );
   }
 }
-

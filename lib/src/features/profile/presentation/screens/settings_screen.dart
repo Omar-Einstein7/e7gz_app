@@ -151,14 +151,14 @@ class SettingsScreen extends StatelessWidget {
               title: 'settings.change_password'.tr(),
               subtitle: 'settings.change_password_desc'.tr(),
               icon: IconsaxPlusBold.lock,
-              onTap: () {},
+              onTap: () => context.push(AppRoutes.editProfile),
             ),
             SizedBox(height: AppSpacing.md.h),
             ProfileTile(
               title: 'settings.privacy_policy'.tr(),
               subtitle: 'settings.privacy_desc'.tr(),
               icon: IconsaxPlusBold.shield_tick,
-              onTap: () {},
+              onTap: () => context.push(AppRoutes.privacyPolicy),
             ),
             SizedBox(height: AppSpacing.md.h),
             ProfileTile(
@@ -200,7 +200,9 @@ class _LanguageOption extends StatelessWidget {
               ? colors.primary.withOpacity(0.05)
               : colors.surfaceContainerLow,
           borderRadius: BorderRadius.circular(16.r),
-          border: isSelected ? Border.all(color: colors.primary, width: 2) : null,
+          border: isSelected
+              ? Border.all(color: colors.primary, width: 2)
+              : null,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -214,11 +216,14 @@ class _LanguageOption extends StatelessWidget {
               ),
             ),
             if (isSelected)
-              Icon(IconsaxPlusBold.tick_circle, color: colors.primary, size: 22),
+              Icon(
+                IconsaxPlusBold.tick_circle,
+                color: colors.primary,
+                size: 22,
+              ),
           ],
         ),
       ),
     );
   }
 }
-

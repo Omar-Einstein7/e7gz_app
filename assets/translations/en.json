@@ -5,7 +5,8 @@
     "cancel": "Cancel",
     "save": "Save",
     "egp_per_hour": "{price} EGP / Hour",
-    "egp": "{price} EGP"
+    "egp": "{price} EGP",
+    "last_updated": "Last Updated: {date}"
   },
   "nav": {
     "home": "Home",
@@ -95,7 +96,17 @@
     "tile_logout": "Logout",
     "tile_logout_sub": "Sign out of your account",
     "need_help": "Need help with your booking?",
-    "support": "Support Center"
+    "support": "Support Center",
+    "available_rewards": "Available Rewards",
+    "view_all": "View All",
+    "no_rewards": "No rewards available at the moment",
+    "redeem_dialog_title": "Redeem Reward",
+    "redeem_confirm_desc": "Are you sure you want to redeem \"{title}\" for {cost} points?",
+    "cancel": "Cancel",
+    "redeem": "Redeem",
+    "redeem_success": "Successfully redeemed {title}!",
+    "faq": "FAQ",
+    "edit_profile": "Edit Profile"
   },
   "pitch_details": {
     "shifts_title": "Available Shifts",
@@ -111,7 +122,10 @@
     "under_lights": "Under the Lights",
     "open_in_maps": "Open in Maps",
     "price_per_hour": "PRICE / HOUR",
-    "egp": "EGP"
+    "egp": "EGP",
+    "reviews_title": "Player Reviews",
+    "rate_pitch": "Rate Pitch",
+    "no_reviews": "No reviews yet. Be the first to share your experience!"
   },
   "booking_slots": {
     "select_date_time": "Select Date & Time",
@@ -169,57 +183,35 @@
     "error_loading_pitches": "Error loading pitches: {error}"
   },
   "settings": {
-    "choose_language": "Choose Language",
     "title": "Settings",
-    "app_preferences": "APP PREFERENCES",
+    "app_preferences": "App Preferences",
     "app_theme": "App Theme",
     "theme_dark": "Dark Mode",
     "theme_light": "Light Mode",
     "language": "Language",
     "lang_name": "English",
-    "notifications": "NOTIFICATIONS",
+    "notifications": "Notifications",
     "push_notifications": "Push Notifications",
-    "push_desc": "Receive updates about bookings & matches",
-    "account_privacy": "ACCOUNT & PRIVACY",
+    "push_desc": "Manage alerts and reminders",
+    "account_privacy": "Account & Privacy",
     "change_password": "Change Password",
     "change_password_desc": "Secure your account credentials",
     "privacy_policy": "Privacy Policy",
     "privacy_desc": "Read our terms and conditions",
     "delete_account": "Delete Account",
-    "delete_account_desc": "Permanently remove your account"
+    "delete_account_desc": "Permanently remove your account",
+    "choose_language": "Choose Language"
   },
-  "profile": {
-    "points_title": "Loyalty Points",
-    "pts": "PTS",
-    "redeem_rewards": "Redeem Rewards",
-    "tile_bookings": "My Bookings",
-    "tile_bookings_sub": "View and manage your schedules",
-    "tile_loyalty": "Loyalty Rewards",
-    "tile_loyalty_sub": "Redeem your points for stadium vouchers",
-    "tile_owner": "Owner Dashboard",
-    "tile_owner_sub": "Manage your venues and shifts",
-    "tile_admin": "Admin Panel",
-    "tile_admin_sub": "System and user oversight controls",
-    "tile_settings": "Settings",
-    "tile_settings_sub": "Theme, language, and security preferences",
-    "tile_logout": "Log Out",
-    "tile_logout_sub": "Securely sign out of your account",
-    "need_help": "Need help or have questions?",
-    "support": "Support",
-    "guest": "Guest",
-    "loyalty_program": "Loyalty Program",
-    "e7gzz_points": "E7GZZ POINTS",
-    "gold_tier": "Gold Tier Status",
-    "next_tier_desc": "You are 550 points away from Platinum",
-    "available_rewards": "Available Rewards",
-    "view_all": "View All",
-    "no_rewards": "No rewards available at the moment",
-    "redeem_dialog_title": "Redeem Reward",
-    "redeem_confirm_desc": "Are you sure you want to redeem \"{title}\" for {cost} points?",
-    "cancel": "Cancel",
-    "redeem": "Redeem",
-    "redeem_success": "Successfully redeemed {title}!",
-    "faq": "FAQ"
+  "privacy": {
+    "introduction_title": "1. Introduction",
+    "introduction_content": "Welcome to e7gz. We are committed to protecting your privacy and ensuring a secure experience. This policy explains how we collect and use your data.",
+    "data_collection_title": "2. Data We Collect",
+    "data_collection_content": "We collect information you provide (name, email, phone) and technical data like location (when searching for pitches) and usage patterns to improve our service.",
+    "data_usage_title": "3. How We Use Data",
+    "data_usage_content": "Your data is used to manage bookings, personalize your experience, and communicate important updates about your matches or the platform.",
+    "security_title": "4. Security",
+    "security_content": "We implement industry-standard security measures to protect your sensitive information from unauthorized access or disclosure.",
+    "last_updated": "Last Updated: {date}"
   },
   "auth": {
     "log_in": "Log in",
@@ -273,25 +265,5 @@
     "new_password_label": "NEW PASSWORD",
     "confirm_new_password_label": "CONFIRM NEW PASSWORD",
     "reset_password_button": "Reset Password"
-  },
-  "settings": {
-    "title": "Settings",
-    "app_preferences": "App Preferences",
-    "app_theme": "App Theme",
-    "theme_dark": "Dark Mode",
-    "theme_light": "Light Mode",
-    "language": "Language",
-    "lang_name": "English (US)",
-    "notifications": "Notifications",
-    "push_notifications": "Push Notifications",
-    "push_desc": "Manage alerts and reminders",
-    "account_privacy": "Account & Privacy",
-    "change_password": "Change Password",
-    "change_password_desc": "Update your security credentials",
-    "privacy_policy": "Privacy Policy",
-    "privacy_desc": "Read our terms and conditions",
-    "delete_account": "Delete Account",
-    "delete_account_desc": "Permanently remove your data",
-    "choose_language": "Choose Language"
   }
 }

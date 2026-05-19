@@ -4,8 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:e7gz/src/features/bookings/presentation/cubit/booking_cubit.dart';
 import 'package:e7gz/src/features/bookings/presentation/cubit/booking_state.dart';
 import 'package:e7gz/src/features/bookings/domain/entities/booking.dart';
-import 'package:e7gz/src/theme/app_colors.dart';
-import '../widgets/booking_card.dart';
+import '../widgets/widgets.dart';
 
 class MyBookingsScreen extends StatefulWidget {
   const MyBookingsScreen({super.key});
@@ -71,7 +70,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen>
               state.status == BookingsStatus.initial) {
             return Skeletonizer(
               enabled: true,
-              child: _BookingsList(
+              child: BookingsList(
                 bookings: List.generate(5, (_) => Booking.empty()),
                 isUpcoming: true,
               ),
@@ -103,8 +102,8 @@ class _MyBookingsScreenState extends State<MyBookingsScreen>
           return TabBarView(
             controller: _tabController,
             children: [
-              _BookingsList(bookings: upcomingBookings, isUpcoming: true),
-              _BookingsList(bookings: pastBookings, isUpcoming: false),
+              BookingsList(bookings: upcomingBookings, isUpcoming: true),
+              BookingsList(bookings: pastBookings, isUpcoming: false),
             ],
           );
         },
@@ -112,36 +111,3 @@ class _MyBookingsScreenState extends State<MyBookingsScreen>
     );
   }
 }
-
-class _BookingsList extends StatelessWidget {
-  final List<Booking> bookings;
-  final bool isUpcoming;
-
-  const _BookingsList({required this.bookings, required this.isUpcoming});
-
-  @override
-  Widget build(BuildContext context) {
-    if (bookings.isEmpty) {
-      return Center(
-        child: Text(
-          isUpcoming ? 'bookings.no_upcoming'.tr() : 'bookings.no_past'.tr(),
-          style: TextStyle(
-            color: context.colors.onSurfaceVariant,
-            fontSize: 14.sp,
-          ),
-        ),
-      );
-    }
-    return ListView.builder(
-      padding: EdgeInsets.all(AppSpacing.lg.w),
-      itemCount: bookings.length,
-      itemBuilder: (context, index) {
-        return BookingCard(
-          booking: bookings[index],
-          isUpcoming: isUpcoming,
-        ).animate().fadeIn(duration: 400.ms).slideY(begin: 0.1, end: 0);
-      },
-    );
-  }
-}
-

@@ -8,6 +8,7 @@ import 'package:e7gz/src/di/injection_container.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
 import 'package:easy_localization/easy_localization.dart';
+import '../widgets/widgets.dart';
 
 class CreateMatchScreen extends StatefulWidget {
   const CreateMatchScreen({super.key});
@@ -22,7 +23,6 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
   final _maxPlayersController = TextEditingController(text: '10');
 
   String? _selectedPitchId;
-  String? _selectedPitchName;
   DateTime? _selectedDate;
   TimeOfDay? _startTime;
   TimeOfDay? _endTime;
@@ -67,7 +67,6 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
   @override
   Widget build(BuildContext context) {
     final tt = context.theme.textTheme;
-    final colors = context.theme.colorScheme;
 
     return Scaffold(
       appBar: AppBar(
@@ -92,7 +91,9 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildFieldLabel('matchmaking.match_title_label'.tr(), tt),
+              MatchmakingFieldLabel(
+                label: 'matchmaking.match_title_label'.tr(),
+              ),
               TextFormField(
                 controller: _titleController,
                 style: const TextStyle(color: Colors.white),
@@ -103,7 +104,7 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
               ),
               SizedBox(height: 24.h),
 
-              _buildFieldLabel('matchmaking.select_pitch'.tr(), tt),
+              MatchmakingFieldLabel(label: 'matchmaking.select_pitch'.tr()),
               _isLoadingPitches
                   ? const Center(child: CircularProgressIndicator())
                   : DropdownButtonFormField<String>(
@@ -135,9 +136,8 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildFieldLabel(
-                          'bookings.date'.tr().toUpperCase(),
-                          tt,
+                        MatchmakingFieldLabel(
+                          label: 'bookings.date'.tr().toUpperCase(),
                         ),
                         InkWell(
                           onTap: _pickDate,
@@ -187,12 +187,14 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildFieldLabel('matchmaking.start_time'.tr(), tt),
+                        MatchmakingFieldLabel(
+                          label: 'matchmaking.start_time'.tr(),
+                        ),
                         InkWell(
                           onTap: () => _pickTime(true),
-                          child: _timeBox(
-                            _startTime?.format(context) ?? '00:00',
-                            _startTime != null,
+                          child: MatchmakingTimeBox(
+                            text: _startTime?.format(context) ?? '00:00',
+                            isSelected: _startTime != null,
                           ),
                         ),
                       ],
@@ -203,12 +205,14 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildFieldLabel('matchmaking.end_time'.tr(), tt),
+                        MatchmakingFieldLabel(
+                          label: 'matchmaking.end_time'.tr(),
+                        ),
                         InkWell(
                           onTap: () => _pickTime(false),
-                          child: _timeBox(
-                            _endTime?.format(context) ?? '00:00',
-                            _endTime != null,
+                          child: MatchmakingTimeBox(
+                            text: _endTime?.format(context) ?? '00:00',
+                            isSelected: _endTime != null,
                           ),
                         ),
                       ],
@@ -224,7 +228,9 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildFieldLabel('matchmaking.max_players'.tr(), tt),
+                        MatchmakingFieldLabel(
+                          label: 'matchmaking.max_players'.tr(),
+                        ),
                         TextFormField(
                           controller: _maxPlayersController,
                           keyboardType: TextInputType.number,
@@ -241,7 +247,9 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildFieldLabel('matchmaking.price_player'.tr(), tt),
+                        MatchmakingFieldLabel(
+                          label: 'matchmaking.price_player'.tr(),
+                        ),
                         TextFormField(
                           initialValue: '150',
                           keyboardType: TextInputType.number,
@@ -263,7 +271,7 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildFieldLabel('matchmaking.skill_level'.tr(), tt),
+                  MatchmakingFieldLabel(label: 'matchmaking.skill_level'.tr()),
                   DropdownButtonFormField<String>(
                     value: _skillLevel,
                     dropdownColor: const Color(0xFF131B2E),
@@ -284,9 +292,7 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                   ),
                 ],
               ),
-
               SizedBox(height: 48.h),
-
               BlocBuilder<MatchmakingCubit, MatchmakingState>(
                 builder: (context, state) {
                   return AppButton(
@@ -302,41 +308,6 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
               SizedBox(height: 48.h),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _timeBox(String text, bool isSelected) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
-      decoration: BoxDecoration(
-        color: const Color(0xFF131B2E),
-        borderRadius: BorderRadius.circular(20.r),
-      ),
-      child: Row(
-        children: [
-          const Icon(IconsaxPlusLinear.clock, color: Colors.white24, size: 20),
-          SizedBox(width: 12.w),
-          Text(
-            text,
-            style: TextStyle(color: isSelected ? Colors.white : Colors.white24),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFieldLabel(String label, TextTheme tt) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 8.h, left: 4.w),
-      child: Text(
-        label,
-        style: TextStyle(
-          color: const Color(0xFFBCC7DE),
-          fontSize: 10.sp,
-          fontWeight: FontWeight.w900,
-          letterSpacing: 1.5,
         ),
       ),
     );
@@ -425,10 +396,10 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
       final sportType = selectedPitch.sportType;
 
       final match = MatchModel(
-        id: '', // Backend generates it
+        id: '',
         title: _titleController.text,
         pitchId: _selectedPitchId!,
-        creatorId: '', // Backend handles it
+        creatorId: '',
         date: DateFormat('yyyy-MM-dd').format(_selectedDate!),
         startTime: startTimeStr,
         endTime: endTimeStr,
@@ -453,4 +424,3 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
     }
   }
 }
-

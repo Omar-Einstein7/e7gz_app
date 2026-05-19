@@ -9,6 +9,8 @@ import 'package:e7gz/src/features/admin/presentation/screens/admin_dashboard_scr
 import 'package:e7gz/src/features/admin/presentation/cubit/admin_cubit.dart';
 import 'package:e7gz/src/di/injection_container.dart';
 import 'package:e7gz/src/features/profile/presentation/screens/settings_screen.dart';
+import 'package:e7gz/src/features/profile/presentation/screens/edit_profile_screen.dart';
+import 'package:e7gz/src/features/profile/presentation/screens/privacy_policy_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:go_router/go_router.dart';
@@ -172,6 +174,16 @@ final GoRouter appRouter = GoRouter(
       path: AppRoutes.settings,
       name: 'settings',
       builder: (context, state) => const SettingsScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.editProfile,
+      name: 'editProfile',
+      builder: (context, state) => const EditProfileScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.privacyPolicy,
+      name: 'privacyPolicy',
+      builder: (context, state) => const PrivacyPolicyScreen(),
     ),
     GoRoute(
       path: AppRoutes.ownerDashboard,

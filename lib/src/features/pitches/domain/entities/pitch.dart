@@ -16,6 +16,8 @@ class Pitch extends Equatable {
   final String openingTime;
   final String closingTime;
   final int slotDurationMinutes;
+  final double morningPrice;
+  final double nightPrice;
 
   const Pitch({
     required this.id,
@@ -33,6 +35,8 @@ class Pitch extends Equatable {
     required this.openingTime,
     required this.closingTime,
     required this.slotDurationMinutes,
+    required this.morningPrice,
+    required this.nightPrice,
   });
 
   factory Pitch.empty() => const Pitch(
@@ -57,6 +61,8 @@ class Pitch extends Equatable {
     openingTime: '',
     closingTime: '',
     slotDurationMinutes: 60,
+    morningPrice: 0,
+    nightPrice: 0,
   );
 
   String get imageUrl => images.isNotEmpty ? images.first : '';
@@ -78,6 +84,8 @@ class Pitch extends Equatable {
     openingTime,
     closingTime,
     slotDurationMinutes,
+    morningPrice,
+    nightPrice,
   ];
 }
 

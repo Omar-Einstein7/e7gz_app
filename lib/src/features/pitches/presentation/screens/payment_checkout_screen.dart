@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
 import 'package:e7gz/src/di/injection_container.dart';
+import 'package:e7gz/src/services/notification_service.dart';
 
 class PaymentCheckoutScreen extends StatefulWidget {
   final String? bookingId;
@@ -37,7 +38,6 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
     final tt = context.typography;
 
     return Scaffold(
-  
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: colors.onSurface),
@@ -464,6 +464,13 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
         (success) {
           if (!mounted) return;
           setState(() => _isLoading = false);
+
+          sl<NotificationService>().showNotification(
+            title: 'Booking Confirmed! ⚽',
+            body:
+                'You successfully booked ${widget.pitchName} on ${widget.bookingDetails}. See you at the stadium!',
+          );
+
           _showSuccessDialog();
         },
       );
@@ -532,4 +539,3 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
     );
   }
 }
-

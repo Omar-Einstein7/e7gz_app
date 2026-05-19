@@ -6,8 +6,7 @@ import 'package:e7gz/src/imports/packages_imports.dart';
 import 'package:e7gz/src/theme/app_colors.dart';
 import 'package:e7gz/src/utils/validators.dart';
 import 'package:easy_localization/easy_localization.dart';
-import '../widgets/brand_header.dart';
-import '../widgets/social_login_button.dart';
+import '../widgets/widgets.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -35,7 +34,6 @@ class _LoginScreenState extends State<LoginScreen> {
     final typography = context.typography;
 
     return Scaffold(
-    
       body: Stack(
         children: [
           // Background Decorative Elements
@@ -114,7 +112,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       Container(
                         padding: EdgeInsets.all(AppSpacing.xl.w),
                         decoration: BoxDecoration(
-                          color: colors.surfaceContainerLow.withValues(alpha: 0.8),
+                          color: colors.surfaceContainerLow.withValues(
+                            alpha: 0.8,
+                          ),
                           borderRadius: AppRadius.bxxl.r,
                           boxShadow: [
                             BoxShadow(
@@ -153,9 +153,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  _inputLabel(
-                                    context,
-                                    'auth.email'.tr().toUpperCase(),
+                                  const AuthInputLabel(
+                                    label: 'auth.email',
+                                    isCompact: true,
                                   ),
                                   AppTextField(
                                     controller: _emailController,
@@ -171,9 +171,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      _inputLabel(
-                                        context,
-                                        'auth.password'.tr().toUpperCase(),
+                                      const AuthInputLabel(
+                                        label: 'auth.password',
+                                        isCompact: true,
                                       ),
                                       TextButton(
                                         onPressed: () => context.push(
@@ -244,33 +244,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
 
-                            // Divider
-                            SizedBox(height: AppSpacing.xl.h),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Divider(color: colors.outlineVariant),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: AppSpacing.md.w,
-                                  ),
-                                  child: Text(
-                                    'auth.or_continue_with'.tr().toUpperCase(),
-                                    style: typography.labelSmall?.copyWith(
-                                      color: colors.onSurfaceVariant.withValues(
-                                        alpha: 0.5,
-                                      ),
-                                      fontWeight: FontWeight.w900,
-                                      letterSpacing: 1.5,
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Divider(color: colors.outlineVariant),
-                                ),
-                              ],
-                            ),
+                            const SocialJoinDivider(),
                             SizedBox(height: AppSpacing.xl.h),
 
                             // Social Logins
@@ -354,20 +328,6 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _inputLabel(BuildContext context, String text) {
-    return Padding(
-      padding: EdgeInsets.only(left: 4.w, bottom: 8.h),
-      child: Text(
-        text,
-        style: context.typography.labelSmall?.copyWith(
-          color: context.colors.onSurfaceVariant.withValues(alpha: 0.6),
-          fontWeight: FontWeight.w900,
-          letterSpacing: 1.2,
-        ),
-      ),
-    );
-  }
-
   Widget _legalLink(BuildContext context, String text) {
     return Text(
       text,
@@ -380,4 +340,3 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
-
