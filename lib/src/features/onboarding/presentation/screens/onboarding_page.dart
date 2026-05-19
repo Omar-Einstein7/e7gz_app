@@ -51,12 +51,10 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.theme;
-    final colorScheme = theme.colorScheme;
-    final textTheme = theme.textTheme;
+    final colors = context.colors;
+    final typography = context.typography;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0B1326),
       body: Stack(
         children: [
           // Background Glow
@@ -67,7 +65,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
               width: 500.w,
               height: 500.h,
               decoration: BoxDecoration(
-                color: colorScheme.primary.withValues(alpha: 0.1),
+                color: colors.primary.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: BackdropFilter(
@@ -154,7 +152,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                                   children: [
                                     Text(
                                           (item['titleKey'] as String).tr(),
-                                          style: textTheme.displayMedium
+                                          style: typography.displayMedium
                                               ?.copyWith(
                                                 color: Colors.white,
                                                 fontWeight: FontWeight.w900,
@@ -170,7 +168,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
                                     Text(
                                           (item['subtitleKey'] as String).tr(),
-                                          style: textTheme.bodyLarge?.copyWith(
+                                          style: typography.bodyLarge?.copyWith(
                                             color: const Color(
                                               0xFFBCC7DE,
                                             ).withValues(alpha: 0.8),
@@ -204,7 +202,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                           controller: _pageController,
                           count: _onboardingData.length,
                           effect: ExpandingDotsEffect(
-                            activeDotColor: colorScheme.primary,
+                            activeDotColor: colors.primary,
                             dotColor: const Color(
                               0xFFBCC7DE,
                             ).withValues(alpha: 0.2),

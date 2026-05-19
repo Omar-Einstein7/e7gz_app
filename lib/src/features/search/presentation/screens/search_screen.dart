@@ -100,16 +100,15 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final cs = context.colorScheme;
-    final typography = context.textTheme;
+    final colors = context.colors;
+    final typography = context.typography;
 
     return Scaffold(
-      backgroundColor: cs.background,
       appBar: AppBar(
         title: Text(
           'e7gzz',
           style: typography.headlineSmall?.copyWith(
-            color: cs.primary,
+            color: colors.primary,
             fontWeight: FontWeight.w900,
           ),
         ),
@@ -128,21 +127,21 @@ class _SearchScreenState extends State<SearchScreen> {
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg.w),
                   decoration: BoxDecoration(
-                    color: cs.surfaceContainerLow,
+                    color: colors.surfaceContainerLow,
                     borderRadius: AppRadius.bfull.r,
-                    border: Border.all(color: cs.outlineVariant),
+                    border: Border.all(color: colors.outlineVariant),
                   ),
                   child: TextField(
                     controller: _searchController,
-                    style: TextStyle(color: cs.onSurface),
+                    style: TextStyle(color: colors.onSurface),
                     decoration: InputDecoration(
                       hintText: 'search.search_placeholder'.tr(),
                       hintStyle: TextStyle(
-                        color: cs.onSurfaceVariant.withValues(alpha: 0.5),
+                        color: colors.onSurfaceVariant.withValues(alpha: 0.5),
                       ),
                       icon: Icon(
                         IconsaxPlusLinear.search_normal_1,
-                        color: cs.primary,
+                        color: colors.primary,
                       ),
                       border: InputBorder.none,
                       enabledBorder: InputBorder.none,
@@ -251,7 +250,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   return Center(
                     child: Text(
                       state.errorMessage ?? 'search.error_occurred'.tr(),
-                      style: TextStyle(color: cs.error),
+                      style: TextStyle(color: colors.error),
                     ),
                   );
                 }
@@ -262,7 +261,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   return Center(
                     child: Text(
                       'search.no_stadiums_found'.tr(),
-                      style: TextStyle(color: cs.onSurfaceVariant),
+                      style: TextStyle(color: colors.onSurfaceVariant),
                     ),
                   );
                 }
@@ -303,3 +302,4 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 }
+

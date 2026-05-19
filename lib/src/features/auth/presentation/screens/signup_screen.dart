@@ -39,11 +39,10 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final cs = context.colorScheme;
-    final typography = context.textTheme;
+    final colors = context.colors;
+    final typography = context.typography;
 
     return Scaffold(
-      backgroundColor: cs.background,
       body: Stack(
         children: [
           // Background Decorative Elements
@@ -54,7 +53,7 @@ class _SignupScreenState extends State<SignupScreen> {
               width: 500.w,
               height: 500.h,
               decoration: BoxDecoration(
-                color: cs.primary.withValues(alpha: 0.1),
+                color: colors.primary.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: BackdropFilter(
@@ -84,12 +83,12 @@ class _SignupScreenState extends State<SignupScreen> {
                   child: Column(
                     children: [
                       // Header
-                      _HeaderBranding(typography: typography, cs: cs),
+                      _HeaderBranding(typography: typography, colors: colors),
 
                       SizedBox(height: AppSpacing.xxl.h),
 
                       // Role Selection
-                      _RoleSelectionHeader(typography: typography, cs: cs),
+                      _RoleSelectionHeader(typography: typography, colors: colors),
 
                       SizedBox(height: AppSpacing.lg.h),
 
@@ -136,9 +135,9 @@ class _SignupScreenState extends State<SignupScreen> {
                       Container(
                         padding: EdgeInsets.all(AppSpacing.xl.w),
                         decoration: BoxDecoration(
-                          color: cs.surfaceContainerLow.withValues(alpha: 0.4),
+                          color: colors.surfaceContainerLow.withValues(alpha: 0.4),
                           borderRadius: AppRadius.bxxl.r,
-                          border: Border.all(color: cs.outlineVariant),
+                          border: Border.all(color: colors.outlineVariant),
                         ),
                         child: ClipRRect(
                           borderRadius: AppRadius.bxxl.r,
@@ -261,13 +260,13 @@ class _SignupScreenState extends State<SignupScreen> {
                                       text: TextSpan(
                                         text: "auth.already_have_account".tr(),
                                         style: typography.bodyMedium?.copyWith(
-                                          color: cs.onSurfaceVariant,
+                                          color: colors.onSurfaceVariant,
                                         ),
                                         children: [
                                           TextSpan(
                                             text: "auth.sign_in".tr(),
                                             style: TextStyle(
-                                              color: cs.primary,
+                                              color: colors.primary,
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
@@ -289,7 +288,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         'auth.agree_terms'.tr(),
                         textAlign: TextAlign.center,
                         style: typography.bodySmall?.copyWith(
-                          color: cs.onSurfaceVariant.withValues(alpha: 0.6),
+                          color: colors.onSurfaceVariant.withValues(alpha: 0.6),
                           height: 1.5,
                         ),
                       ),
@@ -311,8 +310,8 @@ class _SignupScreenState extends State<SignupScreen> {
       padding: EdgeInsets.only(left: 8.w, bottom: 8.h),
       child: Text(
         text,
-        style: context.textTheme.labelMedium?.copyWith(
-          color: context.colorScheme.onSurface.withValues(alpha: 0.8),
+        style: context.typography.labelMedium?.copyWith(
+          color: context.colors.onSurface.withValues(alpha: 0.8),
           fontWeight: FontWeight.bold,
         ),
       ),
@@ -320,12 +319,12 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
   Widget _walletReadyChip(BuildContext context) {
-    final cs = context.colorScheme;
+    final colors = context.colors;
     return Container(
       margin: EdgeInsets.only(right: 8.w),
       padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
       decoration: BoxDecoration(
-        color: cs.surfaceContainerHighest,
+        color: colors.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(100.r),
       ),
       child: Row(
@@ -352,8 +351,8 @@ class _SignupScreenState extends State<SignupScreen> {
           SizedBox(width: 6.w),
           Text(
             'Wallet Ready',
-            style: context.textTheme.labelSmall?.copyWith(
-              color: cs.onSurfaceVariant,
+            style: context.typography.labelSmall?.copyWith(
+              color: colors.onSurfaceVariant,
               fontSize: 10.sp,
               fontWeight: FontWeight.bold,
             ),
@@ -367,9 +366,9 @@ class _SignupScreenState extends State<SignupScreen> {
 // ─── Private extracted widgets ─────────────────────────────────────────────
 
 class _HeaderBranding extends StatelessWidget {
-  const _HeaderBranding({required this.typography, required this.cs});
+  const _HeaderBranding({required this.typography, required this.colors});
   final TextTheme typography;
-  final ColorScheme cs;
+  final ColorScheme colors;
 
   @override
   Widget build(BuildContext context) {
@@ -378,7 +377,7 @@ class _HeaderBranding extends StatelessWidget {
         Text(
           'e7gzz',
           style: typography.displaySmall?.copyWith(
-            color: cs.primary,
+            color: colors.primary,
             fontWeight: FontWeight.w900,
             letterSpacing: -2,
           ),
@@ -387,7 +386,7 @@ class _HeaderBranding extends StatelessWidget {
         Text(
           'auth.join_arena'.tr(),
           style: typography.headlineSmall?.copyWith(
-            color: cs.onSurface,
+            color: colors.onSurface,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -395,7 +394,7 @@ class _HeaderBranding extends StatelessWidget {
         Text(
           'auth.join_arena_subtitle'.tr(),
           textAlign: TextAlign.center,
-          style: typography.bodyMedium?.copyWith(color: cs.onSurfaceVariant),
+          style: typography.bodyMedium?.copyWith(color: colors.onSurfaceVariant),
         ),
       ],
     );
@@ -403,16 +402,16 @@ class _HeaderBranding extends StatelessWidget {
 }
 
 class _RoleSelectionHeader extends StatelessWidget {
-  const _RoleSelectionHeader({required this.typography, required this.cs});
+  const _RoleSelectionHeader({required this.typography, required this.colors});
   final TextTheme typography;
-  final ColorScheme cs;
+  final ColorScheme colors;
 
   @override
   Widget build(BuildContext context) {
     return Text(
       'auth.select_role'.tr().toUpperCase(),
       style: typography.labelSmall?.copyWith(
-        color: cs.onSurfaceVariant,
+        color: colors.onSurfaceVariant,
         fontWeight: FontWeight.w900,
         letterSpacing: 2,
       ),
@@ -439,8 +438,8 @@ class _RoleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cs = context.colorScheme;
-    final typography = context.textTheme;
+    final colors = context.colors;
+    final typography = context.typography;
 
     return GestureDetector(
       onTap: onTap,
@@ -448,18 +447,18 @@ class _RoleCard extends StatelessWidget {
         duration: const Duration(milliseconds: 300),
         padding: EdgeInsets.all(AppSpacing.lg.w),
         decoration: BoxDecoration(
-          color: cs.surfaceContainerHigh,
+          color: colors.surfaceContainerHigh,
           borderRadius: AppRadius.blg.r,
           border: Border.all(
             color: isSelected
-                ? cs.primary.withValues(alpha: 0.5)
+                ? colors.primary.withValues(alpha: 0.5)
                 : Colors.transparent,
             width: 2,
           ),
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: cs.primary.withValues(alpha: 0.1),
+                    color: colors.primary.withValues(alpha: 0.1),
                     blurRadius: 20,
                     spreadRadius: 2,
                   ),
@@ -475,16 +474,16 @@ class _RoleCard extends StatelessWidget {
                   width: 48.w,
                   height: 48.w,
                   decoration: BoxDecoration(
-                    color: cs.primary.withValues(alpha: 0.2),
+                    color: colors.primary.withValues(alpha: 0.2),
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(icon, color: cs.primary, size: 28),
+                  child: Icon(icon, color: colors.primary, size: 28),
                 ),
                 SizedBox(height: AppSpacing.md.h),
                 Text(
                   title,
                   style: typography.titleLarge?.copyWith(
-                    color: cs.onSurface,
+                    color: colors.onSurface,
                     fontWeight: FontWeight.bold,
                     fontSize: 18.sp,
                   ),
@@ -493,7 +492,7 @@ class _RoleCard extends StatelessWidget {
                 Text(
                   subtitle,
                   style: typography.bodySmall?.copyWith(
-                    color: cs.onSurfaceVariant,
+                    color: colors.onSurfaceVariant,
                     height: 1.4,
                   ),
                 ),
@@ -508,7 +507,7 @@ class _RoleCard extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: isSelected ? cs.primary : cs.outline,
+                    color: isSelected ? colors.primary : colors.outline,
                     width: 2,
                   ),
                 ),
@@ -518,7 +517,7 @@ class _RoleCard extends StatelessWidget {
                           width: 12.w,
                           height: 12.w,
                           decoration: BoxDecoration(
-                            color: cs.primary,
+                            color: colors.primary,
                             shape: BoxShape.circle,
                           ),
                         ),
@@ -532,3 +531,4 @@ class _RoleCard extends StatelessWidget {
     );
   }
 }
+

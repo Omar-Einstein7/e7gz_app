@@ -250,3 +250,4 @@ class _EmptyNotifications extends StatelessWidget {
     );
   }
 }
+

@@ -10,11 +10,10 @@ class LoyaltyRewardsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cs = context.theme.colorScheme;
+    final colors = context.theme.colorScheme;
     final tt = context.theme.textTheme;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0B1326),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -62,7 +61,7 @@ class LoyaltyRewardsScreen extends StatelessWidget {
                         child: Icon(
                           IconsaxPlusBold.medal_star,
                           size: 150,
-                          color: cs.primary.withValues(alpha: 0.05),
+                          color: colors.primary.withValues(alpha: 0.05),
                         ),
                       ),
                       Column(
@@ -91,7 +90,7 @@ class LoyaltyRewardsScreen extends StatelessWidget {
                                       (Match m) => '${m[1]},',
                                     ),
                                     style: tt.displayMedium?.copyWith(
-                                      color: cs.primary,
+                                      color: colors.primary,
                                       fontWeight: FontWeight.w900,
                                     ),
                                   );
@@ -105,7 +104,7 @@ class LoyaltyRewardsScreen extends StatelessWidget {
                                 child: Text(
                                   'profile.pts'.tr(),
                                   style: TextStyle(
-                                    color: cs.primary,
+                                    color: colors.primary,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16.sp,
                                   ),
@@ -356,3 +355,4 @@ class LoyaltyRewardsScreen extends StatelessWidget {
     );
   }
 }
+

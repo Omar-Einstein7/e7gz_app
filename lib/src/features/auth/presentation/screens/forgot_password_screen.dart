@@ -43,11 +43,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final cs = context.theme.colorScheme;
+    final colors = context.theme.colorScheme;
     final tt = context.theme.textTheme;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0B1326),
+ 
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -73,7 +73,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               width: 400.w,
               height: 400.h,
               decoration: BoxDecoration(
-                color: cs.primary.withValues(alpha: 0.05),
+                color: colors.primary.withValues(alpha: 0.05),
                 shape: BoxShape.circle,
               ),
               child: BackdropFilter(
@@ -93,7 +93,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   Text(
                     'e7gzz',
                     style: tt.displaySmall?.copyWith(
-                      color: cs.primary,
+                      color: colors.primary,
                       fontWeight: FontWeight.w900,
                       letterSpacing: -2,
                     ),
@@ -112,7 +112,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     child: Center(
                       child: Icon(
                         IconsaxPlusBold.refresh_circle,
-                        color: cs.primary,
+                        color: colors.primary,
                         size: 40,
                       ),
                     ),
@@ -225,7 +225,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         Text(
                           'auth.resend_code'.tr(namedArgs: {'time': '00:59'}),
                           style: tt.labelSmall?.copyWith(
-                            color: cs.primary,
+                            color: colors.primary,
                             fontWeight: FontWeight.bold,
                             letterSpacing: 1,
                           ),
@@ -470,3 +470,4 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     );
   }
 }
+

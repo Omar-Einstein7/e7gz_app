@@ -35,26 +35,25 @@ class _MyBookingsScreenState extends State<MyBookingsScreen>
 
   @override
   Widget build(BuildContext context) {
-    final cs = context.colorScheme;
-    final typography = context.textTheme;
+    final colors = context.colors;
+    final typography = context.typography;
 
     return Scaffold(
-      backgroundColor: cs.background,
       appBar: AppBar(
         title: Text(
           'bookings.title'.tr(),
           style: typography.headlineSmall?.copyWith(
-            color: cs.onSurface,
+            color: colors.onSurface,
             fontWeight: FontWeight.bold,
           ),
         ),
         bottom: TabBar(
           controller: _tabController,
-          indicatorColor: cs.primary,
+          indicatorColor: colors.primary,
           indicatorSize: TabBarIndicatorSize.label,
           dividerColor: Colors.transparent,
-          labelColor: cs.primary,
-          unselectedLabelColor: cs.onSurfaceVariant,
+          labelColor: colors.primary,
+          unselectedLabelColor: colors.onSurfaceVariant,
           labelStyle: TextStyle(
             fontSize: 12.sp,
             fontWeight: FontWeight.w900,
@@ -82,7 +81,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen>
             return Center(
               child: Text(
                 state.errorMessage ?? 'bookings.failed_load'.tr(),
-                style: TextStyle(color: cs.error, fontSize: 14.sp),
+                style: TextStyle(color: colors.error, fontSize: 14.sp),
               ),
             );
           }
@@ -127,7 +126,7 @@ class _BookingsList extends StatelessWidget {
         child: Text(
           isUpcoming ? 'bookings.no_upcoming'.tr() : 'bookings.no_past'.tr(),
           style: TextStyle(
-            color: context.colorScheme.onSurfaceVariant,
+            color: context.colors.onSurfaceVariant,
             fontSize: 14.sp,
           ),
         ),
@@ -145,3 +144,4 @@ class _BookingsList extends StatelessWidget {
     );
   }
 }
+

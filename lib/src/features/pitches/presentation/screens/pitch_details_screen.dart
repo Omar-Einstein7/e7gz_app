@@ -30,22 +30,21 @@ class _PitchDetailsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cs = context.colorScheme;
-
     return Scaffold(
-      backgroundColor: cs.background,
       body: BlocBuilder<PitchDetailCubit, PitchDetailState>(
         builder: (context, state) {
           if (state.status == PitchDetailStatus.loading ||
               state.status == PitchDetailStatus.initial) {
-            return Center(child: CircularProgressIndicator(color: cs.primary));
+            return Center(
+              child: CircularProgressIndicator(color: context.colors.primary),
+            );
           }
 
           if (state.status == PitchDetailStatus.failure) {
             return Center(
               child: Text(
                 state.errorMessage ?? 'Failed to load pitch details',
-                style: TextStyle(color: cs.error, fontSize: 16.sp),
+                style: TextStyle(color: context.colors.error, fontSize: 16.sp),
               ),
             );
           }
@@ -55,21 +54,27 @@ class _PitchDetailsView extends StatelessWidget {
             return Center(
               child: Text(
                 'Pitch not found',
-                style: TextStyle(color: cs.onSurface, fontSize: 16.sp),
+                style: TextStyle(
+                  color: context.colors.onSurface,
+                  fontSize: 16.sp,
+                ),
               ),
             );
           }
 
+          final size = MediaQuery.sizeOf(context);
+          final bool isWide = size.width > 900;
+
           return CustomScrollView(
             physics: const BouncingScrollPhysics(),
             slivers: [
-              // 1. Custom Header that respects the 50% limit
+              // 1. Custom Header with adaptive height for web/wide screens
               SliverPersistentHeader(
                 pinned: true,
                 delegate: _PitchHeaderDelegate(
                   pitch: pitch,
-                  expandedHeight: 0.8.sh,
-                  collapsedHeight: 0.5.sh,
+                  expandedHeight: isWide ? 500 : 0.8.sh,
+                  collapsedHeight: isWide ? 300 : 0.5.sh,
                   topPadding: MediaQuery.paddingOf(context).top,
                 ),
               ),
@@ -77,7 +82,7 @@ class _PitchDetailsView extends StatelessWidget {
               // 2. The "Sheet-like" Content
               SliverToBoxAdapter(
                 child: Container(
-                  decoration: BoxDecoration(color: cs.background),
+                  decoration: BoxDecoration(color: context.colors.background),
                   child: Padding(
                     padding: EdgeInsets.only(
                       left: AppSpacing.lg.w,
@@ -89,7 +94,10 @@ class _PitchDetailsView extends StatelessWidget {
                       children: [
                         _BookingHeaderRow(pitch: pitch),
                         SizedBox(height: AppSpacing.xl.h),
-                        Divider(color: cs.outlineVariant, height: 1),
+                        Divider(
+                          color: context.colors.outlineVariant,
+                          height: 1,
+                        ),
                         SizedBox(height: AppSpacing.xl.h),
                         _AmenitiesSection(amenities: pitch.amenities)
                             .animate()
@@ -149,7 +157,6 @@ class _PitchHeaderDelegate extends SliverPersistentHeaderDelegate {
     bool overlapsContent,
   ) {
     final pc = context.pitchColors;
-    final cs = context.colorScheme;
     final double percent = (shrinkOffset / (maxExtent - minExtent)).clamp(
       0.0,
       1.0,
@@ -185,62 +192,73 @@ class _PitchHeaderDelegate extends SliverPersistentHeaderDelegate {
 
         // 4. Venue Card (Moves up with the header)
         Positioned(
-          bottom: 40.h, // Adjusted to sit above the white lip
-          left: AppSpacing.md.w,
-          right: AppSpacing.md.w,
-          child: ClipRRect(
-            borderRadius: AppRadius.bxxl.r,
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-              child: Container(
-                padding: EdgeInsets.all(AppSpacing.lg.w),
-                decoration: BoxDecoration(
-                  color: pc.glassSurface,
+          bottom: 40.h,
+          left: 0,
+          right: 0,
+          child: Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: 500.w),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: AppSpacing.md.w),
+                child: ClipRRect(
                   borderRadius: AppRadius.bxxl.r,
-                  border: Border.all(color: pc.glassBorder, width: 1.5),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _PremiumBadge().animate().scale(
-                      delay: 400.ms,
-                      curve: Curves.elasticOut,
-                    ),
-                    SizedBox(height: AppSpacing.md.h),
-                    Text(
-                      pitch.name,
-                      style: context.textTheme.headlineLarge?.copyWith(
-                        color: cs.onSurface,
-                        fontWeight: FontWeight.w800,
-                        height: 1.1,
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: AppSpacing.lg.w,
+                        vertical: AppSpacing.md.h,
                       ),
-                    ),
-                    SizedBox(height: AppSpacing.sm.h),
-                    Row(
-                      children: [
-                        Icon(
-                          IconsaxPlusBold.location,
-                          color: pc.accentGreen,
-                          size: 18,
-                        ),
-                        SizedBox(width: AppSpacing.xs.w),
-                        Expanded(
-                          child: Text(
-                            pitch.location.city,
-                            style: context.textTheme.bodyLarge?.copyWith(
-                              color: cs.onSurfaceVariant,
-                              fontWeight: FontWeight.w500,
+                      decoration: BoxDecoration(
+                        color: pc.glassSurface,
+                        borderRadius: AppRadius.bxxl.r,
+                        border: Border.all(color: pc.glassBorder, width: 1.5),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          _PremiumBadge().animate().scale(
+                            delay: 400.ms,
+                            curve: Curves.elasticOut,
+                          ),
+                          SizedBox(height: AppSpacing.sm.h),
+                          Text(
+                            pitch.name,
+                            style: context.typography.headlineMedium?.copyWith(
+                              color: context.colors.onSurface,
+                              fontWeight: FontWeight.w800,
+                              height: 1.1,
                             ),
                           ),
-                        ),
-                        _RatingBadge(
-                          rating: pitch.rating,
-                          reviews: pitch.reviewsCount,
-                        ),
-                      ],
+                          SizedBox(height: AppSpacing.xs.h),
+                          Row(
+                            children: [
+                              Icon(
+                                IconsaxPlusBold.location,
+                                color: pc.accentGreen,
+                                size: 18,
+                              ),
+                              SizedBox(width: AppSpacing.xs.w),
+                              Expanded(
+                                child: Text(
+                                  pitch.location.city,
+                                  style: context.typography.bodyLarge?.copyWith(
+                                    color: context.colors.onSurfaceVariant,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                              _RatingBadge(
+                                rating: pitch.rating,
+                                reviews: pitch.reviewsCount,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ],
+                  ),
                 ),
               ),
             ),
@@ -255,7 +273,7 @@ class _PitchHeaderDelegate extends SliverPersistentHeaderDelegate {
           child: Container(
             height: 32.h,
             decoration: BoxDecoration(
-              color: cs.background,
+              color: context.colors.background,
               borderRadius: BorderRadius.vertical(top: Radius.circular(32.r)),
               boxShadow: [
                 BoxShadow(
@@ -330,6 +348,28 @@ class _ImagePageViewState extends State<ImagePageView> {
           controller: _controller,
           itemCount: widget.images.length,
           itemBuilder: (context, index) {
+            final bool isWide = MediaQuery.sizeOf(context).width > 900;
+            if (isWide) {
+              return Stack(
+                fit: StackFit.expand,
+                children: [
+                  // Blurred background to fill space
+                  AppCachedImage(
+                    imageUrl: widget.images[index],
+                    fit: BoxFit.cover,
+                  ),
+                  BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+                    child: Container(color: Colors.black.withOpacity(0.2)),
+                  ),
+                  // Contained main image to show the "whole image"
+                  AppCachedImage(
+                    imageUrl: widget.images[index],
+                    fit: BoxFit.contain,
+                  ),
+                ],
+              );
+            }
             return AppCachedImage(
               imageUrl: widget.images[index],
               fit: BoxFit.cover,
@@ -337,12 +377,12 @@ class _ImagePageViewState extends State<ImagePageView> {
           },
         ),
         if (widget.images.length > 1)
-          Opacity(
-            opacity: widget.opacity,
-            child: Positioned(
-              bottom: 155.h, // Positioned within the PageView's space
-              left: 0,
-              right: 0,
+          Positioned(
+            bottom: 180.h, // Positioned upper within the PageView's space
+            left: 0,
+            right: 0,
+            child: Opacity(
+              opacity: widget.opacity,
               child: Center(
                 child: Container(
                   padding: EdgeInsets.symmetric(
@@ -357,8 +397,8 @@ class _ImagePageViewState extends State<ImagePageView> {
                     controller: _controller,
                     count: widget.images.length,
                     effect: ExpandingDotsEffect(
-                      dotHeight: 6.h,
-                      dotWidth: 6.w,
+                      dotHeight: 4.5.h,
+                      dotWidth: 4.5.w,
                       activeDotColor: Colors.white,
                       dotColor: Colors.white.withOpacity(0.5),
                       expansionFactor: 4,
@@ -422,7 +462,7 @@ class _PremiumBadge extends StatelessWidget {
       ),
       child: Text(
         'pitch_details.premium_arena'.tr().toUpperCase(),
-        style: context.textTheme.labelSmall?.copyWith(
+        style: context.typography.labelSmall?.copyWith(
           color: Colors.white,
           fontWeight: FontWeight.w800,
           letterSpacing: 1.2,
@@ -439,14 +479,13 @@ class _RatingBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cs = context.colorScheme;
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: AppSpacing.md.w,
         vertical: AppSpacing.sm.h,
       ),
       decoration: BoxDecoration(
-        color: cs.primary.withValues(alpha: 0.1),
+        color: context.colors.primary.withValues(alpha: 0.1),
         borderRadius: AppRadius.blg.r,
       ),
       child: Row(
@@ -455,15 +494,15 @@ class _RatingBadge extends StatelessWidget {
           SizedBox(width: AppSpacing.xs.w),
           Text(
             rating.toString(),
-            style: context.textTheme.titleSmall?.copyWith(
-              color: cs.onSurface,
+            style: context.typography.titleSmall?.copyWith(
+              color: context.colors.onSurface,
               fontWeight: FontWeight.bold,
             ),
           ),
           Text(
             ' ($reviews+)',
-            style: context.textTheme.bodySmall?.copyWith(
-              color: cs.onSurfaceVariant,
+            style: context.typography.bodySmall?.copyWith(
+              color: context.colors.onSurfaceVariant,
             ),
           ),
         ],
@@ -585,7 +624,6 @@ class _LocationSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final pc = context.pitchColors;
-    final cs = context.colorScheme;
     final lat = pitch.location.latitude;
     final lng = pitch.location.longitude;
 
@@ -606,8 +644,8 @@ class _LocationSection extends StatelessWidget {
                 Expanded(
                   child: Text(
                     pitch.location.fullAddress,
-                    style: context.textTheme.bodyLarge?.copyWith(
-                      color: cs.onSurfaceVariant,
+                    style: context.typography.bodyLarge?.copyWith(
+                      color: context.colors.onSurfaceVariant,
                       height: 1.6,
                     ),
                   ),
@@ -627,7 +665,7 @@ class _LocationSection extends StatelessWidget {
               height: 220.h,
               width: double.infinity,
               decoration: BoxDecoration(
-                border: Border.all(color: cs.outlineVariant),
+                border: Border.all(color: context.colors.outlineVariant),
               ),
               child: Stack(
                 children: [
@@ -734,7 +772,6 @@ class _AboutSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cs = context.colorScheme;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -744,8 +781,8 @@ class _AboutSection extends StatelessWidget {
           description.isNotEmpty
               ? description
               : "Featuring high-grade FIFA certified artificial turf, this pitch offers a premium playing surface that reduces injury risk and ensures optimal ball roll.",
-          style: context.textTheme.bodyLarge?.copyWith(
-            color: cs.onSurfaceVariant,
+          style: context.typography.bodyLarge?.copyWith(
+            color: context.colors.onSurfaceVariant,
             height: 1.8,
           ),
         ),
@@ -763,7 +800,7 @@ class _SectionHeader extends StatelessWidget {
     final pc = context.pitchColors;
     return Text(
       title,
-      style: context.textTheme.labelSmall?.copyWith(
+      style: context.typography.labelSmall?.copyWith(
         color: pc.accentGreen,
         fontWeight: FontWeight.w800,
         letterSpacing: 2,
@@ -779,8 +816,6 @@ class _BookingHeaderRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final pc = context.pitchColors;
-    final cs = context.colorScheme;
-
     return Row(
           children: [
             Expanded(
@@ -789,8 +824,8 @@ class _BookingHeaderRow extends StatelessWidget {
                 children: [
                   Text(
                     'pitch_details.price_per_hour'.tr().toUpperCase(),
-                    style: context.textTheme.labelSmall?.copyWith(
-                      color: cs.onSurfaceVariant,
+                    style: context.typography.labelSmall?.copyWith(
+                      color: context.colors.onSurfaceVariant,
                       fontWeight: FontWeight.w700,
                       letterSpacing: 1.2,
                     ),
@@ -799,14 +834,14 @@ class _BookingHeaderRow extends StatelessWidget {
                   RichText(
                     text: TextSpan(
                       text: '${pitch.pricePerHour.toInt()} ',
-                      style: context.textTheme.titleMedium?.copyWith(
-                        color: cs.onSurface,
+                      style: context.typography.titleMedium?.copyWith(
+                        color: context.colors.onSurface,
                         fontWeight: FontWeight.w900,
                       ),
                       children: [
                         TextSpan(
                           text: 'pitch_details.egp'.tr(),
-                          style: context.textTheme.labelMedium?.copyWith(
+                          style: context.typography.labelMedium?.copyWith(
                             color: pc.accentGreen,
                             fontWeight: FontWeight.bold,
                           ),
@@ -870,7 +905,7 @@ class _BookNowButton extends StatelessWidget {
           children: [
             Text(
               'pitch_details.book_now'.tr().toUpperCase(),
-              style: context.textTheme.labelLarge?.copyWith(
+              style: context.typography.labelLarge?.copyWith(
                 fontWeight: FontWeight.w800,
                 letterSpacing: 1,
                 color: Colors.white,

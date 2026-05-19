@@ -54,22 +54,21 @@ class _BookingSlotsScreenState extends State<BookingSlotsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final cs = context.colorScheme;
-    final typography = context.textTheme;
+    final colors = context.colors;
+    final typography = context.typography;
 
     return BlocProvider.value(
       value: _slotsCubit,
       child: Scaffold(
-        backgroundColor: cs.background,
         appBar: AppBar(
           leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: cs.onSurface),
+            icon: Icon(Icons.arrow_back, color: colors.onSurface),
             onPressed: () => context.pop(),
           ),
           title: Text(
             'e7gzz',
             style: typography.headlineSmall?.copyWith(
-              color: cs.primary,
+              color: colors.primary,
               fontWeight: FontWeight.w900,
             ),
           ),
@@ -78,11 +77,11 @@ class _BookingSlotsScreenState extends State<BookingSlotsScreen> {
               padding: EdgeInsets.only(right: AppSpacing.md.w),
               child: CircleAvatar(
                 radius: 18.r,
-                backgroundColor: cs.surfaceContainerHigh,
+                backgroundColor: colors.surfaceContainerHigh,
                 child: Icon(
                   IconsaxPlusBold.user,
                   size: 20,
-                  color: cs.onSurfaceVariant,
+                  color: colors.onSurfaceVariant,
                 ),
               ),
             ),
@@ -133,3 +132,4 @@ class _BookingSlotsScreenState extends State<BookingSlotsScreen> {
     );
   }
 }
+

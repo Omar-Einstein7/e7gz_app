@@ -32,22 +32,8 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final typography = context.typography;
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
-
-    final bgColor = isDark
-        ? const Color(0xFF0B1326)
-        : theme.colorScheme.surface;
-    final textColor = isDark ? Colors.white : theme.colorScheme.onSurface;
-    final searchBg = isDark
-        ? const Color(0xFF131B2E)
-        : theme.colorScheme.surfaceContainerLow;
-    final searchHint = isDark
-        ? const Color(0xFFBCC7DE).withValues(alpha: 0.5)
-        : theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5);
 
     return Scaffold(
-      backgroundColor: bgColor,
       // drawer: const Drawer(), // Menu
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -66,15 +52,13 @@ class _HomePageState extends State<HomePage> {
         builder: (context, state) {
           if (state.status == PitchesStatus.loading && state.pitches.isEmpty) {
             return Center(
-              child: CircularProgressIndicator(
-                color: theme.colorScheme.primary,
-              ),
+              child: CircularProgressIndicator(color: colors.primary),
             );
           }
 
           return RefreshIndicator(
-            color: theme.colorScheme.primary,
-            backgroundColor: theme.colorScheme.surface,
+            color: colors.primary,
+            backgroundColor: colors.surface,
             onRefresh: () =>
                 context.read<PitchesCubit>().loadPitches(refresh: true),
             child: SingleChildScrollView(
@@ -91,7 +75,7 @@ class _HomePageState extends State<HomePage> {
                       text: TextSpan(
                         text: 'home.headline_start'.tr(),
                         style: typography.displaySmall?.copyWith(
-                          color: textColor,
+                          color: colors.onSurface,
                           fontWeight: FontWeight.w900,
                           fontSize: 40.sp,
                           height: 1.1,
@@ -121,23 +105,23 @@ class _HomePageState extends State<HomePage> {
                         height: 56.h,
                         padding: EdgeInsets.symmetric(horizontal: 20.w),
                         decoration: BoxDecoration(
-                          color: searchBg,
+                          color: colors.surfaceContainerLow,
                           borderRadius: BorderRadius.circular(100.r),
                         ),
                         child: Row(
                           children: [
                             Icon(
                               IconsaxPlusLinear.search_normal_1,
-                              color: isDark
-                                  ? const Color(0xFFBCC7DE)
-                                  : theme.colorScheme.onSurfaceVariant,
+                              color: colors.onSurfaceVariant,
                             ),
                             SizedBox(width: 12.w),
                             Expanded(
                               child: Text(
                                 'home.search_placeholder'.tr(),
                                 style: TextStyle(
-                                  color: searchHint,
+                                  color: colors.onSurfaceVariant.withValues(
+                                    alpha: 0.5,
+                                  ),
                                   fontSize: 14.sp,
                                 ),
                                 maxLines: 1,
@@ -180,3 +164,4 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+

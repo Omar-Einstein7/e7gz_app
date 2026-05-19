@@ -70,7 +70,6 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
     final colors = context.theme.colorScheme;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0B1326),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -454,3 +453,4 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
     }
   }
 }
+

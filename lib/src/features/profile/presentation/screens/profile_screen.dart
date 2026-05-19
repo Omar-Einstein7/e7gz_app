@@ -16,8 +16,8 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
-    final cs = context.colorScheme;
-    final typography = context.textTheme;
+    final colors = context.colors;
+    final typography = context.typography;
 
     return BlocBuilder<SessionCubit, SessionState>(
       builder: (context, state) {
@@ -30,16 +30,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
             'https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80';
 
         return Scaffold(
-          backgroundColor: cs.background,
           appBar: AppBar(
             // leading: IconButton(
-            //   icon: Icon(IconsaxPlusLinear.menu_1, color: cs.onSurface),
+            //   icon: Icon(IconsaxPlusLinear.menu_1, color: colors.onSurface),
             //   onPressed: () => Scaffold.of(context).openDrawer(),
             // ),
             title: Text(
               'e7gzz',
               style: typography.headlineSmall?.copyWith(
-                color: cs.primary,
+                color: colors.primary,
                 fontWeight: FontWeight.w900,
               ),
             ),
@@ -48,11 +47,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
             //     padding: EdgeInsets.only(right: AppSpacing.md.w),
             //     child: CircleAvatar(
             //       radius: 18.r,
-            //       backgroundColor: cs.surfaceContainerHigh,
+            //       backgroundColor: colors.surfaceContainerHigh,
             //       child: Icon(
             //         IconsaxPlusBold.user,
             //         size: 20,
-            //         color: cs.onSurfaceVariant,
+            //         color: colors.onSurfaceVariant,
             //       ),
             //     ),
             //   ),
@@ -71,7 +70,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(
-                            color: cs.outlineVariant,
+                            color: colors.outlineVariant,
                             width: 2,
                           ),
                         ),
@@ -86,12 +85,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: Container(
                           padding: const EdgeInsets.all(6),
                           decoration: BoxDecoration(
-                            color: cs.primary,
+                            color: colors.primary,
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
                             Icons.check,
-                            color: cs.onPrimary,
+                            color: colors.onPrimary,
                             size: 16,
                           ),
                         ),
@@ -105,7 +104,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Text(
                   name,
                   style: typography.headlineSmall?.copyWith(
-                    color: cs.onSurface,
+                    color: colors.onSurface,
                     fontWeight: FontWeight.w900,
                     fontSize: 32.sp,
                   ),
@@ -113,7 +112,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Text(
                   email,
                   style: typography.bodyMedium?.copyWith(
-                    color: cs.onSurfaceVariant,
+                    color: colors.onSurfaceVariant,
                   ),
                 ),
 
@@ -124,7 +123,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   width: double.infinity,
                   padding: EdgeInsets.all(AppSpacing.xl.w),
                   decoration: BoxDecoration(
-                    color: cs.surfaceContainerLow,
+                    color: colors.surfaceContainerLow,
                     borderRadius: AppRadius.bxxl.r,
                     boxShadow: AppShadows.card,
                   ),
@@ -135,7 +134,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         top: -10,
                         child: Icon(
                           Icons.star,
-                          color: cs.primary.withValues(alpha: 0.05),
+                          color: colors.primary.withValues(alpha: 0.05),
                           size: 120,
                         ),
                       ),
@@ -145,7 +144,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           Text(
                             'profile.points_title'.tr().toUpperCase(),
                             style: typography.labelSmall?.copyWith(
-                              color: cs.onSurfaceVariant,
+                              color: colors.onSurfaceVariant,
                               fontWeight: FontWeight.bold,
                               letterSpacing: 1,
                             ),
@@ -155,14 +154,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             text: TextSpan(
                               text: '$points ',
                               style: typography.displayMedium?.copyWith(
-                                color: cs.primary,
+                                color: colors.primary,
                                 fontWeight: FontWeight.w900,
                               ),
                               children: [
                                 TextSpan(
                                   text: 'profile.pts'.tr(),
                                   style: TextStyle(
-                                    color: cs.primary,
+                                    color: colors.primary,
                                     fontSize: 18.sp,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -235,7 +234,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Text(
                   'profile.need_help'.tr(),
                   style: typography.bodySmall?.copyWith(
-                    color: cs.onSurfaceVariant,
+                    color: colors.onSurfaceVariant,
                   ),
                 ),
                 SizedBox(height: AppSpacing.lg.h),
@@ -263,3 +262,4 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 }
+

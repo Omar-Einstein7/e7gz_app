@@ -31,11 +31,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final cs = context.colorScheme;
-    final typography = context.textTheme;
+    final colors = context.colors;
+    final typography = context.typography;
 
     return Scaffold(
-      backgroundColor: cs.background,
+    
       body: Stack(
         children: [
           // Background Decorative Elements
@@ -46,7 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
               width: 600.w,
               height: 600.h,
               decoration: BoxDecoration(
-                color: cs.primary.withValues(alpha: 0.1),
+                color: colors.primary.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: BackdropFilter(
@@ -63,7 +63,7 @@ class _LoginScreenState extends State<LoginScreen> {
               width: 400.w,
               height: 400.h,
               decoration: BoxDecoration(
-                color: cs.primaryContainer.withValues(alpha: 0.1),
+                color: colors.primaryContainer.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: BackdropFilter(
@@ -114,7 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       Container(
                         padding: EdgeInsets.all(AppSpacing.xl.w),
                         decoration: BoxDecoration(
-                          color: cs.surfaceContainerLow.withValues(alpha: 0.8),
+                          color: colors.surfaceContainerLow.withValues(alpha: 0.8),
                           borderRadius: AppRadius.bxxl.r,
                           boxShadow: [
                             BoxShadow(
@@ -131,7 +131,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             Text(
                               'auth.log_in'.tr(),
                               style: typography.headlineSmall?.copyWith(
-                                color: cs.onSurface,
+                                color: colors.onSurface,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 24.sp,
                               ),
@@ -140,7 +140,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             Text(
                               'auth.log_in_subtitle'.tr(),
                               style: typography.bodySmall?.copyWith(
-                                color: cs.onSurfaceVariant,
+                                color: colors.onSurfaceVariant,
                                 fontSize: 14.sp,
                               ),
                             ),
@@ -187,7 +187,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                           'auth.forgot_password'.tr(),
                                           style: typography.labelSmall
                                               ?.copyWith(
-                                                color: cs.primary,
+                                                color: colors.primary,
                                                 fontWeight: FontWeight.bold,
                                               ),
                                         ),
@@ -249,7 +249,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             Row(
                               children: [
                                 Expanded(
-                                  child: Divider(color: cs.outlineVariant),
+                                  child: Divider(color: colors.outlineVariant),
                                 ),
                                 Padding(
                                   padding: EdgeInsets.symmetric(
@@ -258,7 +258,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   child: Text(
                                     'auth.or_continue_with'.tr().toUpperCase(),
                                     style: typography.labelSmall?.copyWith(
-                                      color: cs.onSurfaceVariant.withValues(
+                                      color: colors.onSurfaceVariant.withValues(
                                         alpha: 0.5,
                                       ),
                                       fontWeight: FontWeight.w900,
@@ -267,7 +267,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                 ),
                                 Expanded(
-                                  child: Divider(color: cs.outlineVariant),
+                                  child: Divider(color: colors.outlineVariant),
                                 ),
                               ],
                             ),
@@ -309,13 +309,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                   text: TextSpan(
                                     text: 'auth.dont_have_account'.tr(),
                                     style: typography.bodySmall?.copyWith(
-                                      color: cs.onSurfaceVariant,
+                                      color: colors.onSurfaceVariant,
                                     ),
                                     children: [
                                       TextSpan(
                                         text: 'auth.sign_up'.tr(),
                                         style: TextStyle(
-                                          color: cs.primary,
+                                          color: colors.primary,
                                           fontWeight: FontWeight.bold,
                                           decoration: TextDecoration.underline,
                                         ),
@@ -359,8 +359,8 @@ class _LoginScreenState extends State<LoginScreen> {
       padding: EdgeInsets.only(left: 4.w, bottom: 8.h),
       child: Text(
         text,
-        style: context.textTheme.labelSmall?.copyWith(
-          color: context.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+        style: context.typography.labelSmall?.copyWith(
+          color: context.colors.onSurfaceVariant.withValues(alpha: 0.6),
           fontWeight: FontWeight.w900,
           letterSpacing: 1.2,
         ),
@@ -371,8 +371,8 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _legalLink(BuildContext context, String text) {
     return Text(
       text,
-      style: context.textTheme.labelSmall?.copyWith(
-        color: context.colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
+      style: context.typography.labelSmall?.copyWith(
+        color: context.colors.onSurfaceVariant.withValues(alpha: 0.4),
         fontSize: 10.sp,
         fontWeight: FontWeight.w900,
         letterSpacing: 1.5,
@@ -380,3 +380,4 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
+

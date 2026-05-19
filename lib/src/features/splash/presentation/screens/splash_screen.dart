@@ -41,7 +41,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final cs = context.theme.colorScheme;
+    final colors = context.theme.colorScheme;
     final tt = context.theme.textTheme;
 
     return BlocListener<SessionCubit, SessionState>(
@@ -49,7 +49,6 @@ class _SplashScreenState extends State<SplashScreen> {
         _handleNavigation(context, state.status, state.user);
       },
       child: Scaffold(
-        backgroundColor: const Color(0xFF0B1326),
         body: Stack(
           children: [
             // Background Decorative Elements (from code.html)
@@ -60,7 +59,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 width: 600.w,
                 height: 600.h,
                 decoration: BoxDecoration(
-                  color: cs.primary.withValues(alpha: 0.1),
+                  color: colors.primary.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: BackdropFilter(
@@ -126,7 +125,7 @@ class _SplashScreenState extends State<SplashScreen> {
                         height: 20.w,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(cs.primary),
+                          valueColor: AlwaysStoppedAnimation<Color>(colors.primary),
                         ),
                       ),
                       SizedBox(height: 24.h),
@@ -188,3 +187,4 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 }
+

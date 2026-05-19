@@ -317,3 +317,4 @@ class _RecentActivityCard extends StatelessWidget {
     );
   }
 }
+

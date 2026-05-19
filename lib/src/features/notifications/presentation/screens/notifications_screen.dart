@@ -8,11 +8,10 @@ class NotificationsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cs = context.theme.colorScheme;
+    final colors = context.theme.colorScheme;
     final tt = context.theme.textTheme;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0B1326),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -34,7 +33,7 @@ class NotificationsScreen extends StatelessWidget {
             child: Text(
               'Mark as read',
               style: TextStyle(
-                color: cs.primary,
+                color: colors.primary,
                 fontSize: 12.sp,
                 fontWeight: FontWeight.bold,
               ),
@@ -89,7 +88,7 @@ class NotificationsScreen extends StatelessWidget {
                     time: _formatTime(n.createdAt),
                     icon: _getIconForType(n.type),
                     isUnread: !n.isRead,
-                    cs: cs,
+                    colors: colors,
                   ),
                 );
               },
@@ -138,7 +137,7 @@ class NotificationsScreen extends StatelessWidget {
     required String time,
     required IconData icon,
     required bool isUnread,
-    required ColorScheme cs,
+    required ColorScheme colors,
   }) {
     return Container(
       padding: EdgeInsets.all(20.w),
@@ -147,7 +146,7 @@ class NotificationsScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(24.r),
         border: Border.all(
           color: isUnread
-              ? cs.primary.withValues(alpha: 0.1)
+              ? colors.primary.withValues(alpha: 0.1)
               : Colors.white.withValues(alpha: 0.05),
         ),
       ),
@@ -163,7 +162,7 @@ class NotificationsScreen extends StatelessWidget {
             ),
             child: Icon(
               icon,
-              color: isUnread ? cs.primary : const Color(0xFFBCC7DE),
+              color: isUnread ? colors.primary : const Color(0xFFBCC7DE),
               size: 24,
             ),
           ),
@@ -212,7 +211,7 @@ class NotificationsScreen extends StatelessWidget {
               height: 8.w,
               margin: EdgeInsets.only(left: 12.w, top: 4.h),
               decoration: BoxDecoration(
-                color: cs.primary,
+                color: colors.primary,
                 shape: BoxShape.circle,
               ),
             ),
@@ -221,3 +220,4 @@ class NotificationsScreen extends StatelessWidget {
     );
   }
 }
+

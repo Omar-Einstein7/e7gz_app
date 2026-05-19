@@ -9,7 +9,6 @@ class BookingSuccessScreen extends StatelessWidget {
     final tt = context.theme.textTheme;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0B1326),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 32.w),
@@ -155,3 +154,4 @@ class BookingSuccessScreen extends StatelessWidget {
     );
   }
 }
+

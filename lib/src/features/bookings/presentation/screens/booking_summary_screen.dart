@@ -39,7 +39,6 @@ class _BookingSummaryView extends StatelessWidget {
     final colors = context.colors;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0B1326),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -271,3 +270,4 @@ class _BookingSummaryView extends StatelessWidget {
     );
   }
 }
+

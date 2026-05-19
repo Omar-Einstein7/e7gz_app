@@ -9,13 +9,13 @@ class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
   void _showLanguageBottomSheet(BuildContext context) {
-    final cs = context.colorScheme;
-    final typography = context.textTheme;
+    final colors = context.colors;
+    final typography = context.typography;
     final currentLocale = context.locale;
 
     showModalBottomSheet(
       context: context,
-      backgroundColor: cs.surfaceContainerHigh,
+      backgroundColor: colors.surfaceContainerHigh,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
       ),
@@ -30,7 +30,7 @@ class SettingsScreen extends StatelessWidget {
                 Text(
                   'settings.choose_language'.tr(),
                   style: typography.titleLarge?.copyWith(
-                    color: cs.onSurface,
+                    color: colors.onSurface,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -62,26 +62,25 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cs = context.colorScheme;
-    final typography = context.textTheme;
+    final colors = context.colors;
+    final typography = context.typography;
     final isArabic = context.locale.languageCode == 'ar';
 
     return Scaffold(
-      backgroundColor: cs.background,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
           icon: Icon(
             isArabic ? Icons.arrow_back_ios_new : Icons.arrow_back_ios,
-            color: cs.onSurface,
+            color: colors.onSurface,
           ),
           onPressed: () => context.pop(),
         ),
         title: Text(
           'settings.title'.tr(),
           style: typography.headlineSmall?.copyWith(
-            color: cs.onSurface,
+            color: colors.onSurface,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -95,7 +94,7 @@ class SettingsScreen extends StatelessWidget {
             Text(
               'settings.app_preferences'.tr(),
               style: typography.titleMedium?.copyWith(
-                color: cs.primary,
+                color: colors.primary,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -128,7 +127,7 @@ class SettingsScreen extends StatelessWidget {
             Text(
               'settings.notifications'.tr(),
               style: typography.titleMedium?.copyWith(
-                color: cs.primary,
+                color: colors.primary,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -143,7 +142,7 @@ class SettingsScreen extends StatelessWidget {
             Text(
               'settings.account_privacy'.tr(),
               style: typography.titleMedium?.copyWith(
-                color: cs.primary,
+                color: colors.primary,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -190,7 +189,7 @@ class _LanguageOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cs = context.colorScheme;
+    final colors = context.colors;
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(16.r),
@@ -198,10 +197,10 @@ class _LanguageOption extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
         decoration: BoxDecoration(
           color: isSelected
-              ? cs.primary.withOpacity(0.05)
-              : cs.surfaceContainerLow,
+              ? colors.primary.withOpacity(0.05)
+              : colors.surfaceContainerLow,
           borderRadius: BorderRadius.circular(16.r),
-          border: isSelected ? Border.all(color: cs.primary, width: 2) : null,
+          border: isSelected ? Border.all(color: colors.primary, width: 2) : null,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -209,16 +208,17 @@ class _LanguageOption extends StatelessWidget {
             Text(
               title,
               style: TextStyle(
-                color: isSelected ? cs.primary : cs.onSurface,
+                color: isSelected ? colors.primary : colors.onSurface,
                 fontSize: 16.sp,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
               ),
             ),
             if (isSelected)
-              Icon(IconsaxPlusBold.tick_circle, color: cs.primary, size: 22),
+              Icon(IconsaxPlusBold.tick_circle, color: colors.primary, size: 22),
           ],
         ),
       ),
     );
   }
 }
+

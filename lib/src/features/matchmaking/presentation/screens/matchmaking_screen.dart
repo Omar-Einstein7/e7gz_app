@@ -52,7 +52,6 @@ class _MatchmakingViewState extends State<_MatchmakingView> {
         : theme.colorScheme.surfaceContainerLow;
 
     return Scaffold(
-      backgroundColor: bgColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -252,3 +251,4 @@ class _MatchmakingViewState extends State<_MatchmakingView> {
     );
   }
 }
+
