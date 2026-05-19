@@ -39,4 +39,5 @@ class AppLogger {
 void logInfo(String msg) => AppLogger.info(msg);
 void logSuccess(String msg) => AppLogger.success(msg);
 void logWarning(String msg) => AppLogger.warning(msg);
-void logError(String msg) => AppLogger.error(msg);
+void logError(String msg, [Object? error, StackTrace? stackTrace]) =>
+    AppLogger.error(msg, error, stackTrace);

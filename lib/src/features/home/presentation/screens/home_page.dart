@@ -49,9 +49,7 @@ class _HomePageState extends State<HomePage> {
       body: BlocBuilder<PitchesCubit, PitchesState>(
         builder: (context, state) {
           if (state.status == PitchesStatus.loading && state.pitches.isEmpty) {
-            return Center(
-              child: CircularProgressIndicator(color: colors.primary),
-            );
+            return const _HomeLoadingSkeleton();
           }
 
           return RefreshIndicator(
@@ -122,6 +120,63 @@ class _HomePageState extends State<HomePage> {
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+class _HomeLoadingSkeleton extends StatelessWidget {
+  const _HomeLoadingSkeleton();
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      physics: const NeverScrollableScrollPhysics(),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 16.h),
+          // Headline Skeleton
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 24.w),
+            child: Container(
+              height: 80.h,
+              width: 300.w,
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(8.r),
+              ),
+            ),
+          ),
+          SizedBox(height: 32.h),
+          // Search Bar Skeleton
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 24.w),
+            child: Container(
+              height: 56.h,
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(16.r),
+              ),
+            ),
+          ),
+          SizedBox(height: 32.h),
+          // Featured Section Skeleton
+          const HomeSectionHeader(
+            title: 'home.featured_pitches',
+            onViewAllPressed: null,
+          ),
+          SizedBox(height: 24.h),
+          HomeSkeleton.featured(),
+          SizedBox(height: 48.h),
+          // Near Location Section Skeleton
+          const HomeSectionHeader(
+            title: 'home.near_location',
+            onViewAllPressed: null,
+          ),
+          SizedBox(height: 24.h),
+          HomeSkeleton.nearLocation(),
+        ],
       ),
     );
   }

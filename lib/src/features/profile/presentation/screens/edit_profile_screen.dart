@@ -1,3 +1,6 @@
+import 'package:image_picker/image_picker.dart';
+import 'package:e7gz/src/di/injection_container.dart';
+import '../widgets/profile_header.dart';
 import 'package:e7gz/src/features/auth/presentation/providers/session_cubit.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
@@ -15,29 +18,22 @@ class EditProfileScreen extends StatefulWidget {
 class _EditProfileScreenState extends State<EditProfileScreen> {
   final _formKey = GlobalKey<FormState>();
   late final TextEditingController _nameController;
-  late final TextEditingController _passwordController;
-  late final TextEditingController _confirmPasswordController;
 
   @override
   void initState() {
     super.initState();
     final user = context.read<SessionCubit>().state.user;
     _nameController = TextEditingController(text: user?.name);
-    _passwordController = TextEditingController();
-    _confirmPasswordController = TextEditingController();
   }
 
   @override
   void dispose() {
     _nameController.dispose();
-    _passwordController.dispose();
-    _confirmPasswordController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.colors;
     final typography = context.typography;
 
     return Scaffold(
@@ -50,69 +46,108 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(AppSpacing.lg.w),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const AuthInputLabel(label: 'auth.full_name', isCompact: true),
-              AppTextField(
-                controller: _nameController,
-                hint: 'auth.full_name_hint'.tr(),
-                prefixIcon: const Icon(IconsaxPlusBold.profile),
-                validator: Validators.name,
+        child: BlocBuilder<SessionCubit, SessionState>(
+          builder: (context, state) {
+            final user = state.user;
+            return Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ProfileHeader(
+                    name: user?.name ?? '',
+                    email: user?.email ?? '',
+                    photoUrl: user?.photoUrl,
+                    onImageTap: () async {
+                      final picker = ImagePicker();
+                      final pickedFile = await picker.pickImage(
+                        source: ImageSource.gallery,
+                      );
+                      if (pickedFile != null && context.mounted) {
+                        try {
+                          showDialog<void>(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (context) => const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          );
+
+                          await sl<AuthService>().updateProfile(
+                            photoPath: pickedFile.path,
+                          );
+
+                          if (context.mounted) {
+                            Navigator.pop(context); // Close loading dialog
+                            context.showSuccessSnackBar(
+                              'profile.photo_updated'.tr(),
+                            );
+                          }
+                        } catch (e) {
+                          if (context.mounted) {
+                            Navigator.pop(context);
+                            context.showErrorSnackBar('Failed to upload image');
+                          }
+                        }
+                      }
+                    },
+                  ),
+                  SizedBox(height: AppSpacing.xxl.h),
+                  AuthInputLabel(label: 'auth.full_name'.tr(), isCompact: true),
+                  AppTextField(
+                    controller: _nameController,
+                    hint: 'auth.full_name_hint'.tr(),
+                    prefixIcon: const Icon(IconsaxPlusBold.profile),
+                    validator: Validators.name,
+                  ),
+                  SizedBox(height: AppSpacing.xxl.h),
+
+                  AppButton(
+                    label: 'common.save_changes'.tr(),
+                    isFullWidth: true,
+                    height: ButtonSize.large,
+                    onPressed: () async {
+                      if (_formKey.currentState?.validate() ?? false) {
+                        try {
+                          showDialog<void>(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (context) => const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          );
+
+                          // Update name if changed
+                          await sl<AuthService>().updateProfile(
+                            name: _nameController.text,
+                          );
+
+                          // Handle password update if password is not empty
+                          // (Note: Backend may need a specialized route for password update)
+
+                          if (context.mounted) {
+                            Navigator.pop(context); // Close loading dialog
+                            context.showSuccessSnackBar(
+                              'profile.success_update'.tr(),
+                            );
+
+                            context.pop();
+                          }
+                        } catch (e) {
+                          if (context.mounted) {
+                            Navigator.pop(context);
+                            context.showErrorSnackBar(
+                              'Failed to update profile',
+                            );
+                          }
+                        }
+                      }
+                    },
+                  ),
+                ],
               ),
-              SizedBox(height: AppSpacing.xl.h),
-              const Divider(),
-              SizedBox(height: AppSpacing.xl.h),
-              Text(
-                'profile.change_password'.tr(),
-                style: typography.titleMedium?.copyWith(
-                  color: colors.primary,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: AppSpacing.md.h),
-              const AuthInputLabel(label: 'auth.new_password', isCompact: true),
-              AppTextField(
-                controller: _passwordController,
-                hint: '••••••••',
-                obscureText: true,
-                prefixIcon: const Icon(IconsaxPlusBold.lock),
-              ),
-              SizedBox(height: AppSpacing.lg.h),
-              const AuthInputLabel(
-                label: 'auth.confirm_password',
-                isCompact: true,
-              ),
-              AppTextField(
-                controller: _confirmPasswordController,
-                hint: '••••••••',
-                obscureText: true,
-                prefixIcon: const Icon(IconsaxPlusBold.lock),
-                validator: (v) {
-                  if (_passwordController.text.isNotEmpty &&
-                      v != _passwordController.text) {
-                    return 'auth.passwords_do_not_match'.tr();
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: AppSpacing.xxl.h),
-              AppButton(
-                label: 'common.save_changes'.tr(),
-                isFullWidth: true,
-                height: ButtonSize.large,
-                onPressed: () {
-                  if (_formKey.currentState?.validate() ?? false) {
-                    // Logic to update name and password
-                    context.showSuccessSnackBar('Profile updated successfully');
-                    context.pop();
-                  }
-                },
-              ),
-            ],
-          ),
+            );
+          },
         ),
       ),
     );

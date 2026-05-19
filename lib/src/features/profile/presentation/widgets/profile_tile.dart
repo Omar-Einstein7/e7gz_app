@@ -5,6 +5,7 @@ class ProfileTile extends StatelessWidget {
   final String subtitle;
   final IconData icon;
   final bool isLogout;
+  final Widget? trailing;
   final VoidCallback? onTap;
 
   const ProfileTile({
@@ -13,6 +14,7 @@ class ProfileTile extends StatelessWidget {
     required this.subtitle,
     required this.icon,
     this.isLogout = false,
+    this.trailing,
     this.onTap,
   });
 
@@ -69,10 +71,11 @@ class ProfileTile extends StatelessWidget {
                 ],
               ),
             ),
-            Icon(
-              Icons.chevron_right,
-              color: subtitleColor.withValues(alpha: 0.3),
-            ),
+            trailing ??
+                Icon(
+                  Icons.chevron_right,
+                  color: subtitleColor.withValues(alpha: 0.3),
+                ),
           ],
         ),
       ),

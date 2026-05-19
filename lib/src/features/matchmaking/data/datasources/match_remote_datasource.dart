@@ -59,11 +59,32 @@ class MatchRemoteDataSource {
     );
   }
 
-  Future<MatchModel> joinMatch(String id) async {
-    final result = await _dio.post('matches/$id/join');
+  Future<MatchModel> joinMatch(String id, String team) async {
+    final result = await _dio.post('matches/$id/join', data: {'team': team});
     return result.fold((failure) => throw failure.message, (response) {
       final data = response.data as Map<String, dynamic>;
       return MatchModel.fromJson(data['data']['match'] as Map<String, dynamic>);
+    });
+  }
+
+  Future<MatchModel> resolveMatch(String id, String winner) async {
+    final result = await _dio.post(
+      'matches/$id/resolve',
+      data: {'winner': winner},
+    );
+    return result.fold((failure) => throw failure.message, (response) {
+      final data = response.data as Map<String, dynamic>;
+      return MatchModel.fromJson(data['data']['match'] as Map<String, dynamic>);
+    });
+  }
+
+  Future<List<Map<String, dynamic>>> getLeaderboard() async {
+    final result = await _dio.get('matches/leaderboard');
+    return result.fold((failure) => throw failure.message, (response) {
+      final data = response.data as Map<String, dynamic>;
+      return (data['data']['leaderboard'] as List<dynamic>)
+          .map((e) => e as Map<String, dynamic>)
+          .toList();
     });
   }
 }

@@ -40,7 +40,7 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: colors.onSurface),
+          icon: Icon(Icons.arrow_back_ios_new_outlined, color: colors.onSurface),
           onPressed: () => Navigator.pop(context),
         ),
         title: Row(

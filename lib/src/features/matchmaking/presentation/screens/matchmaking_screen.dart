@@ -30,6 +30,7 @@ class _MatchmakingViewState extends State<_MatchmakingView> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<MatchmakingCubit>().loadMatches();
+      context.read<MatchmakingCubit>().loadLeaderboard();
     });
   }
 
@@ -40,9 +41,6 @@ class _MatchmakingViewState extends State<_MatchmakingView> {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
-    final bgColor = isDark
-        ? const Color(0xFF0B1326)
-        : theme.colorScheme.surface;
     final textColor = isDark ? Colors.white : theme.colorScheme.onSurface;
     final secondaryTextColor = isDark
         ? const Color(0xFFBCC7DE)
@@ -55,7 +53,6 @@ class _MatchmakingViewState extends State<_MatchmakingView> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-
         title: Text(
           'e7gzz',
           style: typography.headlineSmall?.copyWith(
@@ -89,7 +86,10 @@ class _MatchmakingViewState extends State<_MatchmakingView> {
             return RefreshIndicator(
               color: theme.colorScheme.primary,
               backgroundColor: theme.colorScheme.surface,
-              onRefresh: () => context.read<MatchmakingCubit>().loadMatches(),
+              onRefresh: () async {
+                context.read<MatchmakingCubit>().loadMatches();
+                context.read<MatchmakingCubit>().loadLeaderboard();
+              },
               child: SingleChildScrollView(
                 padding: EdgeInsets.all(24.w),
                 child: Column(
@@ -171,7 +171,6 @@ class _MatchmakingViewState extends State<_MatchmakingView> {
                         ),
                       )
                     else
-                      // Matches (Stay visible on partial failures)
                       ...state.matches.map((match) {
                         return Padding(
                           padding: EdgeInsets.only(bottom: 16.h),
@@ -183,9 +182,12 @@ class _MatchmakingViewState extends State<_MatchmakingView> {
                                 match.id,
                               ),
                             ),
-                            onJoin: () => context
-                                .read<MatchmakingCubit>()
-                                .joinMatch(match.id),
+                            onJoin: () => context.push(
+                              AppRoutes.matchDetails.replaceFirst(
+                                ':id',
+                                match.id,
+                              ),
+                            ),
                           ),
                         );
                       }),
@@ -214,22 +216,31 @@ class _MatchmakingViewState extends State<_MatchmakingView> {
                     ),
                     SizedBox(height: 24.h),
 
-                    LeaderboardTile(
-                      rank: '01',
-                      name: 'Amira Khaled',
-                      progress: 'matchmaking.matches_won'.tr(
-                        namedArgs: {'count': '12'},
-                      ),
-                      isMvp: true,
-                    ),
-                    SizedBox(height: 12.h),
-                    LeaderboardTile(
-                      rank: '02',
-                      name: 'Youssef Tarek',
-                      progress: 'matchmaking.matches_won'.tr(
-                        namedArgs: {'count': '10'},
-                      ),
-                    ),
+                    if (state.leaderboardStatus == MatchmakingStatus.loading &&
+                        state.leaderboard.isEmpty)
+                      const Center(child: CircularProgressIndicator())
+                    else if (state.leaderboard.isEmpty)
+                      Center(
+                        child: Text(
+                          'matchmaking.no_leaderboard_data'.tr(),
+                          style: TextStyle(color: secondaryTextColor),
+                        ),
+                      )
+                    else
+                      ...List.generate(state.leaderboard.length, (index) {
+                        final entry = state.leaderboard[index];
+                        return Padding(
+                          padding: EdgeInsets.only(bottom: 12.h),
+                          child: LeaderboardTile(
+                            rank: (index + 1).toString().padLeft(2, '0'),
+                            name: entry.name,
+                            progress: 'matchmaking.matches_won'.tr(
+                              namedArgs: {'count': entry.wins.toString()},
+                            ),
+                            isMvp: index == 0,
+                          ),
+                        );
+                      }),
 
                     SizedBox(height: 100.h),
                   ],
@@ -251,4 +262,3 @@ class _MatchmakingViewState extends State<_MatchmakingView> {
     );
   }
 }
-

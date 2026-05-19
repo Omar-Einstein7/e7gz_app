@@ -13,11 +13,12 @@ class AuthInputLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final translatedLabel = label.tr();
     if (isCompact) {
       return Padding(
         padding: EdgeInsets.only(left: 4.w, bottom: 8.h),
         child: Text(
-          label.toUpperCase(),
+          translatedLabel.toUpperCase(),
           style: context.typography.labelSmall?.copyWith(
             color: context.colors.onSurfaceVariant.withValues(alpha: 0.6),
             fontWeight: FontWeight.w900,
@@ -29,7 +30,7 @@ class AuthInputLabel extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(left: 8.w, bottom: 8.h),
       child: Text(
-        label,
+        translatedLabel,
         style: context.typography.labelMedium?.copyWith(
           color: context.colors.onSurface.withValues(alpha: 0.8),
           fontWeight: FontWeight.bold,

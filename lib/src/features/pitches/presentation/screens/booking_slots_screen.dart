@@ -62,7 +62,7 @@ class _BookingSlotsScreenState extends State<BookingSlotsScreen> {
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: colors.onSurface),
+            icon: Icon(Icons.arrow_back_ios_new_outlined, color: colors.onSurface),
             onPressed: () => context.pop(),
           ),
           title: Text(

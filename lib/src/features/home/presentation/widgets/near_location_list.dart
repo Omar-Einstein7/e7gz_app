@@ -1,5 +1,7 @@
 import 'dart:ui';
+import 'widgets.dart';
 import 'package:e7gz/src/imports/imports.dart';
+
 import 'package:e7gz/src/features/pitches/presentation/cubit/pitches_cubit.dart';
 import 'package:e7gz/src/features/pitches/presentation/cubit/pitches_state.dart';
 import 'package:e7gz/src/di/injection_container.dart';
@@ -50,7 +52,7 @@ class _NearLocationListState extends State<NearLocationList> {
       child: BlocBuilder<PitchesCubit, PitchesState>(
         builder: (context, state) {
           if (state.status == PitchesStatus.loading && state.pitches.isEmpty) {
-            return const Center(child: CircularProgressIndicator());
+            return HomeSkeleton.nearLocation();
           }
 
           if (state.status == PitchesStatus.failure) {
@@ -115,8 +117,10 @@ class _NearPitchCard extends StatelessWidget {
     final pitchTheme = context.pitchTheme;
 
     return GestureDetector(
-      onTap: () =>
-          context.push(AppRoutes.pitchDetails.replaceFirst(':id', pitch.id)),
+      onTap: () => context.push(
+        AppRoutes.pitchDetails.replaceFirst(':id', pitch.id),
+        extra: {'pitch': pitch, 'heroTag': 'near_${pitch.id}'},
+      ),
       child: Container(
         width: 275.w,
         margin: EdgeInsets.only(right: 20.w),
@@ -143,11 +147,14 @@ class _NearPitchCard extends StatelessWidget {
                     borderRadius: BorderRadius.vertical(
                       top: Radius.circular(32.r),
                     ),
-                    child: AppCachedImage(
-                      imageUrl: pitch.imageUrl.isNotEmpty
-                          ? pitch.imageUrl
-                          : 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80',
-                      fit: BoxFit.cover,
+                    child: Hero(
+                      tag: 'near_${pitch.id}',
+                      child: AppCachedImage(
+                        imageUrl: pitch.imageUrl.isNotEmpty
+                            ? pitch.imageUrl
+                            : 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80',
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                   // Gradient Overlay for better text contrast

@@ -1,4 +1,6 @@
+import 'package:e7gz/src/features/home/presentation/widgets/widgets.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
+
 import 'package:e7gz/src/imports/imports.dart';
 import 'package:e7gz/src/features/pitches/presentation/cubit/pitches_cubit.dart';
 import 'package:e7gz/src/features/pitches/presentation/cubit/pitches_state.dart';
@@ -16,7 +18,7 @@ class FeaturedPitchesList extends StatelessWidget {
       child: BlocBuilder<PitchesCubit, PitchesState>(
         builder: (context, state) {
           if (state.status == PitchesStatus.loading && state.pitches.isEmpty) {
-            return const Center(child: CircularProgressIndicator());
+            return HomeSkeleton.featured();
           }
 
           if (state.status == PitchesStatus.failure) {
@@ -52,6 +54,7 @@ class FeaturedPitchesList extends StatelessWidget {
               return GestureDetector(
                 onTap: () => context.push(
                   AppRoutes.pitchDetails.replaceFirst(':id', pitch.id),
+                  extra: {'pitch': pitch, 'heroTag': 'featured_${pitch.id}'},
                 ),
                 child: Container(
                   width: 320.w,
@@ -61,15 +64,19 @@ class FeaturedPitchesList extends StatelessWidget {
                       // Image
                       ClipRRect(
                         borderRadius: BorderRadius.circular(40.r),
-                        child: AppCachedImage(
-                          imageUrl: pitch.imageUrl.isNotEmpty
-                              ? pitch.imageUrl
-                              : 'https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80',
-                          fit: BoxFit.cover,
-                          width: double.infinity,
-                          height: double.infinity,
+                        child: Hero(
+                          tag: 'featured_${pitch.id}',
+                          child: AppCachedImage(
+                            imageUrl: pitch.imageUrl.isNotEmpty
+                                ? pitch.imageUrl
+                                : 'https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80',
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                            height: double.infinity,
+                          ),
                         ),
                       ),
+
                       // Overlay
                       Container(
                         decoration: BoxDecoration(

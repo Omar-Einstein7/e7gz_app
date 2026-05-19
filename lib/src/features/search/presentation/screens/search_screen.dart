@@ -287,6 +287,10 @@ class _SearchScreenState extends State<SearchScreen> {
                               ':id',
                               pitch.id,
                             ),
+                            extra: {
+                              'pitch': pitch,
+                              'heroTag': 'search_${pitch.id}',
+                            },
                           ),
                         )
                         .animate()
@@ -302,4 +306,3 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 }
-

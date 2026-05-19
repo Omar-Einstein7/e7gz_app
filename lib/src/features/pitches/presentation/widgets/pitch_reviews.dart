@@ -1,6 +1,10 @@
+import 'package:intl/intl.dart';
 import 'package:e7gz/src/imports/imports.dart';
+
 import '../widgets/widgets.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import '../cubit/pitches_cubit.dart';
+import '../cubit/pitches_state.dart';
 
 class PitchReviewsSection extends StatelessWidget {
   final dynamic pitch;
@@ -44,7 +48,7 @@ class PitchReviewsSection extends StatelessWidget {
               ),
             ),
           )
-        else
+        else ...[
           Container(
             padding: EdgeInsets.all(AppSpacing.md.w),
             decoration: BoxDecoration(
@@ -67,7 +71,7 @@ class PitchReviewsSection extends StatelessWidget {
                     RatingBarIndicator(
                       rating: pitch.rating.toDouble(),
                       itemBuilder: (context, index) =>
-                          Icon(Icons.star_rounded, color: Colors.amber),
+                          const Icon(Icons.star_rounded, color: Colors.amber),
                       itemCount: 5,
                       itemSize: 20.sp,
                       direction: Axis.horizontal,
@@ -84,16 +88,94 @@ class PitchReviewsSection extends StatelessWidget {
               ],
             ),
           ),
+          SizedBox(height: AppSpacing.lg.h),
+          BlocBuilder<PitchDetailCubit, PitchDetailState>(
+            builder: (context, state) {
+              if (state.reviews.isEmpty) return const SizedBox.shrink();
+              return Column(
+                children: state.reviews.map((review) {
+                  return Padding(
+                    padding: EdgeInsets.only(bottom: AppSpacing.md.h),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            CircleAvatar(
+                              radius: 16.r,
+                              backgroundImage: review.userPhoto != null
+                                  ? NetworkImage(review.userPhoto!)
+                                  : null,
+                              child: review.userPhoto == null
+                                  ? Text(
+                                      review.userName.substring(0, 1),
+                                      style: typography.labelSmall,
+                                    )
+                                  : null,
+                            ),
+                            SizedBox(width: AppSpacing.sm.w),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    review.userName,
+                                    style: typography.titleSmall?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  RatingBarIndicator(
+                                    rating: review.rating,
+                                    itemBuilder: (context, index) => const Icon(
+                                      Icons.star_rounded,
+                                      color: Colors.amber,
+                                    ),
+                                    itemCount: 5,
+                                    itemSize: 12.sp,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Text(
+                              DateFormat.yMMMd().format(review.createdAt),
+                              style: typography.bodySmall?.copyWith(
+                                color: colors.onSurfaceVariant,
+                              ),
+                            ),
+                          ],
+                        ),
+                        if (review.comment.isNotEmpty) ...[
+                          SizedBox(height: AppSpacing.xs.h),
+                          Padding(
+                            padding: EdgeInsets.only(left: 40.w),
+                            child: Text(
+                              review.comment,
+                              style: typography.bodyMedium,
+                            ),
+                          ),
+                        ],
+                        SizedBox(height: AppSpacing.sm.h),
+                        const Divider(),
+                      ],
+                    ),
+                  );
+                }).toList(),
+              );
+            },
+          ),
+        ],
       ],
     );
   }
 
   void _showRatingDialog(BuildContext context) {
+    final cubit = context.read<PitchDetailCubit>();
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => const _RatingBottomSheet(),
+      builder: (context) =>
+          BlocProvider.value(value: cubit, child: const _RatingBottomSheet()),
     );
   }
 }
@@ -166,15 +248,35 @@ class _RatingBottomSheetState extends State<_RatingBottomSheet> {
             maxLines: 3,
           ),
           SizedBox(height: AppSpacing.xl.h),
-          AppButton(
-            label: 'Submit Review',
-            isFullWidth: true,
-            onPressed: _rating == 0
-                ? null
-                : () {
-                    context.showSuccessSnackBar('Thank you for your review!');
-                    Navigator.pop(context);
-                  },
+          BlocBuilder<PitchDetailCubit, PitchDetailState>(
+            builder: (context, state) {
+              return AppButton(
+                label: 'Submit Review',
+                isLoading: state.isSubmitting,
+                isFullWidth: true,
+                onPressed: _rating == 0 || state.isSubmitting
+                    ? null
+                    : () async {
+                        final cubit = context.read<PitchDetailCubit>();
+                        final navigator = Navigator.of(context);
+                        final scaffoldMessenger = ScaffoldMessenger.of(context);
+
+                        await cubit.submitReview(
+                          pitchId: cubit.state.pitch!.id,
+                          rating: _rating,
+                          comment: _controller.text,
+                        );
+
+                        scaffoldMessenger.showSnackBar(
+                          const SnackBar(
+                            content: Text('Thank you for your review!'),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+                        navigator.pop();
+                      },
+              );
+            },
           ),
         ],
       ),

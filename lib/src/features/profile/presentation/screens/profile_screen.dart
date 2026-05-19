@@ -23,9 +23,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         final name = user?.name ?? 'profile.guest'.tr();
         final email = user?.email ?? '';
         final points = user?.loyaltyPoints ?? 0;
-        final photoUrl =
-            user?.photoUrl ??
-            'https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80';
+        final photoUrl = user?.photoUrl;
 
         return Scaffold(
           appBar: AppBar(
@@ -41,7 +39,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
             padding: EdgeInsets.all(AppSpacing.lg.w),
             child: Column(
               children: [
-                ProfileHeader(name: name, email: email, photoUrl: photoUrl),
+                ProfileHeader(
+                  name: name,
+                  email: email,
+                  photoUrl: photoUrl,
+                  onImageTap: () => context.push(AppRoutes.editProfile),
+                ),
                 SizedBox(height: AppSpacing.xxl.h),
                 ProfileLoyaltyCard(points: points),
                 SizedBox(height: AppSpacing.xl.h),
@@ -57,6 +60,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   subtitle: 'profile.tile_loyalty_sub'.tr(),
                   icon: IconsaxPlusBold.medal,
                   onTap: () => context.push(AppRoutes.loyalty),
+                ),
+                SizedBox(height: AppSpacing.md.h),
+                ProfileTile(
+                  title: 'profile.edit_profile'.tr(),
+                  subtitle: 'Update your personal details and photo',
+                  icon: IconsaxPlusBold.user_edit,
+                  onTap: () => context.push(AppRoutes.editProfile),
                 ),
                 SizedBox(height: AppSpacing.md.h),
                 if ((user?.isAdmin ?? false) || (user?.isOwner ?? false)) ...[

@@ -1,19 +1,61 @@
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
 import 'package:e7gz/src/theme/cubit/theme_cubit.dart';
-import 'package:easy_localization/easy_localization.dart';
+import 'package:e7gz/src/di/injection_container.dart';
+import 'package:e7gz/src/imports/imports.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 import '../widgets/profile_tile.dart';
 
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
+
+  @override
+  State<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
+  bool _pushNotifications = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadNotificationSettings();
+  }
+
+  Future<void> _loadNotificationSettings() async {
+    final prefs = sl<SharedPreferences>();
+    setState(() {
+      _pushNotifications = prefs.getBool('push_notifications') ?? true;
+    });
+  }
+
+  Future<void> _toggleNotifications(bool value) async {
+    final prefs = sl<SharedPreferences>();
+    await prefs.setBool('push_notifications', value);
+    setState(() {
+      _pushNotifications = value;
+    });
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            value
+                ? 'notifications.enabled'.tr()
+                : 'notifications.disabled'.tr(),
+          ),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    }
+  }
 
   void _showLanguageBottomSheet(BuildContext context) {
     final colors = context.colors;
     final typography = context.typography;
     final currentLocale = context.locale;
 
-    showModalBottomSheet(
+    showModalBottomSheet<void>(
       context: context,
       backgroundColor: colors.surfaceContainerHigh,
       shape: RoundedRectangleBorder(
@@ -57,6 +99,56 @@ class SettingsScreen extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  void _showChangePasswordDialog() {
+    final colors = context.colors;
+
+    showDialog<void>(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: colors.surfaceContainerHigh,
+        title: Text('settings.change_password'.tr()),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            AppTextField(
+              label: 'auth.current_password'.tr(),
+              hint: '••••••••',
+              obscureText: true,
+            ),
+            SizedBox(height: AppSpacing.md.h),
+            AppTextField(
+              label: 'auth.new_password'.tr(),
+              hint: '••••••••',
+              obscureText: true,
+            ),
+            SizedBox(height: AppSpacing.md.h),
+            AppTextField(
+              label: 'auth.confirm_password'.tr(),
+              hint: '••••••••',
+              obscureText: true,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('shared.cancel'.tr()),
+          ),
+          AppButton(
+            label: 'shared.save'.tr(),
+            width: ButtonSize.small,
+            onPressed: () {
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('settings.password_updated'.tr())),
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 
@@ -136,7 +228,11 @@ class SettingsScreen extends StatelessWidget {
               title: 'settings.push_notifications'.tr(),
               subtitle: 'settings.push_desc'.tr(),
               icon: IconsaxPlusBold.notification,
-              onTap: () {},
+              trailing: Switch.adaptive(
+                value: _pushNotifications,
+                activeColor: colors.primary,
+                onChanged: _toggleNotifications,
+              ),
             ),
             SizedBox(height: AppSpacing.xl.h),
             Text(
@@ -151,7 +247,7 @@ class SettingsScreen extends StatelessWidget {
               title: 'settings.change_password'.tr(),
               subtitle: 'settings.change_password_desc'.tr(),
               icon: IconsaxPlusBold.lock,
-              onTap: () => context.push(AppRoutes.editProfile),
+              onTap: _showChangePasswordDialog,
             ),
             SizedBox(height: AppSpacing.md.h),
             ProfileTile(
@@ -197,7 +293,7 @@ class _LanguageOption extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
         decoration: BoxDecoration(
           color: isSelected
-              ? colors.primary.withOpacity(0.05)
+              ? colors.primary.withValues(alpha: 0.05)
               : colors.surfaceContainerLow,
           borderRadius: BorderRadius.circular(16.r),
           border: isSelected

@@ -43,7 +43,20 @@ class BookingsCubit extends Cubit<BookingsState> {
       ),
       (cancelled) {
         final updated = state.bookings.map((b) {
-          return b.id == bookingId ? cancelled : b;
+          if (b.id == bookingId) {
+            return cancelled.copyWith(
+              pitchName: cancelled.pitchName.isNotEmpty
+                  ? cancelled.pitchName
+                  : b.pitchName,
+              pitchAddress: cancelled.pitchAddress.isNotEmpty
+                  ? cancelled.pitchAddress
+                  : b.pitchAddress,
+              pitchImage: cancelled.pitchImage ?? b.pitchImage,
+              pitchLatitude: cancelled.pitchLatitude ?? b.pitchLatitude,
+              pitchLongitude: cancelled.pitchLongitude ?? b.pitchLongitude,
+            );
+          }
+          return b;
         }).toList();
         emit(state.copyWith(status: BookingsStatus.success, bookings: updated));
       },

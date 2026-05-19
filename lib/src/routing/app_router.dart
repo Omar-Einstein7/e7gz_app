@@ -108,9 +108,21 @@ final GoRouter appRouter = GoRouter(
       name: 'pitchDetails',
       builder: (context, state) {
         final id = state.pathParameters['id'] ?? '';
-        return PitchDetailsScreen(pitchId: id);
+        Pitch? pitch;
+        String? heroTag;
+
+        if (state.extra is Pitch) {
+          pitch = state.extra as Pitch;
+        } else if (state.extra is Map<String, dynamic>) {
+          final map = state.extra as Map<String, dynamic>;
+          pitch = map['pitch'] as Pitch?;
+          heroTag = map['heroTag'] as String?;
+        }
+
+        return PitchDetailsScreen(pitchId: id, pitch: pitch, heroTag: heroTag);
       },
     ),
+
     GoRoute(
       path: AppRoutes.matchDetails,
       name: 'matchDetails',

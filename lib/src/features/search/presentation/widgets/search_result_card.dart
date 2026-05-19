@@ -30,7 +30,7 @@ class SearchResultCard extends StatelessWidget {
                     top: Radius.circular(32.r),
                   ),
                   child: Hero(
-                    tag: 'pitch_image_${pitch.id}',
+                    tag: 'search_${pitch.id}',
                     child: AppCachedImage(
                       imageUrl: pitch.imageUrl,
                       height: 200.h,

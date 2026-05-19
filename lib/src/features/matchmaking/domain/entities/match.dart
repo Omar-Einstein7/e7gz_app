@@ -16,7 +16,11 @@ class MatchmakingMatch {
   final String endTime;
   final int maxPlayers;
   final List<String> participantIds;
-  final List<Participant> participants; // Added this
+  final List<Participant> participants;
+  final List<Participant> teamA;
+  final List<Participant> teamB;
+  final String? winner;
+  final String? cancellationReason;
   final double pricePerPlayer;
   final String skillLevel;
   final String status;
@@ -34,7 +38,11 @@ class MatchmakingMatch {
     required this.endTime,
     required this.maxPlayers,
     required this.participantIds,
-    this.participants = const [], // Added this
+    this.participants = const [],
+    this.teamA = const [],
+    this.teamB = const [],
+    this.winner,
+    this.cancellationReason,
     required this.pricePerPlayer,
     required this.skillLevel,
     required this.status,

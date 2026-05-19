@@ -13,7 +13,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'profile.privacy_policy'.tr(),
+          'settings.privacy_policy'.tr(),
           style: typography.titleLarge?.copyWith(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,

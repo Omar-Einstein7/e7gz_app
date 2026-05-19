@@ -71,4 +71,19 @@ class PitchRepositoryImpl implements PitchRepository {
       return pitch;
     }, requiresNetwork: true);
   }
+
+  @override
+  FutureEither<void> createReview({
+    required String pitchId,
+    required double rating,
+    required String comment,
+  }) async {
+    return runTask(() async {
+      await _remote.createReview(
+        pitchId: pitchId,
+        rating: rating,
+        comment: comment,
+      );
+    }, requiresNetwork: true);
+  }
 }

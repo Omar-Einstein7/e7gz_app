@@ -6,12 +6,14 @@ class PitchHeaderDelegate extends SliverPersistentHeaderDelegate {
   final double expandedHeight;
   final double collapsedHeight;
   final double topPadding;
+  final String? heroTag;
 
   PitchHeaderDelegate({
     required this.pitch,
     required this.expandedHeight,
     required this.collapsedHeight,
     required this.topPadding,
+    this.heroTag,
   });
 
   @override
@@ -38,7 +40,8 @@ class PitchHeaderDelegate extends SliverPersistentHeaderDelegate {
         Transform.scale(
           scale: imageScale,
           child: Hero(
-            tag: 'pitch_image_${pitch.id}',
+            tag: heroTag ?? 'pitch_image_${pitch.id}',
+
             child: pitch.images.isNotEmpty
                 ? ImagePageView(images: pitch.images, opacity: 1.0 - percent)
                 : AppCachedImage(
@@ -149,7 +152,7 @@ class PitchHeaderDelegate extends SliverPersistentHeaderDelegate {
           top: topPadding + 8,
           left: 16.w,
           child: CircleActionButton(
-            icon: Icons.arrow_back,
+            icon: Icons.arrow_back_ios_new_outlined,
             onPressed: () => Navigator.of(context).pop(),
           ),
         ),

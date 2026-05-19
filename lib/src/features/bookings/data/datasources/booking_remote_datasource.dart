@@ -1,5 +1,6 @@
-import 'package:e7gz/src/services/dio_service.dart';
-import '../models/booking_model.dart';
+import '../../../../utils/logger.dart';
+import '../../../bookings/data/models/booking_model.dart';
+import '../../../../services/dio_service.dart';
 
 class BookingRemoteDataSource {
   final DioService _dio;
@@ -7,17 +8,29 @@ class BookingRemoteDataSource {
   BookingRemoteDataSource({required DioService dioService}) : _dio = dioService;
 
   Future<List<BookingModel>> getMyBookings({String? status}) async {
-    final params = <String, dynamic>{if (status != null) 'status': status};
-    final result = await _dio.get('bookings', queryParameters: params);
-    return result.fold((failure) => throw Exception(failure.message), (
-      response,
-    ) {
-      final data = response.data as Map<String, dynamic>;
-      final list = data['data']['bookings'] as List<dynamic>? ?? [];
-      return list
-          .map((b) => BookingModel.fromJson(b as Map<String, dynamic>))
-          .toList();
-    });
+    try {
+      final params = <String, dynamic>{if (status != null) 'status': status};
+      final result = await _dio.get('bookings', queryParameters: params);
+
+      return result.fold(
+        (failure) {
+          logError('Failed to fetch bookings: ${failure.message}');
+          throw Exception(failure.message);
+        },
+        (response) {
+          logInfo('Bookings response status: ${response.statusCode}');
+          final data = response.data as Map<String, dynamic>;
+          final list = data['data']['bookings'] as List<dynamic>? ?? [];
+          logSuccess('Fetched ${list.length} bookings');
+          return list
+              .map((b) => BookingModel.fromJson(b as Map<String, dynamic>))
+              .toList();
+        },
+      );
+    } catch (e, stackTrace) {
+      logError('Failed to fetch bookings', e, stackTrace);
+      rethrow;
+    }
   }
 
   Future<BookingModel> getBookingById(String id) async {

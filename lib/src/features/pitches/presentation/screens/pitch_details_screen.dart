@@ -9,27 +9,37 @@ import '../widgets/widgets.dart';
 
 class PitchDetailsScreen extends StatelessWidget {
   final String pitchId;
-  const PitchDetailsScreen({super.key, required this.pitchId});
+  final Pitch? pitch;
+  final String? heroTag;
+  const PitchDetailsScreen({
+    super.key,
+    required this.pitchId,
+    this.pitch,
+    this.heroTag,
+  });
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => sl<PitchDetailCubit>()..loadPitch(pitchId),
-      child: const _PitchDetailsView(),
+      create: (context) =>
+          sl<PitchDetailCubit>()..loadPitch(pitchId, initialPitch: pitch),
+      child: _PitchDetailsView(heroTag: heroTag),
     );
   }
 }
 
 class _PitchDetailsView extends StatelessWidget {
-  const _PitchDetailsView();
+  final String? heroTag;
+  const _PitchDetailsView({this.heroTag});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocBuilder<PitchDetailCubit, PitchDetailState>(
         builder: (context, state) {
-          if (state.status == PitchDetailStatus.loading ||
-              state.status == PitchDetailStatus.initial) {
+          if ((state.status == PitchDetailStatus.loading ||
+                  state.status == PitchDetailStatus.initial) &&
+              state.pitch == null) {
             return Center(
               child: CircularProgressIndicator(color: context.colors.primary),
             );
@@ -67,11 +77,13 @@ class _PitchDetailsView extends StatelessWidget {
                 pinned: true,
                 delegate: PitchHeaderDelegate(
                   pitch: pitch,
+                  heroTag: heroTag,
                   expandedHeight: isWide ? 500 : 0.8.sh,
                   collapsedHeight: isWide ? 300 : 0.5.sh,
                   topPadding: MediaQuery.paddingOf(context).top,
                 ),
               ),
+
               SliverToBoxAdapter(
                 child: Container(
                   decoration: BoxDecoration(color: context.colors.background),

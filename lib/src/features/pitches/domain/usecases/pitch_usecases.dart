@@ -50,3 +50,20 @@ class GetPitchDetailsUseCase {
 
   FutureEither<Pitch> call(String id) => _repository.getPitchById(id);
 }
+
+class CreateReviewUseCase {
+  final PitchRepository _repository;
+  const CreateReviewUseCase(this._repository);
+
+  FutureEither<void> call({
+    required String pitchId,
+    required double rating,
+    required String comment,
+  }) {
+    return _repository.createReview(
+      pitchId: pitchId,
+      rating: rating,
+      comment: comment,
+    );
+  }
+}

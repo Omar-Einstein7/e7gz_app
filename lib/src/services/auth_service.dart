@@ -57,16 +57,19 @@ class AuthService {
       );
       final data = response.data as Map<String, dynamic>;
 
-      // Postman says: response.data.accessToken
+      // Postman says: response.data.accessToken or token might be at the root
       final responseData = data['data'] ?? data;
-      final accessToken = responseData['accessToken']?.toString();
-      final refreshToken = responseData['refreshToken']?.toString();
+      final accessToken =
+          responseData['accessToken']?.toString() ?? data['token']?.toString();
+      final refreshToken =
+          responseData['refreshToken']?.toString() ??
+          data['refreshToken']?.toString();
 
-      if (accessToken != null) {
+      if (accessToken != null && accessToken.isNotEmpty) {
         await _saveTokens(accessToken, refreshToken);
       } else {
         AppLogger.warning(
-          '⚠️ Login successful but no accessToken found in response',
+          '⚠️ Login successful but no token/accessToken found in response',
         );
       }
 
@@ -98,11 +101,18 @@ class AuthService {
       final data = response.data as Map<String, dynamic>;
 
       final responseData = data['data'] ?? data;
-      final accessToken = responseData['accessToken']?.toString();
-      final refreshToken = responseData['refreshToken']?.toString();
+      final accessToken =
+          responseData['accessToken']?.toString() ?? data['token']?.toString();
+      final refreshToken =
+          responseData['refreshToken']?.toString() ??
+          data['refreshToken']?.toString();
 
-      if (accessToken != null) {
+      if (accessToken != null && accessToken.isNotEmpty) {
         await _saveTokens(accessToken, refreshToken);
+      } else {
+        AppLogger.warning(
+          '⚠️ Signup successful but no token/accessToken found in response',
+        );
       }
 
       _authStateController.add(responseData);
@@ -148,13 +158,16 @@ class AuthService {
     String? name,
     String? phone,
     String? photoPath,
+    String? password,
   }) async {
     return runTask(() async {
       final data = <String, dynamic>{};
       if (name != null) data['name'] = name;
       if (phone != null) data['phone'] = phone;
+      if (password != null && password.isNotEmpty) data['password'] = password;
 
       final formData = FormData.fromMap(data);
+
       if (photoPath != null) {
         final xfile = XFile(photoPath);
         final bytes = await xfile.readAsBytes();

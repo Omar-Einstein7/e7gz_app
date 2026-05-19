@@ -51,10 +51,46 @@ class MatchRepositoryImpl implements MatchRepository {
   }
 
   @override
-  Future<Either<Failure, MatchmakingMatch>> joinMatch(String id) async {
+  Future<Either<Failure, MatchmakingMatch>> joinMatch(
+    String id,
+    String team,
+  ) async {
     try {
-      final result = await remoteDataSource.joinMatch(id);
+      final result = await remoteDataSource.joinMatch(id, team);
       return right(result);
+    } catch (e) {
+      return left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, MatchmakingMatch>> resolveMatch(
+    String id,
+    String winner,
+  ) async {
+    try {
+      final result = await remoteDataSource.resolveMatch(id, winner);
+      return right(result);
+    } catch (e) {
+      return left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<LeaderboardEntry>>> getLeaderboard() async {
+    try {
+      final result = await remoteDataSource.getLeaderboard();
+      final entries = result.map((e) {
+        return LeaderboardEntry(
+          id: e['_id']?.toString() ?? '',
+          name: e['name']?.toString() ?? 'Player',
+          photoUrl: e['photoUrl']?.toString(),
+          wins: (e['wins'] as num?)?.toInt() ?? 0,
+          losses: (e['losses'] as num?)?.toInt() ?? 0,
+          matchesPlayed: (e['matchesPlayed'] as num?)?.toInt() ?? 0,
+        );
+      }).toList();
+      return right(entries);
     } catch (e) {
       return left(ServerFailure(e.toString()));
     }

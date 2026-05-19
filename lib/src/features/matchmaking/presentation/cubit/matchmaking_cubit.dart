@@ -63,14 +63,37 @@ class MatchmakingCubit extends Cubit<MatchmakingState> {
     );
   }
 
-  Future<void> joinMatch(String matchId) async {
-    final result = await repository.joinMatch(matchId);
+  Future<void> loadLeaderboard() async {
+    emit(state.copyWith(leaderboardStatus: MatchmakingStatus.loading));
+    final result = await repository.getLeaderboard();
 
     result.fold(
       (failure) => emit(
         state.copyWith(
+          leaderboardStatus: MatchmakingStatus.failure,
           errorMessage: failure.message,
-          status: MatchmakingStatus.failure,
+        ),
+      ),
+      (entries) => emit(
+        state.copyWith(
+          leaderboardStatus: MatchmakingStatus.success,
+          leaderboard: entries,
+        ),
+      ),
+    );
+  }
+
+  Future<void> joinMatch(String matchId, String team) async {
+    // Show loading on the details screen while request is in-flight
+    emit(state.copyWith(singleMatchStatus: MatchmakingStatus.loading));
+
+    final result = await repository.joinMatch(matchId, team);
+
+    result.fold(
+      (failure) => emit(
+        state.copyWith(
+          singleMatchStatus: MatchmakingStatus.failure,
+          errorMessage: failure.message,
         ),
       ),
       (MatchmakingMatch updatedMatch) {
@@ -80,14 +103,44 @@ class MatchmakingCubit extends Cubit<MatchmakingState> {
 
         emit(
           state.copyWith(
-            status: MatchmakingStatus.success,
-            errorMessage: 'Joined match successfully!',
+            singleMatchStatus: MatchmakingStatus.success,
+            errorMessage: null,
             matches: updatedMatches,
             selectedMatch: state.selectedMatch?.id == updatedMatch.id
                 ? updatedMatch
                 : state.selectedMatch,
           ),
         );
+      },
+    );
+  }
+
+  Future<void> resolveMatch(String matchId, String winner) async {
+    emit(state.copyWith(singleMatchStatus: MatchmakingStatus.loading));
+    final result = await repository.resolveMatch(matchId, winner);
+
+    result.fold(
+      (failure) => emit(
+        state.copyWith(
+          singleMatchStatus: MatchmakingStatus.failure,
+          errorMessage: failure.message,
+        ),
+      ),
+      (updatedMatch) {
+        final List<MatchmakingMatch> updatedMatches = state.matches.map((m) {
+          return m.id == updatedMatch.id ? updatedMatch : m;
+        }).toList();
+
+        emit(
+          state.copyWith(
+            singleMatchStatus: MatchmakingStatus.success,
+            errorMessage: 'Match resolved successfully!',
+            matches: updatedMatches,
+            selectedMatch: updatedMatch,
+          ),
+        );
+        // Refresh leaderboard after resolution
+        loadLeaderboard();
       },
     );
   }

@@ -2,6 +2,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:e7gz/src/features/pitches/domain/entities/pitch.dart';
 import 'package:e7gz/src/features/pitches/domain/usecases/pitch_usecases.dart';
 import 'pitches_state.dart';
+import 'package:e7gz/src/di/injection_container.dart';
+import 'package:e7gz/src/features/pitches/data/datasources/pitch_remote_datasource.dart';
 
 /// Manages the list of pitches with search, filter, and pagination.
 class PitchesCubit extends Cubit<PitchesState> {
@@ -15,7 +17,6 @@ class PitchesCubit extends Cubit<PitchesState> {
        _getNearbyPitches = getNearbyPitches,
        super(const PitchesState());
 
-  // ─── Current filter cache (for pagination) ────────────────────────────────
   String? _search;
   String? _city;
   String? _sportType;
@@ -96,16 +97,35 @@ class PitchesCubit extends Cubit<PitchesState> {
   }
 }
 
-// ─── Single Pitch Detail Cubit ────────────────────────────────────────────────
-
 class PitchDetailCubit extends Cubit<PitchDetailState> {
   final GetPitchDetailsUseCase _getPitchDetails;
 
-  PitchDetailCubit(this._getPitchDetails) : super(const PitchDetailState());
+  PitchDetailCubit({
+    required GetPitchDetailsUseCase getPitchDetails,
+    required CreateReviewUseCase createReview,
+  }) : _getPitchDetails = getPitchDetails,
+       super(const PitchDetailState());
 
-  Future<void> loadPitch(String pitchId) async {
-    emit(state.copyWith(status: PitchDetailStatus.loading));
+  Future<void> loadPitch(
+    String pitchId, {
+    Pitch? initialPitch,
+    bool silent = false,
+  }) async {
+    if (initialPitch != null) {
+      emit(
+        state.copyWith(status: PitchDetailStatus.success, pitch: initialPitch),
+      );
+    } else if (!silent) {
+      emit(state.copyWith(status: PitchDetailStatus.loading));
+    }
+
     final result = await _getPitchDetails(pitchId);
+
+    // Also fetch reviews
+    final reviewsResult = await sl<PitchRemoteDataSource>().getPitchReviews(
+      pitchId,
+    );
+
     result.fold(
       (failure) => emit(
         state.copyWith(
@@ -113,8 +133,32 @@ class PitchDetailCubit extends Cubit<PitchDetailState> {
           errorMessage: failure.message,
         ),
       ),
-      (pitch) =>
-          emit(state.copyWith(status: PitchDetailStatus.success, pitch: pitch)),
+      (pitch) => emit(
+        state.copyWith(
+          status: PitchDetailStatus.success,
+          pitch: pitch,
+          reviews: reviewsResult,
+        ),
+      ),
     );
+  }
+
+  Future<void> submitReview({
+    required String pitchId,
+    required double rating,
+    required String comment,
+  }) async {
+    emit(state.copyWith(isSubmitting: true));
+    try {
+      await sl<PitchRemoteDataSource>().createReview(
+        pitchId: pitchId,
+        rating: rating,
+        comment: comment,
+      );
+      emit(state.copyWith(isSubmitting: false));
+      loadPitch(pitchId, silent: true);
+    } catch (e) {
+      emit(state.copyWith(isSubmitting: false));
+    }
   }
 }

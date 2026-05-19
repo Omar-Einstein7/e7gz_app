@@ -22,6 +22,13 @@ abstract class PitchRepository {
 
   /// Get a single pitch by its ID.
   FutureEither<Pitch> getPitchById(String id);
+
+  /// Create a new review for a pitch
+  FutureEither<void> createReview({
+    required String pitchId,
+    required double rating,
+    required String comment,
+  });
 }
 
 class PitchListResult {

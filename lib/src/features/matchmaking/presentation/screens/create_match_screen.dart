@@ -27,6 +27,7 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
   TimeOfDay? _startTime;
   TimeOfDay? _endTime;
   String _skillLevel = 'all';
+  String? _creationTeam = 'teamA'; // Default to Team A for creator
 
   List<Pitch> _availablePitches = [];
   double _pricePerPlayer = 150.0;
@@ -73,7 +74,10 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(
+            Icons.arrow_back_ios_new_outlined,
+            color: Colors.white,
+          ),
           onPressed: () => context.pop(),
         ),
         title: Text(
@@ -292,6 +296,74 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                   ),
                 ],
               ),
+              SizedBox(height: 24.h),
+
+              MatchmakingFieldLabel(label: 'matchmaking.select_your_team'.tr()),
+              Row(
+                children: [
+                  Expanded(
+                    child: InkWell(
+                      onTap: () => setState(() => _creationTeam = 'teamA'),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(vertical: 16.h),
+                        decoration: BoxDecoration(
+                          color: _creationTeam == 'teamA'
+                              ? const Color(0xFFE44C4C).withValues(alpha: 0.2)
+                              : const Color(0xFF131B2E),
+                          borderRadius: BorderRadius.circular(20.r),
+                          border: Border.all(
+                            color: _creationTeam == 'teamA'
+                                ? const Color(0xFFE44C4C)
+                                : Colors.transparent,
+                          ),
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Team A',
+                            style: TextStyle(
+                              color: _creationTeam == 'teamA'
+                                  ? Colors.white
+                                  : Colors.white24,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 16.w),
+                  Expanded(
+                    child: InkWell(
+                      onTap: () => setState(() => _creationTeam = 'teamB'),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(vertical: 16.h),
+                        decoration: BoxDecoration(
+                          color: _creationTeam == 'teamB'
+                              ? const Color(0xFF4C8CE4).withValues(alpha: 0.2)
+                              : const Color(0xFF131B2E),
+                          borderRadius: BorderRadius.circular(20.r),
+                          border: Border.all(
+                            color: _creationTeam == 'teamB'
+                                ? const Color(0xFF4C8CE4)
+                                : Colors.transparent,
+                          ),
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Team B',
+                            style: TextStyle(
+                              color: _creationTeam == 'teamB'
+                                  ? Colors.white
+                                  : Colors.white24,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               SizedBox(height: 48.h),
               BlocBuilder<MatchmakingCubit, MatchmakingState>(
                 builder: (context, state) {
@@ -404,12 +476,15 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
         startTime: startTimeStr,
         endTime: endTimeStr,
         maxPlayers: int.parse(_maxPlayersController.text),
-        participantIds: [],
-        participants: [],
+        participantIds: const [],
+        participants: const [],
+        teamA: const [],
+        teamB: const [],
         pricePerPlayer: _pricePerPlayer,
         skillLevel: _skillLevel,
         status: 'open',
         sportType: sportType,
+        team: _creationTeam,
       );
 
       final cubit = context.read<MatchmakingCubit>();

@@ -229,6 +229,7 @@ Future<void> initDependencies() async {
     () => GetNearbyPitchesUseCase(sl<PitchRepository>()),
   );
   sl.registerLazySingleton(() => GetPitchDetailsUseCase(sl<PitchRepository>()));
+  sl.registerLazySingleton(() => CreateReviewUseCase(sl<PitchRepository>()));
 
   // Bookings
   sl.registerLazySingleton(() => GetMyBookingsUseCase(sl<BookingRepository>()));
@@ -263,7 +264,12 @@ Future<void> initDependencies() async {
       getNearbyPitches: sl<GetNearbyPitchesUseCase>(),
     ),
   );
-  sl.registerFactory(() => PitchDetailCubit(sl<GetPitchDetailsUseCase>()));
+  sl.registerFactory(
+    () => PitchDetailCubit(
+      getPitchDetails: sl<GetPitchDetailsUseCase>(),
+      createReview: sl<CreateReviewUseCase>(),
+    ),
+  );
   sl.registerFactory(
     () => BookingsCubit(
       getMyBookings: sl<GetMyBookingsUseCase>(),

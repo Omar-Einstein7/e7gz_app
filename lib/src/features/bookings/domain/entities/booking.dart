@@ -58,6 +58,48 @@ class Booking extends Equatable {
 
   String get timeRange => '$startTime - $endTime';
 
+  Booking copyWith({
+    String? id,
+    String? userId,
+    String? userName,
+    String? userPhone,
+    String? pitchId,
+    String? pitchName,
+    String? pitchAddress,
+    String? pitchImage,
+    double? pitchLatitude,
+    double? pitchLongitude,
+    String? date,
+    String? startTime,
+    String? endTime,
+    double? totalPrice,
+    BookingStatus? status,
+    String? paymentStatus,
+    String? notes,
+    DateTime? createdAt,
+  }) {
+    return Booking(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      userName: userName ?? this.userName,
+      userPhone: userPhone ?? this.userPhone,
+      pitchId: pitchId ?? this.pitchId,
+      pitchName: pitchName ?? this.pitchName,
+      pitchAddress: pitchAddress ?? this.pitchAddress,
+      pitchImage: pitchImage ?? this.pitchImage,
+      pitchLatitude: pitchLatitude ?? this.pitchLatitude,
+      pitchLongitude: pitchLongitude ?? this.pitchLongitude,
+      date: date ?? this.date,
+      startTime: startTime ?? this.startTime,
+      endTime: endTime ?? this.endTime,
+      totalPrice: totalPrice ?? this.totalPrice,
+      status: status ?? this.status,
+      paymentStatus: paymentStatus ?? this.paymentStatus,
+      notes: notes ?? this.notes,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
+
   @override
   List<Object?> get props => [id, pitchId, date, startTime, endTime, status];
 }
