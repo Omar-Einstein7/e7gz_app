@@ -65,6 +65,8 @@ class _SignupScreenState extends State<SignupScreen> {
           SafeArea(
             child: BlocListener<AuthCubit, AuthState>(
               listener: (context, state) {
+                if (!ModalRoute.of(context)!.isCurrent) return;
+
                 if (state.isFailure) {
                   context.showErrorSnackBar(
                     state.errorMessage ?? 'Signup failed',

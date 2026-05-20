@@ -130,6 +130,34 @@ class AuthService {
     }, requiresNetwork: true);
   }
 
+  FutureEither<String> verifyOtp({
+    required String email,
+    required String otp,
+  }) async {
+    return runTask(() async {
+      final response = await _authDio.post<dynamic>(
+        'auth/verify-otp',
+        data: {'email': email, 'otp': otp},
+      );
+      final data = response.data as Map<String, dynamic>;
+      final responseData = data['data'] ?? data;
+      return responseData['resetToken'] as String;
+    }, requiresNetwork: true);
+  }
+
+  FutureEither<void> resetPassword({
+    required String email,
+    required String resetToken,
+    required String password,
+  }) async {
+    return runTask(() async {
+      await _authDio.post<dynamic>(
+        'auth/reset-password',
+        data: {'email': email, 'resetToken': resetToken, 'password': password},
+      );
+    }, requiresNetwork: true);
+  }
+
   FutureEither<void> logout() async {
     return runTask(() async {
       try {

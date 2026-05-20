@@ -280,6 +280,11 @@
     "set_new_password_desc": "Your new password must be different from previous passwords.",
     "new_password_label": "NEW PASSWORD",
     "confirm_new_password_label": "CONFIRM NEW PASSWORD",
-    "reset_password_button": "Reset Password"
+    "reset_password_button": "Reset Password",
+    "enter_email_to_reset": "Enter your email address and we'll send you a 6-digit verification code.",
+    "send_code": "Send Code",
+    "otp_sent_to": "We sent a 6-digit code to {email}. Check your inbox.",
+    "resend_available": "Resend Code",
+    "password_reset_success": "Password reset! Please log in with your new password."
   }
 }

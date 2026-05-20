@@ -65,6 +65,24 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  FutureEither<String> verifyOtp({required String email, required String otp}) {
+    return _authService.verifyOtp(email: email, otp: otp);
+  }
+
+  @override
+  FutureEither<void> resetPassword({
+    required String email,
+    required String resetToken,
+    required String password,
+  }) {
+    return _authService.resetPassword(
+      email: email,
+      resetToken: resetToken,
+      password: password,
+    );
+  }
+
+  @override
   FutureEither<void> logout() {
     return _authService.logout();
   }

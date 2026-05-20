@@ -75,6 +75,8 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Center(
               child: BlocListener<AuthCubit, AuthState>(
                 listener: (context, state) {
+                  if (!ModalRoute.of(context)!.isCurrent) return;
+
                   if (state.isFailure) {
                     context.showErrorSnackBar(
                       state.errorMessage ?? 'Authentication failed',
