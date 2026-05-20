@@ -72,105 +72,51 @@ jobs:
         run: flutter pub get
 
       - name: Decode Keystore
-        id: decode_keystore
         if: github.event_name != 'pull_request'
+        env:
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
-          echo -n "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > android/app/release.keystore
+          if [ -z "$KEYSTORE_BASE64" ]; then echo "Error: ANDROID_KEYSTORE_BASE64 is missing"; exit 1; fi
+          if [ -z "$KEYSTORE_PASSWORD" ]; then echo "Error: ANDROID_KEYSTORE_PASSWORD is missing"; exit 1; fi
+          if [ -z "$KEY_ALIAS" ]; then echo "Error: ANDROID_KEY_ALIAS is missing"; exit 1; fi
+          if [ -z "$KEY_PASSWORD" ]; then echo "Error: ANDROID_KEY_PASSWORD is missing"; exit 1; fi
+          
+          printf '%s' "$KEYSTORE_BASE64" | base64 -d > android/app/release.keystore
           if [ ! -s android/app/release.keystore ]; then
             echo "Error: Keystore file is empty after decoding!"
             exit 1
           fi
-          echo "ANDROID_KEYSTORE_PATH=release.keystore" >> $GITHUB_ENV
 
-      - name: Build Android Release APK
-        run: flutter build apk --release --build-name=1.0.${{ github.run_number }} --build-number=${{ github.run_number }}
+      - name: Build Android Release Artifacts
+        if: github.event_name != 'pull_request'
+        run: |
+          flutter build apk --release --build-name=1.0.${{ github.run_number }} --build-number=${{ github.run_number }}
+          flutter build appbundle --release --build-name=1.0.${{ github.run_number }} --build-number=${{ github.run_number }}
         env:
           ANDROID_KEYSTORE_PATH: release.keystore
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
 
-      - name: Build Android Release Bundle (AAB)
-        run: flutter build appbundle --release --build-name=1.0.${{ github.run_number }} --build-number=${{ github.run_number }}
-        env:
-          ANDROID_KEYSTORE_PATH: release.keystore
-          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
-          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
-
-      - name: Upload APK artifact
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: app-release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
 
-      - name: Upload AAB artifact
+      - name: Upload AAB
         uses: actions/upload-artifact@v4
         with:
           name: app-release-aab
           path: build/app/outputs/bundle/release/app-release.aab
 
-  # 3. IOS BUILD JOB
-  build-ios:
-    name: Build iOS IPA
-    needs: [analyze-and-test]
-    runs-on: macos-latest
-    if: github.event_name != 'pull_request'
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: 'stable'
-          cache: true
-
-      - name: Install dependencies
-        run: flutter pub get
-
-      - name: Install Apple Certificate & Provisioning Profile
-        env:
-          BUILD_CERTIFICATE_BASE64: ${{ secrets.IOS_P12_BASE64 }}
-          P12_PASSWORD: ${{ secrets.IOS_P12_PASSWORD }}
-          BUILD_PROVISION_PROFILE_BASE64: ${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }}
-          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
-        run: |
-          # Create variables
-          CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
-          PP_PATH=$RUNNER_TEMP/build_pp.mobileprovision
-          KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
-
-          # Import certificate and provisioning profile from secrets
-          echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode --output $CERTIFICATE_PATH
-          echo -n "$BUILD_PROVISION_PROFILE_BASE64" | base64 --decode --output $PP_PATH
-
-          # Create temporary keychain
-          security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
-          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
-          security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
-
-          # Import certificate to keychain
-          security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
-          security list-keychain -d user -s $KEYCHAIN_PATH
-
-          # Apply provisioning profile
-          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
-
-      - name: Build iOS Release IPA
-        run: flutter build ipa --release --export-options-plist=ios/ExportOptions.plist --build-name=1.0.${{ github.run_number }} --build-number=${{ github.run_number }}
-
-      - name: Upload IPA artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: app-release-ipa
-          path: build/ios/ipa/*.ipa
-
-  # 4. RELEASE JOB
+  # 3. RELEASE JOB
   create-release:
     name: Create GitHub Release
-    needs: [build-android, build-ios]
+    needs: [build-android]
     if: startsWith(github.ref, 'refs/tags/v') || github.event.inputs.tag_name != ''
     runs-on: ubuntu-latest
     permissions:
@@ -194,7 +140,6 @@ jobs:
           gh release create "$RELEASE_TAG" \
             release-assets/*.apk \
             release-assets/*.aab \
-            release-assets/*.ipa \
             --title "Release ${{ github.ref_name }}" \
             --generate-notes
         env:
