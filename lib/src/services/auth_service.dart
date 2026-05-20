@@ -182,6 +182,52 @@ class AuthService {
     });
   }
 
+  Future<Map<String, dynamic>> _getUploadSignature() async {
+    try {
+      final response = await _dio.get<dynamic>('pitches/upload-signature');
+      final data = response.data as Map<String, dynamic>;
+      return (data['data'] ?? <String, dynamic>{}) as Map<String, dynamic>;
+    } catch (e) {
+      AppLogger.error('Failed to get upload signature: $e');
+      return {};
+    }
+  }
+
+  Future<String?> _uploadToCloudinary({
+    required List<int> bytes,
+    required String filename,
+    required Map<String, dynamic> signatureData,
+  }) async {
+    try {
+      final formData = FormData.fromMap({
+        'file': MultipartFile.fromBytes(
+          bytes,
+          filename: filename,
+          contentType: DioMediaType('image', 'jpeg'),
+        ),
+        'api_key': signatureData['apiKey'],
+        'timestamp': signatureData['timestamp'],
+        'signature': signatureData['signature'],
+        'folder': signatureData['folder'],
+      });
+
+      final cloudName = signatureData['cloudName'];
+      final uploadResponse = await Dio().post<Map<String, dynamic>>(
+        'https://api.cloudinary.com/v1_1/$cloudName/image/upload',
+        data: formData,
+      );
+
+      if (uploadResponse.statusCode == 200 ||
+          uploadResponse.statusCode == 201) {
+        return uploadResponse.data!['secure_url'] as String;
+      }
+      return null;
+    } catch (e) {
+      AppLogger.error('Cloudinary profile direct upload failed: $e');
+      return null;
+    }
+  }
+
   FutureEither<Map<String, dynamic>?> updateProfile({
     String? name,
     String? phone,
@@ -190,30 +236,35 @@ class AuthService {
   }) async {
     return runTask(() async {
       final data = <String, dynamic>{};
+
+      if (photoPath != null) {
+        AppLogger.info('🚀 Starting direct profile photo upload...');
+        final signatureData = await _getUploadSignature();
+        if (signatureData.isNotEmpty) {
+          final xfile = XFile(photoPath);
+          final bytes = await xfile.readAsBytes();
+          final url = await _uploadToCloudinary(
+            bytes: bytes,
+            filename: 'profile_${DateTime.now().millisecondsSinceEpoch}.jpg',
+            signatureData: signatureData,
+          );
+          if (url != null) {
+            data['photoUrl'] = url;
+            AppLogger.info('✅ Profile photo uploaded: $url');
+          }
+        }
+      }
+
       if (name != null) data['name'] = name;
       if (phone != null) data['phone'] = phone;
       if (password != null && password.isNotEmpty) data['password'] = password;
 
-      final formData = FormData.fromMap(data);
-
-      if (photoPath != null) {
-        final xfile = XFile(photoPath);
-        final bytes = await xfile.readAsBytes();
-        formData.files.add(
-          MapEntry(
-            'photo',
-            MultipartFile.fromBytes(
-              bytes,
-              filename: 'profile_pic.jpg',
-              contentType: DioMediaType('image', 'jpeg'),
-            ),
-          ),
-        );
-      }
-
-      final response = await _dio.put<dynamic>('auth/me', data: formData);
-      final responseData = response.data as Map<String, dynamic>;
-      final userMap = responseData['data'] ?? responseData;
+      AppLogger.info('🚀 Sending profile update JSON to backend...');
+      final response = await _dio.put<dynamic>('auth/me', data: data);
+      final Map<String, dynamic> responseBody =
+          response.data as Map<String, dynamic>;
+      final Map<String, dynamic> userMap =
+          (responseBody['data'] ?? responseBody) as Map<String, dynamic>;
 
       _authStateController.add(userMap);
       return userMap;

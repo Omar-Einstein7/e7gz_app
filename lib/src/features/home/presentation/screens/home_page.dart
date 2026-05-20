@@ -45,6 +45,14 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () => context.push(AppRoutes.notifications),
+            icon: const Icon(IconsaxPlusLinear.notification),
+            color: colors.primary,
+          ),
+          SizedBox(width: 8.w),
+        ],
       ),
       body: BlocBuilder<PitchesCubit, PitchesState>(
         builder: (context, state) {

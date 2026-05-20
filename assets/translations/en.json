@@ -1,4 +1,10 @@
 {
+  "common": {
+    "save_changes": "Save Changes",
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm"
+  },
   "shared": {
     "get_started": "Get Started",
     "confirm": "Confirm",
@@ -13,7 +19,8 @@
     "search": "Search",
     "matches": "Matches",
     "bookings": "Bookings",
-    "profile": "Profile"
+    "profile": "Profile",
+    "notifications": "Notifications"
   },
   "onboarding": {
     "title_1": "The Stadium\nis Calling",
@@ -107,12 +114,15 @@
     "redeem_success": "Successfully redeemed {title}!",
     "faq": "FAQ",
     "edit_profile": "Edit Profile",
+    "edit_profile_sub": "Update your personal details and photo",
     "loyalty_program": "Loyalty Program",
     "e7gzz_points": "E7gzz Points",
     "gold_tier": "Gold Tier",
     "next_tier_desc": "550 PTS to Platinum",
     "photo_updated": "Profile picture updated successfully",
-    "success_update": "Profile updated successfully"
+    "success_update": "Profile updated successfully",
+    "error_update_photo": "Failed to upload image",
+    "error_update_profile": "Failed to update profile"
   },
   "pitch_details": {
     "shifts_title": "Available Shifts",
@@ -247,6 +257,9 @@
     "create_account_subtitle": "Create a new account to get started.",
     "name": "Name",
     "name_required": "Name is required",
+    "phone_required": "Phone number is required",
+    "phone_invalid": "Enter a valid Egyptian phone number",
+    "phone_placeholder": "01x xxxx xxxx",
     "confirm_password": "Confirm Password",
     "confirm_password_required": "Confirm password is required",
     "passwords_do_not_match": "Passwords do not match",
@@ -265,6 +278,7 @@
     "owner": "Pitch Owner",
     "owner_desc": "List your stadium, manage bookings, and grow business.",
     "full_name": "Full Name",
+    "full_name_hint": "Enter your full name",
     "mobile_number": "Mobile Number",
     "create_password": "Create Password",
     "agree_terms": "By creating an account, you agree to our Terms of Service and Privacy Policy. Experience the game, managed professionally.",

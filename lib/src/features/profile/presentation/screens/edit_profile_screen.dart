@@ -18,17 +18,20 @@ class EditProfileScreen extends StatefulWidget {
 class _EditProfileScreenState extends State<EditProfileScreen> {
   final _formKey = GlobalKey<FormState>();
   late final TextEditingController _nameController;
+  late final TextEditingController _phoneController;
 
   @override
   void initState() {
     super.initState();
     final user = context.read<SessionCubit>().state.user;
     _nameController = TextEditingController(text: user?.name);
+    _phoneController = TextEditingController(text: user?.phone);
   }
 
   @override
   void dispose() {
     _nameController.dispose();
+    _phoneController.dispose();
     super.dispose();
   }
 
@@ -55,6 +58,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ProfileHeader(
+                    key: ValueKey(user?.photoUrl ?? 'none'),
                     name: user?.name ?? '',
                     email: user?.email ?? '',
                     photoUrl: user?.photoUrl,
@@ -86,7 +90,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         } catch (e) {
                           if (context.mounted) {
                             Navigator.pop(context);
-                            context.showErrorSnackBar('Failed to upload image');
+                            context.showErrorSnackBar(
+                              'profile.error_update_photo'.tr(),
+                            );
                           }
                         }
                       }
@@ -99,6 +105,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     hint: 'auth.full_name_hint'.tr(),
                     prefixIcon: const Icon(IconsaxPlusBold.profile),
                     validator: Validators.name,
+                  ),
+                  SizedBox(height: AppSpacing.lg.h),
+                  AuthInputLabel(
+                    label: 'auth.mobile_number'.tr(),
+                    isCompact: true,
+                  ),
+                  AppTextField(
+                    controller: _phoneController,
+                    hint: 'auth.phone_placeholder'.tr(),
+                    prefixIcon: const Icon(IconsaxPlusBold.call),
+                    keyboardType: TextInputType.phone,
+                    validator: Validators.phone,
                   ),
                   SizedBox(height: AppSpacing.xxl.h),
 
@@ -117,16 +135,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             ),
                           );
 
-                          // Update name if changed
+                          // Update profile data
                           await sl<AuthService>().updateProfile(
                             name: _nameController.text,
+                            phone: _phoneController.text,
                           );
 
                           // Handle password update if password is not empty
                           // (Note: Backend may need a specialized route for password update)
 
                           if (context.mounted) {
-                            Navigator.pop(context); // Close loading dialog
+                            Navigator.pop(context);
                             context.showSuccessSnackBar(
                               'profile.success_update'.tr(),
                             );
@@ -137,7 +156,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           if (context.mounted) {
                             Navigator.pop(context);
                             context.showErrorSnackBar(
-                              'Failed to update profile',
+                              'profile.error_update_profile'.tr(),
                             );
                           }
                         }

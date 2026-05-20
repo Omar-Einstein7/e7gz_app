@@ -154,7 +154,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                                           (item['titleKey'] as String).tr(),
                                           style: typography.displayMedium
                                               ?.copyWith(
-                                                color: Colors.white,
+                                                color: colors.onSurface,
                                                 fontWeight: FontWeight.w900,
                                                 fontSize: 28.sp,
                                                 height: 1.1,
@@ -169,9 +169,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                                     Text(
                                           (item['subtitleKey'] as String).tr(),
                                           style: typography.bodyLarge?.copyWith(
-                                            color: const Color(
-                                              0xFFBCC7DE,
-                                            ).withValues(alpha: 0.8),
+                                            color: const Color.fromARGB(255, 115, 122, 136).withValues(alpha: 0.8),
                                             fontSize: 15.sp,
                                             height: 1.5,
                                           ),

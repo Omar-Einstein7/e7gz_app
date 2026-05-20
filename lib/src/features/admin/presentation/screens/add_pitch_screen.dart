@@ -162,7 +162,11 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
   }
 
   Future<void> _pickImages() async {
-    final List<XFile> images = await _picker.pickMultiImage(imageQuality: 70);
+    final List<XFile> images = await _picker.pickMultiImage(
+      imageQuality: 80,
+      maxWidth: 1024,
+      maxHeight: 1024,
+    );
     if (images.isNotEmpty) {
       setState(() {
         _pickedImages.addAll(images);

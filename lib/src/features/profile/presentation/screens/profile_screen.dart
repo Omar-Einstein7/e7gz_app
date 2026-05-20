@@ -64,7 +64,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 SizedBox(height: AppSpacing.md.h),
                 ProfileTile(
                   title: 'profile.edit_profile'.tr(),
-                  subtitle: 'Update your personal details and photo',
+                  subtitle: 'profile.edit_profile_sub'.tr(),
                   icon: IconsaxPlusBold.user_edit,
                   onTap: () => context.push(AppRoutes.editProfile),
                 ),

@@ -16,12 +16,12 @@ class NotificationsScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(IconsaxPlusLinear.arrow_left, color: Colors.white),
           onPressed: () => context.pop(),
         ),
         title: Text(
-          'Notifications',
-          style: tt.headlineSmall?.copyWith(
+          'nav.notifications'.tr(),
+          style: tt.titleLarge?.copyWith(
             color: Colors.white,
             fontWeight: FontWeight.bold,
           ),
@@ -220,4 +220,3 @@ class NotificationsScreen extends StatelessWidget {
     );
   }
 }
-

@@ -131,13 +131,13 @@ class AdminRepositoryImpl implements AdminRepository {
     List<String>? multipleFileNames,
   }) async {
     try {
-      final success = await _dataSource.createPitch(
+      final error = await _dataSource.createPitch(
         pitchData,
         multipleImageBytes: multipleImageBytes,
         multipleFileNames: multipleFileNames,
       );
-      if (success) return right(true);
-      return left(const ServerFailure('Failed to create pitch'));
+      if (error == null) return right(true);
+      return left(ServerFailure(error));
     } catch (e) {
       return left(ServerFailure('Failed to create pitch: $e'));
     }
@@ -162,14 +162,14 @@ class AdminRepositoryImpl implements AdminRepository {
     List<String>? multipleFileNames,
   }) async {
     try {
-      final success = await _dataSource.updatePitch(
+      final error = await _dataSource.updatePitch(
         id,
         pitchData,
         multipleImageBytes: multipleImageBytes,
         multipleFileNames: multipleFileNames,
       );
-      if (success) return right(true);
-      return left(const ServerFailure('Failed to update pitch'));
+      if (error == null) return right(true);
+      return left(ServerFailure(error));
     } catch (e) {
       return left(ServerFailure('Failed to update pitch: $e'));
     }

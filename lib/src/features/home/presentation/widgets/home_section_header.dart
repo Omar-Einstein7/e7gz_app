@@ -45,7 +45,7 @@ class HomeSectionHeader extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: typography.headlineSmall?.copyWith(
-                    color: Colors.white,
+                    color: colors.onSurface,
                     fontWeight: FontWeight.bold,
                   ),
                 ),

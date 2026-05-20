@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:dio/dio.dart';
 import '../../../../utils/logger.dart';
 
@@ -121,73 +120,114 @@ class AdminRemoteDataSource {
     }
   }
 
+  /// GET /api/pitches/upload-signature
+  Future<Map<String, dynamic>> getUploadSignature() async {
+    try {
+      final response = await _dio.get<dynamic>('pitches/upload-signature');
+      return _extractData<Map<String, dynamic>>(response, 'data', {});
+    } catch (e) {
+      AppLogger.error('Failed to get upload signature: $e');
+      return {};
+    }
+  }
+
+  /// Direct upload to Cloudinary using a signature
+  Future<String?> _uploadToCloudinary({
+    required List<int> bytes,
+    required String filename,
+    required Map<String, dynamic> signatureData,
+  }) async {
+    try {
+      final formData = FormData.fromMap({
+        'file': MultipartFile.fromBytes(
+          bytes,
+          filename: filename,
+          contentType: DioMediaType('image', 'jpeg'),
+        ),
+        'api_key': signatureData['apiKey'],
+        'timestamp': signatureData['timestamp'],
+        'signature': signatureData['signature'],
+        'folder': signatureData['folder'],
+      });
+
+      final cloudName = signatureData['cloudName'];
+      final uploadResponse = await Dio().post<Map<String, dynamic>>(
+        'https://api.cloudinary.com/v1_1/$cloudName/image/upload',
+        data: formData,
+      );
+
+      if (uploadResponse.statusCode == 200 ||
+          uploadResponse.statusCode == 201) {
+        return uploadResponse.data!['secure_url'] as String;
+      }
+      return null;
+    } catch (e) {
+      AppLogger.error('Cloudinary direct upload failed: $e');
+      return null;
+    }
+  }
+
   /// POST /api/pitches
-  Future<bool> createPitch(
+  /// Returns null on success, or error message on failure
+  Future<String?> createPitch(
     Map<String, dynamic> pitchData, {
     List<List<int>>? multipleImageBytes,
     List<String>? multipleFileNames,
   }) async {
     try {
-      dynamic data;
+      final Map<String, dynamic> finalPayload = Map.from(pitchData);
 
+      // Handle direct uploads if bytes are provided
       if (multipleImageBytes != null && multipleImageBytes.isNotEmpty) {
-        final Map<String, dynamic> mappedData = Map.from(pitchData);
+        AppLogger.info('🚀 Starting direct uploads to Cloudinary...');
+        final signatureData = await getUploadSignature();
+        if (signatureData.isEmpty) return 'Failed to get upload signature';
 
-        if (mappedData['images'] != null) {
-          mappedData.remove(
-            'images',
-          ); // Don't send JSON images if we have files here
-        }
-        if (mappedData['location'] != null) {
-          mappedData['location'] = jsonEncode(mappedData['location']);
-        }
-        if (mappedData['amenities'] != null) {
-          mappedData['amenities'] = jsonEncode(mappedData['amenities']);
-        }
-        if (mappedData['pricePerHour'] != null) {
-          mappedData['pricePerHour'] = mappedData['pricePerHour'].toString();
-        }
-
-        final List<MultipartFile> files = [];
+        final List<String> uploadedUrls = [];
         for (int i = 0; i < multipleImageBytes.length; i++) {
-          files.add(
-            MultipartFile.fromBytes(
-              multipleImageBytes[i],
-              filename:
-                  (multipleFileNames != null && multipleFileNames.length > i)
-                  ? multipleFileNames[i]
-                  : 'pitch_$i.jpg',
-              contentType: DioMediaType('image', 'jpeg'),
-            ),
+          final url = await _uploadToCloudinary(
+            bytes: multipleImageBytes[i],
+            filename:
+                (multipleFileNames != null && multipleFileNames.length > i)
+                ? multipleFileNames[i]
+                : 'pitch_$i.jpg',
+            signatureData: signatureData,
           );
+          if (url != null) uploadedUrls.add(url);
         }
 
-        data = FormData.fromMap({...mappedData, 'images': files});
-        AppLogger.info('--- Create Pitch Multipart Payload ---');
-        AppLogger.info('Keys: ${mappedData.keys.toList()}');
-        AppLogger.info('Files: ${files.length}');
-        AppLogger.info('Sending pitch with ${files.length} images (Multipart)');
-      } else {
-        data = pitchData;
-        AppLogger.info('--- Create Pitch JSON Payload ---');
-        AppLogger.info('Keys: ${pitchData.keys.toList()}');
-        AppLogger.info('Sending pitch (JSON)');
-      }
+        if (uploadedUrls.isEmpty)
+          return 'Failed to upload images to Cloudinary';
 
-      // IMPORTANT: Intercepts or BaseOptions might force application/json.
-      // We must explicitly override it to multipart/form-data when sending FormData.
-      final response = await _dio.post('pitches', data: data, options: null);
-
-      return response.statusCode == 201 || response.statusCode == 200;
-    } catch (e) {
-      if (e is DioException) {
-        AppLogger.error(
-          'Failed to create pitch: ${e.response?.data ?? e.message}',
+        // Combine with any existing URLs (unlikely for create, but good for consistency)
+        final List<String> currentImages = List<String>.from(
+          finalPayload['images'] ?? [],
         );
-      } else {
-        AppLogger.error('Failed to create pitch: $e');
+        finalPayload['images'] = [...currentImages, ...uploadedUrls];
       }
-      return false;
+
+      AppLogger.info('🚀 Sending final JSON payload to backend...');
+      final response = await _dio.post<dynamic>('pitches', data: finalPayload);
+
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        return null;
+      }
+      return 'Failed with status ${response.statusCode}';
+    } catch (e) {
+      String errorMessage = 'Failed to create pitch';
+      if (e is DioException) {
+        final responseData = e.response?.data;
+        if (responseData is Map && responseData.containsKey('message')) {
+          errorMessage = responseData['message'].toString();
+        } else {
+          errorMessage = e.message ?? errorMessage;
+        }
+        AppLogger.error('Failed to create pitch (Dio): $errorMessage');
+      } else {
+        errorMessage = e.toString();
+        AppLogger.error('Failed to create pitch: $errorMessage');
+      }
+      return errorMessage;
     }
   }
 
@@ -209,71 +249,70 @@ class AdminRemoteDataSource {
   }
 
   /// PUT /api/pitches/:id
-  Future<bool> updatePitch(
+  /// Returns null on success, or error message on failure
+  Future<String?> updatePitch(
     String id,
     Map<String, dynamic> pitchData, {
     List<List<int>>? multipleImageBytes,
     List<String>? multipleFileNames,
   }) async {
     try {
-      dynamic data;
+      final Map<String, dynamic> finalPayload = Map.from(pitchData);
 
+      // Handle direct uploads if bytes are provided
       if (multipleImageBytes != null && multipleImageBytes.isNotEmpty) {
-        final Map<String, dynamic> mappedData = Map.from(pitchData);
-        if (mappedData['images'] != null) {
-          // Rename to avoid collision with 'images' file field
-          mappedData['existingImages'] = jsonEncode(mappedData['images']);
-          mappedData.remove('images');
-        }
-        if (mappedData['location'] != null)
-          mappedData['location'] = jsonEncode(mappedData['location']);
-        if (mappedData['amenities'] != null)
-          mappedData['amenities'] = jsonEncode(mappedData['amenities']);
-        if (mappedData['pricePerHour'] != null)
-          mappedData['pricePerHour'] = mappedData['pricePerHour'].toString();
+        AppLogger.info('🚀 Starting direct uploads to Cloudinary...');
+        final signatureData = await getUploadSignature();
+        if (signatureData.isEmpty) return 'Failed to get upload signature';
 
-        final List<MultipartFile> files = [];
+        final List<String> uploadedUrls = [];
         for (int i = 0; i < multipleImageBytes.length; i++) {
-          files.add(
-            MultipartFile.fromBytes(
-              multipleImageBytes[i],
-              filename:
-                  (multipleFileNames != null && multipleFileNames.length > i)
-                  ? multipleFileNames[i]
-                  : 'pitch_$i.jpg',
-              contentType: DioMediaType('image', 'jpeg'),
-            ),
+          final url = await _uploadToCloudinary(
+            bytes: multipleImageBytes[i],
+            filename:
+                (multipleFileNames != null && multipleFileNames.length > i)
+                ? multipleFileNames[i]
+                : 'pitch_$i.jpg',
+            signatureData: signatureData,
           );
+          if (url != null) uploadedUrls.add(url);
         }
 
-        data = FormData.fromMap({...mappedData, 'images': files});
-      } else {
-        data = pitchData;
+        if (uploadedUrls.isEmpty)
+          return 'Failed to upload images to Cloudinary';
+
+        // Set them as 'newImages' for the backend to merge
+        finalPayload['newImages'] = uploadedUrls;
       }
 
-      AppLogger.info('🚀 Sending PUT request to pitches/$id');
-      final response = await _dio.put(
+      AppLogger.info('🚀 Sending final JSON payload to pitches/$id');
+      final response = await _dio.put<dynamic>(
         'pitches/$id',
-        data: data,
-        options: Options(
-          sendTimeout: const Duration(seconds: 30),
-          receiveTimeout: const Duration(seconds: 30),
-        ),
+        data: finalPayload,
       );
       AppLogger.info('✅ PUT response received: ${response.statusCode}');
 
-      return response.statusCode == 200 ||
+      if (response.statusCode == 200 ||
           response.statusCode == 201 ||
-          response.statusCode == 204;
-    } catch (e) {
-      if (e is DioException) {
-        AppLogger.error(
-          'Failed to update pitch (Dio): ${e.response?.data ?? e.message}',
-        );
-      } else {
-        AppLogger.error('Failed to update pitch (Generic): $e');
+          response.statusCode == 204) {
+        return null;
       }
-      return false;
+      return 'Failed with status ${response.statusCode}';
+    } catch (e) {
+      String errorMessage = 'Failed to update pitch';
+      if (e is DioException) {
+        final responseData = e.response?.data;
+        if (responseData is Map && responseData.containsKey('message')) {
+          errorMessage = responseData['message'].toString();
+        } else {
+          errorMessage = e.message ?? errorMessage;
+        }
+        AppLogger.error('Failed to update pitch (Dio): $errorMessage');
+      } else {
+        errorMessage = e.toString();
+        AppLogger.error('Failed to update pitch: $errorMessage');
+      }
+      return errorMessage;
     }
   }
 }

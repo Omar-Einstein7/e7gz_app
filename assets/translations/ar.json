@@ -1,4 +1,10 @@
 {
+  "common": {
+    "save_changes": "حفظ التغييرات",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "confirm": "تأكيد"
+  },
   "shared": {
     "get_started": "ابدأ الآن",
     "confirm": "تأكيد",
@@ -12,7 +18,8 @@
     "search": "البحث",
     "matches": "المباريات",
     "bookings": "حجوزاتي",
-    "profile": "حسابي"
+    "profile": "حسابي",
+    "notifications": "التنبيهات"
   },
   "onboarding": {
     "title_1": "الملعب\nيناديك",
@@ -111,7 +118,12 @@
     "redeem_success": "تم استبدال {title} بنجاح!",
     "faq": "الأسئلة الشائعة",
     "edit_profile": "تعديل الملف الشخصي",
-    "privacy_policy": "سياسة الخصوصية"
+    "edit_profile_sub": "تحديث بياناتك الشخصية وصورتك",
+    "privacy_policy": "سياسة الخصوصية",
+    "photo_updated": "تم تحديث الصورة الشخصية بنجاح",
+    "success_update": "تم تحديث الملف الشخصي بنجاح",
+    "error_update_photo": "فشل في رفع الصورة",
+    "error_update_profile": "فشل في تحديث الملف الشخصي"
   },
   "pitch_details": {
     "shifts_title": "الفترات المتاحة",
@@ -243,6 +255,9 @@
     "create_account_subtitle": "أنشئ حساباً جديداً للبدء.",
     "name": "الاسم",
     "name_required": "الاسم مطلوب",
+    "phone_required": "رقم الهاتف مطلوب",
+    "phone_invalid": "أدخل رقم هاتف مصري صالح",
+    "phone_placeholder": "٠١x xxxx xxxx",
     "confirm_password": "تأكيد كلمة المرور",
     "confirm_password_required": "تأكيد كلمة المرور مطلوب",
     "passwords_do_not_match": "كلمتا المرور غير متطابقتين",
@@ -261,6 +276,7 @@
     "owner": "صاحب ملعب",
     "owner_desc": "اعرض ملعبك، أدر الحجوزات، ونمّ أعمالك.",
     "full_name": "الاسم الكامل",
+    "full_name_hint": "أدخل اسمك الكامل",
     "mobile_number": "رقم الهاتف المحمول",
     "create_password": "إنشاء كلمة مرور",
     "agree_terms": "بإنشائك للحساب، فإنك توافق على شروط الخدمة وسياسة الخصوصية الخاصة بنا. عِش التجربة الرياضية بإدارة احترافية.",

@@ -7,7 +7,9 @@ class NotificationsCubit extends Cubit<NotificationsState> {
   final NotificationRepository repository;
 
   NotificationsCubit({required this.repository})
-    : super(const NotificationsState());
+    : super(const NotificationsState()) {
+    loadNotifications();
+  }
 
   Future<void> loadNotifications() async {
     emit(state.copyWith(status: NotificationsStatus.loading));

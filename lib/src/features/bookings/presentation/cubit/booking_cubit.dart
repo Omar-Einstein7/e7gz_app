@@ -2,6 +2,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:e7gz/src/features/bookings/domain/entities/booking.dart';
 import 'package:e7gz/src/features/bookings/domain/usecases/booking_usecases.dart';
 import 'booking_state.dart';
+import 'package:e7gz/src/services/notification_service.dart';
+import 'package:e7gz/src/di/injection_container.dart';
 
 // ─── My Bookings Cubit ────────────────────────────────────────────────────────
 
@@ -134,12 +136,20 @@ class CreateBookingCubit extends Cubit<CreateBookingState> {
           errorMessage: failure.message,
         ),
       ),
-      (booking) => emit(
-        state.copyWith(
-          status: CreateBookingStatus.success,
-          createdBooking: booking,
-        ),
-      ),
+      (booking) {
+        // Trigger local notification
+        sl<NotificationService>().showNotification(
+          title: 'Booking Confirmed! ⚽',
+          body:
+              'Your match at ${booking.pitchName} on ${booking.date} is confirmed.',
+        );
+        emit(
+          state.copyWith(
+            status: CreateBookingStatus.success,
+            createdBooking: booking,
+          ),
+        );
+      },
     );
   }
 
