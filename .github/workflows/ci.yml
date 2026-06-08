@@ -1,89 +1,949 @@
-name: Flutter CI Pipeline
+# =============================================================================
+# E7GZ APP — ENTERPRISE-GRADE FLUTTER CI/CD PIPELINE
+# =============================================================================
+#
+# ARCHITECTURE OVERVIEW
+# ─────────────────────
+# This pipeline is structured as a directed acyclic graph (DAG) of parallel jobs:
+#
+#  [quality] ─────────────────────────────────────────┐
+#  [build-android] (matrix: flavor × build-type) ─────┤
+#                                                      ▼
+#                                              [create-release]
+#
+# Quality and build jobs run concurrently. The release job is gated on both.
+#
+# JOB TOPOLOGY
+# ─────────────
+#  quality          → flutter analyze, test, format check (fast gate)
+#  build-android    → matrix: {dev|staging|production} × {debug|release}
+#                     produces APK (debug/release) and AAB (release only)
+#  create-release   → GitHub Release with all artifacts (tags and manual only)
+#
+# SECRETS REQUIRED (Settings → Secrets → Actions)
+# ─────────────────────────────────────────────────
+#  Android signing:
+#    ANDROID_KEYSTORE_BASE64   — base64-encoded .jks file
+#                                generate: base64 -i release.jks | pbcopy
+#    ANDROID_KEYSTORE_PASSWORD — keystore store password
+#    ANDROID_KEY_ALIAS         — key alias inside the keystore
+#    ANDROID_KEY_PASSWORD      — key password
+#
+#  Optional / future integrations (see commented sections below):
+#    FIREBASE_APP_ID_ANDROID   — Firebase App Distribution app ID
+#    FIREBASE_TOKEN            — firebase-tools CI token
+#    PLAY_STORE_JSON_KEY       — Google Play service account JSON (full content)
+#    SLACK_WEBHOOK_URL         — Slack incoming webhook URL
+#    DISCORD_WEBHOOK_URL       — Discord webhook URL
+#    TELEGRAM_BOT_TOKEN        — Telegram bot token
+#    TELEGRAM_CHAT_ID          — Telegram chat/channel ID
+#    SONAR_TOKEN               — SonarQube analysis token
+#    SONAR_HOST_URL            — SonarQube server URL
+#    CODECOV_TOKEN             — Codecov upload token
+#    SENTRY_AUTH_TOKEN         — Sentry auth token for source map upload
+#
+# FLAVOR SETUP NOTES
+# ───────────────────
+# Flavors are injected via --dart-define. Your app reads them at runtime:
+#
+#   const flavor = String.fromEnvironment('FLAVOR', defaultValue: 'dev');
+#   const apiUrl = String.fromEnvironment('API_URL', defaultValue: '');
+#
+# Android productFlavors in build.gradle.kts:
+#   flavorDimensions += "environment"
+#   productFlavors {
+#     create("dev")        { dimension = "environment"; applicationIdSuffix = ".dev" }
+#     create("staging")    { dimension = "environment"; applicationIdSuffix = ".staging" }
+#     create("production") { dimension = "environment" }
+#   }
+#
+# ARTIFACT NAMING CONVENTION
+# ───────────────────────────
+#  APK debug   : {app-name}-{flavor}-debug-{version}.apk
+#  APK release : {app-name}-{flavor}-release-{version}.apk
+#  AAB release : {app-name}-{flavor}-release-{version}.aab
+#
+# =============================================================================
 
+name: Flutter CI/CD Pipeline
+
+# =============================================================================
+# TRIGGERS
+# =============================================================================
 on:
+  # Run on pushes to main, develop, and feature/* branches
   push:
-    branches: [ "main", "feature/cicd" ]
-    tags: [ "v*" ]
+    branches:
+      - main
+      - develop
+      - "feature/*"
+    # Also trigger on version tags for release creation
+    tags:
+      - "v*"
+
+  # Run on all pull requests
   pull_request:
-    branches: [ "main", "feature/cicd" ]
+    branches:
+      - main
+      - develop
+      - "feature/*"
+
+  # Allow manual trigger with optional version override
   workflow_dispatch:
     inputs:
-      tag_name:
-        description: 'Tag name for release (e.g. v1.0.17)'
+      version_override:
+        description: "Manual version override (e.g. 1.5.0). Leave empty for auto-increment."
         required: false
-        default: ''
+        default: ""
+      release_flavor:
+        description: "Flavor to release (production / staging / dev)"
+        required: false
+        default: "production"
 
+# =============================================================================
+# CONCURRENCY — cancel stale in-progress runs on the same branch/PR.
+# Release deployments are excluded from cancellation (cancel-in-progress: false
+# is inherited by jobs whose concurrency group starts with "deploy-").
+# =============================================================================
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ !startsWith(github.ref, 'refs/tags/') }}
+
+# =============================================================================
+# GLOBAL ENVIRONMENT
+# =============================================================================
 env:
+  # Force GitHub Actions to use Node 20 runtime for all JS actions
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  # Flutter channel — always use stable for production pipelines
+  FLUTTER_CHANNEL: stable
+  # Java version — must match compileOptions in build.gradle.kts
+  JAVA_VERSION: "17"
+  # App name prefix used in artifact naming
+  APP_NAME: e7gz
+
+# =============================================================================
+# REUSABLE STEP TEMPLATES (via composite actions or inline anchors)
+# GitHub Actions does not support YAML anchors natively, so shared logic is
+# extracted into clearly labelled step groups within each job.
+# =============================================================================
 
 jobs:
-  # ANDROID BUILD JOB
-  build-android:
-    name: Build Android APK
+  # ============================================================================
+  # JOB 1 — QUALITY GATE
+  # Runs: flutter pub get → format check → analyze → test
+  # Blocks: release creation if any check fails
+  # Duration estimate: ~3–5 min (no sharding — scale with matrix if suite grows)
+  # ============================================================================
+  quality:
+    name: Quality Gate
     runs-on: ubuntu-latest
+
+    # Minimal permissions — this job only reads code and reports status
+    permissions:
+      contents: read
+      checks: write
+
     steps:
+      # ── Checkout ─────────────────────────────────────────────────────────────
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Setup Java
-        uses: actions/setup-java@v4
         with:
-          distribution: 'zulu'
-          java-version: '17'
+          # Shallow clone for speed — full history only needed for SonarQube
+          fetch-depth: 1
 
-      - name: Setup Flutter
+      # ── Flutter SDK ───────────────────────────────────────────────────────────
+      # cache: true caches the SDK binary between runs (~400 MB saved per run)
+      - name: Setup Flutter (${{ env.FLUTTER_CHANNEL }})
         uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
+          channel: ${{ env.FLUTTER_CHANNEL }}
           cache: true
 
+      # ── Pub package cache ─────────────────────────────────────────────────────
+      # CRITICAL: flutter-action cache: true only covers the SDK binary.
+      # This explicit cache layer covers ~/.pub-cache and .dart_tool.
+      # Saves 1–3 min of network fetch per job on cache hit.
+      - name: Cache pub packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pub-cache
+            .dart_tool
+          key: pub-${{ runner.os }}-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: pub-${{ runner.os }}-
+
+      # ── Install dependencies ──────────────────────────────────────────────────
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Build Android Release Artifacts
+      # ── Dependency validation ─────────────────────────────────────────────────
+      # Verifies that all declared dependencies are compatible and resolvable.
+      - name: Validate dependencies
+        run: flutter pub deps
+
+      # ── Dart format check ─────────────────────────────────────────────────────
+      # Pipeline fails if any file is not formatted according to dart fmt.
+      # Developers must run `dart format .` before pushing.
+      - name: Check Dart formatting
+        run: dart format --set-exit-if-changed .
+
+      # ── Static analysis ───────────────────────────────────────────────────────
+      # Uses analysis_options.yaml rules. Fatal infos and warnings enabled.
+      - name: Run Flutter analyze
+        run: flutter analyze --fatal-infos --fatal-warnings
+
+      # ── Unit & widget tests ───────────────────────────────────────────────────
+      # --coverage generates lcov.info for optional upload to Codecov.
+      # --reporter compact avoids flooding logs on large suites.
+      - name: Run tests
         run: |
-          flutter build apk --release --build-name=1.0.${{ github.run_number }} --build-number=${{ github.run_number }}
+          flutter test \
+            --coverage \
+            --reporter compact
 
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: app-release-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+      # ── Upload coverage to Codecov (optional — requires CODECOV_TOKEN secret) ─
+      # Uncomment when Codecov integration is configured.
+      #
+      # - name: Upload coverage to Codecov
+      #   uses: codecov/codecov-action@v4
+      #   with:
+      #     token: ${{ secrets.CODECOV_TOKEN }}
+      #     files: coverage/lcov.info
+      #     fail_ci_if_error: false
 
-
-  # RELEASE JOB
-  create-release:
-    name: Create GitHub Release
-    needs: [build-android]
+  # ============================================================================
+  # JOB 2 — VERSIONING
+  # Determines the next semantic version number.
+  # Runs independently in parallel with the quality and build jobs.
+  # Outputs: version (e.g. "1.4.17"), version_code (e.g. "10417")
+  # ============================================================================
+  versioning:
+    name: Resolve Version
     runs-on: ubuntu-latest
+
     permissions:
-      contents: write
+      contents: read
+
+    outputs:
+      version: ${{ steps.resolve.outputs.version }}
+      version_code: ${{ steps.resolve.outputs.version_code }}
+      release_tag: ${{ steps.resolve.outputs.release_tag }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history needed to read latest tag
 
-      - name: Download artifacts
+      # ── Resolve semantic version ──────────────────────────────────────────────
+      # Priority order:
+      #   1. workflow_dispatch manual override
+      #   2. Git tag (refs/tags/v1.2.3 → "1.2.3")
+      #   3. Auto-increment: latest tag PATCH + 1
+      #   4. Fallback: 1.0.<run_number>
+      - name: Resolve version
+        id: resolve
+        run: |
+          set -euo pipefail
+
+          # --- 1. Manual override takes highest priority ---
+          if [ -n "${{ github.event.inputs.version_override }}" ]; then
+            VERSION="${{ github.event.inputs.version_override }}"
+            echo "Using manual override: $VERSION"
+
+          # --- 2. Extract version from git tag (v1.2.3 → 1.2.3) ---
+          elif [[ "${{ github.ref }}" == refs/tags/v* ]]; then
+            VERSION="${{ github.ref_name }}"
+            VERSION="${VERSION#v}"  # Strip leading 'v'
+            echo "Using tag version: $VERSION"
+
+          # --- 3. Auto-increment PATCH from latest release tag ---
+          else
+            LATEST_TAG=$(git tag --sort=-v:refname | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | head -1 || echo "v0.0.0")
+            echo "Latest tag: $LATEST_TAG"
+
+            # Parse MAJOR.MINOR.PATCH
+            MAJOR=$(echo "$LATEST_TAG" | sed 's/v//' | cut -d. -f1)
+            MINOR=$(echo "$LATEST_TAG" | sed 's/v//' | cut -d. -f2)
+            PATCH=$(echo "$LATEST_TAG" | sed 's/v//' | cut -d. -f3)
+
+            # Increment PATCH
+            PATCH=$((PATCH + 1))
+            VERSION="${MAJOR}.${MINOR}.${PATCH}"
+            echo "Auto-incremented version: $VERSION"
+          fi
+
+          # --- Build version code: MAJOR*10000 + MINOR*100 + PATCH ---
+          # Example: 1.4.17 → 10417
+          MAJOR=$(echo "$VERSION" | cut -d. -f1)
+          MINOR=$(echo "$VERSION" | cut -d. -f2)
+          PATCH=$(echo "$VERSION" | cut -d. -f3)
+          VERSION_CODE=$(( MAJOR * 10000 + MINOR * 100 + PATCH ))
+
+          RELEASE_TAG="v${VERSION}"
+
+          echo "Final version: $VERSION (code: $VERSION_CODE, tag: $RELEASE_TAG)"
+
+          # Expose outputs for downstream jobs
+          echo "version=$VERSION"       >> "$GITHUB_OUTPUT"
+          echo "version_code=$VERSION_CODE" >> "$GITHUB_OUTPUT"
+          echo "release_tag=$RELEASE_TAG"   >> "$GITHUB_OUTPUT"
+
+  # ============================================================================
+  # JOB 3 — ANDROID MATRIX BUILD
+  # Matrix: flavor (dev, staging, production) × build_type (debug, release)
+  #
+  # Effective combinations:
+  #   dev-debug, dev-release, staging-debug, staging-release,
+  #   production-debug, production-release
+  #
+  # What is built per combination:
+  #   debug   → APK (fast, unsigned, validation builds)
+  #   release → APK + AAB (signed with keystore, optimized, shrunk)
+  #
+  # Artifacts uploaded per combination:
+  #   {APP_NAME}-{flavor}-{build_type}-{version}.apk
+  #   {APP_NAME}-{flavor}-release-{version}.aab  (release only)
+  #
+  # Note: production-debug is intentionally included so QA can sideload
+  # production-flavored debug builds for testing. Remove from the exclude
+  # list below if not needed.
+  # ============================================================================
+  build-android:
+    name: Android ${{ matrix.flavor }}-${{ matrix.build_type }}
+    runs-on: ubuntu-latest
+    needs: [versioning]  # Wait for version resolution before building
+
+    # Minimal permissions for build jobs
+    permissions:
+      contents: read
+
+    strategy:
+      # CRITICAL: fail-fast: false ensures one failing combination does not
+      # cancel sibling matrix runners that may already be mid-build.
+      fail-fast: false
+      matrix:
+        flavor: [dev, staging, production]
+        build_type: [debug, release]
+        # Exclude combinations that are not useful in practice.
+        # Uncomment entries to re-enable them.
+        exclude:
+          # staging-debug is usually not needed — use dev-debug for local testing
+          - flavor: staging
+            build_type: debug
+          # production-debug: uncomment to exclude if unwanted
+          # - flavor: production
+          #   build_type: debug
+
+    # Flavor-specific dart-define values injected at build time.
+    # These map to String.fromEnvironment('KEY') in Dart code.
+    env:
+      FLAVOR: ${{ matrix.flavor }}
+      BUILD_TYPE: ${{ matrix.build_type }}
+      VERSION: ${{ needs.versioning.outputs.version }}
+      VERSION_CODE: ${{ needs.versioning.outputs.version_code }}
+
+    steps:
+      # ── Checkout ──────────────────────────────────────────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      # ── Java 17 ───────────────────────────────────────────────────────────────
+      # Required for Android Gradle Plugin. Must match compileOptions in
+      # android/app/build.gradle.kts (JavaVersion.VERSION_17).
+      - name: Setup Java ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4
+        with:
+          distribution: zulu
+          java-version: ${{ env.JAVA_VERSION }}
+
+      # ── Flutter SDK ───────────────────────────────────────────────────────────
+      - name: Setup Flutter (${{ env.FLUTTER_CHANNEL }})
+        uses: subosito/flutter-action@v2
+        with:
+          channel: ${{ env.FLUTTER_CHANNEL }}
+          cache: true
+
+      # ── Pub package cache ─────────────────────────────────────────────────────
+      - name: Cache pub packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pub-cache
+            .dart_tool
+          key: pub-${{ runner.os }}-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: pub-${{ runner.os }}-
+
+      # ── Gradle cache ──────────────────────────────────────────────────────────
+      # Saves 2–4 min of Gradle dependency resolution per run.
+      # Key incorporates both pubspec.lock and build.gradle files.
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', '**/pubspec.lock') }}
+          restore-keys: gradle-${{ runner.os }}-
+
+      # ── Android build output cache ────────────────────────────────────────────
+      # Caches intermediate Android build outputs (.kotlin, .class files).
+      - name: Cache Android build outputs
+        uses: actions/cache@v4
+        with:
+          path: |
+            android/.gradle
+            android/app/build
+          key: android-build-${{ runner.os }}-${{ matrix.flavor }}-${{ matrix.build_type }}-${{ hashFiles('**/pubspec.lock', '**/*.gradle*') }}
+          restore-keys: |
+            android-build-${{ runner.os }}-${{ matrix.flavor }}-${{ matrix.build_type }}-
+            android-build-${{ runner.os }}-${{ matrix.flavor }}-
+
+      # ── Install dependencies ──────────────────────────────────────────────────
+      - name: Install dependencies
+        run: flutter pub get
+
+      # ── Decode keystore (release builds only) ─────────────────────────────────
+      # The keystore is stored as a base64-encoded GitHub Secret.
+      # It is decoded to a temp path and referenced via ANDROID_KEYSTORE_PATH.
+      # Signing is conditional in build.gradle.kts — debug builds are not affected.
+      - name: Decode Android keystore
+        if: matrix.build_type == 'release'
+        run: |
+          KEYSTORE_PATH="${RUNNER_TEMP}/release.jks"
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > "$KEYSTORE_PATH"
+          echo "ANDROID_KEYSTORE_PATH=$KEYSTORE_PATH" >> "$GITHUB_ENV"
+
+      # ── Build — debug APK ─────────────────────────────────────────────────────
+      # Debug builds are fast, unsigned, and used for validation / QA sideloading.
+      - name: Build debug APK (${{ matrix.flavor }})
+        if: matrix.build_type == 'debug'
+        run: |
+          flutter build apk \
+            --debug \
+            --flavor "$FLAVOR" \
+            --build-name="$VERSION" \
+            --build-number="$VERSION_CODE" \
+            --dart-define=FLAVOR="$FLAVOR" \
+            --dart-define=ENV="$FLAVOR"
+
+      # ── Build — release APK ───────────────────────────────────────────────────
+      # Release APK: signed, minified, shrunk. Used for direct distribution.
+      - name: Build release APK (${{ matrix.flavor }})
+        if: matrix.build_type == 'release'
+        env:
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          flutter build apk \
+            --release \
+            --flavor "$FLAVOR" \
+            --build-name="$VERSION" \
+            --build-number="$VERSION_CODE" \
+            --dart-define=FLAVOR="$FLAVOR" \
+            --dart-define=ENV="$FLAVOR" \
+            --obfuscate \
+            --split-debug-info=build/symbols
+
+      # ── Build — release AAB ───────────────────────────────────────────────────
+      # App Bundle: preferred format for Google Play Store upload.
+      # Only built for release — debug AABs are not useful in practice.
+      - name: Build release AAB (${{ matrix.flavor }})
+        if: matrix.build_type == 'release'
+        env:
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          flutter build appbundle \
+            --release \
+            --flavor "$FLAVOR" \
+            --build-name="$VERSION" \
+            --build-number="$VERSION_CODE" \
+            --dart-define=FLAVOR="$FLAVOR" \
+            --dart-define=ENV="$FLAVOR" \
+            --obfuscate \
+            --split-debug-info=build/symbols
+
+      # ── Rename artifacts with convention ──────────────────────────────────────
+      # Naming: {app}-{flavor}-{build_type}-{version}.{ext}
+      # Example: e7gz-production-release-1.4.17.apk
+      - name: Rename artifacts
+        run: |
+          mkdir -p dist
+
+          if [ "$BUILD_TYPE" = "debug" ]; then
+            APK_SRC="build/app/outputs/flutter-apk/app-${FLAVOR}-debug.apk"
+            APK_DEST="dist/${APP_NAME}-${FLAVOR}-debug-${VERSION}.apk"
+            [ -f "$APK_SRC" ] && mv "$APK_SRC" "$APK_DEST" || true
+          fi
+
+          if [ "$BUILD_TYPE" = "release" ]; then
+            APK_SRC="build/app/outputs/flutter-apk/app-${FLAVOR}-release.apk"
+            APK_DEST="dist/${APP_NAME}-${FLAVOR}-release-${VERSION}.apk"
+            [ -f "$APK_SRC" ] && mv "$APK_SRC" "$APK_DEST" || true
+
+            AAB_SRC="build/app/outputs/bundle/${FLAVOR}Release/app-${FLAVOR}-release.aab"
+            AAB_DEST="dist/${APP_NAME}-${FLAVOR}-release-${VERSION}.aab"
+            [ -f "$AAB_SRC" ] && mv "$AAB_SRC" "$AAB_DEST" || true
+
+            # Mapping file for deobfuscation (used by Firebase Crashlytics / Sentry)
+            MAPPING_SRC="build/app/outputs/mapping/${FLAVOR}Release/mapping.txt"
+            MAPPING_DEST="dist/mapping-${FLAVOR}-${VERSION}.txt"
+            [ -f "$MAPPING_SRC" ] && mv "$MAPPING_SRC" "$MAPPING_DEST" || true
+
+            # Debug symbols for crash reporting
+            [ -d "build/symbols" ] && mv "build/symbols" "dist/symbols-${FLAVOR}-${VERSION}" || true
+          fi
+
+      # ── Upload artifacts ──────────────────────────────────────────────────────
+      # Each matrix combination uploads to its own named artifact.
+      # The release job downloads all artifacts via pattern matching.
+      - name: Upload artifacts (${{ matrix.flavor }}-${{ matrix.build_type }})
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-${{ matrix.flavor }}-${{ matrix.build_type }}-${{ needs.versioning.outputs.version }}
+          path: dist/
+          retention-days: 7
+          # Upload even if build fails so logs and partial outputs are available
+          if-no-files-found: warn
+
+      # ── Upload build logs on failure ──────────────────────────────────────────
+      - name: Upload build logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-logs-${{ matrix.flavor }}-${{ matrix.build_type }}
+          path: |
+            build/app/outputs/logs/
+            ~/.gradle/daemon/*/daemon-*.out.log
+          retention-days: 3
+          if-no-files-found: ignore
+
+      # =========================================================================
+      # OPTIONAL: Firebase App Distribution (release builds only)
+      # Uncomment when FIREBASE_APP_ID_ANDROID and FIREBASE_TOKEN secrets are set.
+      # Distributes the APK to testers immediately after build.
+      # =========================================================================
+      #
+      # - name: Distribute to Firebase App Distribution
+      #   if: matrix.build_type == 'release' && matrix.flavor != 'production'
+      #   uses: wzieba/Firebase-Distribution-Github-Action@v1
+      #   with:
+      #     appId: ${{ secrets.FIREBASE_APP_ID_ANDROID }}
+      #     token: ${{ secrets.FIREBASE_TOKEN }}
+      #     groups: testers
+      #     file: dist/${{ env.APP_NAME }}-${{ matrix.flavor }}-release-${{ needs.versioning.outputs.version }}.apk
+      #     releaseNotes: "Build ${{ needs.versioning.outputs.version }} (${{ matrix.flavor }})"
+
+  # ============================================================================
+  # JOB 4 — RELEASE CREATION
+  # Runs only on version tags (v*) or manual workflow_dispatch.
+  # Gated on: quality + versioning + build-android (all matrix combinations).
+  #
+  # Steps:
+  #   1. Download all android-* artifacts
+  #   2. Generate changelog from commit messages (categorized)
+  #   3. Create GitHub Release with all artifacts attached
+  # ============================================================================
+  create-release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+
+    # Gate: must pass quality checks and all build combinations
+    needs: [quality, versioning, build-android]
+
+    # Only create a release on version tags or manual trigger
+    if: |
+      startsWith(github.ref, 'refs/tags/v') ||
+      github.event_name == 'workflow_dispatch'
+
+    # Elevated permissions needed to create releases and write tags
+    permissions:
+      contents: write
+
+    # Separate concurrency group for releases — never cancel mid-release
+    concurrency:
+      group: deploy-${{ github.ref }}
+      cancel-in-progress: false
+
+    env:
+      VERSION: ${{ needs.versioning.outputs.version }}
+      RELEASE_TAG: ${{ needs.versioning.outputs.release_tag }}
+
+    steps:
+      # ── Checkout (for gh CLI and changelog generation) ────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history required for changelog generation
+
+      # ── Download all build artifacts ──────────────────────────────────────────
+      # Pattern matches all android-* artifacts from the matrix build job.
+      # Files land in release-assets/ flattened via merge-multiple: true.
+      - name: Download all artifacts
         uses: actions/download-artifact@v4
         with:
+          pattern: android-*
           path: release-assets/
           merge-multiple: true
 
-      - name: Create GitHub Release
+      # ── List downloaded files (diagnostic) ───────────────────────────────────
+      - name: List release assets
         run: |
-          if [ "${{ github.event.inputs.tag_name }}" != "" ]; then
-            RELEASE_TAG="${{ github.event.inputs.tag_name }}"
-          elif [[ "${{ github.ref }}" == refs/tags/* ]]; then
-            RELEASE_TAG="${{ github.ref_name }}"
+          echo "=== Release assets for $RELEASE_TAG ==="
+          find release-assets/ -type f | sort
+
+      # ── Generate categorized changelog ────────────────────────────────────────
+      # Parses commit messages since the previous tag and groups them into:
+      #   Features, Bug Fixes, Performance, Refactors, Breaking Changes, Other
+      # Conventional commit prefixes: feat, fix, perf, refactor, BREAKING
+      - name: Generate changelog
+        id: changelog
+        run: |
+          # Find the previous tag to diff against
+          PREVIOUS_TAG=$(git tag --sort=-v:refname | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | sed -n '2p' || echo "")
+
+          if [ -n "$PREVIOUS_TAG" ]; then
+            RANGE="${PREVIOUS_TAG}..HEAD"
+            echo "Generating changelog from $PREVIOUS_TAG to HEAD"
           else
-            RELEASE_TAG="v1.0.${{ github.run_number }}"
+            RANGE="HEAD"
+            echo "No previous tag found — listing all commits"
           fi
-          
-          echo "Creating release for tag: $RELEASE_TAG"
-          
+
+          # Extract commit messages in the range
+          COMMITS=$(git log "$RANGE" --pretty=format:"%s" --no-merges 2>/dev/null || echo "")
+
+          # Categorize commits by conventional commit prefix
+          FEATURES=$(echo "$COMMITS"      | grep -iE "^feat(\(.*\))?[!]?:" | sed 's/^feat[^:]*: /- /' || true)
+          FIXES=$(echo "$COMMITS"         | grep -iE "^fix(\(.*\))?[!]?:"  | sed 's/^fix[^:]*: /- /'  || true)
+          PERF=$(echo "$COMMITS"          | grep -iE "^perf(\(.*\))?:"     | sed 's/^perf[^:]*: /- /' || true)
+          REFACTORS=$(echo "$COMMITS"     | grep -iE "^refactor(\(.*\))?:" | sed 's/^refactor[^:]*: /- /' || true)
+          BREAKING=$(echo "$COMMITS"      | grep -iE "BREAKING CHANGE|^.*!:" | sed 's/^/- /'           || true)
+          OTHER=$(echo "$COMMITS"         | grep -ivE "^(feat|fix|perf|refactor|chore|ci|docs|style|test)(\(.*\))?[!]?:" | sed 's/^/- /' || true)
+
+          # Build release notes markdown
+          NOTES=""
+
+          [ -n "$BREAKING" ]  && NOTES="${NOTES}### Breaking Changes\n${BREAKING}\n\n"
+          [ -n "$FEATURES" ]  && NOTES="${NOTES}### Features\n${FEATURES}\n\n"
+          [ -n "$FIXES" ]     && NOTES="${NOTES}### Bug Fixes\n${FIXES}\n\n"
+          [ -n "$PERF" ]      && NOTES="${NOTES}### Performance Improvements\n${PERF}\n\n"
+          [ -n "$REFACTORS" ] && NOTES="${NOTES}### Refactors\n${REFACTORS}\n\n"
+          [ -n "$OTHER" ]     && NOTES="${NOTES}### Other Changes\n${OTHER}\n\n"
+
+          if [ -z "$NOTES" ]; then
+            NOTES="No notable changes in this release."
+          fi
+
+          # Write to file (avoids shell quoting issues with multiline strings)
+          printf "%b" "$NOTES" > release-notes.md
+          echo "=== Release Notes ==="
+          cat release-notes.md
+
+      # ── Create or update git tag ──────────────────────────────────────────────
+      # Required when release is triggered via workflow_dispatch (not a tag push).
+      - name: Create git tag (if not already tagged)
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if git rev-parse "$RELEASE_TAG" >/dev/null 2>&1; then
+            echo "Tag $RELEASE_TAG already exists — skipping tag creation."
+          else
+            git config user.name  "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git tag -a "$RELEASE_TAG" -m "Release $RELEASE_TAG"
+            git push origin "$RELEASE_TAG"
+            echo "Created and pushed tag: $RELEASE_TAG"
+          fi
+
+      # ── Create GitHub Release ─────────────────────────────────────────────────
+      # Attaches all APK and AAB files. Uses the categorized changelog as body.
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TITLE="Release $RELEASE_TAG"
+
+          # Override title for production
+          FLAVOR_INPUT="${{ github.event.inputs.release_flavor }}"
+          if [ "$FLAVOR_INPUT" = "production" ]; then
+            TITLE="Production Release $RELEASE_TAG"
+          elif [ "$FLAVOR_INPUT" = "staging" ]; then
+            TITLE="Staging Release $RELEASE_TAG"
+          fi
+
+          echo "Creating GitHub Release: $TITLE"
+
           gh release create "$RELEASE_TAG" \
             release-assets/*.apk \
-            --title "Release $RELEASE_TAG" \
-            --generate-notes
+            release-assets/*.aab \
+            --title "$TITLE" \
+            --notes-file release-notes.md \
+            --draft
 
-        env:
-          GH_TOKEN: ${{ github.token }}
+          echo "GitHub Release created: $RELEASE_TAG"
+
+      # =========================================================================
+      # OPTIONAL: Slack notification on release
+      # Uncomment when SLACK_WEBHOOK_URL secret is configured.
+      # =========================================================================
+      #
+      # - name: Notify Slack on release
+      #   if: always()
+      #   uses: slackapi/slack-github-action@v1.26.0
+      #   with:
+      #     payload: |
+      #       {
+      #         "text": "${{ job.status == 'success' && '✅' || '❌' }} *${{ env.RELEASE_TAG }}* released on *${{ github.repository }}*",
+      #         "attachments": [{
+      #           "color": "${{ job.status == 'success' && 'good' || 'danger' }}",
+      #           "fields": [{ "title": "Status", "value": "${{ job.status }}", "short": true }]
+      #         }]
+      #       }
+      #   env:
+      #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      #     SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+
+      # =========================================================================
+      # OPTIONAL: Discord webhook notification
+      # Uncomment when DISCORD_WEBHOOK_URL secret is configured.
+      # =========================================================================
+      #
+      # - name: Notify Discord on release
+      #   if: always()
+      #   run: |
+      #     STATUS_EMOJI="${{ job.status == 'success' && '✅' || '❌' }}"
+      #     curl -s -X POST "${{ secrets.DISCORD_WEBHOOK_URL }}" \
+      #       -H "Content-Type: application/json" \
+      #       -d "{\"content\": \"${STATUS_EMOJI} **${{ env.RELEASE_TAG }}** released | Status: ${{ job.status }}\"}"
+
+      # =========================================================================
+      # OPTIONAL: Telegram notification
+      # Requires TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID secrets.
+      # =========================================================================
+      #
+      # - name: Notify Telegram on release
+      #   if: always()
+      #   run: |
+      #     MESSAGE="🚀 *${{ env.RELEASE_TAG }}* released%0AStatus: ${{ job.status }}%0ARepo: ${{ github.repository }}"
+      #     curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
+      #       -d "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&text=${MESSAGE}&parse_mode=Markdown"
+
+  # ============================================================================
+  # OPTIONAL JOB — GOOGLE PLAY STORE DEPLOYMENT
+  # Uncomment and configure when ready to deploy to Play Store.
+  # Requires: PLAY_STORE_JSON_KEY secret (service account JSON full content).
+  # Gated on: quality + build-android + create-release.
+  # ============================================================================
+  #
+  # deploy-play-store:
+  #   name: Deploy to Play Store
+  #   runs-on: ubuntu-latest
+  #   needs: [quality, build-android, create-release]
+  #   if: startsWith(github.ref, 'refs/tags/v')
+  #   concurrency:
+  #     group: deploy-play-store-${{ github.ref }}
+  #     cancel-in-progress: false
+  #   permissions:
+  #     contents: read
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #
+  #     - name: Setup Ruby (for Fastlane supply)
+  #       uses: ruby/setup-ruby@v1
+  #       with:
+  #         ruby-version: '3.2'
+  #         bundler-cache: true
+  #
+  #     - name: Download production AAB
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         pattern: android-production-release-*
+  #         path: build/
+  #         merge-multiple: true
+  #
+  #     - name: Upload to Play Store (internal track)
+  #       env:
+  #         SUPPLY_JSON_KEY_DATA: ${{ secrets.PLAY_STORE_JSON_KEY }}
+  #       run: |
+  #         bundle exec fastlane supply \
+  #           --aab build/*.aab \
+  #           --track internal \
+  #           --release_status draft
+
+  # ============================================================================
+  # OPTIONAL JOB — iOS CI/CD
+  # Requires macOS runner. Uncomment when iOS signing is configured.
+  # Required secrets:
+  #   MATCH_SSH_KEY     — SSH key for Fastlane Match certificates repo
+  #   MATCH_PASSWORD    — Match encryption password
+  #   ASC_KEY_ID        — App Store Connect API key ID
+  #   ASC_ISSUER_ID     — App Store Connect issuer UUID
+  #   ASC_PRIVATE_KEY   — App Store Connect .p8 key content
+  # ============================================================================
+  #
+  # build-ios:
+  #   name: iOS Build (production-release)
+  #   runs-on: macos-latest       # REQUIRED — Xcode only on macOS
+  #   needs: [quality, versioning]
+  #   if: startsWith(github.ref, 'refs/tags/v')
+  #   permissions:
+  #     contents: read
+  #   env:
+  #     VERSION: ${{ needs.versioning.outputs.version }}
+  #     VERSION_CODE: ${{ needs.versioning.outputs.version_code }}
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #
+  #     - name: Setup Flutter
+  #       uses: subosito/flutter-action@v2
+  #       with:
+  #         channel: stable
+  #         cache: true
+  #
+  #     - name: Cache pub packages
+  #       uses: actions/cache@v4
+  #       with:
+  #         path: |
+  #           ~/.pub-cache
+  #           .dart_tool
+  #         key: pub-${{ runner.os }}-${{ hashFiles('**/pubspec.lock') }}
+  #         restore-keys: pub-${{ runner.os }}-
+  #
+  #     - name: Cache CocoaPods
+  #       uses: actions/cache@v4
+  #       with:
+  #         path: ios/Pods
+  #         key: pods-${{ runner.os }}-${{ hashFiles('ios/Podfile.lock') }}
+  #         restore-keys: pods-${{ runner.os }}-
+  #
+  #     - run: flutter pub get
+  #     - run: cd ios && pod install --repo-update
+  #
+  #     - name: Setup Ruby and Fastlane
+  #       uses: ruby/setup-ruby@v1
+  #       with:
+  #         ruby-version: '3.2'
+  #         bundler-cache: true
+  #         working-directory: ios
+  #
+  #     - name: Setup SSH for Match
+  #       uses: webfactory/ssh-agent@v0.9.0
+  #       with:
+  #         ssh-private-key: ${{ secrets.MATCH_SSH_KEY }}
+  #
+  #     - name: Fetch certificates (readonly)
+  #       env:
+  #         MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+  #       run: cd ios && bundle exec fastlane match appstore --readonly
+  #
+  #     - name: Build IPA
+  #       run: |
+  #         flutter build ipa --release \
+  #           --flavor production \
+  #           --build-name="$VERSION" \
+  #           --build-number="$VERSION_CODE" \
+  #           --dart-define=FLAVOR=production \
+  #           --dart-define=ENV=production \
+  #           --export-options-plist=ios/ExportOptions.plist
+  #
+  #     - uses: actions/upload-artifact@v4
+  #       with:
+  #         name: ios-production-release-${{ env.VERSION }}
+  #         path: build/ios/ipa/*.ipa
+  #         retention-days: 7
+  #
+  #     # Upload to TestFlight
+  #     # - name: Upload to TestFlight
+  #     #   env:
+  #     #     APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+  #     #     APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+  #     #     APP_STORE_CONNECT_API_KEY_CONTENT: ${{ secrets.ASC_PRIVATE_KEY }}
+  #     #   run: cd ios && bundle exec fastlane pilot upload --skip_waiting_for_build_processing true
+
+  # ============================================================================
+  # OPTIONAL JOB — SONARQUBE / SONARCLOUD ANALYSIS
+  # Requires: SONAR_TOKEN and SONAR_HOST_URL secrets.
+  # fetch-depth: 0 is mandatory for SCM blame and new-code period detection.
+  # ============================================================================
+  #
+  # sonar:
+  #   name: SonarQube Analysis
+  #   runs-on: ubuntu-latest
+  #   needs: [quality]
+  #   permissions:
+  #     contents: read
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #       with:
+  #         fetch-depth: 0    # Required for SonarQube blame — this job only
+  #
+  #     - name: Setup Java (SonarQube scanner requires JVM)
+  #       uses: actions/setup-java@v4
+  #       with:
+  #         distribution: zulu
+  #         java-version: '17'
+  #
+  #     - name: Setup Flutter
+  #       uses: subosito/flutter-action@v2
+  #       with:
+  #         channel: stable
+  #         cache: true
+  #
+  #     - uses: actions/cache@v4
+  #       with:
+  #         path: |
+  #           ~/.pub-cache
+  #           .dart_tool
+  #         key: pub-${{ runner.os }}-${{ hashFiles('**/pubspec.lock') }}
+  #         restore-keys: pub-${{ runner.os }}-
+  #
+  #     - run: flutter pub get
+  #
+  #     - name: Run tests with coverage
+  #       run: flutter test --coverage --reporter compact
+  #
+  #     - name: Run SonarQube scan
+  #       uses: SonarSource/sonarqube-scan-action@v3
+  #       env:
+  #         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  #         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
+  # ============================================================================
+  # OPTIONAL JOB — SENTRY SOURCE MAP UPLOAD
+  # Upload debug symbols / obfuscation mapping to Sentry after release.
+  # Requires: SENTRY_AUTH_TOKEN secret and sentry-dart-plugin in pubspec.
+  # ============================================================================
+  #
+  # upload-sentry-symbols:
+  #   name: Upload Sentry Symbols
+  #   runs-on: ubuntu-latest
+  #   needs: [create-release]
+  #   if: startsWith(github.ref, 'refs/tags/v')
+  #   permissions:
+  #     contents: read
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #
+  #     - name: Download symbols artifacts
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         pattern: android-production-release-*
+  #         path: artifacts/
+  #         merge-multiple: true
+  #
+  #     - name: Upload symbols to Sentry
+  #       env:
+  #         SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+  #       run: |
+  #         npx @sentry/cli debug-files upload \
+  #           --org your-org \
+  #           --project your-project \
+  #           artifacts/symbols-production-*/

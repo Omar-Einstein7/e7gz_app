@@ -2,7 +2,6 @@ import 'dart:ui';
 import 'package:e7gz/src/features/auth/presentation/providers/auth_cubit.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:e7gz/src/utils/validators.dart';
 import '../widgets/widgets.dart';
 
@@ -133,7 +132,6 @@ class _SignupScreenState extends State<SignupScreen> {
                           border: Border.all(color: colors.outlineVariant),
                         ),
                         child: ClipRRect(
-                          borderRadius: AppRadius.bxxl.r,
                           child: BackdropFilter(
                             filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
                             child: Column(

@@ -3,9 +3,7 @@ import 'package:e7gz/src/features/auth/presentation/providers/auth_cubit.dart';
 import 'package:e7gz/src/features/auth/presentation/providers/session_cubit.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
-import 'package:e7gz/src/theme/app_colors.dart';
 import 'package:e7gz/src/utils/validators.dart';
-import 'package:easy_localization/easy_localization.dart';
 import '../widgets/widgets.dart';
 
 class LoginScreen extends StatefulWidget {

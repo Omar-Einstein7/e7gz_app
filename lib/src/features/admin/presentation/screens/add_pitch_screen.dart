@@ -239,6 +239,8 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
 
   @override
   Widget build(BuildContext context) {
+        final colors = context.colors;
+    final tt = context.typography;
     return BlocConsumer<AdminCubit, AdminState>(
       listener: (context, state) {
         AppLogger.info(
@@ -278,9 +280,9 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
       builder: (context, state) {
         final _isLoading = state.isMutating;
         return Scaffold(
-          backgroundColor: AdminColors.bg,
+          backgroundColor: colors.surface,
           appBar: AppBar(
-            backgroundColor: AdminColors.surface,
+              backgroundColor: colors.onSurface,
             elevation: 0,
             leading: IconButton(
               icon: const Icon(

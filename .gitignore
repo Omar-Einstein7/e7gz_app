@@ -126,3 +126,11 @@ GoogleService-Info.plist
 *.jks
 key.properties
 .vercel
+
+# Agent & Tools
+.agent/
+.agents/skills/
+.claude/
+.codegraph/
+.cursor/
+
