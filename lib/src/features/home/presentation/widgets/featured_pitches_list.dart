@@ -1,5 +1,4 @@
 import 'package:e7gz/src/features/home/presentation/widgets/widgets.dart';
-import 'package:e7gz/src/imports/core_imports.dart';
 
 import 'package:e7gz/src/imports/imports.dart';
 import 'package:e7gz/src/features/pitches/presentation/cubit/pitches_cubit.dart';

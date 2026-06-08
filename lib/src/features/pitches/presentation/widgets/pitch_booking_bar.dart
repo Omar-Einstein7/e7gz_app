@@ -69,7 +69,7 @@ class _BookNowButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final pc = context.pitchColors;
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         borderRadius: AppRadius.bxl.r,
         boxShadow: [

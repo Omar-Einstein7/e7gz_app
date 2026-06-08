@@ -1,5 +1,6 @@
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 class WalletReadyChip extends StatelessWidget {
   const WalletReadyChip({super.key});
 

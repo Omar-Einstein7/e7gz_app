@@ -17,14 +17,18 @@ class PitchAmenitiesSection extends StatelessWidget {
           runSpacing: 12.h,
           children: amenities.map((amenity) {
             IconData iconData = IconsaxPlusLinear.star;
-            if (amenity.toLowerCase().contains('shower'))
+            if (amenity.toLowerCase().contains('shower')) {
               iconData = IconsaxPlusLinear.cloud_drizzle;
-            if (amenity.toLowerCase().contains('parking'))
+            }
+            if (amenity.toLowerCase().contains('parking')) {
               iconData = IconsaxPlusLinear.car;
-            if (amenity.toLowerCase().contains('wifi'))
+            }
+            if (amenity.toLowerCase().contains('wifi')) {
               iconData = IconsaxPlusLinear.wifi;
-            if (amenity.toLowerCase().contains('cafe'))
+            }
+            if (amenity.toLowerCase().contains('cafe')) {
               iconData = IconsaxPlusLinear.cup;
+            }
             return AmenityItem(label: amenity, icon: iconData);
           }).toList(),
         ),

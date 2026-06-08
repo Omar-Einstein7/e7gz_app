@@ -1,9 +1,6 @@
-import 'package:e7gz/src/imports/core_imports.dart';
-import 'package:e7gz/src/imports/packages_imports.dart';
 import 'package:e7gz/src/theme/cubit/theme_cubit.dart';
 import 'package:e7gz/src/di/injection_container.dart';
 import 'package:e7gz/src/imports/imports.dart';
-import 'package:iconsax_plus/iconsax_plus.dart';
 import '../widgets/profile_tile.dart';
 
 class SettingsScreen extends StatefulWidget {

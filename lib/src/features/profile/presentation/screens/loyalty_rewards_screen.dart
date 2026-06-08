@@ -3,7 +3,6 @@ import 'package:e7gz/src/features/profile/presentation/cubit/profile_cubit.dart'
 import 'package:e7gz/src/features/profile/presentation/cubit/profile_state.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
-import 'package:easy_localization/easy_localization.dart';
 
 class LoyaltyRewardsScreen extends StatelessWidget {
   const LoyaltyRewardsScreen({super.key});
@@ -210,78 +209,68 @@ class LoyaltyRewardsScreen extends StatelessWidget {
                     ),
                   ),
 
-                ...state.rewards
-                    .map(
-                      (reward) => Padding(
-                        padding: EdgeInsets.only(bottom: 16.h),
-                        child: rewardItem(
-                          reward.title,
-                          reward.description,
-                          '${reward.pointsCost} PTS',
-                          Icons.confirmation_number,
-                          onTap: () {
-                            showDialog<void>(
-                              context: context,
-                              builder: (ctx) => AlertDialog(
-                                backgroundColor: const Color(0xFF131B2E),
-                                title: Text(
-                                  'profile.redeem_dialog_title'.tr(),
-                                  style: tt.titleLarge?.copyWith(
-                                    color: Colors.white,
-                                  ),
+                ...state.rewards.map(
+                  (reward) => Padding(
+                    padding: EdgeInsets.only(bottom: 16.h),
+                    child: rewardItem(
+                      reward.title,
+                      reward.description,
+                      '${reward.pointsCost} PTS',
+                      Icons.confirmation_number,
+                      onTap: () {
+                        showDialog<void>(
+                          context: context,
+                          builder: (ctx) => AlertDialog(
+                            backgroundColor: const Color(0xFF131B2E),
+                            title: Text(
+                              'profile.redeem_dialog_title'.tr(),
+                              style: tt.titleLarge?.copyWith(
+                                color: Colors.white,
+                              ),
+                            ),
+                            content: Text(
+                              'profile.redeem_confirm_desc'.tr(
+                                namedArgs: {
+                                  'title': reward.title,
+                                  'cost': reward.pointsCost.toString(),
+                                },
+                              ),
+                              style: const TextStyle(color: Color(0xFFBCC7DE)),
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(ctx),
+                                child: Text(
+                                  'profile.cancel'.tr(),
+                                  style: const TextStyle(color: Colors.white54),
                                 ),
-                                content: Text(
-                                  'profile.redeem_confirm_desc'.tr(
-                                    namedArgs: {
-                                      'title': reward.title,
-                                      'cost': reward.pointsCost.toString(),
-                                    },
-                                  ),
-                                  style: const TextStyle(
-                                    color: Color(0xFFBCC7DE),
-                                  ),
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () => Navigator.pop(ctx),
-                                    child: Text(
-                                      'profile.cancel'.tr(),
-                                      style: const TextStyle(
-                                        color: Colors.white54,
+                              ),
+                              AppButton(
+                                label: 'profile.redeem'.tr(),
+                                height: ButtonSize.small,
+                                onPressed: () {
+                                  Navigator.pop(ctx);
+                                  context.read<ProfileCubit>().redeemReward(
+                                    reward.id,
+                                  );
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        'profile.redeem_success'.tr(
+                                          namedArgs: {'title': reward.title},
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  AppButton(
-                                    label: 'profile.redeem'.tr(),
-                                    height: ButtonSize.small,
-                                    onPressed: () {
-                                      Navigator.pop(ctx);
-                                      context.read<ProfileCubit>().redeemReward(
-                                        reward.id,
-                                      );
-                                      ScaffoldMessenger.of(
-                                        context,
-                                      ).showSnackBar(
-                                        SnackBar(
-                                          content: Text(
-                                            'profile.redeem_success'.tr(
-                                              namedArgs: {
-                                                'title': reward.title,
-                                              },
-                                            ),
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ],
+                                  );
+                                },
                               ),
-                            );
-                          },
-                        ),
-                      ),
-                    )
-                    .toList(),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
 
                 SizedBox(height: 100.h),
               ],
@@ -355,4 +344,3 @@ class LoyaltyRewardsScreen extends StatelessWidget {
     );
   }
 }
-

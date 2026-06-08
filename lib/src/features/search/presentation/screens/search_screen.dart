@@ -3,7 +3,6 @@ import 'package:e7gz/src/features/search/presentation/cubit/search_cubit.dart';
 import 'package:e7gz/src/features/search/presentation/cubit/search_state.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
-import 'package:easy_localization/easy_localization.dart';
 import '../widgets/search_filter_chip.dart';
 import '../widgets/search_result_card.dart';
 

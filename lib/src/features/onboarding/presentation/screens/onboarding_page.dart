@@ -1,7 +1,6 @@
 import 'dart:ui';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
-import 'package:easy_localization/easy_localization.dart';
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});
@@ -169,7 +168,12 @@ class _OnboardingPageState extends State<OnboardingPage> {
                                     Text(
                                           (item['subtitleKey'] as String).tr(),
                                           style: typography.bodyLarge?.copyWith(
-                                            color: const Color.fromARGB(255, 115, 122, 136).withValues(alpha: 0.8),
+                                            color: const Color.fromARGB(
+                                              255,
+                                              115,
+                                              122,
+                                              136,
+                                            ).withValues(alpha: 0.8),
                                             fontSize: 15.sp,
                                             height: 1.5,
                                           ),
@@ -223,9 +227,9 @@ class _OnboardingPageState extends State<OnboardingPage> {
                             curve: Curves.easeOutBack,
                           )
                         else
-                          Container(
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF131B2E),
+                          DecoratedBox(
+                            decoration: const BoxDecoration(
+                              color: Color(0xFF131B2E),
                               shape: BoxShape.circle,
                             ),
                             child: IconButton(

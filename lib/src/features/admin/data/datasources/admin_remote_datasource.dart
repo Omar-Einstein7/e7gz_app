@@ -196,8 +196,9 @@ class AdminRemoteDataSource {
           if (url != null) uploadedUrls.add(url);
         }
 
-        if (uploadedUrls.isEmpty)
+        if (uploadedUrls.isEmpty) {
           return 'Failed to upload images to Cloudinary';
+        }
 
         // Combine with any existing URLs (unlikely for create, but good for consistency)
         final List<String> currentImages = List<String>.from(
@@ -278,8 +279,9 @@ class AdminRemoteDataSource {
           if (url != null) uploadedUrls.add(url);
         }
 
-        if (uploadedUrls.isEmpty)
+        if (uploadedUrls.isEmpty) {
           return 'Failed to upload images to Cloudinary';
+        }
 
         // Set them as 'newImages' for the backend to merge
         finalPayload['newImages'] = uploadedUrls;

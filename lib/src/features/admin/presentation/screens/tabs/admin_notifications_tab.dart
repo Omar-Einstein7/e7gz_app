@@ -230,10 +230,10 @@ class _NotificationTile extends StatelessWidget {
 class _EmptyNotifications extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return AdminCard(
+    return const AdminCard(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
+        children: [
           SizedBox(height: 48),
           Icon(
             IconsaxPlusBold.notification_status,
@@ -250,4 +250,3 @@ class _EmptyNotifications extends StatelessWidget {
     );
   }
 }
-

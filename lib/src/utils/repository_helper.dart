@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
 import 'failure.dart';
 

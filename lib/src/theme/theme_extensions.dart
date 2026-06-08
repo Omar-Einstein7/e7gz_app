@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:ui';
 import 'app_colors.dart';
 
 /// Extension for semantic colors not covered by [ColorScheme].

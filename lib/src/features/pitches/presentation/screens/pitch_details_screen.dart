@@ -4,7 +4,6 @@ import 'package:e7gz/src/imports/packages_imports.dart';
 import 'package:e7gz/src/features/pitches/presentation/cubit/pitches_cubit.dart';
 import 'package:e7gz/src/features/pitches/presentation/cubit/pitches_state.dart';
 import 'package:e7gz/src/di/injection_container.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import '../widgets/widgets.dart';
 
 class PitchDetailsScreen extends StatelessWidget {
@@ -85,7 +84,7 @@ class _PitchDetailsView extends StatelessWidget {
               ),
 
               SliverToBoxAdapter(
-                child: Container(
+                child: DecoratedBox(
                   decoration: BoxDecoration(color: context.colors.background),
                   child: Padding(
                     padding: EdgeInsets.only(

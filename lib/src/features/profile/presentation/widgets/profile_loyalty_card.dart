@@ -1,6 +1,4 @@
-
 import 'package:e7gz/src/imports/imports.dart';
-
 
 class ProfileLoyaltyCard extends StatelessWidget {
   final int points;

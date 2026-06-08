@@ -1,6 +1,5 @@
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:e7gz/src/features/bookings/presentation/cubit/booking_cubit.dart';
 import 'package:e7gz/src/features/bookings/presentation/cubit/booking_state.dart';
 import 'package:e7gz/src/features/bookings/domain/entities/booking.dart';

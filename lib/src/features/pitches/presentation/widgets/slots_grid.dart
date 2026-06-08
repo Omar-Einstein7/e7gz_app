@@ -3,7 +3,6 @@ import 'package:e7gz/src/features/bookings/presentation/cubit/booking_cubit.dart
 import 'package:e7gz/src/features/bookings/presentation/cubit/booking_state.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
-import 'package:e7gz/src/theme/app_colors.dart';
 
 class SlotsGrid extends StatelessWidget {
   const SlotsGrid({super.key});
@@ -150,7 +149,7 @@ class _SlotBox extends StatelessWidget {
         ? cs.onSurfaceVariant.withOpacity(0.5)
         : (isSelected ? cs.onPrimary : cs.onSurface);
 
-    Widget content = AnimatedContainer(
+    final Widget content = AnimatedContainer(
       duration: const Duration(milliseconds: 200),
       decoration: BoxDecoration(
         color: bgColor,

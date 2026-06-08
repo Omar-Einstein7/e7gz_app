@@ -125,7 +125,9 @@ class _SplashScreenState extends State<SplashScreen> {
                         height: 20.w,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(colors.primary),
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            colors.primary,
+                          ),
                         ),
                       ),
                       SizedBox(height: 24.h),
@@ -187,4 +189,3 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 }
-

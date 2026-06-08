@@ -4,12 +4,7 @@ import 'package:e7gz/src/features/admin/presentation/cubit/admin_cubit.dart';
 import 'package:e7gz/src/features/admin/presentation/cubit/admin_state.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:iconsax_plus/iconsax_plus.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart' as loc;
@@ -190,33 +185,33 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
     if (!_formKey.currentState!.validate()) return;
 
     final payload = {
-      "name": _nameController.text,
-      "description": _descriptionController.text,
-      "sportType": _sportType,
-      "location": {
-        "address": _addressController.text,
-        "city": _cityController.text,
-        "coordinates": {
-          "type": "Point",
-          "coordinates": [
+      'name': _nameController.text,
+      'description': _descriptionController.text,
+      'sportType': _sportType,
+      'location': {
+        'address': _addressController.text,
+        'city': _cityController.text,
+        'coordinates': {
+          'type': 'Point',
+          'coordinates': [
             _selectedLocation.longitude,
             _selectedLocation.latitude,
           ],
         },
       },
-      "pricePerHour": int.tryParse(_morningPriceController.text) ?? 0,
-      "morningPrice": int.tryParse(_morningPriceController.text) ?? 0,
-      "nightPrice": int.tryParse(_nightPriceController.text) ?? 0,
-      "amenities": _selectedAmenities,
-      "openingTime": "08:00",
-      "closingTime": "23:00",
-      "images": _existingUrls,
+      'pricePerHour': int.tryParse(_morningPriceController.text) ?? 0,
+      'morningPrice': int.tryParse(_morningPriceController.text) ?? 0,
+      'nightPrice': int.tryParse(_nightPriceController.text) ?? 0,
+      'amenities': _selectedAmenities,
+      'openingTime': '08:00',
+      'closingTime': '23:00',
+      'images': _existingUrls,
     };
 
     final List<List<int>> imageBytesList = [];
     final List<String> fileNames = [];
 
-    for (var image in _pickedImages) {
+    for (final image in _pickedImages) {
       imageBytesList.add(await image.readAsBytes());
       fileNames.add(image.name);
     }
@@ -239,7 +234,7 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
 
   @override
   Widget build(BuildContext context) {
-        final colors = context.colors;
+    final colors = context.colors;
     final tt = context.typography;
     return BlocConsumer<AdminCubit, AdminState>(
       listener: (context, state) {
@@ -278,11 +273,11 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
         }
       },
       builder: (context, state) {
-        final _isLoading = state.isMutating;
+        final isLoading = state.isMutating;
         return Scaffold(
           backgroundColor: colors.surface,
           appBar: AppBar(
-              backgroundColor: colors.onSurface,
+            backgroundColor: colors.onSurface,
             elevation: 0,
             leading: IconButton(
               icon: const Icon(
@@ -327,15 +322,15 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
                                 style: BorderStyle.solid,
                               ),
                             ),
-                            child: Column(
+                            child: const Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Icon(
+                                Icon(
                                   IconsaxPlusBold.add_square,
                                   color: AdminColors.accent,
                                 ),
-                                const SizedBox(height: 8),
-                                const Text(
+                                SizedBox(height: 8),
+                                Text(
                                   'Add Pix',
                                   style: TextStyle(
                                     color: AdminColors.textSecondary,
@@ -406,10 +401,10 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
                                   top: 4,
                                   child: GestureDetector(
                                     onTap: () => _removeImage(idx),
-                                    child: CircleAvatar(
+                                    child: const CircleAvatar(
                                       radius: 12,
                                       backgroundColor: Colors.black54,
-                                      child: const Icon(
+                                      child: Icon(
                                         Icons.close,
                                         size: 14,
                                         color: Colors.white,
@@ -625,14 +620,14 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
                     width: double.infinity,
                     height: 54,
                     child: FilledButton(
-                      onPressed: _isLoading ? null : _submit,
+                      onPressed: isLoading ? null : _submit,
                       style: FilledButton.styleFrom(
                         backgroundColor: AdminColors.accent,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      child: _isLoading
+                      child: isLoading
                           ? const SizedBox(
                               width: 24,
                               height: 24,
@@ -712,7 +707,7 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
         Text(label, style: AdminTextStyles.label),
         const SizedBox(height: 8),
         DropdownButtonFormField<String>(
-          value: _sportType,
+          initialValue: _sportType,
           dropdownColor: AdminColors.surfaceHigh,
           style: const TextStyle(color: AdminColors.textPrimary, fontSize: 14),
           decoration: InputDecoration(

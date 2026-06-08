@@ -1,4 +1,3 @@
-import 'package:intl/intl.dart';
 import 'package:e7gz/src/imports/imports.dart';
 
 import '../widgets/widgets.dart';
@@ -234,7 +233,7 @@ class _RatingBottomSheetState extends State<_RatingBottomSheet> {
             itemCount: 5,
             itemPadding: EdgeInsets.symmetric(horizontal: 4.0.w),
             itemBuilder: (context, _) =>
-                Icon(Icons.star_rounded, color: Colors.amber),
+                const Icon(Icons.star_rounded, color: Colors.amber),
             onRatingUpdate: (rating) {
               setState(() {
                 _rating = rating;

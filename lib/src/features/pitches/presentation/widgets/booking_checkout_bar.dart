@@ -3,8 +3,6 @@ import 'package:e7gz/src/features/bookings/presentation/cubit/booking_state.dart
 import 'package:e7gz/src/features/pitches/domain/entities/pitch.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:e7gz/src/theme/app_colors.dart';
 
 class BookingCheckoutBar extends StatelessWidget {
   final String pitchId;

@@ -105,8 +105,9 @@ class AuthRepositoryImpl implements AuthRepository {
       photoPath: photoPath,
     );
     return result.fold((failure) => left(failure), (userData) {
-      if (userData == null)
+      if (userData == null) {
         return left(const ServerFailure('Failed to update profile'));
+      }
       return right(UserModel.fromJson(userData));
     });
   }

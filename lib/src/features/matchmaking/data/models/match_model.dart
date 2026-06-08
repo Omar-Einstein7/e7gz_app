@@ -79,7 +79,7 @@ class MatchModel extends MatchmakingMatch {
       skillLevel: json['skillLevel'] ?? 'all',
       status: json['status'] ?? 'open',
       pitchName: pitch?['name'],
-      pitchImage: (pitch?['images'] as List<dynamic>?)?.isNotEmpty == true
+      pitchImage: (pitch?['images'] as List<dynamic>?)?.isNotEmpty ?? false
           ? pitch!['images'][0]
           : null,
       sportType: json['sportType']?.toString() ?? 'football',

@@ -48,7 +48,7 @@ class AdminNotificationsOverlay extends StatelessWidget {
             child: ListView.separated(
               padding: const EdgeInsets.symmetric(vertical: 8),
               itemCount: 4,
-              separatorBuilder: (_, __) => const Divider(
+              separatorBuilder: (_, _) => const Divider(
                 color: AdminColors.border,
                 height: 1,
                 indent: 20,

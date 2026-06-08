@@ -44,7 +44,7 @@ class PitchHeaderDelegate extends SliverPersistentHeaderDelegate {
 
             child: pitch.images.isNotEmpty
                 ? ImagePageView(images: pitch.images, opacity: 1.0 - percent)
-                : AppCachedImage(
+                : const AppCachedImage(
                     imageUrl:
                         'https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80',
                     fit: BoxFit.cover,
@@ -273,7 +273,11 @@ class _ImagePageViewState extends State<ImagePageView> {
 class CircleActionButton extends StatelessWidget {
   final IconData icon;
   final VoidCallback onPressed;
-  const CircleActionButton({required this.icon, required this.onPressed});
+  const CircleActionButton({
+    super.key,
+    required this.icon,
+    required this.onPressed,
+  });
 
   @override
   Widget build(BuildContext context) {

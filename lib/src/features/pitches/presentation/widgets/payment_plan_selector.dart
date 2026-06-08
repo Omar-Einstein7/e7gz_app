@@ -1,11 +1,8 @@
 import 'package:e7gz/src/imports/core_imports.dart';
-import 'package:e7gz/src/theme/app_colors.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:e7gz/src/features/bookings/presentation/cubit/booking_cubit.dart';
-import 'package:e7gz/src/features/bookings/presentation/cubit/booking_state.dart';
 
 class PaymentPlanSelector extends StatelessWidget {
   final bool isFullPayment;

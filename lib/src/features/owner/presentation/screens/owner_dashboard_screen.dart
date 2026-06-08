@@ -84,7 +84,6 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
   }
 
   Widget _buildBottomNav(BuildContext context) {
-
     return ClipRRect(
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),

@@ -1,7 +1,6 @@
 import 'package:e7gz/src/features/auth/presentation/providers/session_cubit.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
 import 'package:flutter/material.dart';
-import 'package:iconsax_plus/iconsax_plus.dart';
 import '../layout/admin_layout.dart';
 
 class _NavItem {
@@ -31,7 +30,7 @@ class AdminSidebar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return DecoratedBox(
       decoration: const BoxDecoration(
         color: AdminColors.surface,
         border: Border(right: BorderSide(color: AdminColors.border)),
@@ -70,9 +69,9 @@ class AdminSidebar extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 12),
-                Column(
+                const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     Text(
                       'E7GZ',
                       style: TextStyle(
@@ -96,8 +95,8 @@ class AdminSidebar extends StatelessWidget {
           ),
           const SizedBox(height: 32),
           // ── Section label ───────────────────────────────────────
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
             child: Text(
               'MAIN MENU',
               style: TextStyle(

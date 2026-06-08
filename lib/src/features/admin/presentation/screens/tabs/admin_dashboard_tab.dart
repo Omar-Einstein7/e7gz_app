@@ -128,11 +128,9 @@ class _AdminDashboardTabState extends State<AdminDashboardTab>
                     return Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(
+                        const Expanded(
                           flex: 3,
-                          child: const ChartPlaceholder(
-                            title: 'Bookings Overview',
-                          ),
+                          child: ChartPlaceholder(title: 'Bookings Overview'),
                         ),
                         const SizedBox(width: 16),
                         Expanded(flex: 2, child: _TopVenuesCard()),
@@ -213,7 +211,7 @@ class _TopVenuesCard extends StatelessWidget {
                       tween: Tween(begin: 0, end: v.$3),
                       duration: const Duration(milliseconds: 800),
                       curve: Curves.easeOut,
-                      builder: (_, val, __) => LinearProgressIndicator(
+                      builder: (_, val, _) => LinearProgressIndicator(
                         value: val,
                         backgroundColor: AdminColors.surfaceHigh,
                         valueColor: const AlwaysStoppedAnimation(
@@ -317,4 +315,3 @@ class _RecentActivityCard extends StatelessWidget {
     );
   }
 }
-

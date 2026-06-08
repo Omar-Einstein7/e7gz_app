@@ -1,4 +1,3 @@
-import 'package:e7gz/src/config/app_config.dart';
 import 'package:e7gz/src/features/matchmaking/presentation/cubit/matchmaking_cubit.dart';
 import 'package:e7gz/src/features/matchmaking/presentation/cubit/matchmaking_state.dart';
 import 'package:e7gz/src/features/matchmaking/data/models/match_model.dart';
@@ -7,7 +6,6 @@ import 'package:e7gz/src/features/search/data/datasources/search_remote_datasour
 import 'package:e7gz/src/di/injection_container.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
-import 'package:easy_localization/easy_localization.dart';
 import '../widgets/widgets.dart';
 
 class CreateMatchScreen extends StatefulWidget {
@@ -30,7 +28,7 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
   String? _creationTeam = 'teamA'; // Default to Team A for creator
 
   List<Pitch> _availablePitches = [];
-  double _pricePerPlayer = 150.0;
+  double _pricePerPlayer = 150;
   bool _isLoadingPitches = true;
 
   @override
@@ -109,29 +107,27 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
               SizedBox(height: 24.h),
 
               MatchmakingFieldLabel(label: 'matchmaking.select_pitch'.tr()),
-              _isLoadingPitches
-                  ? const Center(child: CircularProgressIndicator())
-                  : DropdownButtonFormField<String>(
-                      value: _selectedPitchId,
-                      dropdownColor: const Color(0xFF131B2E),
-                      style: const TextStyle(color: Colors.white),
-                      decoration: _inputDecoration(
-                        'matchmaking.choose_location'.tr(),
-                      ),
-                      items: _availablePitches
-                          .map(
-                            (p) => DropdownMenuItem(
-                              value: p.id,
-                              child: Text(
-                                p.name,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          )
-                          .toList(),
-                      onChanged: (v) => setState(() => _selectedPitchId = v),
-                      validator: (v) => v == null ? 'auth.required'.tr() : null,
-                    ),
+              if (_isLoadingPitches)
+                const Center(child: CircularProgressIndicator())
+              else
+                DropdownButtonFormField<String>(
+                  value: _selectedPitchId,
+                  dropdownColor: const Color(0xFF131B2E),
+                  style: const TextStyle(color: Colors.white),
+                  decoration: _inputDecoration(
+                    'matchmaking.choose_location'.tr(),
+                  ),
+                  items: _availablePitches
+                      .map(
+                        (p) => DropdownMenuItem(
+                          value: p.id,
+                          child: Text(p.name, overflow: TextOverflow.ellipsis),
+                        ),
+                      )
+                      .toList(),
+                  onChanged: (v) => setState(() => _selectedPitchId = v),
+                  validator: (v) => v == null ? 'auth.required'.tr() : null,
+                ),
               SizedBox(height: 24.h),
 
               Row(
@@ -440,10 +436,11 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
     );
     if (picked != null) {
       setState(() {
-        if (isStart)
+        if (isStart) {
           _startTime = picked;
-        else
+        } else {
           _endTime = picked;
+        }
       });
     }
   }

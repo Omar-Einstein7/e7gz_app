@@ -2,7 +2,6 @@ import 'package:e7gz/src/features/bookings/domain/entities/booking.dart';
 import 'package:e7gz/src/features/bookings/presentation/cubit/booking_cubit.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
-import 'package:e7gz/src/theme/app_colors.dart';
 import 'booking_status_chip.dart';
 
 class BookingCard extends StatelessWidget {

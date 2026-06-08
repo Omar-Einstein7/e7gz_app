@@ -32,7 +32,7 @@ class MatchmakingCard extends StatelessWidget {
 
     return GestureDetector(
       onTap: onTap,
-      child: Container(
+      child: DecoratedBox(
         decoration: BoxDecoration(
           color: cardBg,
           borderRadius: BorderRadius.circular(40.r),

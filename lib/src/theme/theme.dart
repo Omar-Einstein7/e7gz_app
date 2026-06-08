@@ -60,7 +60,7 @@ abstract final class AppTheme {
       fontFamily: AppTypography.fontFamily,
       extensions: extensions,
 
-      scaffoldBackgroundColor: colorScheme.background,
+      scaffoldBackgroundColor: colorScheme.surface,
       dividerColor: colorScheme.outline,
 
       // --- Component Themes ---

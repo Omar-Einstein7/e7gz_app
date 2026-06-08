@@ -137,31 +137,31 @@ class _SignupScreenState extends State<SignupScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                AuthInputLabel(label: "auth.full_name".tr()),
+                                AuthInputLabel(label: 'auth.full_name'.tr()),
                                 AppTextField(
                                   controller: _nameController,
-                                  hint: "Mohamed Ahmed",
+                                  hint: 'Mohamed Ahmed',
                                   prefixIcon: const Icon(
                                     IconsaxPlusBold.profile,
                                   ),
                                   validator: Validators.name,
                                 ),
                                 SizedBox(height: AppSpacing.lg.h),
-                                AuthInputLabel(label: "auth.email".tr()),
+                                AuthInputLabel(label: 'auth.email'.tr()),
                                 AppTextField(
                                   controller: _emailController,
-                                  hint: "mohamed@example.com",
+                                  hint: 'mohamed@example.com',
                                   keyboardType: TextInputType.emailAddress,
                                   prefixIcon: const Icon(IconsaxPlusBold.sms),
                                   validator: Validators.email,
                                 ),
                                 SizedBox(height: AppSpacing.lg.h),
                                 AuthInputLabel(
-                                  label: "auth.mobile_number".tr(),
+                                  label: 'auth.mobile_number'.tr(),
                                 ),
                                 AppTextField(
                                   controller: _phoneController,
-                                  hint: "01X XXXX XXXX",
+                                  hint: '01X XXXX XXXX',
                                   keyboardType: TextInputType.phone,
                                   prefixIcon: const Icon(IconsaxPlusBold.call),
                                   suffixIcon: const WalletReadyChip(),
@@ -169,7 +169,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                 ),
                                 SizedBox(height: AppSpacing.lg.h),
                                 AuthInputLabel(
-                                  label: "auth.create_password".tr(),
+                                  label: 'auth.create_password'.tr(),
                                 ),
                                 BlocBuilder<AuthCubit, AuthState>(
                                   buildWhen: (prev, curr) =>
@@ -178,7 +178,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                   builder: (context, state) {
                                     return AppTextField(
                                       controller: _passwordController,
-                                      hint: "••••••••",
+                                      hint: '••••••••',
                                       obscureText: state.obscurePassword,
                                       prefixIcon: const Icon(
                                         IconsaxPlusBold.lock,
@@ -241,13 +241,13 @@ class _SignupScreenState extends State<SignupScreen> {
                                         context.go(AppRoutes.login),
                                     child: RichText(
                                       text: TextSpan(
-                                        text: "auth.already_have_account".tr(),
+                                        text: 'auth.already_have_account'.tr(),
                                         style: typography.bodyMedium?.copyWith(
                                           color: colors.onSurfaceVariant,
                                         ),
                                         children: [
                                           TextSpan(
-                                            text: "auth.sign_in".tr(),
+                                            text: 'auth.sign_in'.tr(),
                                             style: TextStyle(
                                               color: colors.primary,
                                               fontWeight: FontWeight.bold,

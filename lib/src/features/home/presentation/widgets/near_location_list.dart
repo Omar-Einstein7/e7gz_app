@@ -259,9 +259,9 @@ class _NearPitchCard extends StatelessWidget {
                         SizedBox(height: 6.h),
                         Row(
                           children: [
-                            Icon(
+                            const Icon(
                               IconsaxPlusLinear.map_1,
-                              color: const Color(0xFFBCC7DE),
+                              color: Color(0xFFBCC7DE),
                               size: 14,
                             ),
                             SizedBox(width: 4.w),

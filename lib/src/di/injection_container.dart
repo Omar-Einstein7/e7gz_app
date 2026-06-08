@@ -89,7 +89,6 @@ import '../features/search/presentation/cubit/search_cubit.dart';
 import '../features/profile/data/datasources/profile_remote_datasource.dart';
 import '../features/profile/data/repositories/profile_repository_impl.dart';
 import '../features/profile/domain/repositories/profile_repository.dart';
-import '../features/profile/presentation/cubit/profile_cubit.dart';
 
 /// Global service locator instance.
 final sl = GetIt.instance;

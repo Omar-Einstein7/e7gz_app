@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 /// Text('Hello', style: context.textTheme.titleLarge);
 /// ```
 TextTheme buildTextTheme() {
-  final baseTextTheme = TextTheme(
+  const baseTextTheme = TextTheme(
     // ── Display ──────────────────────────────────────────────────────────────
     displayLarge: TextStyle(
       fontSize: 57,

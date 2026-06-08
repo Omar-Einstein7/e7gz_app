@@ -1,6 +1,5 @@
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
-import 'package:e7gz/src/theme/app_colors.dart';
 
 class CalendarStrip extends StatelessWidget {
   final List<DateTime> weekDates;

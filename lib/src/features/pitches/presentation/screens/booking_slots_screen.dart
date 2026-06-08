@@ -3,7 +3,6 @@ import 'package:e7gz/src/imports/packages_imports.dart';
 import 'package:e7gz/src/features/bookings/presentation/cubit/booking_cubit.dart';
 import 'package:e7gz/src/features/bookings/domain/usecases/booking_usecases.dart';
 import 'package:e7gz/src/di/injection_container.dart';
-import 'package:e7gz/src/theme/app_colors.dart';
 
 import '../widgets/pitch_mini_hero.dart';
 import '../widgets/calendar_strip.dart';
@@ -62,7 +61,10 @@ class _BookingSlotsScreenState extends State<BookingSlotsScreen> {
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios_new_outlined, color: colors.onSurface),
+            icon: Icon(
+              Icons.arrow_back_ios_new_outlined,
+              color: colors.onSurface,
+            ),
             onPressed: () => context.pop(),
           ),
           title: Text(
@@ -132,4 +134,3 @@ class _BookingSlotsScreenState extends State<BookingSlotsScreen> {
     );
   }
 }
-

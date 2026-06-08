@@ -1,6 +1,4 @@
-import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/imports.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:e7gz/src/features/pitches/domain/entities/pitch.dart';
 import 'package:e7gz/src/features/pitches/presentation/cubit/pitches_cubit.dart';
 import 'package:e7gz/src/features/pitches/presentation/cubit/pitches_state.dart';
@@ -66,13 +64,14 @@ class _BookingSummaryView extends StatelessWidget {
           }
 
           final pitch = state.pitch;
-          if (pitch == null)
+          if (pitch == null) {
             return Center(
               child: Text(
                 'bookings.pitch_not_found'.tr(),
                 style: const TextStyle(color: Colors.white),
               ),
             );
+          }
 
           return SingleChildScrollView(
             padding: EdgeInsets.all(24.w),
@@ -270,4 +269,3 @@ class _BookingSummaryView extends StatelessWidget {
     );
   }
 }
-

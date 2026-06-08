@@ -1,6 +1,5 @@
 import 'package:e7gz/src/features/pitches/domain/entities/pitch.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
-import 'package:e7gz/src/theme/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class PitchMiniHero extends StatelessWidget {

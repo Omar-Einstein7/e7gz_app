@@ -9,7 +9,7 @@ class PitchLocationSection extends StatelessWidget {
 
   Future<void> _openMap(double latitude, double longitude) async {
     final Uri googleMapUrl = Uri.parse(
-      "https://www.google.com/maps/search/?api=1&query=$latitude,$longitude",
+      'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude',
     );
     try {
       await launchUrl(googleMapUrl, mode: LaunchMode.externalApplication);
@@ -67,7 +67,7 @@ class PitchLocationSection extends StatelessWidget {
                   FlutterMap(
                     options: MapOptions(
                       initialCenter: LatLng(lat, lng),
-                      initialZoom: 15.0,
+                      initialZoom: 15,
                       interactionOptions: const InteractionOptions(
                         flags: InteractiveFlag.none,
                       ),
@@ -85,7 +85,7 @@ class PitchLocationSection extends StatelessWidget {
                             width: 60,
                             height: 60,
                             child:
-                                Container(
+                                DecoratedBox(
                                       decoration: BoxDecoration(
                                         color: pc.accentGreen.withValues(
                                           alpha: 0.2,

@@ -1,5 +1,6 @@
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 class RoleCard extends StatelessWidget {
   const RoleCard({
     super.key,

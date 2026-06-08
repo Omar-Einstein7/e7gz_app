@@ -1,7 +1,6 @@
 import 'package:e7gz/src/features/pitches/domain/entities/pitch.dart';
 import 'package:e7gz/src/features/pitches/domain/repositories/pitch_repository.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
-import 'package:e7gz/src/imports/packages_imports.dart';
 import '../datasources/pitch_remote_datasource.dart';
 import '../models/pitch_model.dart';
 

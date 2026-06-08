@@ -55,6 +55,16 @@ class OwnerHomeScreen extends StatelessWidget {
                 if (state.status == OwnerStatus.failure &&
                     state.errorMessage != null)
                   RawToast(
+                    animationDuration: Durations.medium1,
+                    toastPosition: ToastPosition.top,
+                    snackbarDuration: const Duration(milliseconds: 2000),
+                    onRemove: () {},
+                    getPosition: () {
+                      return 1;
+                    },
+                    getscaleFactor: () {
+                      return 1;
+                    },
                     child: Container(
                       margin: EdgeInsets.only(bottom: AppSpacing.md.h),
                       padding: EdgeInsets.all(AppSpacing.md.w),
@@ -92,16 +102,6 @@ class OwnerHomeScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                    animationDuration: Durations.medium1,
-                    toastPosition: ToastPosition.top,
-                    snackbarDuration: Duration(milliseconds: 2000),
-                    onRemove: () {},
-                    getPosition: () {
-                      return 1;
-                    },
-                    getscaleFactor: () {
-                      return 1;
-                    },
                   ),
 
                 // Greeting

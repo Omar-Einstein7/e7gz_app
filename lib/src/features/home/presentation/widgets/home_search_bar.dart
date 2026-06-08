@@ -1,6 +1,4 @@
-import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/imports.dart';
-import 'package:easy_localization/easy_localization.dart';
 
 class HomeSearchBar extends StatelessWidget {
   const HomeSearchBar({super.key});

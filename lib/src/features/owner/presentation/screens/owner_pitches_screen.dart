@@ -27,10 +27,7 @@ class OwnerPitchesScreen extends StatelessWidget {
             automaticallyImplyLeading: false,
             title: Text(
               'My Pitches',
-              style: tt.titleLarge?.copyWith(
-              
-                fontWeight: FontWeight.bold,
-              ),
+              style: tt.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
             actions: [
               Padding(

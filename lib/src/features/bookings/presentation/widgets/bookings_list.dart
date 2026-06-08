@@ -1,7 +1,6 @@
 import 'package:e7gz/src/features/bookings/domain/entities/booking.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'booking_card.dart';
 
 class BookingsList extends StatelessWidget {

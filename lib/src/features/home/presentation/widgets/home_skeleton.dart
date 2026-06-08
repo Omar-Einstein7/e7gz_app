@@ -1,5 +1,4 @@
 import 'package:e7gz/src/imports/imports.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 class HomeSkeleton extends StatelessWidget {
   final bool isFeatured;

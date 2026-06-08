@@ -1,5 +1,4 @@
 import 'package:e7gz/src/imports/core_imports.dart';
-import 'package:e7gz/src/services/dio_service.dart';
 import '../models/match_model.dart';
 
 class MatchRemoteDataSource {
@@ -13,9 +12,9 @@ class MatchRemoteDataSource {
     String? status,
   }) async {
     final params = <String, dynamic>{
-      if (pitchId != null) 'pitchId': pitchId,
-      if (date != null) 'date': date,
-      if (status != null) 'status': status,
+      'pitchId': ?pitchId,
+      'date': ?date,
+      'status': ?status,
     };
 
     final result = await _dio.get('matches', queryParameters: params);

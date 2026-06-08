@@ -3,8 +3,6 @@ import 'package:e7gz/src/features/auth/presentation/providers/session_cubit.dart
 import 'package:e7gz/src/features/matchmaking/domain/entities/match.dart';
 import 'package:e7gz/src/features/matchmaking/presentation/cubit/matchmaking_cubit.dart';
 import 'package:e7gz/src/features/matchmaking/presentation/cubit/matchmaking_state.dart';
-import 'package:e7gz/src/imports/core_imports.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:e7gz/src/imports/imports.dart';
 
 class MatchDetailsScreen extends StatefulWidget {
@@ -591,7 +589,7 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
             ),
             if (isWinner) ...[
               SizedBox(width: 4.w),
-              Icon(Icons.emoji_events, color: Colors.amber, size: 16),
+              const Icon(Icons.emoji_events, color: Colors.amber, size: 16),
             ],
           ],
         ),

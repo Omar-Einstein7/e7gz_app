@@ -1,5 +1,4 @@
 import 'package:e7gz/src/imports/imports.dart';
-import 'package:easy_localization/easy_localization.dart';
 
 class HomeSectionHeader extends StatelessWidget {
   final String title;

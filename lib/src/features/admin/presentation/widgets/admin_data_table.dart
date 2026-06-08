@@ -30,7 +30,7 @@ class AdminDataTable extends StatelessWidget {
               children: [
                 Text(title, style: AdminTextStyles.sectionTitle),
                 const Spacer(),
-                if (action != null) action!,
+                ?action,
               ],
             ),
           ),

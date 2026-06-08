@@ -1,6 +1,6 @@
 import 'package:e7gz/src/imports/core_imports.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 class SocialJoinDivider extends StatelessWidget {
   const SocialJoinDivider({super.key});
 

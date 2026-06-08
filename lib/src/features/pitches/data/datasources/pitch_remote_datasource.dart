@@ -22,9 +22,9 @@ class PitchRemoteDataSource {
       'limit': limit,
       if (search != null && search.isNotEmpty) 'search': search,
       if (city != null && city.isNotEmpty) 'city': city,
-      if (sportType != null) 'sportType': sportType,
-      if (minPrice != null) 'minPrice': minPrice,
-      if (maxPrice != null) 'maxPrice': maxPrice,
+      'sportType': ?sportType,
+      'minPrice': ?minPrice,
+      'maxPrice': ?maxPrice,
     };
 
     final result = await _dio.get('pitches', queryParameters: params);

@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:e7gz/src/features/auth/presentation/providers/auth_cubit.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
-import 'package:easy_localization/easy_localization.dart';
 import '../widgets/widgets.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
@@ -32,10 +31,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
-    for (var controller in _otpControllers) {
+    for (final controller in _otpControllers) {
       controller.dispose();
     }
-    for (var node in _otpFocusNodes) {
+    for (final node in _otpFocusNodes) {
       node.dispose();
     }
     _countdownTimer?.cancel();
@@ -152,7 +151,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       ),
                       SizedBox(height: 16.h),
                       Text(
-                        "auth.forgot_desc".tr(),
+                        'auth.forgot_desc'.tr(),
                         textAlign: TextAlign.center,
                         style: typography.bodyMedium?.copyWith(
                           color: colors.onSurfaceVariant,

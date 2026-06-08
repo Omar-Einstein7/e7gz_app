@@ -154,4 +154,3 @@ class BookingSuccessScreen extends StatelessWidget {
     );
   }
 }
-

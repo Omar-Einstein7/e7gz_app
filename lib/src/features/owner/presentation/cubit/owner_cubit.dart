@@ -1,7 +1,5 @@
 import 'package:e7gz/src/features/owner/domain/repositories/owner_repository.dart';
 import 'package:e7gz/src/imports/imports.dart';
-import 'package:e7gz/src/utils/failure.dart';
-import 'package:fpdart/fpdart.dart';
 import '../../../pitches/domain/entities/pitch.dart';
 
 import 'owner_state.dart';

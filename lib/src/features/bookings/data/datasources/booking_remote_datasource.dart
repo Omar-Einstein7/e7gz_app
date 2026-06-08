@@ -9,7 +9,7 @@ class BookingRemoteDataSource {
 
   Future<List<BookingModel>> getMyBookings({String? status}) async {
     try {
-      final params = <String, dynamic>{if (status != null) 'status': status};
+      final params = <String, dynamic>{'status': ?status};
       final result = await _dio.get('bookings', queryParameters: params);
 
       return result.fold(
@@ -57,7 +57,7 @@ class BookingRemoteDataSource {
       'date': date,
       'startTime': startTime,
       'endTime': endTime,
-      if (notes != null) 'notes': notes,
+      'notes': ?notes,
     };
     final result = await _dio.post('bookings', data: body);
     return result.fold((failure) => throw Exception(failure.message), (

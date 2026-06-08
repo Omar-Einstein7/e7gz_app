@@ -1,7 +1,6 @@
 import 'dart:ui';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
-import 'package:easy_localization/easy_localization.dart';
 
 /// The main application scaffold that handles bottom navigation with [StatefulNavigationShell].
 class MainWrapper extends StatelessWidget {

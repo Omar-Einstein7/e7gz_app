@@ -1,8 +1,5 @@
 import 'package:e7gz/src/features/admin/presentation/layout/admin_layout.dart';
 import 'package:e7gz/src/features/admin/presentation/widgets/admin_data_table.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:e7gz/src/imports/imports.dart';
 import '../add_pitch_screen.dart';
 import '../../cubit/admin_cubit.dart';
@@ -57,7 +54,7 @@ class _AdminPitchesTabState extends State<AdminPitchesTab>
                       ),
                     ),
                   );
-                  if (result == true && mounted) {
+                  if ((result ?? false) && mounted) {
                     context.read<AdminCubit>().loadAllPitches();
                   }
                 },
@@ -161,7 +158,7 @@ class _AdminPitchesTabState extends State<AdminPitchesTab>
                                     ),
                                   ),
                                 );
-                                if (result == true && mounted) {
+                                if ((result ?? false) && mounted) {
                                   context.read<AdminCubit>().loadAllPitches();
                                 }
                               },
@@ -210,7 +207,7 @@ class _AdminPitchesTabState extends State<AdminPitchesTab>
                                     ],
                                   ),
                                 );
-                                if (confirm == true && mounted) {
+                                if ((confirm ?? false) && mounted) {
                                   context.read<AdminCubit>().deletePitch(p.id);
                                 }
                               },
@@ -229,4 +226,3 @@ class _AdminPitchesTabState extends State<AdminPitchesTab>
     );
   }
 }
-
