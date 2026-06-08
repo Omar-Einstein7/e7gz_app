@@ -31,6 +31,21 @@ android {
         multiDexEnabled = true
     }
 
+    flavorDimensions += "environment"
+    productFlavors {
+        create("dev") {
+            dimension = "environment"
+            applicationIdSuffix = ".dev"
+        }
+        create("staging") {
+            dimension = "environment"
+            applicationIdSuffix = ".staging"
+        }
+        create("production") {
+            dimension = "environment"
+        }
+    }
+
     signingConfigs {
         create("release") {
             val keystoreFile = System.getenv("ANDROID_KEYSTORE_PATH")
