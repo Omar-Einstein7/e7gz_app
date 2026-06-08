@@ -31,14 +31,14 @@ class SearchRemoteDataSourceImpl implements SearchRemoteDataSource {
     final params = {
       if (query != null && query.isNotEmpty) 'search': query,
       if (sportType != null && sportType.isNotEmpty) 'sportType': sportType,
-      'minPrice': ?minPrice,
-      'maxPrice': ?maxPrice,
-      'rating': ?rating,
+      if (minPrice != null) 'minPrice': minPrice,
+      if (maxPrice != null) 'maxPrice': maxPrice,
+      if (rating != null) 'rating': rating,
       'page': page,
       'limit': limit,
     };
 
-    final response = await dio.get('pitches', queryParameters: params);
+    final response = await dio.get<dynamic>('pitches', queryParameters: params);
 
     final data = response.data as Map<String, dynamic>;
     final dynamic pitchesData = data['data'];

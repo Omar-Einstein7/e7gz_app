@@ -120,7 +120,7 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
         ),
       );
 
-      final List results = response.data is String
+      final List<dynamic> results = response.data is String
           ? jsonDecode(response.data)
           : response.data;
 
@@ -216,6 +216,7 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
       fileNames.add(image.name);
     }
 
+    if (!mounted) return;
     if (_isEdit) {
       context.read<AdminCubit>().updatePitch(
         widget.pitch!.id,
@@ -235,7 +236,6 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    final tt = context.typography;
     return BlocConsumer<AdminCubit, AdminState>(
       listener: (context, state) {
         AppLogger.info(
@@ -317,7 +317,9 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
                               color: AdminColors.surface,
                               borderRadius: BorderRadius.circular(16),
                               border: Border.all(
-                                color: AdminColors.accent.withOpacity(0.3),
+                                color: AdminColors.accent.withValues(
+                                  alpha: 0.3,
+                                ),
                                 width: 2,
                                 style: BorderStyle.solid,
                               ),
@@ -365,7 +367,7 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
                                     child: CircleAvatar(
                                       radius: 12,
                                       backgroundColor: Colors.redAccent
-                                          .withOpacity(0.8),
+                                          .withValues(alpha: 0.8),
                                       child: const Icon(
                                         Icons.close,
                                         size: 14,
@@ -523,7 +525,9 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
                             }
                           });
                         },
-                        selectedColor: AdminColors.accent.withOpacity(0.2),
+                        selectedColor: AdminColors.accent.withValues(
+                          alpha: 0.2,
+                        ),
                         checkmarkColor: AdminColors.accent,
                         labelStyle: TextStyle(
                           color: isSelected

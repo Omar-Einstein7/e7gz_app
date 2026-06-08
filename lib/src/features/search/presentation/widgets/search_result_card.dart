@@ -131,7 +131,7 @@ class SearchResultCard extends StatelessWidget {
                           vertical: AppSpacing.xs.h,
                         ),
                         decoration: BoxDecoration(
-                          color: cs.surfaceVariant,
+                          color: cs.surfaceContainerHighest,
                           borderRadius: AppRadius.bsm.r,
                         ),
                         child: Row(

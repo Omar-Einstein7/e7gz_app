@@ -50,16 +50,16 @@ class PitchThemeExtension extends ThemeExtension<PitchThemeExtension> {
   static final dark = PitchThemeExtension(
     accentGreen: const Color(0xFF4BE277),
     nightBackground: const Color(0xFF0B1326),
-    glassSurface: Colors.white.withOpacity(0.08),
-    glassBorder: Colors.white.withOpacity(0.15),
+    glassSurface: Colors.white.withValues(alpha: 0.08),
+    glassBorder: Colors.white.withValues(alpha: 0.15),
     heroGradient: LinearGradient(
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
       stops: const [0.0, 0.4, 0.8, 1.0],
       colors: [
-        Colors.black.withOpacity(0.4),
+        Colors.black.withValues(alpha: 0.4),
         Colors.transparent,
-        const Color(0xFF0B1326).withOpacity(0.8),
+        const Color(0xFF0B1326).withValues(alpha: 0.8),
         const Color(0xFF0B1326),
       ],
     ),
@@ -68,16 +68,16 @@ class PitchThemeExtension extends ThemeExtension<PitchThemeExtension> {
   static final light = PitchThemeExtension(
     accentGreen: const Color(0xFF2E7D32),
     nightBackground: const Color(0xFFF5F5F5),
-    glassSurface: Colors.black.withOpacity(0.05),
-    glassBorder: Colors.black.withOpacity(0.1),
+    glassSurface: Colors.black.withValues(alpha: 0.05),
+    glassBorder: Colors.black.withValues(alpha: 0.1),
     heroGradient: LinearGradient(
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
       stops: const [0.0, 0.4, 0.8, 1.0],
       colors: [
-        Colors.black.withOpacity(0.1),
+        Colors.black.withValues(alpha: 0.1),
         Colors.transparent,
-        const Color(0xFFF5F5F5).withOpacity(0.8),
+        const Color(0xFFF5F5F5).withValues(alpha: 0.8),
         const Color(0xFFF5F5F5),
       ],
     ),

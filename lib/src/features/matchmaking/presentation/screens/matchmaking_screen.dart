@@ -138,7 +138,7 @@ class _MatchmakingViewState extends State<_MatchmakingView> {
                           Switch(
                             value: _isPublicOnly,
                             onChanged: (v) => setState(() => _isPublicOnly = v),
-                            activeColor: colors.primary,
+                            activeThumbColor: colors.primary,
                           ),
                         ],
                       ),

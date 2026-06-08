@@ -85,7 +85,7 @@ class _SlotsLegend extends StatelessWidget {
         SizedBox(width: AppSpacing.md.w),
         _IndicatorChip(
           label: 'BOOKED',
-          color: context.colorScheme.surfaceVariant,
+          color: context.colorScheme.surfaceContainerHighest,
         ),
       ],
     );
@@ -138,15 +138,15 @@ class _SlotBox extends StatelessWidget {
     final isBooked = !slot.isAvailable;
 
     final bgColor = isBooked
-        ? cs.surfaceVariant.withOpacity(0.3)
+        ? cs.surfaceContainerHighest.withValues(alpha: 0.3)
         : (isSelected ? cs.primary : cs.surfaceContainerHigh);
 
     final onColor = isBooked
-        ? cs.onSurfaceVariant.withOpacity(0.4)
+        ? cs.onSurfaceVariant.withValues(alpha: 0.4)
         : (isSelected ? cs.onPrimary : cs.onSurfaceVariant);
 
     final timeColor = isBooked
-        ? cs.onSurfaceVariant.withOpacity(0.5)
+        ? cs.onSurfaceVariant.withValues(alpha: 0.5)
         : (isSelected ? cs.onPrimary : cs.onSurface);
 
     final Widget content = AnimatedContainer(
@@ -155,10 +155,18 @@ class _SlotBox extends StatelessWidget {
         color: bgColor,
         borderRadius: AppRadius.blg.r,
         border: isBooked
-            ? Border.all(color: cs.outlineVariant.withOpacity(0.2), width: 1)
+            ? Border.all(
+                color: cs.outlineVariant.withValues(alpha: 0.2),
+                width: 1,
+              )
             : null,
         boxShadow: isSelected
-            ? [BoxShadow(color: cs.primary.withOpacity(0.2), blurRadius: 10)]
+            ? [
+                BoxShadow(
+                  color: cs.primary.withValues(alpha: 0.2),
+                  blurRadius: 10,
+                ),
+              ]
             : [],
       ),
       child: Column(
@@ -194,7 +202,7 @@ class _SlotBox extends StatelessWidget {
             isBooked ? 'BOOKED' : '${slot.price.toInt()} EGP',
             style: TextStyle(
               color: isBooked
-                  ? cs.error.withOpacity(0.6)
+                  ? cs.error.withValues(alpha: 0.6)
                   : (isSelected ? cs.onPrimary : cs.primary),
               fontSize: 10.sp,
               fontWeight: FontWeight.bold,

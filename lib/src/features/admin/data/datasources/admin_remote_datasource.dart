@@ -7,7 +7,7 @@ class AdminRemoteDataSource {
   AdminRemoteDataSource({required Dio dio}) : _dio = dio;
 
   /// Helper to extract data or return an empty fallback
-  T _extractData<T>(Response response, String key, T fallback) {
+  T _extractData<T>(Response<dynamic> response, String key, T fallback) {
     try {
       final data = response.data;
       if (data is Map<String, dynamic>) {
@@ -103,7 +103,7 @@ class AdminRemoteDataSource {
   /// PUT /api/notifications/mark-read
   Future<void> markNotificationsAsRead() async {
     try {
-      await _dio.put('notifications/mark-read');
+      await _dio.put<dynamic>('notifications/mark-read');
     } catch (e) {
       AppLogger.error('Failed to mark notifications as read: $e');
     }
@@ -235,7 +235,7 @@ class AdminRemoteDataSource {
   /// DELETE /api/pitches/:id
   Future<bool> deletePitch(String id) async {
     try {
-      final response = await _dio.delete('pitches/$id');
+      final response = await _dio.delete<dynamic>('pitches/$id');
       return response.statusCode == 200 || response.statusCode == 204;
     } catch (e) {
       if (e is DioException) {

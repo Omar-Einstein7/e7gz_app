@@ -15,7 +15,6 @@ class MatchmakingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.colors;
     final typography = context.typography;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final theme = Theme.of(context);

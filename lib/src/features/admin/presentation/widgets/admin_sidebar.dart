@@ -56,7 +56,7 @@ class AdminSidebar extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                     boxShadow: [
                       BoxShadow(
-                        color: AdminColors.accent.withOpacity(0.4),
+                        color: AdminColors.accent.withValues(alpha: 0.4),
                         blurRadius: 12,
                         offset: const Offset(0, 4),
                       ),
@@ -180,11 +180,11 @@ class _NavTile extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 11),
             decoration: BoxDecoration(
               color: selected
-                  ? AdminColors.accent.withOpacity(0.1)
+                  ? AdminColors.accent.withValues(alpha: 0.1)
                   : Colors.transparent,
               borderRadius: BorderRadius.circular(10),
               border: selected
-                  ? Border.all(color: AdminColors.accent.withOpacity(0.2))
+                  ? Border.all(color: AdminColors.accent.withValues(alpha: 0.2))
                   : null,
             ),
             child: Row(

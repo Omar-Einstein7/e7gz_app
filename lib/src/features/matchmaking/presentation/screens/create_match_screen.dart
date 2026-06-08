@@ -111,7 +111,7 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                 const Center(child: CircularProgressIndicator())
               else
                 DropdownButtonFormField<String>(
-                  value: _selectedPitchId,
+                  initialValue: _selectedPitchId,
                   dropdownColor: const Color(0xFF131B2E),
                   style: const TextStyle(color: Colors.white),
                   decoration: _inputDecoration(
@@ -273,7 +273,7 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                 children: [
                   MatchmakingFieldLabel(label: 'matchmaking.skill_level'.tr()),
                   DropdownButtonFormField<String>(
-                    value: _skillLevel,
+                    initialValue: _skillLevel,
                     dropdownColor: const Color(0xFF131B2E),
                     style: const TextStyle(color: Colors.white),
                     decoration: _inputDecoration(''),
