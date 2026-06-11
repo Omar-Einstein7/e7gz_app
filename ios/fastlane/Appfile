@@ -1,0 +1,4 @@
+app_identifier("com.e7gz.app") # Change if this isn't correct
+apple_id("developer@e7gz.com") # Your Apple ID
+
+# App Store Connect API Key info is passed via ENV vars in CI

@@ -1,0 +1,15 @@
+default_platform(:android)
+
+platform :android do
+  desc "Deploy a new version to the Google Play Store (Internal Track)"
+  lane :internal do
+    # Download AAB from artifacts in CI and point supply to it
+    # Supply configuration is handled in the GitHub Action via flags
+    # Here we can add additional steps like generating a changelog
+  end
+
+  desc "Deploy a new version to the Google Play Store (Production Track)"
+  lane :production do
+    # Configuration for production deployment
+  end
+end

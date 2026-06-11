@@ -1,0 +1,4 @@
+json_key_file(ENV["SUPPLY_JSON_KEY_DATA_FILE"]) 
+package_name("com.e7gz.app") # Change if this isn't the correct package name
+
+# Note: The json key content will be supplied via environment variables in CI
