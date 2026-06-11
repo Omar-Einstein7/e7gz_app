@@ -1,6 +1,6 @@
 import 'package:e7gz/src/imports/core_imports.dart';
-import '../entities/notification.dart';
-import '../repositories/notification_repository.dart';
+import 'package:e7gz/src/features/notifications/domain/entities/notification.dart';
+import 'package:e7gz/src/features/notifications/domain/repositories/notification_repository.dart';
 
 class GetNotifications {
   final NotificationRepository repository;

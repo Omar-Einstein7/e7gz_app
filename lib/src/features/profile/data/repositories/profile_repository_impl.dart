@@ -1,9 +1,9 @@
 import 'package:fpdart/fpdart.dart';
-import '../../../../utils/failure.dart';
-import '../../../../utils/typedefs.dart';
-import '../../domain/entities/reward.dart';
-import '../../domain/repositories/profile_repository.dart';
-import '../datasources/profile_remote_datasource.dart';
+import 'package:e7gz/src/utils/failure.dart';
+import 'package:e7gz/src/utils/typedefs.dart';
+import 'package:e7gz/src/features/profile/domain/entities/reward.dart';
+import 'package:e7gz/src/features/profile/domain/repositories/profile_repository.dart';
+import 'package:e7gz/src/features/profile/data/datasources/profile_remote_datasource.dart';
 
 class ProfileRepositoryImpl implements ProfileRepository {
   final ProfileRemoteDataSource remoteDataSource;

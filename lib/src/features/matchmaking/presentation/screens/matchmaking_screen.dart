@@ -1,9 +1,9 @@
 import 'package:e7gz/src/features/matchmaking/presentation/cubit/matchmaking_state.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
-import '../widgets/matchmaking_card.dart';
-import '../widgets/leaderboard_tile.dart';
-import '../cubit/matchmaking_cubit.dart';
+import 'package:e7gz/src/features/matchmaking/presentation/widgets/matchmaking_card.dart';
+import 'package:e7gz/src/features/matchmaking/presentation/widgets/leaderboard_tile.dart';
+import 'package:e7gz/src/features/matchmaking/presentation/cubit/matchmaking_cubit.dart';
 
 class MatchmakingScreen extends StatelessWidget {
   const MatchmakingScreen({super.key});

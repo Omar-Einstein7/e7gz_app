@@ -8,9 +8,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart' as loc;
-import '../layout/admin_layout.dart';
+import 'package:e7gz/src/features/admin/presentation/layout/admin_layout.dart';
 
-import '../../../pitches/domain/entities/pitch.dart';
+import 'package:e7gz/src/features/pitches/domain/entities/pitch.dart';
 
 class AdminAddPitchScreen extends StatefulWidget {
   final Pitch? pitch;

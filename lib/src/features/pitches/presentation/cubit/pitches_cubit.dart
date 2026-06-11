@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:e7gz/src/features/pitches/domain/entities/pitch.dart';
 import 'package:e7gz/src/features/pitches/domain/usecases/pitch_usecases.dart';
-import 'pitches_state.dart';
+import 'package:e7gz/src/features/pitches/presentation/cubit/pitches_state.dart';
 import 'package:e7gz/src/di/injection_container.dart';
 import 'package:e7gz/src/features/pitches/data/datasources/pitch_remote_datasource.dart';
 

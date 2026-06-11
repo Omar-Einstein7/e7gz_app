@@ -6,7 +6,7 @@ import 'package:e7gz/src/features/search/data/datasources/search_remote_datasour
 import 'package:e7gz/src/di/injection_container.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
-import '../widgets/widgets.dart';
+import 'package:e7gz/src/features/matchmaking/presentation/widgets/widgets.dart';
 
 class CreateMatchScreen extends StatefulWidget {
   const CreateMatchScreen({super.key});

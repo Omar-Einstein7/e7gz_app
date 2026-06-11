@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:e7gz/src/features/maps/domain/usecases/maps_usecases.dart';
-import 'maps_state.dart';
+import 'package:e7gz/src/features/maps/presentation/cubit/maps_state.dart';
 
 class MapsCubit extends Cubit<MapsState> {
   final GetRouteUseCase _getRoute;

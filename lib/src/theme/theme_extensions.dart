@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'app_colors.dart';
+import 'package:e7gz/src/theme/app_colors.dart';
 
 /// Extension for semantic colors not covered by [ColorScheme].
 class SemanticColors extends ThemeExtension<SemanticColors> {

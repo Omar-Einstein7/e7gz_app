@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../layout/admin_layout.dart';
+import 'package:e7gz/src/features/admin/presentation/layout/admin_layout.dart';
 
 class StatCard extends StatelessWidget {
   final String title;

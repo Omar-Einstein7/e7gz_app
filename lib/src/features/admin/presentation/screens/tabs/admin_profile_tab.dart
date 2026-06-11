@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:go_router/go_router.dart';
-import '../../cubit/admin_cubit.dart';
-import '../../cubit/admin_state.dart';
+import 'package:e7gz/src/features/admin/presentation/cubit/admin_cubit.dart';
+import 'package:e7gz/src/features/admin/presentation/cubit/admin_state.dart';
 
 class AdminProfileTab extends StatefulWidget {
   const AdminProfileTab({super.key});

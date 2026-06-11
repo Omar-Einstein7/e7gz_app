@@ -1,4 +1,4 @@
-import '../../imports/imports.dart';
+import 'package:e7gz/src/imports/imports.dart';
 
 /// Displays an empty state with an icon, title, optional subtitle, and action.
 ///

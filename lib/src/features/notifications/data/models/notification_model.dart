@@ -1,4 +1,4 @@
-import '../../domain/entities/notification.dart';
+import 'package:e7gz/src/features/notifications/domain/entities/notification.dart';
 
 class NotificationModel extends AppNotification {
   const NotificationModel({

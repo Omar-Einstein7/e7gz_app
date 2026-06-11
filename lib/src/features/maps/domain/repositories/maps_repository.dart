@@ -1,5 +1,5 @@
 import 'package:e7gz/src/utils/typedefs.dart';
-import '../entities/route_info.dart';
+import 'package:e7gz/src/features/maps/domain/entities/route_info.dart';
 
 abstract class MapsRepository {
   /// Get a driving route between two coordinates.

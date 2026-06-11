@@ -1,9 +1,9 @@
 import 'package:e7gz/src/features/admin/presentation/layout/admin_layout.dart';
 import 'package:e7gz/src/features/admin/presentation/widgets/admin_data_table.dart';
 import 'package:e7gz/src/imports/imports.dart';
-import '../add_pitch_screen.dart';
-import '../../cubit/admin_cubit.dart';
-import '../../cubit/admin_state.dart';
+import 'package:e7gz/src/features/admin/presentation/screens/add_pitch_screen.dart';
+import 'package:e7gz/src/features/admin/presentation/cubit/admin_cubit.dart';
+import 'package:e7gz/src/features/admin/presentation/cubit/admin_state.dart';
 
 class AdminPitchesTab extends StatefulWidget {
   const AdminPitchesTab({super.key});

@@ -1,6 +1,6 @@
 import 'package:e7gz/src/utils/typedefs.dart';
-import '../entities/route_info.dart';
-import '../repositories/maps_repository.dart';
+import 'package:e7gz/src/features/maps/domain/entities/route_info.dart';
+import 'package:e7gz/src/features/maps/domain/repositories/maps_repository.dart';
 
 class GetRouteUseCase {
   final MapsRepository _repository;

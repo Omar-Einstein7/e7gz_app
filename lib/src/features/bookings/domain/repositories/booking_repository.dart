@@ -1,5 +1,5 @@
 import 'package:e7gz/src/utils/typedefs.dart';
-import '../entities/booking.dart';
+import 'package:e7gz/src/features/bookings/domain/entities/booking.dart';
 
 abstract class BookingRepository {
   /// Get the current user's bookings (optionally filtered by status).

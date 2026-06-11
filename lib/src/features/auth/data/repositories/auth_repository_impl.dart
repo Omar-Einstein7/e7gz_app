@@ -3,7 +3,7 @@ import 'package:e7gz/src/imports/packages_imports.dart';
 
 import 'package:e7gz/src/features/auth/domain/entities/user.dart';
 import 'package:e7gz/src/features/auth/domain/repositories/auth_repository.dart';
-import '../models/user_model.dart';
+import 'package:e7gz/src/features/auth/data/models/user_model.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthService _authService;

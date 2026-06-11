@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import '../models/notification_model.dart';
+import 'package:e7gz/src/features/notifications/data/models/notification_model.dart';
 
 abstract class NotificationRemoteDataSource {
   Future<List<NotificationModel>> getNotifications();

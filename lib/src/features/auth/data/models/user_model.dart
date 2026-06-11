@@ -1,4 +1,4 @@
-import '../../domain/entities/user.dart';
+import 'package:e7gz/src/features/auth/domain/entities/user.dart';
 
 /// Data model for [AppUser] with JSON serialization.
 ///

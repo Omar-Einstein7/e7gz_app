@@ -1,6 +1,6 @@
 import 'package:image_picker/image_picker.dart';
 import 'package:e7gz/src/di/injection_container.dart';
-import '../widgets/profile_header.dart';
+import 'package:e7gz/src/features/profile/presentation/widgets/profile_header.dart';
 import 'package:e7gz/src/features/auth/presentation/providers/session_cubit.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';

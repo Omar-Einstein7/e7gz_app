@@ -1,39 +1,39 @@
-import '../../imports/imports.dart';
-import '../../di/injection_container.dart';
+import 'package:e7gz/src/imports/imports.dart';
+import 'package:e7gz/src/di/injection_container.dart';
 
 // Auth
-import '../../features/auth/presentation/providers/session_cubit.dart';
-import '../../features/auth/presentation/providers/auth_cubit.dart';
+import 'package:e7gz/src/features/auth/presentation/providers/session_cubit.dart';
+import 'package:e7gz/src/features/auth/presentation/providers/auth_cubit.dart';
 
 // Pitches
-import '../../features/pitches/presentation/cubit/pitches_cubit.dart';
+import 'package:e7gz/src/features/pitches/presentation/cubit/pitches_cubit.dart';
 
 // Bookings
-import '../../features/bookings/presentation/cubit/booking_cubit.dart';
+import 'package:e7gz/src/features/bookings/presentation/cubit/booking_cubit.dart';
 
 // Maps
-import '../../features/maps/presentation/cubit/maps_cubit.dart';
+import 'package:e7gz/src/features/maps/presentation/cubit/maps_cubit.dart';
 
 // Matchmaking
-import '../../features/matchmaking/presentation/cubit/matchmaking_cubit.dart';
+import 'package:e7gz/src/features/matchmaking/presentation/cubit/matchmaking_cubit.dart';
 
 // Owner
-import '../../features/owner/presentation/cubit/owner_cubit.dart';
+import 'package:e7gz/src/features/owner/presentation/cubit/owner_cubit.dart';
 
 // Admin
-import '../../features/admin/presentation/cubit/admin_cubit.dart';
+import 'package:e7gz/src/features/admin/presentation/cubit/admin_cubit.dart';
 
 // Notifications
-import '../../features/notifications/presentation/cubit/notifications_cubit.dart';
+import 'package:e7gz/src/features/notifications/presentation/cubit/notifications_cubit.dart';
 
 // Home
-import '../../features/home/presentation/cubit/home_cubit.dart';
+import 'package:e7gz/src/features/home/presentation/cubit/home_cubit.dart';
 
 // Search
-import '../../features/search/presentation/cubit/search_cubit.dart';
+import 'package:e7gz/src/features/search/presentation/cubit/search_cubit.dart';
 
 // Profile
-import '../../features/profile/presentation/cubit/profile_cubit.dart';
+import 'package:e7gz/src/features/profile/presentation/cubit/profile_cubit.dart';
 
 /// A wrapper that provides all BLoCs / Cubits via [MultiBlocProvider].
 ///

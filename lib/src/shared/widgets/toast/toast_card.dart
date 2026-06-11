@@ -1,4 +1,4 @@
-import '../../../imports/imports.dart';
+import 'package:e7gz/src/imports/imports.dart';
 
 /// ToastCard widget to display decent and rich looking toast.
 class ToastCard extends StatelessWidget {

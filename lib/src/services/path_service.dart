@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
-import '../utils/utils.dart';
+import 'package:e7gz/src/utils/utils.dart';
 
 /// A service to easily access platform-specific file system locations.
 class PathService {

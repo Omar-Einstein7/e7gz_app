@@ -1,4 +1,4 @@
-import '../../domain/entities/reward.dart';
+import 'package:e7gz/src/features/profile/domain/entities/reward.dart';
 
 class RewardModel extends Reward {
   const RewardModel({

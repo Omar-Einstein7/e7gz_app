@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import '../../../../utils/logger.dart';
+import 'package:e7gz/src/utils/logger.dart';
 
 class AdminRemoteDataSource {
   final Dio _dio;

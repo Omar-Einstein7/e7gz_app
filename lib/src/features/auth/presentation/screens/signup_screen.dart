@@ -3,7 +3,7 @@ import 'package:e7gz/src/features/auth/presentation/providers/auth_cubit.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
 import 'package:e7gz/src/utils/validators.dart';
-import '../widgets/widgets.dart';
+import 'package:e7gz/src/features/auth/presentation/widgets/widgets.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});

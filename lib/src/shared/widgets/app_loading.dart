@@ -1,4 +1,4 @@
-import '../../imports/imports.dart';
+import 'package:e7gz/src/imports/imports.dart';
 
 /// Centered loading indicator using the primary colour from the theme.
 ///

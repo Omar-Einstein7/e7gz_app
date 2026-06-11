@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import '../../domain/entities/home_data.dart';
+import 'package:e7gz/src/features/home/domain/entities/home_data.dart';
 
 enum HomeStatus { initial, loading, success, failure }
 

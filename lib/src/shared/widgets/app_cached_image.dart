@@ -1,5 +1,5 @@
-import '../../imports/core_imports.dart';
-import '../../imports/packages_imports.dart';
+import 'package:e7gz/src/imports/core_imports.dart';
+import 'package:e7gz/src/imports/packages_imports.dart';
 
 /// A premium, highly customizable wrapper around [CachedNetworkImage].
 ///

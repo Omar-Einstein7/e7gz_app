@@ -1,5 +1,5 @@
 import 'package:e7gz/src/imports/imports.dart';
-import '../../domain/entities/match.dart';
+import 'package:e7gz/src/features/matchmaking/domain/entities/match.dart';
 
 class MatchmakingCard extends StatelessWidget {
   final MatchmakingMatch match;

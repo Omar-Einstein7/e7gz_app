@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import '../../domain/entities/reward.dart';
+import 'package:e7gz/src/features/profile/domain/entities/reward.dart';
 
 enum ProfileStatus { initial, loading, success, failure }
 

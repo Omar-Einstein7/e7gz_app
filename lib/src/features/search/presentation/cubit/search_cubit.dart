@@ -1,6 +1,6 @@
 import 'package:e7gz/src/imports/imports.dart';
-import '../../domain/repositories/search_repository.dart';
-import 'search_state.dart';
+import 'package:e7gz/src/features/search/domain/repositories/search_repository.dart';
+import 'package:e7gz/src/features/search/presentation/cubit/search_state.dart';
 
 class SearchCubit extends Cubit<SearchState> {
   final SearchRepository repository;

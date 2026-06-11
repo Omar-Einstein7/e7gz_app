@@ -1,8 +1,8 @@
 import 'package:e7gz/src/imports/imports.dart';
-import '../../domain/entities/match.dart';
-import '../../domain/repositories/match_repository.dart';
-import '../../data/models/match_model.dart';
-import 'matchmaking_state.dart';
+import 'package:e7gz/src/features/matchmaking/domain/entities/match.dart';
+import 'package:e7gz/src/features/matchmaking/domain/repositories/match_repository.dart';
+import 'package:e7gz/src/features/matchmaking/data/models/match_model.dart';
+import 'package:e7gz/src/features/matchmaking/presentation/cubit/matchmaking_state.dart';
 
 class MatchmakingCubit extends Cubit<MatchmakingState> {
   final MatchRepository repository;

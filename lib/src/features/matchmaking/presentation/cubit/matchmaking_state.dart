@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-import '../../domain/entities/match.dart';
-import '../../domain/repositories/match_repository.dart';
+import 'package:e7gz/src/features/matchmaking/domain/entities/match.dart';
+import 'package:e7gz/src/features/matchmaking/domain/repositories/match_repository.dart';
 
 enum MatchmakingStatus { initial, loading, success, failure }
 

@@ -1,5 +1,5 @@
 import 'package:e7gz/src/imports/imports.dart';
-import '../widgets/widgets.dart';
+import 'package:e7gz/src/features/pitches/presentation/widgets/widgets.dart';
 
 class PitchAmenitiesSection extends StatelessWidget {
   final List<String> amenities;

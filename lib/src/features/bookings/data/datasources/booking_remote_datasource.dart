@@ -1,6 +1,6 @@
-import '../../../../utils/logger.dart';
-import '../../../bookings/data/models/booking_model.dart';
-import '../../../../services/dio_service.dart';
+import 'package:e7gz/src/utils/logger.dart';
+import 'package:e7gz/src/features/bookings/data/models/booking_model.dart';
+import 'package:e7gz/src/services/dio_service.dart';
 
 class BookingRemoteDataSource {
   final DioService _dio;

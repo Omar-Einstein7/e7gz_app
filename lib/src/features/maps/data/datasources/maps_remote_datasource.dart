@@ -1,5 +1,5 @@
 import 'package:e7gz/src/services/dio_service.dart';
-import '../models/route_model.dart';
+import 'package:e7gz/src/features/maps/data/models/route_model.dart';
 
 /// Proxies all map operations through our Node.js backend
 /// which in turn calls OpenRouteService.

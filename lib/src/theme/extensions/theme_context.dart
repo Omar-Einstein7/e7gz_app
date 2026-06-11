@@ -1,6 +1,6 @@
 import 'package:e7gz/src/theme/color_schemes.dart';
 import 'package:flutter/material.dart';
-import '../theme_extensions.dart';
+import 'package:e7gz/src/theme/theme_extensions.dart';
 
 /// Extension on [BuildContext] for easier access to theme-related data.
 extension ThemeContextExtension on BuildContext {

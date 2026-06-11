@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../theme/extensions/theme_context.dart';
-import '../shared/enums/snack_bar_type.dart';
+import 'package:e7gz/src/theme/extensions/theme_context.dart';
+import 'package:e7gz/src/shared/enums/snack_bar_type.dart';
 
 extension ContextExtension on BuildContext {
   // ── MediaQuery shortcuts ─────────────────────────────────────────────────

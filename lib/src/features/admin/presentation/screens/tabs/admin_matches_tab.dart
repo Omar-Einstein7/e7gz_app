@@ -3,8 +3,8 @@ import 'package:e7gz/src/features/admin/presentation/widgets/admin_data_table.da
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
-import '../../cubit/admin_cubit.dart';
-import '../../cubit/admin_state.dart';
+import 'package:e7gz/src/features/admin/presentation/cubit/admin_cubit.dart';
+import 'package:e7gz/src/features/admin/presentation/cubit/admin_state.dart';
 
 class AdminMatchesTab extends StatefulWidget {
   const AdminMatchesTab({super.key});

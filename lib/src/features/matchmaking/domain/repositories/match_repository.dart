@@ -1,7 +1,7 @@
 import 'package:fpdart/fpdart.dart';
-import '../../../../utils/failure.dart';
-import '../entities/match.dart';
-import '../../data/models/match_model.dart';
+import 'package:e7gz/src/utils/failure.dart';
+import 'package:e7gz/src/features/matchmaking/domain/entities/match.dart';
+import 'package:e7gz/src/features/matchmaking/data/models/match_model.dart';
 
 abstract class MatchRepository {
   Future<Either<Failure, List<MatchmakingMatch>>> getMatches({

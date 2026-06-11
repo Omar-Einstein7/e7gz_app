@@ -2,93 +2,93 @@ import 'package:get_it/get_it.dart';
 import 'package:dio/dio.dart';
 
 // Config
-import '../config/app_config.dart';
+import 'package:e7gz/src/config/app_config.dart';
 
 // Services
-import '../services/auth_service.dart';
-import '../services/copy_service.dart';
-import '../services/device_info_service.dart';
-import '../services/dio_service.dart';
-import '../services/internet_connection_service.dart';
-import '../services/location_service.dart';
-import '../services/path_service.dart';
-import '../services/permission_service.dart';
-import '../services/secure_storage_service.dart';
-import '../services/storage_service.dart';
-import '../services/url_launcher_service.dart';
-import '../services/version_update_service.dart';
-import '../services/notification_service.dart';
+import 'package:e7gz/src/services/auth_service.dart';
+import 'package:e7gz/src/services/copy_service.dart';
+import 'package:e7gz/src/services/device_info_service.dart';
+import 'package:e7gz/src/services/dio_service.dart';
+import 'package:e7gz/src/services/internet_connection_service.dart';
+import 'package:e7gz/src/services/location_service.dart';
+import 'package:e7gz/src/services/path_service.dart';
+import 'package:e7gz/src/services/permission_service.dart';
+import 'package:e7gz/src/services/secure_storage_service.dart';
+import 'package:e7gz/src/services/storage_service.dart';
+import 'package:e7gz/src/services/url_launcher_service.dart';
+import 'package:e7gz/src/services/version_update_service.dart';
+import 'package:e7gz/src/services/notification_service.dart';
 
 // ── Auth ─────────────────────────────────────────────────────────────────────
-import '../features/auth/domain/repositories/auth_repository.dart';
-import '../features/auth/data/repositories/auth_repository_impl.dart';
-import '../features/auth/presentation/providers/session_cubit.dart';
-import '../features/auth/presentation/providers/auth_cubit.dart';
+import 'package:e7gz/src/features/auth/domain/repositories/auth_repository.dart';
+import 'package:e7gz/src/features/auth/data/repositories/auth_repository_impl.dart';
+import 'package:e7gz/src/features/auth/presentation/providers/session_cubit.dart';
+import 'package:e7gz/src/features/auth/presentation/providers/auth_cubit.dart';
 
 // ── Pitches ──────────────────────────────────────────────────────────────────
-import '../features/pitches/data/datasources/pitch_remote_datasource.dart';
-import '../features/pitches/data/repositories/pitch_repository_impl.dart';
-import '../features/pitches/domain/repositories/pitch_repository.dart';
-import '../features/pitches/domain/usecases/pitch_usecases.dart';
-import '../features/pitches/presentation/cubit/pitches_cubit.dart';
+import 'package:e7gz/src/features/pitches/data/datasources/pitch_remote_datasource.dart';
+import 'package:e7gz/src/features/pitches/data/repositories/pitch_repository_impl.dart';
+import 'package:e7gz/src/features/pitches/domain/repositories/pitch_repository.dart';
+import 'package:e7gz/src/features/pitches/domain/usecases/pitch_usecases.dart';
+import 'package:e7gz/src/features/pitches/presentation/cubit/pitches_cubit.dart';
 
 // ── Bookings ─────────────────────────────────────────────────────────────────
-import '../features/bookings/data/datasources/booking_remote_datasource.dart';
-import '../features/bookings/data/repositories/booking_repository_impl.dart';
-import '../features/bookings/domain/repositories/booking_repository.dart';
-import '../features/bookings/domain/usecases/booking_usecases.dart';
-import '../features/bookings/presentation/cubit/booking_cubit.dart';
+import 'package:e7gz/src/features/bookings/data/datasources/booking_remote_datasource.dart';
+import 'package:e7gz/src/features/bookings/data/repositories/booking_repository_impl.dart';
+import 'package:e7gz/src/features/bookings/domain/repositories/booking_repository.dart';
+import 'package:e7gz/src/features/bookings/domain/usecases/booking_usecases.dart';
+import 'package:e7gz/src/features/bookings/presentation/cubit/booking_cubit.dart';
 
 // ── Maps ─────────────────────────────────────────────────────────────────────
-import '../features/maps/data/datasources/maps_remote_datasource.dart';
-import '../features/maps/data/repositories/maps_repository_impl.dart';
-import '../features/maps/domain/repositories/maps_repository.dart';
-import '../features/maps/domain/usecases/maps_usecases.dart';
-import '../features/maps/presentation/cubit/maps_cubit.dart';
+import 'package:e7gz/src/features/maps/data/datasources/maps_remote_datasource.dart';
+import 'package:e7gz/src/features/maps/data/repositories/maps_repository_impl.dart';
+import 'package:e7gz/src/features/maps/domain/repositories/maps_repository.dart';
+import 'package:e7gz/src/features/maps/domain/usecases/maps_usecases.dart';
+import 'package:e7gz/src/features/maps/presentation/cubit/maps_cubit.dart';
 
 // ── Matchmaking ──────────────────────────────────────────────────────────────
-import '../features/matchmaking/data/datasources/match_remote_datasource.dart';
-import '../features/matchmaking/data/repositories/match_repository_impl.dart';
-import '../features/matchmaking/domain/repositories/match_repository.dart';
-import '../features/matchmaking/presentation/cubit/matchmaking_cubit.dart';
+import 'package:e7gz/src/features/matchmaking/data/datasources/match_remote_datasource.dart';
+import 'package:e7gz/src/features/matchmaking/data/repositories/match_repository_impl.dart';
+import 'package:e7gz/src/features/matchmaking/domain/repositories/match_repository.dart';
+import 'package:e7gz/src/features/matchmaking/presentation/cubit/matchmaking_cubit.dart';
 
 // ── Owner ────────────────────────────────────────────────────────────────────
-import '../features/owner/data/datasources/owner_remote_datasource.dart';
-import '../features/owner/data/repositories/owner_repository_impl.dart';
-import '../features/owner/domain/repositories/owner_repository.dart';
-import '../features/owner/presentation/cubit/owner_cubit.dart';
+import 'package:e7gz/src/features/owner/data/datasources/owner_remote_datasource.dart';
+import 'package:e7gz/src/features/owner/data/repositories/owner_repository_impl.dart';
+import 'package:e7gz/src/features/owner/domain/repositories/owner_repository.dart';
+import 'package:e7gz/src/features/owner/presentation/cubit/owner_cubit.dart';
 
 // ── Admin ────────────────────────────────────────────────────────────────────
-import '../features/admin/data/datasources/admin_remote_datasource.dart';
-import '../features/admin/data/repositories/admin_repository_impl.dart';
-import '../features/admin/domain/repositories/admin_repository.dart';
-import '../features/admin/presentation/cubit/admin_cubit.dart';
+import 'package:e7gz/src/features/admin/data/datasources/admin_remote_datasource.dart';
+import 'package:e7gz/src/features/admin/data/repositories/admin_repository_impl.dart';
+import 'package:e7gz/src/features/admin/domain/repositories/admin_repository.dart';
+import 'package:e7gz/src/features/admin/presentation/cubit/admin_cubit.dart';
 
 // ── Notifications ────────────────────────────────────────────────────────────
-import '../features/notifications/data/datasources/notification_remote_datasource.dart';
-import '../features/notifications/data/repositories/notification_repository_impl.dart';
-import '../features/notifications/domain/repositories/notification_repository.dart';
-import '../features/notifications/presentation/cubit/notifications_cubit.dart';
-import '../features/profile/presentation/cubit/profile_cubit.dart';
-import '../theme/cubit/theme_cubit.dart';
+import 'package:e7gz/src/features/notifications/data/datasources/notification_remote_datasource.dart';
+import 'package:e7gz/src/features/notifications/data/repositories/notification_repository_impl.dart';
+import 'package:e7gz/src/features/notifications/domain/repositories/notification_repository.dart';
+import 'package:e7gz/src/features/notifications/presentation/cubit/notifications_cubit.dart';
+import 'package:e7gz/src/features/profile/presentation/cubit/profile_cubit.dart';
+import 'package:e7gz/src/theme/cubit/theme_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // ── Home ─────────────────────────────────────────────────────────────────────
-import '../features/home/data/datasources/home_remote_datasource.dart';
-import '../features/home/data/repositories/home_repository_impl.dart';
-import '../features/home/domain/repositories/home_repository.dart';
-import '../features/home/presentation/cubit/home_cubit.dart';
+import 'package:e7gz/src/features/home/data/datasources/home_remote_datasource.dart';
+import 'package:e7gz/src/features/home/data/repositories/home_repository_impl.dart';
+import 'package:e7gz/src/features/home/domain/repositories/home_repository.dart';
+import 'package:e7gz/src/features/home/presentation/cubit/home_cubit.dart';
 
 // ── Search ───────────────────────────────────────────────────────────────────
-import '../features/search/data/datasources/search_remote_datasource.dart';
-import '../features/search/data/repositories/search_repository_impl.dart';
-import '../features/search/domain/repositories/search_repository.dart';
-import '../features/search/presentation/cubit/search_cubit.dart';
+import 'package:e7gz/src/features/search/data/datasources/search_remote_datasource.dart';
+import 'package:e7gz/src/features/search/data/repositories/search_repository_impl.dart';
+import 'package:e7gz/src/features/search/domain/repositories/search_repository.dart';
+import 'package:e7gz/src/features/search/presentation/cubit/search_cubit.dart';
 
 // ── Profile ──────────────────────────────────────────────────────────────────
-import '../features/profile/data/datasources/profile_remote_datasource.dart';
-import '../features/profile/data/repositories/profile_repository_impl.dart';
-import '../features/profile/domain/repositories/profile_repository.dart';
+import 'package:e7gz/src/features/profile/data/datasources/profile_remote_datasource.dart';
+import 'package:e7gz/src/features/profile/data/repositories/profile_repository_impl.dart';
+import 'package:e7gz/src/features/profile/domain/repositories/profile_repository.dart';
 
 /// Global service locator instance.
 final sl = GetIt.instance;

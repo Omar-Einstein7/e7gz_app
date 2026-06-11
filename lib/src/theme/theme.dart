@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'app_colors.dart';
-import 'app_typography.dart';
-import 'app_dimensions.dart';
-import 'theme_extensions.dart';
+import 'package:e7gz/src/theme/app_colors.dart';
+import 'package:e7gz/src/theme/app_typography.dart';
+import 'package:e7gz/src/theme/app_dimensions.dart';
+import 'package:e7gz/src/theme/theme_extensions.dart';
 
 /// The central entry point for the application's theme system.
 abstract final class AppTheme {

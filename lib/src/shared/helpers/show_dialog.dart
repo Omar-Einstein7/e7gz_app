@@ -1,5 +1,5 @@
 import 'dart:ui';
-import '../../imports/imports.dart';
+import 'package:e7gz/src/imports/imports.dart';
 
 /// Shows a premium custom dialog with optional backdrop blur.
 ///

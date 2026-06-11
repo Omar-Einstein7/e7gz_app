@@ -1,7 +1,7 @@
 import 'package:e7gz/src/imports/core_imports.dart';
-import '../../../pitches/domain/entities/pitch.dart';
-import '../../domain/repositories/search_repository.dart';
-import '../datasources/search_remote_datasource.dart';
+import 'package:e7gz/src/features/pitches/domain/entities/pitch.dart';
+import 'package:e7gz/src/features/search/domain/repositories/search_repository.dart';
+import 'package:e7gz/src/features/search/data/datasources/search_remote_datasource.dart';
 
 class SearchRepositoryImpl implements SearchRepository {
   final SearchRemoteDataSource remoteDataSource;

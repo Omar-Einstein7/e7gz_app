@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../widgets/admin_sidebar.dart';
-import '../widgets/admin_top_bar.dart';
+import 'package:e7gz/src/features/admin/presentation/widgets/admin_sidebar.dart';
+import 'package:e7gz/src/features/admin/presentation/widgets/admin_top_bar.dart';
 
 class AdminLayout extends StatefulWidget {
   final Widget child;

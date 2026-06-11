@@ -1,5 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
-import '../utils/utils.dart';
+import 'package:e7gz/src/utils/utils.dart';
 
 /// A wrapper around [SharedPreferences] for simple key-value persistence.
 class StorageService {

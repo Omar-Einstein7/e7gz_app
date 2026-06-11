@@ -1,7 +1,7 @@
 import 'package:e7gz/src/features/notifications/presentation/cubit/notifications_state.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
-import '../cubit/notifications_cubit.dart';
+import 'package:e7gz/src/features/notifications/presentation/cubit/notifications_cubit.dart';
 
 class NotificationsScreen extends StatelessWidget {
   const NotificationsScreen({super.key});

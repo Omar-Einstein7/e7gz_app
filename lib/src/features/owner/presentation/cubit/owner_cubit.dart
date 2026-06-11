@@ -1,8 +1,8 @@
 import 'package:e7gz/src/features/owner/domain/repositories/owner_repository.dart';
 import 'package:e7gz/src/imports/imports.dart';
-import '../../../pitches/domain/entities/pitch.dart';
+import 'package:e7gz/src/features/pitches/domain/entities/pitch.dart';
 
-import 'owner_state.dart';
+import 'package:e7gz/src/features/owner/presentation/cubit/owner_state.dart';
 
 class OwnerCubit extends Cubit<OwnerState> {
   final OwnerRepository repository;

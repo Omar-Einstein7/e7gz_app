@@ -1,5 +1,5 @@
 import 'package:e7gz/src/imports/core_imports.dart';
-import '../models/match_model.dart';
+import 'package:e7gz/src/features/matchmaking/data/models/match_model.dart';
 
 class MatchRemoteDataSource {
   final DioService _dio;

@@ -1,5 +1,5 @@
 import 'dart:ui';
-import 'widgets.dart';
+import 'package:e7gz/src/features/home/presentation/widgets/widgets.dart';
 import 'package:e7gz/src/imports/imports.dart';
 
 import 'package:e7gz/src/features/pitches/presentation/cubit/pitches_cubit.dart';
@@ -40,7 +40,8 @@ class _NearLocationListState extends State<NearLocationList> {
           }
         },
       );
-    } catch (_) {
+    } catch (e) {
+      AppLogger.warning('Failed to request location coordinates: $e');
       if (mounted) setState(() => _isLoadingLocation = false);
     }
   }
@@ -333,7 +334,8 @@ class _NearPitchCard extends StatelessWidget {
 
       final km = distanceInMeters / 1000;
       return '${km.toStringAsFixed(1)} KM';
-    } catch (_) {
+    } catch (e) {
+      AppLogger.warning('Failed to calculate distance for pitch: $e');
       return '-- KM';
     }
   }

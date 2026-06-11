@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import '../models/home_model.dart';
+import 'package:e7gz/src/features/home/data/models/home_model.dart';
 
 abstract class HomeRemoteDataSource {
   Future<HomeModel> getHomeData();

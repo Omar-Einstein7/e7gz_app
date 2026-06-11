@@ -1,4 +1,4 @@
-import '../../imports/imports.dart';
+import 'package:e7gz/src/imports/imports.dart';
 
 /// A multi-purpose image widget that handles network images, SVGs, and local assets.
 ///

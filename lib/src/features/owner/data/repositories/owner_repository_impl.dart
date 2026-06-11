@@ -1,9 +1,9 @@
 import 'package:fpdart/fpdart.dart';
-import '../../../../utils/failure.dart';
-import '../../../../utils/typedefs.dart';
-import '../../../pitches/domain/entities/pitch.dart';
-import '../../domain/repositories/owner_repository.dart';
-import '../datasources/owner_remote_datasource.dart';
+import 'package:e7gz/src/utils/failure.dart';
+import 'package:e7gz/src/utils/typedefs.dart';
+import 'package:e7gz/src/features/pitches/domain/entities/pitch.dart';
+import 'package:e7gz/src/features/owner/domain/repositories/owner_repository.dart';
+import 'package:e7gz/src/features/owner/data/datasources/owner_remote_datasource.dart';
 
 class OwnerRepositoryImpl implements OwnerRepository {
   final OwnerRemoteDataSource remoteDataSource;

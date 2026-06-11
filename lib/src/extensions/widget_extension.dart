@@ -1,4 +1,4 @@
-import '../imports/imports.dart';
+import 'package:e7gz/src/imports/imports.dart';
 
 extension WidgetExtension on Widget {
   /// Wrap the widget with Padding

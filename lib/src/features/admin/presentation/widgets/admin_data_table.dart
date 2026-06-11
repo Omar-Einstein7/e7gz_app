@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../layout/admin_layout.dart';
+import 'package:e7gz/src/features/admin/presentation/layout/admin_layout.dart';
 
 /// A styled DataTable wrapped in an AdminCard with a header row
 class AdminDataTable extends StatelessWidget {

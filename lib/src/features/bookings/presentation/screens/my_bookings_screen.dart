@@ -3,7 +3,7 @@ import 'package:e7gz/src/imports/packages_imports.dart';
 import 'package:e7gz/src/features/bookings/presentation/cubit/booking_cubit.dart';
 import 'package:e7gz/src/features/bookings/presentation/cubit/booking_state.dart';
 import 'package:e7gz/src/features/bookings/domain/entities/booking.dart';
-import '../widgets/widgets.dart';
+import 'package:e7gz/src/features/bookings/presentation/widgets/widgets.dart';
 
 class MyBookingsScreen extends StatefulWidget {
   const MyBookingsScreen({super.key});

@@ -1,6 +1,6 @@
 import 'dart:async';
-import '../utils/utils.dart';
-import 'secure_storage_service.dart';
+import 'package:e7gz/src/utils/utils.dart';
+import 'package:e7gz/src/services/secure_storage_service.dart';
 import 'package:dio/dio.dart';
 import 'package:image_picker/image_picker.dart';
 

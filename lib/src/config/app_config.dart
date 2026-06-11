@@ -1,4 +1,4 @@
-import '../imports/core_imports.dart';
+import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get_it/get_it.dart';

@@ -1,9 +1,9 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:e7gz/src/utils/failure.dart';
-import '../../domain/entities/match.dart';
-import '../../domain/repositories/match_repository.dart';
-import '../datasources/match_remote_datasource.dart';
-import '../models/match_model.dart';
+import 'package:e7gz/src/features/matchmaking/domain/entities/match.dart';
+import 'package:e7gz/src/features/matchmaking/domain/repositories/match_repository.dart';
+import 'package:e7gz/src/features/matchmaking/data/datasources/match_remote_datasource.dart';
+import 'package:e7gz/src/features/matchmaking/data/models/match_model.dart';
 
 class MatchRepositoryImpl implements MatchRepository {
   final MatchRemoteDataSource remoteDataSource;

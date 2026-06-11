@@ -1,5 +1,5 @@
-import '../../../../utils/typedefs.dart';
-import '../../../pitches/domain/entities/pitch.dart';
+import 'package:e7gz/src/utils/typedefs.dart';
+import 'package:e7gz/src/features/pitches/domain/entities/pitch.dart';
 
 abstract class SearchRepository {
   FutureEither<List<Pitch>> searchPitches({

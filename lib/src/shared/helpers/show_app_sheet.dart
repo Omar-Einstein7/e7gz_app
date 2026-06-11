@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import '../../imports/imports.dart';
+import 'package:e7gz/src/imports/imports.dart';
 
 /// Shows a highly customizable bottom sheet with premium features like backdrop blur.
 ///

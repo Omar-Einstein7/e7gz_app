@@ -1,9 +1,9 @@
 import 'package:fpdart/fpdart.dart';
-import '../../../../utils/failure.dart';
-import '../../../../utils/typedefs.dart';
-import '../../domain/entities/notification.dart';
-import '../../domain/repositories/notification_repository.dart';
-import '../datasources/notification_remote_datasource.dart';
+import 'package:e7gz/src/utils/failure.dart';
+import 'package:e7gz/src/utils/typedefs.dart';
+import 'package:e7gz/src/features/notifications/domain/entities/notification.dart';
+import 'package:e7gz/src/features/notifications/domain/repositories/notification_repository.dart';
+import 'package:e7gz/src/features/notifications/data/datasources/notification_remote_datasource.dart';
 
 class NotificationRepositoryImpl implements NotificationRepository {
   final NotificationRemoteDataSource remoteDataSource;

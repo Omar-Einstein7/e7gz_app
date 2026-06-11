@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
-import '../utils/utils.dart';
+import 'package:e7gz/src/utils/utils.dart';
 
 /// A service to retrieve detailed information about the current device.
 class DeviceInfoService {

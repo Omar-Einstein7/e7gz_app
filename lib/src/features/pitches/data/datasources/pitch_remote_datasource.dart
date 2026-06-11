@@ -1,7 +1,7 @@
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/services/dio_service.dart';
-import '../models/pitch_model.dart';
-import '../models/review_model.dart';
+import 'package:e7gz/src/features/pitches/data/models/pitch_model.dart';
+import 'package:e7gz/src/features/pitches/data/models/review_model.dart';
 
 class PitchRemoteDataSource {
   final DioService _dio;

@@ -1,6 +1,6 @@
 import 'package:e7gz/src/imports/core_imports.dart';
 
-import '../repositories/notification_repository.dart';
+import 'package:e7gz/src/features/notifications/domain/repositories/notification_repository.dart';
 
 class MarkNotificationAsRead {
   final NotificationRepository repository;

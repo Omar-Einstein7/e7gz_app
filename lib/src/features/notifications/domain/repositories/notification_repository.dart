@@ -1,5 +1,5 @@
 import 'package:e7gz/src/imports/core_imports.dart';
-import '../entities/notification.dart';
+import 'package:e7gz/src/features/notifications/domain/entities/notification.dart';
 
 abstract class NotificationRepository {
   FutureEither<List<AppNotification>> getNotifications();

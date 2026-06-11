@@ -1,9 +1,9 @@
 import 'package:e7gz/src/imports/imports.dart';
 
-import '../widgets/widgets.dart';
+import 'package:e7gz/src/features/pitches/presentation/widgets/widgets.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import '../cubit/pitches_cubit.dart';
-import '../cubit/pitches_state.dart';
+import 'package:e7gz/src/features/pitches/presentation/cubit/pitches_cubit.dart';
+import 'package:e7gz/src/features/pitches/presentation/cubit/pitches_state.dart';
 
 class PitchReviewsSection extends StatelessWidget {
   final dynamic pitch;

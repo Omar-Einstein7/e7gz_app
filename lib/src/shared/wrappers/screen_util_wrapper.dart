@@ -1,4 +1,4 @@
-import '../../imports/imports.dart';
+import 'package:e7gz/src/imports/imports.dart';
 
 /// A wrapper to initialize [ScreenUtil] with design-specific constraints.
 class ScreenUtilWrapper extends StatelessWidget {

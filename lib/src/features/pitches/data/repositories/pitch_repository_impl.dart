@@ -1,8 +1,8 @@
 import 'package:e7gz/src/features/pitches/domain/entities/pitch.dart';
 import 'package:e7gz/src/features/pitches/domain/repositories/pitch_repository.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
-import '../datasources/pitch_remote_datasource.dart';
-import '../models/pitch_model.dart';
+import 'package:e7gz/src/features/pitches/data/datasources/pitch_remote_datasource.dart';
+import 'package:e7gz/src/features/pitches/data/models/pitch_model.dart';
 
 class PitchRepositoryImpl implements PitchRepository {
   final PitchRemoteDataSource _remote;

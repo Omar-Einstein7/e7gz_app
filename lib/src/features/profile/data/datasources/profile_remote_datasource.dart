@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import '../models/reward_model.dart';
+import 'package:e7gz/src/features/profile/data/models/reward_model.dart';
 
 abstract class ProfileRemoteDataSource {
   Future<List<RewardModel>> getAvailableRewards();

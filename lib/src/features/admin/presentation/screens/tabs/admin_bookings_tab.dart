@@ -6,8 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-import '../../cubit/admin_cubit.dart';
-import '../../cubit/admin_state.dart';
+import 'package:e7gz/src/features/admin/presentation/cubit/admin_cubit.dart';
+import 'package:e7gz/src/features/admin/presentation/cubit/admin_state.dart';
 
 class AdminBookingsTab extends StatefulWidget {
   const AdminBookingsTab({super.key});

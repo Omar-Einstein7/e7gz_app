@@ -1,5 +1,5 @@
 import 'package:e7gz/src/imports/imports.dart';
-import '../widgets/widgets.dart';
+import 'package:e7gz/src/features/pitches/presentation/widgets/widgets.dart';
 
 class PitchShiftsSection extends StatelessWidget {
   final dynamic pitch;
@@ -32,7 +32,9 @@ class PitchShiftsSection extends StatelessWidget {
     int openingHour = 8;
     try {
       openingHour = int.parse(opening.split(':')[0]);
-    } catch (_) {}
+    } catch (e) {
+      AppLogger.warning('Failed to parse opening hour: $opening. Error: $e');
+    }
 
     final showMorning = openingHour < 16;
 

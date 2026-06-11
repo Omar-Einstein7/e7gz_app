@@ -1,6 +1,6 @@
 import 'package:e7gz/src/imports/imports.dart';
-import '../../domain/repositories/home_repository.dart';
-import 'home_state.dart';
+import 'package:e7gz/src/features/home/domain/repositories/home_repository.dart';
+import 'package:e7gz/src/features/home/presentation/cubit/home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
   final HomeRepository repository;

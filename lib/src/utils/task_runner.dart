@@ -1,8 +1,8 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:dio/dio.dart';
 
-import '../di/injection_container.dart';
-import '../imports/core_imports.dart';
+import 'package:e7gz/src/di/injection_container.dart';
+import 'package:e7gz/src/imports/core_imports.dart';
 
 /// A reusable generic function to handle potential exceptions in async tasks
 /// and map them to the [Either] type matching [FutureEither<T>].

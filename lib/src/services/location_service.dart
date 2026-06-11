@@ -1,5 +1,5 @@
 import 'package:geolocator/geolocator.dart';
-import '../utils/utils.dart';
+import 'package:e7gz/src/utils/utils.dart';
 
 /// A service to handle device location requests and status checks.
 class LocationService {

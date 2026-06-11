@@ -1,6 +1,6 @@
 import 'package:e7gz/src/imports/imports.dart';
-import '../../domain/repositories/profile_repository.dart';
-import 'profile_state.dart';
+import 'package:e7gz/src/features/profile/domain/repositories/profile_repository.dart';
+import 'package:e7gz/src/features/profile/presentation/cubit/profile_state.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {
   final ProfileRepository repository;

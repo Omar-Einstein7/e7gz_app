@@ -1,6 +1,6 @@
 import 'package:e7gz/src/utils/typedefs.dart';
-import '../entities/booking.dart';
-import '../repositories/booking_repository.dart';
+import 'package:e7gz/src/features/bookings/domain/entities/booking.dart';
+import 'package:e7gz/src/features/bookings/domain/repositories/booking_repository.dart';
 
 class GetMyBookingsUseCase {
   final BookingRepository _repository;

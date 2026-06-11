@@ -2,7 +2,7 @@ import 'package:e7gz/src/features/pitches/presentation/cubit/pitches_cubit.dart'
 import 'package:e7gz/src/features/pitches/presentation/cubit/pitches_state.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
-import '../widgets/widgets.dart';
+import 'package:e7gz/src/features/home/presentation/widgets/widgets.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

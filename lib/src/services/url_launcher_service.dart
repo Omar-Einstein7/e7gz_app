@@ -1,5 +1,5 @@
 import 'dart:io';
-import '../imports/imports.dart';
+import 'package:e7gz/src/imports/imports.dart';
 
 /// A service to handle URL launching operations.
 class UrlLauncherService {

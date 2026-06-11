@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import '../utils/utils.dart';
+import 'package:e7gz/src/utils/utils.dart';
 
 /// A robust networking service powered by Dio.
 class DioService {

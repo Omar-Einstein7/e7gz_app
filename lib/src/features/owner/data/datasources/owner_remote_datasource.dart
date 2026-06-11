@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import '../../../pitches/data/models/pitch_model.dart';
+import 'package:e7gz/src/features/pitches/data/models/pitch_model.dart';
 
 abstract class OwnerRemoteDataSource {
   Future<Map<String, dynamic>> getStats();

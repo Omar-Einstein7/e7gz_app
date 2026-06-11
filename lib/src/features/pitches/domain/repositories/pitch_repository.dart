@@ -1,5 +1,5 @@
 import 'package:e7gz/src/utils/typedefs.dart';
-import '../entities/pitch.dart';
+import 'package:e7gz/src/features/pitches/domain/entities/pitch.dart';
 
 abstract class PitchRepository {
   /// Get a paginated list of pitches with optional filters.

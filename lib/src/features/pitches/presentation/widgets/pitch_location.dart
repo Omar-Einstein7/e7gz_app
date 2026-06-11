@@ -1,5 +1,5 @@
 import 'package:e7gz/src/imports/imports.dart';
-import '../widgets/widgets.dart';
+import 'package:e7gz/src/features/pitches/presentation/widgets/widgets.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 

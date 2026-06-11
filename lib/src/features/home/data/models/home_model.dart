@@ -1,5 +1,5 @@
-import '../../domain/entities/home_data.dart';
-import '../../../pitches/data/models/pitch_model.dart';
+import 'package:e7gz/src/features/home/domain/entities/home_data.dart';
+import 'package:e7gz/src/features/pitches/data/models/pitch_model.dart';
 
 class HomeModel extends HomeData {
   const HomeModel({

@@ -1,5 +1,5 @@
 import 'package:permission_handler/permission_handler.dart';
-import '../utils/utils.dart';
+import 'package:e7gz/src/utils/utils.dart';
 
 /// A service to handle device permission requests and status checks.
 class PermissionService {

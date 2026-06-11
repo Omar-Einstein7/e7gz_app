@@ -1,6 +1,6 @@
 import 'package:app_version_update/data/models/app_version_result.dart';
 
-import '../imports/imports.dart';
+import 'package:e7gz/src/imports/imports.dart';
 
 /// A service to check for app updates and manage version information using
 /// the `app_version_update` package.

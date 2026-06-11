@@ -1,4 +1,4 @@
-import '../../../imports/imports.dart';
+import 'package:e7gz/src/imports/imports.dart';
 
 /// Enum for toast positions.
 enum ToastPosition { top, bottom }

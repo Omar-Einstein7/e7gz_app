@@ -1,5 +1,5 @@
 import 'package:e7gz/src/imports/packages_imports.dart';
-import 'failure.dart';
+import 'package:e7gz/src/utils/failure.dart';
 
 /// A helper mixin for repositories to handle exceptions and return [Either].
 mixin RepositoryHelper {

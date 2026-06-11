@@ -4,11 +4,11 @@ import 'package:e7gz/src/features/bookings/presentation/cubit/booking_cubit.dart
 import 'package:e7gz/src/features/bookings/domain/usecases/booking_usecases.dart';
 import 'package:e7gz/src/di/injection_container.dart';
 
-import '../widgets/pitch_mini_hero.dart';
-import '../widgets/calendar_strip.dart';
-import '../widgets/slots_grid.dart';
-import '../widgets/payment_plan_selector.dart';
-import '../widgets/booking_checkout_bar.dart';
+import 'package:e7gz/src/features/pitches/presentation/widgets/pitch_mini_hero.dart';
+import 'package:e7gz/src/features/pitches/presentation/widgets/calendar_strip.dart';
+import 'package:e7gz/src/features/pitches/presentation/widgets/slots_grid.dart';
+import 'package:e7gz/src/features/pitches/presentation/widgets/payment_plan_selector.dart';
+import 'package:e7gz/src/features/pitches/presentation/widgets/booking_checkout_bar.dart';
 
 class BookingSlotsScreen extends StatefulWidget {
   final String pitchId;

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../layout/admin_layout.dart';
-import '../cubit/admin_cubit.dart';
-import 'tabs/admin_dashboard_tab.dart';
-import 'tabs/admin_pitches_tab.dart';
-import 'tabs/admin_bookings_tab.dart';
-import 'tabs/admin_matches_tab.dart';
-import 'tabs/admin_notifications_tab.dart';
-import 'tabs/admin_profile_tab.dart';
-import '../../../../di/injection_container.dart';
+import 'package:e7gz/src/features/admin/presentation/layout/admin_layout.dart';
+import 'package:e7gz/src/features/admin/presentation/cubit/admin_cubit.dart';
+import 'package:e7gz/src/features/admin/presentation/screens/tabs/admin_dashboard_tab.dart';
+import 'package:e7gz/src/features/admin/presentation/screens/tabs/admin_pitches_tab.dart';
+import 'package:e7gz/src/features/admin/presentation/screens/tabs/admin_bookings_tab.dart';
+import 'package:e7gz/src/features/admin/presentation/screens/tabs/admin_matches_tab.dart';
+import 'package:e7gz/src/features/admin/presentation/screens/tabs/admin_notifications_tab.dart';
+import 'package:e7gz/src/features/admin/presentation/screens/tabs/admin_profile_tab.dart';
+import 'package:e7gz/src/di/injection_container.dart';
 
 class AdminDashboardScreen extends StatefulWidget {
   const AdminDashboardScreen({super.key});

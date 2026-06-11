@@ -1,6 +1,6 @@
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../widgets/widgets.dart';
+import 'package:e7gz/src/features/pitches/presentation/widgets/widgets.dart';
 
 class PitchAboutSection extends StatelessWidget {
   final String description;

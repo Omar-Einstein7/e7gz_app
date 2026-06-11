@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import '../../../pitches/domain/entities/pitch.dart';
+import 'package:e7gz/src/features/pitches/domain/entities/pitch.dart';
 
 enum OwnerStatus { initial, loading, success, failure }
 
