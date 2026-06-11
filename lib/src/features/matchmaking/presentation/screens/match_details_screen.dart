@@ -4,6 +4,7 @@ import 'package:e7gz/src/features/matchmaking/domain/entities/match.dart';
 import 'package:e7gz/src/features/matchmaking/presentation/cubit/matchmaking_cubit.dart';
 import 'package:e7gz/src/features/matchmaking/presentation/cubit/matchmaking_state.dart';
 import 'package:e7gz/src/imports/imports.dart';
+import 'package:e7gz/src/shared/helpers/show_dialog.dart';
 
 class MatchDetailsScreen extends StatefulWidget {
   final String matchId;
@@ -34,29 +35,90 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
           curr.singleMatchStatus == MatchmakingStatus.failure,
       listener: (context, state) {
         if (state.selectedMatch != null) {
-          showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              title: Row(
-                children: [
-                  const Icon(Icons.warning_amber_rounded, color: Colors.orange, size: 28),
-                  const SizedBox(width: 8),
-                  Text('matchmaking.join_error_title'.tr().isEmpty || 'matchmaking.join_error_title'.tr() == 'matchmaking.join_error_title' ? 'Matchmaking' : 'matchmaking.join_error_title'.tr()),
-                ],
-              ),
-              content: Text(
-                state.errorMessage ?? 'matchmaking.error_joining'.tr(),
-                style: const TextStyle(fontSize: 16),
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text('OK', style: TextStyle(fontWeight: FontWeight.bold)),
+          showAppDialog(
+            child: Center(
+              child: Container(
+                margin: const EdgeInsets.symmetric(horizontal: 24),
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  color: colors.surfaceContainerHigh,
+                  borderRadius: BorderRadius.circular(28),
+                  border: Border.all(
+                    color: colors.outlineVariant.withValues(alpha: 0.5),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.3),
+                      blurRadius: 24,
+                      offset: const Offset(0, 8),
+                    ),
+                  ],
                 ),
-              ],
+                child: Material(
+                  color: Colors.transparent,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: colors.errorContainer.withValues(alpha: 0.2),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          Icons.warning_amber_rounded,
+                          color: colors.error,
+                          size: 32,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        'matchmaking.join_error_title'.tr().isEmpty ||
+                                'matchmaking.join_error_title'.tr() ==
+                                    'matchmaking.join_error_title'
+                            ? 'Matchmaking'
+                            : 'matchmaking.join_error_title'.tr(),
+                        style: typography.titleLarge?.copyWith(
+                          color: colors.onSurface,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 12),
+                      Text(
+                        state.errorMessage ?? 'matchmaking.error_joining'.tr(),
+                        style: typography.bodyMedium?.copyWith(
+                          color: colors.onSurfaceVariant,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 24),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: colors.primary,
+                            foregroundColor: colors.onPrimary,
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                            elevation: 0,
+                          ),
+                          child: const Text(
+                            'OK',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
           );
         } else {
@@ -99,7 +161,8 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
               );
             }
 
-            if (state.singleMatchStatus == MatchmakingStatus.failure && state.selectedMatch == null) {
+            if (state.singleMatchStatus == MatchmakingStatus.failure &&
+                state.selectedMatch == null) {
               return Center(
                 child: Text(
                   state.errorMessage ?? 'matchmaking.error_loading_match'.tr(),
