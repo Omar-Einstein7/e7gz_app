@@ -58,6 +58,7 @@ class _AdminLayoutState extends State<AdminLayout>
 
     return SafeArea(
       child: Scaffold(
+        backgroundColor: AdminColors.bg,
         drawer: isDesktop
             ? null
             : Drawer(

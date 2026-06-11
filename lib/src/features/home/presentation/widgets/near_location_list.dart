@@ -116,23 +116,23 @@ class _NearPitchCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final pitchTheme = context.pitchTheme;
-
+   final cs = context.colorScheme;
     return GestureDetector(
       onTap: () => context.push(
         AppRoutes.pitchDetails.replaceFirst(':id', pitch.id),
         extra: {'pitch': pitch, 'heroTag': 'near_${pitch.id}'},
       ),
       child: Container(
-        width: 275.w,
-        margin: EdgeInsets.only(right: 20.w),
+        width: 250.w,
+        margin: EdgeInsets.only(right: 20.w ,top: 5.h, bottom: 5.h),
         decoration: BoxDecoration(
-          color: const Color(0xFF131B2E),
-          borderRadius: BorderRadius.circular(32.r),
+        color:  cs.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(32.r),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.1),
-              blurRadius: 15,
-              offset: const Offset(0, 8),
+              color: Colors.black.withValues(alpha: 0.2),
+              blurRadius: 5,
+              offset: const Offset(0, 1),
             ),
           ],
         ),
@@ -220,7 +220,7 @@ class _NearPitchCard extends StatelessWidget {
                                   _getDistanceText(),
                                   style: TextStyle(
                                     fontFamily: 'Chewy',
-                                    color: Colors.white,
+                                    color: cs.onSurface,
                                     fontSize: 10.sp,
                                     fontWeight: FontWeight.w800,
                                   ),
@@ -249,7 +249,7 @@ class _NearPitchCard extends StatelessWidget {
                           pitch.name,
                           style: TextStyle(
                             fontFamily: 'Chewy',
-                            color: Colors.white,
+                            color: cs.onSurface,
                             fontWeight: FontWeight.w800,
                             fontSize: 18.sp,
                             height: 1.1,
@@ -271,7 +271,7 @@ class _NearPitchCard extends StatelessWidget {
                                 pitch.location.city,
                                 style: TextStyle(
                                   fontFamily: 'Chewy',
-                                  color: const Color(0xFFBCC7DE),
+                                  color: cs.onSurface,
                                   fontSize: 13.sp,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -292,7 +292,7 @@ class _NearPitchCard extends StatelessWidget {
                             text: '${pitch.pricePerHour.toInt()}',
                             style: TextStyle(
                               fontFamily: 'Chewy',
-                              color: Colors.white,
+                              color: cs.onSurface,
                               fontWeight: FontWeight.w800,
                               fontSize: 18.sp,
                             ),

@@ -33,16 +33,44 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
           prev.singleMatchStatus != curr.singleMatchStatus &&
           curr.singleMatchStatus == MatchmakingStatus.failure,
       listener: (context, state) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              state.errorMessage ?? 'matchmaking.error_joining'.tr(),
-              style: const TextStyle(color: Colors.white),
+        if (state.selectedMatch != null) {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              title: Row(
+                children: [
+                  const Icon(Icons.warning_amber_rounded, color: Colors.orange, size: 28),
+                  const SizedBox(width: 8),
+                  Text('matchmaking.join_error_title'.tr().isEmpty || 'matchmaking.join_error_title'.tr() == 'matchmaking.join_error_title' ? 'Matchmaking' : 'matchmaking.join_error_title'.tr()),
+                ],
+              ),
+              content: Text(
+                state.errorMessage ?? 'matchmaking.error_joining'.tr(),
+                style: const TextStyle(fontSize: 16),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('OK', style: TextStyle(fontWeight: FontWeight.bold)),
+                ),
+              ],
             ),
-            backgroundColor: Colors.redAccent,
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                state.errorMessage ?? 'matchmaking.error_joining'.tr(),
+                style: const TextStyle(color: Colors.white),
+              ),
+              backgroundColor: Colors.redAccent,
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+        }
       },
       child: Scaffold(
         appBar: AppBar(
@@ -71,7 +99,7 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
               );
             }
 
-            if (state.singleMatchStatus == MatchmakingStatus.failure) {
+            if (state.singleMatchStatus == MatchmakingStatus.failure && state.selectedMatch == null) {
               return Center(
                 child: Text(
                   state.errorMessage ?? 'matchmaking.error_loading_match'.tr(),
