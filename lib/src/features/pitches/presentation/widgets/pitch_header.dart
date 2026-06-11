@@ -217,7 +217,9 @@ class _ImagePageViewState extends State<ImagePageView> {
                   ),
                   BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-                    child: Container(color: Colors.black.withValues(alpha: 0.2)),
+                    child: Container(
+                      color: Colors.black.withValues(alpha: 0.2),
+                    ),
                   ),
                   AppCachedImage(
                     imageUrl: widget.images[index],
