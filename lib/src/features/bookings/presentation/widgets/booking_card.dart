@@ -106,7 +106,7 @@ class BookingCard extends StatelessWidget {
 
   void _showCancelDialog(BuildContext context) {
     final cs = context.colorScheme;
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: cs.surfaceContainerHigh,

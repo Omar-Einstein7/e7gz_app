@@ -133,4 +133,5 @@ key.properties
 .claude/
 .codegraph/
 .cursor/
+.agents/
 

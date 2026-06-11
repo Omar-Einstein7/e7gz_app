@@ -31,9 +31,9 @@ class SearchRemoteDataSourceImpl implements SearchRemoteDataSource {
     final params = {
       if (query != null && query.isNotEmpty) 'search': query,
       if (sportType != null && sportType.isNotEmpty) 'sportType': sportType,
-      if (minPrice != null) 'minPrice': minPrice,
-      if (maxPrice != null) 'maxPrice': maxPrice,
-      if (rating != null) 'rating': rating,
+      'minPrice': ?minPrice,
+      'maxPrice': ?maxPrice,
+      'rating': ?rating,
       'page': page,
       'limit': limit,
     };

@@ -23,7 +23,6 @@ class ShiftCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final typography = context.typography;
-    final colors = context.colors;
 
     return GestureDetector(
       onTap: onTap,

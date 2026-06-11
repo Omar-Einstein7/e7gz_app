@@ -18,7 +18,7 @@ class MainWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: context.colorScheme.background,
+      backgroundColor: context.colorScheme.surface,
       body: navigationShell,
       bottomNavigationBar: CustomBottomNavBar(
         currentIndex: navigationShell.currentIndex,
@@ -48,7 +48,7 @@ class CustomBottomNavBar extends StatelessWidget {
         bottom: bottomPadding > 0 ? bottomPadding : AppSpacing.sm.h,
       ),
       decoration: BoxDecoration(
-        color: cs.background,
+        color: cs.surface,
         border: Border(top: BorderSide(color: cs.outlineVariant, width: 1)),
       ),
       child: ClipRRect(

@@ -4,19 +4,19 @@ import '../layout/admin_layout.dart';
 /// Placeholder bar chart (no external charting package required)
 class ChartPlaceholder extends StatelessWidget {
   final String title;
-  final List<_BarData> bars;
+  final List<BarData> bars;
 
   const ChartPlaceholder({
     super.key,
     required this.title,
     this.bars = const [
-      _BarData('Mon', 0.6),
-      _BarData('Tue', 0.9),
-      _BarData('Wed', 0.5),
-      _BarData('Thu', 0.75),
-      _BarData('Fri', 0.95),
-      _BarData('Sat', 0.45),
-      _BarData('Sun', 0.3),
+      BarData('Mon', 0.6),
+      BarData('Tue', 0.9),
+      BarData('Wed', 0.5),
+      BarData('Thu', 0.75),
+      BarData('Fri', 0.95),
+      BarData('Sat', 0.45),
+      BarData('Sun', 0.3),
     ],
   });
 
@@ -65,10 +65,10 @@ class ChartPlaceholder extends StatelessWidget {
   }
 }
 
-class _BarData {
+class BarData {
   final String label;
   final double fraction; // 0..1
-  const _BarData(this.label, this.fraction);
+  const BarData(this.label, this.fraction);
 }
 
 class _AnimatedBar extends StatefulWidget {
@@ -113,8 +113,8 @@ class _AnimatedBarState extends State<_AnimatedBar>
               begin: Alignment.bottomCenter,
               end: Alignment.topCenter,
               colors: [
-                AdminColors.accent.withOpacity(0.9),
-                AdminColors.accent.withOpacity(0.3),
+                AdminColors.accent.withValues(alpha: 0.9),
+                AdminColors.accent.withValues(alpha: 0.3),
               ],
             ),
             borderRadius: BorderRadius.circular(6),

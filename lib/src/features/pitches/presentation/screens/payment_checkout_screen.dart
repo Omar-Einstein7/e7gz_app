@@ -493,7 +493,7 @@ class _PaymentCheckoutScreenState extends State<PaymentCheckoutScreen> {
     final colors = context.colors;
     final tt = context.typography;
 
-    showDialog(
+    showDialog<void>(
       context: context,
       barrierDismissible: false,
       builder: (context) => BackdropFilter(

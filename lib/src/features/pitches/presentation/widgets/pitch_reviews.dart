@@ -169,7 +169,7 @@ class PitchReviewsSection extends StatelessWidget {
 
   void _showRatingDialog(BuildContext context) {
     final cubit = context.read<PitchDetailCubit>();
-    showModalBottomSheet(
+    showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,

@@ -85,7 +85,7 @@ class _PitchDetailsView extends StatelessWidget {
 
               SliverToBoxAdapter(
                 child: DecoratedBox(
-                  decoration: BoxDecoration(color: context.colors.background),
+                  decoration: BoxDecoration(color: context.colors.surface),
                   child: Padding(
                     padding: EdgeInsets.only(
                       left: AppSpacing.lg.w,

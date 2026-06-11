@@ -54,7 +54,7 @@ class _AdminPitchesTabState extends State<AdminPitchesTab>
                       ),
                     ),
                   );
-                  if ((result ?? false) && mounted) {
+                  if ((result ?? false) && context.mounted) {
                     context.read<AdminCubit>().loadAllPitches();
                   }
                 },
@@ -158,7 +158,7 @@ class _AdminPitchesTabState extends State<AdminPitchesTab>
                                     ),
                                   ),
                                 );
-                                if ((result ?? false) && mounted) {
+                                if ((result ?? false) && context.mounted) {
                                   context.read<AdminCubit>().loadAllPitches();
                                 }
                               },
@@ -207,7 +207,7 @@ class _AdminPitchesTabState extends State<AdminPitchesTab>
                                     ],
                                   ),
                                 );
-                                if ((confirm ?? false) && mounted) {
+                                if ((confirm ?? false) && context.mounted) {
                                   context.read<AdminCubit>().deletePitch(p.id);
                                 }
                               },

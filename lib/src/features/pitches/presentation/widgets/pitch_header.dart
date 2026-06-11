@@ -136,7 +136,7 @@ class PitchHeaderDelegate extends SliverPersistentHeaderDelegate {
           child: Container(
             height: 32.h,
             decoration: BoxDecoration(
-              color: context.colors.background,
+              color: context.colors.surface,
               borderRadius: BorderRadius.vertical(top: Radius.circular(32.r)),
               boxShadow: [
                 BoxShadow(
@@ -217,7 +217,7 @@ class _ImagePageViewState extends State<ImagePageView> {
                   ),
                   BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-                    child: Container(color: Colors.black.withOpacity(0.2)),
+                    child: Container(color: Colors.black.withValues(alpha: 0.2)),
                   ),
                   AppCachedImage(
                     imageUrl: widget.images[index],
@@ -246,7 +246,7 @@ class _ImagePageViewState extends State<ImagePageView> {
                     vertical: 8.h,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.3),
+                    color: Colors.black.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(20.r),
                   ),
                   child: SmoothPageIndicator(
@@ -256,7 +256,7 @@ class _ImagePageViewState extends State<ImagePageView> {
                       dotHeight: 4.5.h,
                       dotWidth: 4.5.w,
                       activeDotColor: Colors.white,
-                      dotColor: Colors.white.withOpacity(0.5),
+                      dotColor: Colors.white.withValues(alpha: 0.5),
                       expansionFactor: 4,
                       spacing: 8.w,
                     ),
@@ -284,7 +284,7 @@ class CircleActionButton extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(left: 8.w),
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.3),
+        color: Colors.black.withValues(alpha: 0.3),
         shape: BoxShape.circle,
       ),
       child: IconButton(

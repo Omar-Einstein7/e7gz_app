@@ -227,7 +227,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               icon: IconsaxPlusBold.notification,
               trailing: Switch.adaptive(
                 value: _pushNotifications,
-                activeColor: colors.primary,
+                activeThumbColor: colors.primary,
                 onChanged: _toggleNotifications,
               ),
             ),

@@ -6,7 +6,7 @@ import 'package:e7gz/src/features/bookings/presentation/cubit/booking_cubit.dart
 
 class PaymentPlanSelector extends StatelessWidget {
   final bool isFullPayment;
-  final Function(bool) onPlanChanged;
+  final void Function(bool) onPlanChanged;
 
   const PaymentPlanSelector({
     super.key,

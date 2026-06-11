@@ -4,7 +4,7 @@ import 'package:e7gz/src/imports/packages_imports.dart';
 class CalendarStrip extends StatelessWidget {
   final List<DateTime> weekDates;
   final int selectedDateIndex;
-  final Function(int, DateTime) onDateSelected;
+  final void Function(int, DateTime) onDateSelected;
 
   const CalendarStrip({
     super.key,

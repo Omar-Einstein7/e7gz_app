@@ -29,7 +29,7 @@ abstract final class AppTheme {
     onSurface: AppColors.lightOnSurface,
     onSurfaceVariant: AppColors.lightOnSurfaceVariant,
     outline: AppColors.lightOutline,
-    background: AppColors.lightBackground,
+    // background: AppColors.lightBackground,
   );
 
   static final ColorScheme _darkColorScheme = ColorScheme.fromSeed(
@@ -41,7 +41,7 @@ abstract final class AppTheme {
     onSurface: AppColors.darkOnSurface,
     onSurfaceVariant: AppColors.darkOnSurfaceVariant,
     outline: AppColors.darkOutline,
-    background: AppColors.darkBackground,
+    // background: AppColors.darkBackground,
   );
 
   static ThemeData _buildTheme({

@@ -113,7 +113,9 @@ class _AdminProfileTabState extends State<AdminProfileTab>
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
-                                color: AdminColors.accent.withOpacity(0.3),
+                                color: AdminColors.accent.withValues(
+                                  alpha: 0.3,
+                                ),
                                 blurRadius: 20,
                                 offset: const Offset(0, 6),
                               ),
@@ -136,10 +138,14 @@ class _AdminProfileTabState extends State<AdminProfileTab>
                             vertical: 4,
                           ),
                           decoration: BoxDecoration(
-                            color: AdminColors.accentPurple.withOpacity(0.1),
+                            color: AdminColors.accentPurple.withValues(
+                              alpha: 0.1,
+                            ),
                             borderRadius: BorderRadius.circular(20),
                             border: Border.all(
-                              color: AdminColors.accentPurple.withOpacity(0.3),
+                              color: AdminColors.accentPurple.withValues(
+                                alpha: 0.3,
+                              ),
                             ),
                           ),
                           child: Text(
