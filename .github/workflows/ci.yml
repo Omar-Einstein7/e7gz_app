@@ -343,6 +343,8 @@ jobs:
       BUILD_TYPE: ${{ matrix.build_type }}
       VERSION: ${{ needs.versioning.outputs.version }}
       VERSION_CODE: ${{ needs.versioning.outputs.version_code }}
+      FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+      FIREBASE_APP_ID_ANDROID: ${{ secrets.FIREBASE_APP_ID_ANDROID }}
 
     steps:
       # ── Checkout ──────────────────────────────────────────────────────────────
@@ -537,7 +539,7 @@ jobs:
       # =========================================================================
       
       - name: Distribute to Firebase App Distribution
-        if: matrix.build_type == 'release' && matrix.flavor != 'production'
+        if: matrix.build_type == 'release' && matrix.flavor != 'production' && env.FIREBASE_TOKEN != '' && env.FIREBASE_APP_ID_ANDROID != ''
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
           appId: ${{ secrets.FIREBASE_APP_ID_ANDROID }}
