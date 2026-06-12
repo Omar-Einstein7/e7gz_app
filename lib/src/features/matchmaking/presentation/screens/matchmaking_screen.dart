@@ -1,3 +1,4 @@
+import 'package:e7gz/src/features/matchmaking/domain/entities/match.dart';
 import 'package:e7gz/src/features/matchmaking/presentation/cubit/matchmaking_state.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
@@ -148,9 +149,33 @@ class _MatchmakingViewState extends State<_MatchmakingView> {
 
                     if (state.status == MatchmakingStatus.loading &&
                         state.matches.isEmpty)
-                      Center(
-                        child: CircularProgressIndicator(
-                          color: theme.colorScheme.primary,
+                      Skeletonizer(
+                        enabled: true,
+                        child: Column(
+                          children: List.generate(
+                            3,
+                            (index) => Padding(
+                              padding: EdgeInsets.only(bottom: 16.h),
+                              child: const MatchmakingCard(
+                                match: MatchmakingMatch(
+                                  id: 'skeleton',
+                                  title: 'Loading Match Title',
+                                  pitchId: 'pitch',
+                                  creatorId: 'creator',
+                                  date: '2024-01-01',
+                                  startTime: '18:00',
+                                  endTime: '19:00',
+                                  maxPlayers: 10,
+                                  participantIds: ['1', '2', '3'],
+                                  pricePerPlayer: 150.0,
+                                  skillLevel: 'Beginner',
+                                  status: 'open',
+                                  sportType: 'football',
+                                  pitchName: 'Loading Pitch Location',
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
                       )
                     else if (state.status == MatchmakingStatus.failure &&
@@ -217,7 +242,23 @@ class _MatchmakingViewState extends State<_MatchmakingView> {
 
                     if (state.leaderboardStatus == MatchmakingStatus.loading &&
                         state.leaderboard.isEmpty)
-                      const Center(child: CircularProgressIndicator())
+                      Skeletonizer(
+                        enabled: true,
+                        child: Column(
+                          children: List.generate(
+                            3,
+                            (index) => Padding(
+                              padding: EdgeInsets.only(bottom: 12.h),
+                              child: LeaderboardTile(
+                                rank: '01',
+                                name: 'Loading Name Placeholder',
+                                progress: '0 Matches Won',
+                                isMvp: index == 0,
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
                     else if (state.leaderboard.isEmpty)
                       Center(
                         child: Text(

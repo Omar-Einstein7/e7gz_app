@@ -35,9 +35,12 @@ class _AdminBookingsTabState extends State<AdminBookingsTab>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Bookings', style: AdminTextStyles.pageTitle),
+          Text('Bookings', style: AdminTextStyles.getPageTitle(context)),
           const SizedBox(height: 4),
-          const Text('Track all reservations', style: AdminTextStyles.label),
+          Text(
+            'Track all reservations',
+            style: AdminTextStyles.getLabel(context),
+          ),
           const SizedBox(height: 24),
           BlocBuilder<AdminCubit, AdminState>(
             builder: (context, state) {
@@ -63,8 +66,8 @@ class _AdminBookingsTabState extends State<AdminBookingsTab>
                       const SizedBox(height: 12),
                       Text(
                         'Failed to load bookings: ${state.bookingsError}',
-                        style: const TextStyle(
-                          color: AdminColors.textSecondary,
+                        style: TextStyle(
+                          color: AdminColors.getTextSecondary(context),
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -102,8 +105,8 @@ class _AdminBookingsTabState extends State<AdminBookingsTab>
                       DataCell(
                         Text(
                           b.userName ?? 'Guest',
-                          style: const TextStyle(
-                            color: AdminColors.textPrimary,
+                          style: TextStyle(
+                            color: AdminColors.getTextPrimary(context),
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -166,7 +169,9 @@ class _AdminBookingsTabState extends State<AdminBookingsTab>
                   const SizedBox(width: 12),
                   Text(
                     booking.pitchName,
-                    style: AdminTextStyles.pageTitle.copyWith(fontSize: 18),
+                    style: AdminTextStyles.getPageTitle(
+                      context,
+                    ).copyWith(fontSize: 18),
                   ),
                   const Spacer(),
                   IconButton(

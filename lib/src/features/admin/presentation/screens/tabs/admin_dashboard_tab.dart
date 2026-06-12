@@ -44,7 +44,9 @@ class _AdminDashboardTabState extends State<AdminDashboardTab>
                 Text(
                   'Error loading dashboard: ${state.statsError}',
                   textAlign: TextAlign.center,
-                  style: const TextStyle(color: AdminColors.textSecondary),
+                  style: TextStyle(
+                    color: AdminColors.getTextSecondary(context),
+                  ),
                 ),
                 const SizedBox(height: 24),
                 ElevatedButton(
@@ -174,9 +176,9 @@ class _TopVenuesCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Top Venues', style: AdminTextStyles.sectionTitle),
+          Text('Top Venues', style: AdminTextStyles.getSectionTitle(context)),
           const SizedBox(height: 4),
-          const Text('By occupancy rate', style: AdminTextStyles.label),
+          Text('By occupancy rate', style: AdminTextStyles.getLabel(context)),
           const SizedBox(height: 20),
           ..._venues.map(
             (v) => Padding(
@@ -189,8 +191,8 @@ class _TopVenuesCard extends StatelessWidget {
                     children: [
                       Text(
                         v.$1,
-                        style: const TextStyle(
-                          color: AdminColors.textPrimary,
+                        style: TextStyle(
+                          color: AdminColors.getTextPrimary(context),
                           fontSize: 13,
                         ),
                       ),
@@ -273,7 +275,10 @@ class _RecentActivityCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Recent Activity', style: AdminTextStyles.sectionTitle),
+          Text(
+            'Recent Activity',
+            style: AdminTextStyles.getSectionTitle(context),
+          ),
           const SizedBox(height: 16),
           ..._activities.map(
             (a) => Padding(
@@ -293,16 +298,16 @@ class _RecentActivityCard extends StatelessWidget {
                   Expanded(
                     child: Text(
                       a.$3,
-                      style: const TextStyle(
-                        color: AdminColors.textPrimary,
+                      style: TextStyle(
+                        color: AdminColors.getTextPrimary(context),
                         fontSize: 13,
                       ),
                     ),
                   ),
                   Text(
                     a.$4,
-                    style: const TextStyle(
-                      color: AdminColors.textMuted,
+                    style: TextStyle(
+                      color: AdminColors.getTextMuted(context),
                       fontSize: 11,
                     ),
                   ),

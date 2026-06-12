@@ -32,11 +32,11 @@ class _AdminMatchesTabState extends State<AdminMatchesTab>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Matches', style: AdminTextStyles.pageTitle),
+          Text('Matches', style: AdminTextStyles.getPageTitle(context)),
           const SizedBox(height: 4),
-          const Text(
+          Text(
             'All open & completed matches',
-            style: AdminTextStyles.label,
+            style: AdminTextStyles.getLabel(context),
           ),
           const SizedBox(height: 24),
           BlocBuilder<AdminCubit, AdminState>(
@@ -63,8 +63,8 @@ class _AdminMatchesTabState extends State<AdminMatchesTab>
                       const SizedBox(height: 12),
                       Text(
                         'Failed to load matches: ${state.matchesError}',
-                        style: const TextStyle(
-                          color: AdminColors.textSecondary,
+                        style: TextStyle(
+                          color: AdminColors.getTextSecondary(context),
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -97,8 +97,8 @@ class _AdminMatchesTabState extends State<AdminMatchesTab>
                       DataCell(
                         Text(
                           m.title.isEmpty ? 'Friendly Match' : m.title,
-                          style: const TextStyle(
-                            color: AdminColors.textPrimary,
+                          style: TextStyle(
+                            color: AdminColors.getTextPrimary(context),
                             fontWeight: FontWeight.w500,
                           ),
                         ),

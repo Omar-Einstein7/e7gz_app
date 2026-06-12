@@ -28,13 +28,13 @@ class AdminDataTable extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(20, 16, 16, 14),
             child: Row(
               children: [
-                Text(title, style: AdminTextStyles.sectionTitle),
+                Text(title, style: AdminTextStyles.getSectionTitle(context)),
                 const Spacer(),
-                ?action,
+                if (action != null) action!,
               ],
             ),
           ),
-          const Divider(color: AdminColors.border, height: 1),
+          Divider(color: AdminColors.getBorder(context), height: 1),
           // ── Table ─────────────────────────────────────────────
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
@@ -42,14 +42,14 @@ class AdminDataTable extends StatelessWidget {
               headingRowHeight: 42,
               dataRowMinHeight: 52,
               dataRowMaxHeight: 52,
-              headingTextStyle: const TextStyle(
-                color: AdminColors.textMuted,
+              headingTextStyle: TextStyle(
+                color: AdminColors.getTextMuted(context),
                 fontSize: 11,
                 fontWeight: FontWeight.w700,
                 letterSpacing: 0.8,
               ),
-              dataTextStyle: const TextStyle(
-                color: AdminColors.textSecondary,
+              dataTextStyle: TextStyle(
+                color: AdminColors.getTextSecondary(context),
                 fontSize: 13,
               ),
               dividerThickness: 0.6,

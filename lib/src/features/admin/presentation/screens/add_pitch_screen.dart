@@ -280,16 +280,16 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
             backgroundColor: colors.onSurface,
             elevation: 0,
             leading: IconButton(
-              icon: const Icon(
+              icon: Icon(
                 Icons.arrow_back_ios_new,
-                color: AdminColors.textPrimary,
+                color: AdminColors.accent,
                 size: 18,
               ),
               onPressed: () => context.pop(),
             ),
             title: Text(
               _isEdit ? 'Edit Pitch' : 'Add New Pitch',
-              style: AdminTextStyles.pageTitle,
+              style: AdminTextStyles.getPageTitle(context),
             ),
             centerTitle: true,
           ),
@@ -300,7 +300,7 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('PITCH MEDIA', style: AdminTextStyles.label),
+                  Text('PITCH MEDIA', style: AdminTextStyles.getLabel(context)),
                   const SizedBox(height: 12),
                   SizedBox(
                     height: 120,
@@ -324,18 +324,20 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
                                 style: BorderStyle.solid,
                               ),
                             ),
-                            child: const Column(
+                            child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(
+                                const Icon(
                                   IconsaxPlusBold.add_square,
                                   color: AdminColors.accent,
                                 ),
-                                SizedBox(height: 8),
+                                const SizedBox(height: 8),
                                 Text(
                                   'Add Pix',
                                   style: TextStyle(
-                                    color: AdminColors.textSecondary,
+                                    color: AdminColors.getTextSecondary(
+                                      context,
+                                    ),
                                     fontSize: 12,
                                   ),
                                 ),
@@ -506,7 +508,7 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
                   ),
                   const SizedBox(height: 24),
 
-                  const Text('AMENITIES', style: AdminTextStyles.label),
+                  Text('AMENITIES', style: AdminTextStyles.getLabel(context)),
                   const SizedBox(height: 12),
                   Wrap(
                     spacing: 8,
@@ -532,7 +534,7 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
                         labelStyle: TextStyle(
                           color: isSelected
                               ? AdminColors.accent
-                              : AdminColors.textSecondary,
+                              : AdminColors.getTextSecondary(context),
                           fontSize: 12,
                           fontWeight: isSelected
                               ? FontWeight.bold
@@ -556,9 +558,9 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
+                      Text(
                         'PITCH LOCATION',
-                        style: AdminTextStyles.label,
+                        style: AdminTextStyles.getLabel(context),
                       ),
                       TextButton.icon(
                         onPressed: _getCurrentLocation,
@@ -670,7 +672,7 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: AdminTextStyles.label),
+        Text(label, style: AdminTextStyles.getLabel(context)),
         const SizedBox(height: 8),
         TextFormField(
           controller: controller,
@@ -682,10 +684,13 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
               icon.onPressed?.call();
             }
           },
-          style: const TextStyle(color: AdminColors.textPrimary, fontSize: 14),
+          style: TextStyle(
+            color: AdminColors.getTextPrimary(context),
+            fontSize: 14,
+          ),
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: const TextStyle(color: AdminColors.textMuted),
+            hintStyle: TextStyle(color: AdminColors.getTextMuted(context)),
             filled: true,
             fillColor: AdminColors.surface,
             suffixIcon: suffixIcon,
@@ -708,12 +713,15 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: AdminTextStyles.label),
+        Text(label, style: AdminTextStyles.getLabel(context)),
         const SizedBox(height: 8),
         DropdownButtonFormField<String>(
           initialValue: _sportType,
           dropdownColor: AdminColors.surfaceHigh,
-          style: const TextStyle(color: AdminColors.textPrimary, fontSize: 14),
+          style: TextStyle(
+            color: AdminColors.getTextPrimary(context),
+            fontSize: 14,
+          ),
           decoration: InputDecoration(
             filled: true,
             fillColor: AdminColors.surface,

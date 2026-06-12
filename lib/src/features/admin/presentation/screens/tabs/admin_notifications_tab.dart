@@ -35,12 +35,18 @@ class _AdminNotificationsTabState extends State<AdminNotificationsTab>
           // ── Header ───────────────────────────────────────────
           Row(
             children: [
-              const Column(
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Notifications', style: AdminTextStyles.pageTitle),
-                  SizedBox(height: 2),
-                  Text('System & user alerts', style: AdminTextStyles.label),
+                  Text(
+                    'Notifications',
+                    style: AdminTextStyles.getPageTitle(context),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    'System & user alerts',
+                    style: AdminTextStyles.getLabel(context),
+                  ),
                 ],
               ),
               const Spacer(),
@@ -85,8 +91,8 @@ class _AdminNotificationsTabState extends State<AdminNotificationsTab>
                       const SizedBox(height: 12),
                       Text(
                         'Failed to load alerts: ${state.notificationsError}',
-                        style: const TextStyle(
-                          color: AdminColors.textSecondary,
+                        style: TextStyle(
+                          color: AdminColors.getTextSecondary(context),
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -115,7 +121,10 @@ class _AdminNotificationsTabState extends State<AdminNotificationsTab>
                         children: [
                           _NotificationTile(notification: n),
                           if (!isLast)
-                            const Divider(color: AdminColors.border, height: 1),
+                            Divider(
+                              color: AdminColors.getBorder(context),
+                              height: 1,
+                            ),
                         ],
                       );
                     }),
@@ -149,7 +158,9 @@ class _NotificationTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isRead = notification.isRead;
-    final color = isRead ? AdminColors.textMuted : AdminColors.accent;
+    final color = isRead
+        ? AdminColors.getTextMuted(context)
+        : AdminColors.accent;
 
     return Padding(
       padding: const EdgeInsets.all(16),
@@ -181,7 +192,7 @@ class _NotificationTile extends StatelessWidget {
                       ? 'System Update'
                       : notification.title,
                   style: TextStyle(
-                    color: AdminColors.textPrimary,
+                    color: AdminColors.getTextPrimary(context),
                     fontWeight: isRead ? FontWeight.w400 : FontWeight.w600,
                     fontSize: 13,
                   ),
@@ -189,8 +200,8 @@ class _NotificationTile extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   notification.body,
-                  style: const TextStyle(
-                    color: AdminColors.textSecondary,
+                  style: TextStyle(
+                    color: AdminColors.getTextSecondary(context),
                     fontSize: 12,
                   ),
                 ),
@@ -203,8 +214,8 @@ class _NotificationTile extends StatelessWidget {
             children: [
               Text(
                 _timeAgo(notification.createdAt),
-                style: const TextStyle(
-                  color: AdminColors.textMuted,
+                style: TextStyle(
+                  color: AdminColors.getTextMuted(context),
                   fontSize: 11,
                 ),
               ),
@@ -230,21 +241,27 @@ class _NotificationTile extends StatelessWidget {
 class _EmptyNotifications extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return const AdminCard(
+    return AdminCard(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(height: 48),
+          const SizedBox(height: 48),
           Icon(
             IconsaxPlusBold.notification_status,
-            color: AdminColors.textMuted,
+            color: AdminColors.getTextMuted(context),
             size: 48,
           ),
-          SizedBox(height: 16),
-          Text('All caught up!', style: AdminTextStyles.sectionTitle),
-          SizedBox(height: 4),
-          Text('No new notifications', style: AdminTextStyles.label),
-          SizedBox(height: 48),
+          const SizedBox(height: 16),
+          Text(
+            'All caught up!',
+            style: AdminTextStyles.getSectionTitle(context),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            'No new notifications',
+            style: AdminTextStyles.getLabel(context),
+          ),
+          const SizedBox(height: 48),
         ],
       ),
     );

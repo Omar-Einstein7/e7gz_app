@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:e7gz/src/theme/extensions/theme_context.dart';
 import 'package:e7gz/src/features/admin/presentation/widgets/admin_sidebar.dart';
 import 'package:e7gz/src/features/admin/presentation/widgets/admin_top_bar.dart';
 
@@ -55,14 +56,21 @@ class _AdminLayoutState extends State<AdminLayout>
   Widget build(BuildContext context) {
     final w = MediaQuery.sizeOf(context).width;
     final isDesktop = w >= _breakpoint;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    final bg = isDark ? const Color(0xFF0B0F1A) : theme.colorScheme.surface;
+    final sidebarBg = isDark
+        ? const Color(0xFF131929)
+        : theme.colorScheme.surfaceContainerLow;
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: AdminColors.bg,
+        backgroundColor: bg,
         drawer: isDesktop
             ? null
             : Drawer(
-                backgroundColor: AdminColors.surface,
+                backgroundColor: sidebarBg,
                 child: AdminSidebar(
                   selectedIndex: widget.selectedIndex,
                   onIndexChanged: (i) {
@@ -121,29 +129,69 @@ class AdminColors {
   static const textPrimary = Color(0xFFE8EDF5);
   static const textSecondary = Color(0xFF6B7FA3);
   static const textMuted = Color(0xFF374563);
+
+  static Color getBg(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return isDark ? bg : Theme.of(context).colorScheme.surface;
+  }
+
+  static Color getSurface(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return isDark ? surface : Theme.of(context).colorScheme.surfaceContainerLow;
+  }
+
+  static Color getSurfaceHigh(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return isDark
+        ? surfaceHigh
+        : Theme.of(context).colorScheme.surfaceContainer;
+  }
+
+  static Color getBorder(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return isDark ? border : Theme.of(context).colorScheme.outlineVariant;
+  }
+
+  static Color getTextPrimary(BuildContext context) {
+    return context.colorScheme.onSurface;
+  }
+
+  static Color getTextSecondary(BuildContext context) {
+    return context.colorScheme.onSurfaceVariant;
+  }
+
+  static Color getTextMuted(BuildContext context) {
+    return context.colorScheme.outline;
+  }
 }
 
 class AdminTextStyles {
   AdminTextStyles._();
 
   static const pageTitle = TextStyle(
-    color: AdminColors.textPrimary,
     fontSize: 20,
     fontWeight: FontWeight.w700,
     letterSpacing: -0.3,
   );
 
   static const sectionTitle = TextStyle(
-    color: AdminColors.textPrimary,
     fontSize: 14,
     fontWeight: FontWeight.w600,
   );
 
-  static const label = TextStyle(
-    color: AdminColors.textSecondary,
-    fontSize: 12,
-    fontWeight: FontWeight.w500,
-  );
+  static const label = TextStyle(fontSize: 12, fontWeight: FontWeight.w500);
+
+  static TextStyle getPageTitle(BuildContext context) {
+    return pageTitle.copyWith(color: AdminColors.getTextPrimary(context));
+  }
+
+  static TextStyle getSectionTitle(BuildContext context) {
+    return sectionTitle.copyWith(color: AdminColors.getTextPrimary(context));
+  }
+
+  static TextStyle getLabel(BuildContext context) {
+    return label.copyWith(color: AdminColors.getTextSecondary(context));
+  }
 }
 
 /// Reusable card shell
@@ -155,12 +203,14 @@ class AdminCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final border = AdminColors.getBorder(context);
+    final surface = AdminColors.getSurface(context);
     return Container(
       padding: padding ?? const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AdminColors.surface,
+        color: surface,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AdminColors.border),
+        border: Border.all(color: border),
         boxShadow: const [
           BoxShadow(
             color: Color(0x18000000),

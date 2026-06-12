@@ -34,12 +34,15 @@ class _AdminPitchesTabState extends State<AdminPitchesTab>
           // ── Header row ────────────────────────────────────────
           Row(
             children: [
-              const Column(
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Pitches', style: AdminTextStyles.pageTitle),
-                  SizedBox(height: 2),
-                  Text('Manage all venues', style: AdminTextStyles.label),
+                  Text('Pitches', style: AdminTextStyles.getPageTitle(context)),
+                  const SizedBox(height: 2),
+                  Text(
+                    'Manage all venues',
+                    style: AdminTextStyles.getLabel(context),
+                  ),
                 ],
               ),
               const Spacer(),
@@ -100,8 +103,8 @@ class _AdminPitchesTabState extends State<AdminPitchesTab>
                       const SizedBox(height: 12),
                       Text(
                         'Failed to load pitches: ${state.pitchesError}',
-                        style: const TextStyle(
-                          color: AdminColors.textSecondary,
+                        style: TextStyle(
+                          color: AdminColors.getTextSecondary(context),
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -131,8 +134,8 @@ class _AdminPitchesTabState extends State<AdminPitchesTab>
                       DataCell(
                         Text(
                           p.name,
-                          style: const TextStyle(
-                            color: AdminColors.textPrimary,
+                          style: TextStyle(
+                            color: AdminColors.getTextPrimary(context),
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -172,26 +175,32 @@ class _AdminPitchesTabState extends State<AdminPitchesTab>
                                   context: context,
                                   builder: (c) => AlertDialog(
                                     backgroundColor: AdminColors.surface,
-                                    title: const Text(
+                                    title: Text(
                                       'Delete Pitch?',
                                       style: TextStyle(
-                                        color: AdminColors.textPrimary,
+                                        color: AdminColors.getTextPrimary(
+                                          context,
+                                        ),
                                       ),
                                     ),
-                                    content: const Text(
+                                    content: Text(
                                       'Are you sure you want to delete this pitch?',
                                       style: TextStyle(
-                                        color: AdminColors.textSecondary,
+                                        color: AdminColors.getTextSecondary(
+                                          context,
+                                        ),
                                       ),
                                     ),
                                     actions: [
                                       TextButton(
                                         onPressed: () =>
                                             Navigator.pop(c, false),
-                                        child: const Text(
+                                        child: Text(
                                           'Cancel',
                                           style: TextStyle(
-                                            color: AdminColors.textSecondary,
+                                            color: AdminColors.getTextSecondary(
+                                              context,
+                                            ),
                                           ),
                                         ),
                                       ),

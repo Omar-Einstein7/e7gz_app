@@ -155,11 +155,7 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
         ),
         body: BlocBuilder<MatchmakingCubit, MatchmakingState>(
           builder: (context, state) {
-            if (state.singleMatchStatus == MatchmakingStatus.loading) {
-              return Center(
-                child: CircularProgressIndicator(color: colors.primary),
-              );
-            }
+            final isLoading = state.singleMatchStatus == MatchmakingStatus.loading;
 
             if (state.singleMatchStatus == MatchmakingStatus.failure &&
                 state.selectedMatch == null) {
@@ -171,7 +167,25 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
               );
             }
 
-            final match = state.selectedMatch;
+            final match = isLoading
+                ? const MatchmakingMatch(
+                    id: 'skeleton',
+                    title: 'Loading Match Title Loading Match Title',
+                    pitchId: 'pitch',
+                    creatorId: 'creator',
+                    date: '2024-01-01',
+                    startTime: '18:00',
+                    endTime: '19:00',
+                    maxPlayers: 10,
+                    participantIds: ['1', '2', '3'],
+                    pricePerPlayer: 150.0,
+                    skillLevel: 'Beginner',
+                    status: 'open',
+                    sportType: 'football',
+                    pitchName: 'Loading Pitch Location',
+                  )
+                : state.selectedMatch;
+
             if (match == null) {
               return Center(
                 child: Text(
@@ -181,7 +195,9 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
               );
             }
 
-            return SingleChildScrollView(
+            return Skeletonizer(
+              enabled: isLoading,
+              child: SingleChildScrollView(
               padding: EdgeInsets.all(24.w),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -343,7 +359,7 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
                   SizedBox(height: 120.h),
                 ],
               ),
-            );
+            ));
           },
         ),
         bottomSheet: BlocBuilder<MatchmakingCubit, MatchmakingState>(

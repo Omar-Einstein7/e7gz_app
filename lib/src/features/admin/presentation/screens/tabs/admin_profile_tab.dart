@@ -56,8 +56,8 @@ class _AdminProfileTabState extends State<AdminProfileTab>
                       const SizedBox(height: 12),
                       Text(
                         'Failed to load profile: ${state.profileError}',
-                        style: const TextStyle(
-                          color: AdminColors.textSecondary,
+                        style: TextStyle(
+                          color: AdminColors.getTextSecondary(context),
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -73,10 +73,12 @@ class _AdminProfileTabState extends State<AdminProfileTab>
 
               final profile = state.profile;
               if (profile == null) {
-                return const Center(
+                return Center(
                   child: Text(
                     'No profile found',
-                    style: TextStyle(color: AdminColors.textSecondary),
+                    style: TextStyle(
+                      color: AdminColors.getTextSecondary(context),
+                    ),
                   ),
                 );
               }
@@ -89,11 +91,11 @@ class _AdminProfileTabState extends State<AdminProfileTab>
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Profile', style: AdminTextStyles.pageTitle),
+                  Text('Profile', style: AdminTextStyles.getPageTitle(context)),
                   const SizedBox(height: 4),
-                  const Text(
+                  Text(
                     'Account details & settings',
-                    style: AdminTextStyles.label,
+                    style: AdminTextStyles.getLabel(context),
                   ),
                   const SizedBox(height: 24),
                   // ── Profile card ──────────────────────────────
@@ -128,9 +130,15 @@ class _AdminProfileTabState extends State<AdminProfileTab>
                           ),
                         ),
                         const SizedBox(height: 16),
-                        Text(userName, style: AdminTextStyles.pageTitle),
+                        Text(
+                          userName,
+                          style: AdminTextStyles.getPageTitle(context),
+                        ),
                         const SizedBox(height: 4),
-                        Text(userEmail, style: AdminTextStyles.label),
+                        Text(
+                          userEmail,
+                          style: AdminTextStyles.getLabel(context),
+                        ),
                         const SizedBox(height: 4),
                         Container(
                           padding: const EdgeInsets.symmetric(
@@ -159,7 +167,10 @@ class _AdminProfileTabState extends State<AdminProfileTab>
                           ),
                         ),
                         const SizedBox(height: 24),
-                        const Divider(color: AdminColors.border, height: 1),
+                        Divider(
+                          color: AdminColors.getBorder(context),
+                          height: 1,
+                        ),
                         const SizedBox(height: 20),
                         // Info rows
                         _InfoRow(
@@ -207,8 +218,12 @@ class _AdminProfileTabState extends State<AdminProfileTab>
                               child: FilledButton(
                                 onPressed: () {},
                                 style: FilledButton.styleFrom(
-                                  backgroundColor: AdminColors.surfaceHigh,
-                                  foregroundColor: AdminColors.textPrimary,
+                                  backgroundColor: AdminColors.getSurfaceHigh(
+                                    context,
+                                  ),
+                                  foregroundColor: AdminColors.getTextPrimary(
+                                    context,
+                                  ),
                                   padding: const EdgeInsets.symmetric(
                                     vertical: 14,
                                   ),
@@ -258,21 +273,25 @@ class _InfoRow extends StatelessWidget {
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: AdminColors.surfaceHigh,
+              color: AdminColors.getSurfaceHigh(context),
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Icon(icon, color: AdminColors.textSecondary, size: 18),
+            child: Icon(
+              icon,
+              color: AdminColors.getTextSecondary(context),
+              size: 18,
+            ),
           ),
           const SizedBox(width: 14),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(label, style: AdminTextStyles.label),
+              Text(label, style: AdminTextStyles.getLabel(context)),
               const SizedBox(height: 2),
               Text(
                 value,
-                style: const TextStyle(
-                  color: AdminColors.textPrimary,
+                style: TextStyle(
+                  color: AdminColors.getTextPrimary(context),
                   fontSize: 13,
                   fontWeight: FontWeight.w500,
                 ),

@@ -30,10 +30,16 @@ class AdminSidebar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final border = AdminColors.getBorder(context);
+    final surface = AdminColors.getSurface(context);
+    final textPrimary = AdminColors.getTextPrimary(context);
+    final textSecondary = AdminColors.getTextSecondary(context);
+    final textMuted = AdminColors.getTextMuted(context);
+
     return DecoratedBox(
-      decoration: const BoxDecoration(
-        color: AdminColors.surface,
-        border: Border(right: BorderSide(color: AdminColors.border)),
+      decoration: BoxDecoration(
+        color: surface,
+        border: Border(right: BorderSide(color: border)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -69,13 +75,13 @@ class AdminSidebar extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 12),
-                const Column(
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       'E7GZ',
                       style: TextStyle(
-                        color: AdminColors.textPrimary,
+                        color: textPrimary,
                         fontSize: 16,
                         fontWeight: FontWeight.w800,
                         letterSpacing: 1.2,
@@ -84,7 +90,7 @@ class AdminSidebar extends StatelessWidget {
                     Text(
                       'Admin Console',
                       style: TextStyle(
-                        color: AdminColors.textSecondary,
+                        color: textSecondary,
                         fontSize: 10,
                       ),
                     ),
@@ -95,12 +101,12 @@ class AdminSidebar extends StatelessWidget {
           ),
           const SizedBox(height: 32),
           // ── Section label ───────────────────────────────────────
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Text(
               'MAIN MENU',
               style: TextStyle(
-                color: AdminColors.textMuted,
+                color: textMuted,
                 fontSize: 10,
                 fontWeight: FontWeight.w700,
                 letterSpacing: 1.4,
@@ -126,7 +132,7 @@ class AdminSidebar extends StatelessWidget {
             ),
           ),
           // ── Divider + logout ───────────────────────────────────
-          const Divider(color: AdminColors.border, height: 1),
+          Divider(color: border, height: 1),
           const SizedBox(height: 12),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -162,11 +168,13 @@ class _NavTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textSecondary = AdminColors.getTextSecondary(context);
+    final textPrimary = AdminColors.getTextPrimary(context);
     final color = danger
         ? const Color(0xFFEF4444)
         : selected
         ? AdminColors.accent
-        : AdminColors.textSecondary;
+        : textSecondary;
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 2),
@@ -195,7 +203,7 @@ class _NavTile extends StatelessWidget {
                   child: Text(
                     label,
                     style: TextStyle(
-                      color: selected ? AdminColors.textPrimary : color,
+                      color: selected ? textPrimary : color,
                       fontSize: 13,
                       fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
                     ),

@@ -92,22 +92,28 @@ class _AdminTopBarState extends State<AdminTopBar> {
   @override
   Widget build(BuildContext context) {
     final title = _titles.elementAtOrNull(widget.selectedIndex) ?? 'Admin';
+    final border = AdminColors.getBorder(context);
+    final surface = AdminColors.getSurface(context);
+    final surfaceHigh = AdminColors.getSurfaceHigh(context);
+    final textSecondary = AdminColors.getTextSecondary(context);
+    final textPrimary = AdminColors.getTextPrimary(context);
+    final textMuted = AdminColors.getTextMuted(context);
 
     return Container(
       height: 64,
       padding: const EdgeInsets.symmetric(horizontal: 24),
-      decoration: const BoxDecoration(
-        color: AdminColors.surface,
-        border: Border(bottom: BorderSide(color: AdminColors.border)),
+      decoration: BoxDecoration(
+        color: surface,
+        border: Border(bottom: BorderSide(color: border)),
       ),
       child: Row(
         children: [
           // ── Hamburger (mobile) ──────────────────────────────────
           if (!widget.isDesktop) ...[
             IconButton(
-              icon: const Icon(
+              icon: Icon(
                 Icons.menu_rounded,
-                color: AdminColors.textSecondary,
+                color: textSecondary,
               ),
               onPressed: () => Scaffold.of(context).openDrawer(),
               padding: EdgeInsets.zero,
@@ -120,8 +126,8 @@ class _AdminTopBarState extends State<AdminTopBar> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(title, style: AdminTextStyles.pageTitle),
-              const Text('Overview & management', style: AdminTextStyles.label),
+              Text(title, style: AdminTextStyles.getPageTitle(context)),
+              Text('Overview & management', style: AdminTextStyles.getLabel(context)),
             ],
           ),
           const Spacer(),
@@ -131,30 +137,30 @@ class _AdminTopBarState extends State<AdminTopBar> {
               width: 220,
               height: 36,
               decoration: BoxDecoration(
-                color: AdminColors.surfaceHigh,
+                color: surfaceHigh,
                 borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: AdminColors.border),
+                border: Border.all(color: border),
               ),
               child: Row(
                 children: [
                   const SizedBox(width: 12),
-                  const Icon(
+                  Icon(
                     IconsaxPlusBold.search_normal,
-                    color: AdminColors.textMuted,
+                    color: textMuted,
                     size: 16,
                   ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: TextField(
                       controller: _searchController,
-                      style: const TextStyle(
-                        color: AdminColors.textPrimary,
+                      style: TextStyle(
+                        color: textPrimary,
                         fontSize: 13,
                       ),
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         hintText: 'Search...',
                         hintStyle: TextStyle(
-                          color: AdminColors.textMuted,
+                          color: textMuted,
                           fontSize: 13,
                         ),
                         border: InputBorder.none,
@@ -185,13 +191,13 @@ class _AdminTopBarState extends State<AdminTopBar> {
                     height: 38,
                     decoration: BoxDecoration(
                       color: _notificationOverlay != null
-                          ? AdminColors.surfaceHigh
+                          ? surfaceHigh
                           : Colors.transparent,
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(
                         color: _notificationOverlay != null
                             ? AdminColors.accent
-                            : AdminColors.border,
+                            : border,
                       ),
                     ),
                     child: Icon(
@@ -200,7 +206,7 @@ class _AdminTopBarState extends State<AdminTopBar> {
                           : IconsaxPlusBold.notification,
                       color: _notificationOverlay != null
                           ? AdminColors.accent
-                          : AdminColors.textSecondary,
+                          : textSecondary,
                       size: 18,
                     ),
                   ),
@@ -211,11 +217,11 @@ class _AdminTopBarState extends State<AdminTopBar> {
                       child: Container(
                         width: 10,
                         height: 10,
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           color: AdminColors.accent,
                           shape: BoxShape.circle,
                           border: Border.fromBorderSide(
-                            BorderSide(color: AdminColors.surface, width: 1.5),
+                            BorderSide(color: surface, width: 1.5),
                           ),
                         ),
                       ),
