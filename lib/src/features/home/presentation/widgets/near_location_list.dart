@@ -116,7 +116,7 @@ class _NearPitchCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final pitchTheme = context.pitchTheme;
-   final cs = context.colorScheme;
+    final cs = context.colorScheme;
     return GestureDetector(
       onTap: () => context.push(
         AppRoutes.pitchDetails.replaceFirst(':id', pitch.id),
@@ -124,10 +124,10 @@ class _NearPitchCard extends StatelessWidget {
       ),
       child: Container(
         width: 250.w,
-        margin: EdgeInsets.only(right: 20.w ,top: 5.h, bottom: 5.h),
+        margin: EdgeInsets.only(right: 20.w, top: 5.h, bottom: 5.h),
         decoration: BoxDecoration(
-        color:  cs.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(32.r),
+          color: cs.surfaceContainerLow,
+          borderRadius: BorderRadius.circular(32.r),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.2),

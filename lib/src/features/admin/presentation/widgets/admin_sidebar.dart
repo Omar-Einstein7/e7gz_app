@@ -89,10 +89,7 @@ class AdminSidebar extends StatelessWidget {
                     ),
                     Text(
                       'Admin Console',
-                      style: TextStyle(
-                        color: textSecondary,
-                        fontSize: 10,
-                      ),
+                      style: TextStyle(color: textSecondary, fontSize: 10),
                     ),
                   ],
                 ),

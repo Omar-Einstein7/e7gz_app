@@ -17,10 +17,8 @@ class LoyaltyRewardsScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(
-        Icons.arrow_back_ios_new,
-            color: colors.onSurface,
-          ), onPressed: () { 
+          icon: Icon(Icons.arrow_back_ios_new, color: colors.onSurface),
+          onPressed: () {
             context.pop();
           },
         ),
@@ -50,7 +48,7 @@ class LoyaltyRewardsScreen extends StatelessWidget {
                   width: double.infinity,
                   padding: EdgeInsets.all(32.w),
                   decoration: BoxDecoration(
-                    color:  colors.surfaceContainerLow,
+                    color: colors.surfaceContainerLow,
                     borderRadius: BorderRadius.circular(40.r),
                     border: Border.all(
                       color: Colors.white.withValues(alpha: 0.05),
@@ -73,7 +71,7 @@ class LoyaltyRewardsScreen extends StatelessWidget {
                           Text(
                             'profile.e7gzz_points'.tr().toUpperCase(),
                             style: TextStyle(
-                             color: colors.onSurfaceVariant,
+                              color: colors.onSurfaceVariant,
                               fontSize: 10.sp,
                               fontWeight: FontWeight.w900,
                               letterSpacing: 2,
@@ -167,7 +165,7 @@ class LoyaltyRewardsScreen extends StatelessWidget {
                               tier['nextTierInfo'] ??
                                   'profile.next_tier_desc'.tr(),
                               style: TextStyle(
-                              color: colors.onSurfaceVariant,
+                                color: colors.onSurfaceVariant,
                                 fontSize: 12.sp,
                               ),
                             ),

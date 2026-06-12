@@ -111,10 +111,7 @@ class _AdminTopBarState extends State<AdminTopBar> {
           // ── Hamburger (mobile) ──────────────────────────────────
           if (!widget.isDesktop) ...[
             IconButton(
-              icon: Icon(
-                Icons.menu_rounded,
-                color: textSecondary,
-              ),
+              icon: Icon(Icons.menu_rounded, color: textSecondary),
               onPressed: () => Scaffold.of(context).openDrawer(),
               padding: EdgeInsets.zero,
               visualDensity: VisualDensity.compact,
@@ -127,7 +124,10 @@ class _AdminTopBarState extends State<AdminTopBar> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(title, style: AdminTextStyles.getPageTitle(context)),
-              Text('Overview & management', style: AdminTextStyles.getLabel(context)),
+              Text(
+                'Overview & management',
+                style: AdminTextStyles.getLabel(context),
+              ),
             ],
           ),
           const Spacer(),
@@ -153,16 +153,10 @@ class _AdminTopBarState extends State<AdminTopBar> {
                   Expanded(
                     child: TextField(
                       controller: _searchController,
-                      style: TextStyle(
-                        color: textPrimary,
-                        fontSize: 13,
-                      ),
+                      style: TextStyle(color: textPrimary, fontSize: 13),
                       decoration: InputDecoration(
                         hintText: 'Search...',
-                        hintStyle: TextStyle(
-                          color: textMuted,
-                          fontSize: 13,
-                        ),
+                        hintStyle: TextStyle(color: textMuted, fontSize: 13),
                         border: InputBorder.none,
                         isDense: true,
                         contentPadding: EdgeInsets.zero,
