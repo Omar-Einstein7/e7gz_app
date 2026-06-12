@@ -280,7 +280,7 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
             backgroundColor: colors.onSurface,
             elevation: 0,
             leading: IconButton(
-              icon: Icon(
+              icon: const Icon(
                 Icons.arrow_back_ios_new,
                 color: AdminColors.accent,
                 size: 18,

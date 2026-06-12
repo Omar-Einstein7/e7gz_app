@@ -18,6 +18,7 @@ class AdminDataTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final actionWidget = action;
     return AdminCard(
       padding: EdgeInsets.zero,
       child: Column(
@@ -30,7 +31,7 @@ class AdminDataTable extends StatelessWidget {
               children: [
                 Text(title, style: AdminTextStyles.getSectionTitle(context)),
                 const Spacer(),
-                if (action != null) action!,
+                ?actionWidget,
               ],
             ),
           ),

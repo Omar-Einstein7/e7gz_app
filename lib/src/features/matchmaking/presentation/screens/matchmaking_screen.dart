@@ -167,7 +167,7 @@ class _MatchmakingViewState extends State<_MatchmakingView> {
                                   endTime: '19:00',
                                   maxPlayers: 10,
                                   participantIds: ['1', '2', '3'],
-                                  pricePerPlayer: 150.0,
+                                  pricePerPlayer: 150,
                                   skillLevel: 'Beginner',
                                   status: 'open',
                                   sportType: 'football',

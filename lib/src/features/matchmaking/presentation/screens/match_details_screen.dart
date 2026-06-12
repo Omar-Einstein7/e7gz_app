@@ -4,7 +4,6 @@ import 'package:e7gz/src/features/matchmaking/domain/entities/match.dart';
 import 'package:e7gz/src/features/matchmaking/presentation/cubit/matchmaking_cubit.dart';
 import 'package:e7gz/src/features/matchmaking/presentation/cubit/matchmaking_state.dart';
 import 'package:e7gz/src/imports/imports.dart';
-import 'package:e7gz/src/shared/helpers/show_dialog.dart';
 
 class MatchDetailsScreen extends StatefulWidget {
   final String matchId;
@@ -35,7 +34,7 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
           curr.singleMatchStatus == MatchmakingStatus.failure,
       listener: (context, state) {
         if (state.selectedMatch != null) {
-          showAppDialog(
+          showAppDialog<void>(
             child: Center(
               child: Container(
                 margin: const EdgeInsets.symmetric(horizontal: 24),
@@ -155,7 +154,8 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
         ),
         body: BlocBuilder<MatchmakingCubit, MatchmakingState>(
           builder: (context, state) {
-            final isLoading = state.singleMatchStatus == MatchmakingStatus.loading;
+            final isLoading =
+                state.singleMatchStatus == MatchmakingStatus.loading;
 
             if (state.singleMatchStatus == MatchmakingStatus.failure &&
                 state.selectedMatch == null) {
@@ -178,7 +178,7 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
                     endTime: '19:00',
                     maxPlayers: 10,
                     participantIds: ['1', '2', '3'],
-                    pricePerPlayer: 150.0,
+                    pricePerPlayer: 150,
                     skillLevel: 'Beginner',
                     status: 'open',
                     sportType: 'football',
@@ -198,168 +198,173 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
             return Skeletonizer(
               enabled: isLoading,
               child: SingleChildScrollView(
-              padding: EdgeInsets.all(24.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Match Image
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(32.r),
-                    child: AppCachedImage(
-                      imageUrl:
-                          match.pitchImage ??
-                          'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80',
-                      height: 250.h,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
+                padding: EdgeInsets.all(24.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Match Image
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(32.r),
+                      child: AppCachedImage(
+                        imageUrl:
+                            match.pitchImage ??
+                            'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80',
+                        height: 250.h,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 24.h),
-                  Text(
-                    match.title,
-                    style: typography.displaySmall?.copyWith(
-                      color: colors.onSurface,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      Icon(Icons.location_on, color: colors.primary, size: 16),
-                      SizedBox(width: 8.w),
-                      Expanded(
-                        child: Text(
-                          match.pitchName ?? 'Premium Pitch',
-                          style: TextStyle(
-                            color: colors.onSurfaceVariant,
-                            fontSize: 14.sp,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 32.h),
-                  // Info Row
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      _infoCard(
-                        context,
-                        'bookings.date'.tr(),
-                        match.date,
-                        Icons.calendar_today,
-                      ),
-                      _infoCard(
-                        context,
-                        'bookings.time'.tr(),
-                        match.startTime,
-                        Icons.timer,
-                      ),
-                      _infoCard(
-                        context,
-                        'matchmaking.level'.tr(),
-                        match.skillLevel.toUpperCase(),
-                        Icons.bolt,
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 16.h),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      _infoCard(
-                        context,
-                        'matchmaking.slots'.tr(),
-                        '${match.participantIds.length}/${match.maxPlayers}',
-                        Icons.group,
-                      ),
-                      _infoCard(
-                        context,
-                        'matchmaking.price'.tr(),
-                        '${match.pricePerPlayer.toInt()} ${'pitch_details.egp'.tr()}',
-                        Icons.payments,
-                      ),
-                      _infoCard(
-                        context,
-                        'matchmaking.status'.tr(),
-                        match.status.toUpperCase(),
-                        Icons.info,
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 48.h),
-                  Text(
-                    'matchmaking.teams'.tr(),
-                    style: typography.titleLarge?.copyWith(
-                      color: colors.onSurface,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 16.h),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: _teamColumn(
-                          context,
-                          'Team A',
-                          match.teamA,
-                          match.winner == 'teamA',
-                        ),
-                      ),
-                      SizedBox(width: 16.w),
-                      Expanded(
-                        child: _teamColumn(
-                          context,
-                          'Team B',
-                          match.teamB,
-                          match.winner == 'teamB',
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 32.h),
-                  if (match.participants.length < match.maxPlayers) ...[
+                    SizedBox(height: 24.h),
                     Text(
-                      'matchmaking.participants'.tr(),
+                      match.title,
+                      style: typography.displaySmall?.copyWith(
+                        color: colors.onSurface,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.location_on,
+                          color: colors.primary,
+                          size: 16,
+                        ),
+                        SizedBox(width: 8.w),
+                        Expanded(
+                          child: Text(
+                            match.pitchName ?? 'Premium Pitch',
+                            style: TextStyle(
+                              color: colors.onSurfaceVariant,
+                              fontSize: 14.sp,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 32.h),
+                    // Info Row
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        _infoCard(
+                          context,
+                          'bookings.date'.tr(),
+                          match.date,
+                          Icons.calendar_today,
+                        ),
+                        _infoCard(
+                          context,
+                          'bookings.time'.tr(),
+                          match.startTime,
+                          Icons.timer,
+                        ),
+                        _infoCard(
+                          context,
+                          'matchmaking.level'.tr(),
+                          match.skillLevel.toUpperCase(),
+                          Icons.bolt,
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 16.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        _infoCard(
+                          context,
+                          'matchmaking.slots'.tr(),
+                          '${match.participantIds.length}/${match.maxPlayers}',
+                          Icons.group,
+                        ),
+                        _infoCard(
+                          context,
+                          'matchmaking.price'.tr(),
+                          '${match.pricePerPlayer.toInt()} ${'pitch_details.egp'.tr()}',
+                          Icons.payments,
+                        ),
+                        _infoCard(
+                          context,
+                          'matchmaking.status'.tr(),
+                          match.status.toUpperCase(),
+                          Icons.info,
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 48.h),
+                    Text(
+                      'matchmaking.teams'.tr(),
                       style: typography.titleLarge?.copyWith(
                         color: colors.onSurface,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     SizedBox(height: 16.h),
-                    if (match.participants.isEmpty &&
-                        match.participantIds.isEmpty)
-                      Text(
-                        'matchmaking.no_participants'.tr(),
-                        style: TextStyle(color: colors.onSurfaceVariant),
-                      )
-                    else if (match.participants.isEmpty)
-                      ...List.generate(
-                        match.participantIds.length,
-                        (index) => _participantTile(
-                          context,
-                          index,
-                          '${'matchmaking.player'.tr()} ${match.participantIds[index]}',
-                          null,
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: _teamColumn(
+                            context,
+                            'Team A',
+                            match.teamA,
+                            match.winner == 'teamA',
+                          ),
                         ),
-                      )
-                    else
-                      ...List.generate(
-                        match.participants.length,
-                        (index) => _participantTile(
-                          context,
-                          index,
-                          match.participants[index].name,
-                          match.participants[index].photoUrl,
+                        SizedBox(width: 16.w),
+                        Expanded(
+                          child: _teamColumn(
+                            context,
+                            'Team B',
+                            match.teamB,
+                            match.winner == 'teamB',
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 32.h),
+                    if (match.participants.length < match.maxPlayers) ...[
+                      Text(
+                        'matchmaking.participants'.tr(),
+                        style: typography.titleLarge?.copyWith(
+                          color: colors.onSurface,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
+                      SizedBox(height: 16.h),
+                      if (match.participants.isEmpty &&
+                          match.participantIds.isEmpty)
+                        Text(
+                          'matchmaking.no_participants'.tr(),
+                          style: TextStyle(color: colors.onSurfaceVariant),
+                        )
+                      else if (match.participants.isEmpty)
+                        ...List.generate(
+                          match.participantIds.length,
+                          (index) => _participantTile(
+                            context,
+                            index,
+                            '${'matchmaking.player'.tr()} ${match.participantIds[index]}',
+                            null,
+                          ),
+                        )
+                      else
+                        ...List.generate(
+                          match.participants.length,
+                          (index) => _participantTile(
+                            context,
+                            index,
+                            match.participants[index].name,
+                            match.participants[index].photoUrl,
+                          ),
+                        ),
+                    ],
+                    SizedBox(height: 120.h),
                   ],
-                  SizedBox(height: 120.h),
-                ],
+                ),
               ),
-            ));
+            );
           },
         ),
         bottomSheet: BlocBuilder<MatchmakingCubit, MatchmakingState>(
