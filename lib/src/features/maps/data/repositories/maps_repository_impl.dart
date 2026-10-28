@@ -1,6 +1,6 @@
 import 'package:fpdart/fpdart.dart';
-import 'package:e7gz/src/utils/failure.dart';
-import 'package:e7gz/src/utils/typedefs.dart';
+import 'package:e7gz/src/core/services/errors/failure.dart';
+import 'package:e7gz/src/core/services/utils/typedefs.dart';
 import 'package:e7gz/src/features/maps/domain/entities/route_info.dart';
 import 'package:e7gz/src/features/maps/domain/repositories/maps_repository.dart';
 import 'package:e7gz/src/features/maps/data/datasources/maps_remote_datasource.dart';

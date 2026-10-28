@@ -1,3 +1,4 @@
+import 'package:e7gz/src/core/services/errors/failure.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
 

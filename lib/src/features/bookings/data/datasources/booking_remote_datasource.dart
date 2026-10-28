@@ -12,7 +12,7 @@ class BookingRemoteDataSource {
       final params = <String, dynamic>{'status': ?status};
       final result = await _dio.get('bookings', queryParameters: params);
 
-      return result.fold(
+      return await result.fold(
         (failure) {
           logError('Failed to fetch bookings: ${failure.message}');
           throw Exception(failure.message);

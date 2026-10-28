@@ -1,4 +1,4 @@
-import 'package:e7gz/src/utils/typedefs.dart';
+import 'package:e7gz/src/core/services/utils/typedefs.dart';
 import 'package:e7gz/src/features/bookings/domain/entities/booking.dart';
 import 'package:e7gz/src/features/bookings/domain/repositories/booking_repository.dart';
 

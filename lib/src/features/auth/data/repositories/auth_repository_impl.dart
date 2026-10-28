@@ -1,6 +1,6 @@
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
-
+import 'package:e7gz/src/core/services/errors/failure.dart';
 import 'package:e7gz/src/features/auth/domain/entities/user.dart';
 import 'package:e7gz/src/features/auth/domain/repositories/auth_repository.dart';
 import 'package:e7gz/src/features/auth/data/models/user_model.dart';

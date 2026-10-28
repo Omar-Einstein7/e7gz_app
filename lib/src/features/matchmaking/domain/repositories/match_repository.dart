@@ -1,5 +1,6 @@
+import 'package:e7gz/src/core/services/errors/failure.dart';
 import 'package:fpdart/fpdart.dart';
-import 'package:e7gz/src/utils/failure.dart';
+
 import 'package:e7gz/src/features/matchmaking/domain/entities/match.dart';
 import 'package:e7gz/src/features/matchmaking/data/models/match_model.dart';
 

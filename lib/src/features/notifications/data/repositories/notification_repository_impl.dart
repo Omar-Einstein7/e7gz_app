@@ -1,6 +1,6 @@
 import 'package:fpdart/fpdart.dart';
-import 'package:e7gz/src/utils/failure.dart';
-import 'package:e7gz/src/utils/typedefs.dart';
+import 'package:e7gz/src/core/services/errors/failure.dart';
+import 'package:e7gz/src/core/services/utils/typedefs.dart';
 import 'package:e7gz/src/features/notifications/domain/entities/notification.dart';
 import 'package:e7gz/src/features/notifications/domain/repositories/notification_repository.dart';
 import 'package:e7gz/src/features/notifications/data/datasources/notification_remote_datasource.dart';
