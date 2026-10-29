@@ -12,8 +12,7 @@ include: package:flutter_lints/flutter.yaml
 analyzer:
   errors:
     inference_failure_on_untyped_parameter: ignore
-  plugins:
-    - custom_lint
+
   exclude:
     - "**/*.g.dart"
     - "**/*.freezed.dart"
@@ -27,8 +26,7 @@ analyzer:
     - "**/android/app/build/**"
     - "**/android/build/**"
     - "**/web/**"
-    - "**/test/**"
-    - "**/integration_test/**"
+
     - build/**
     - android/**
     - ios/**
@@ -36,9 +34,7 @@ analyzer:
     - windows/**
     - macos/**
     - linux/**
-  strong-mode:
-    implicit-casts: true
-    implicit-dynamic: false
+
   language:
     strict-casts: false
     strict-inference: true
