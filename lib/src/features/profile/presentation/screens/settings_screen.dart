@@ -1,5 +1,5 @@
 import 'package:e7gz/src/theme/cubit/theme_cubit.dart';
-import 'package:e7gz/src/di/injection_container.dart';
+import 'package:e7gz/src/core/di/injection_container.dart';
 import 'package:e7gz/src/imports/imports.dart';
 import 'package:e7gz/src/features/profile/presentation/widgets/profile_tile.dart';
 

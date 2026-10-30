@@ -1,7 +1,7 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:dio/dio.dart';
 
-import 'package:e7gz/src/di/injection_container.dart';
+import 'package:e7gz/src/core/di/injection_container.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 
 /// A reusable generic function to handle potential exceptions in async tasks

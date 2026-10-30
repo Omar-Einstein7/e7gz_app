@@ -3,7 +3,7 @@ import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
 import 'package:e7gz/src/features/pitches/presentation/cubit/pitches_cubit.dart';
 import 'package:e7gz/src/features/pitches/presentation/cubit/pitches_state.dart';
-import 'package:e7gz/src/di/injection_container.dart';
+import 'package:e7gz/src/core/di/injection_container.dart';
 import 'package:e7gz/src/features/pitches/presentation/widgets/widgets.dart';
 
 class PitchDetailsScreen extends StatelessWidget {

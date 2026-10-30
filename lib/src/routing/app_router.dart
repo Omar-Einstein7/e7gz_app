@@ -7,7 +7,7 @@ import 'package:e7gz/src/shared/wrappers/main_wrapper.dart';
 import 'package:e7gz/src/features/admin/presentation/screens/add_pitch_screen.dart';
 import 'package:e7gz/src/features/admin/presentation/screens/admin_dashboard_screen.dart';
 import 'package:e7gz/src/features/admin/presentation/cubit/admin_cubit.dart';
-import 'package:e7gz/src/di/injection_container.dart';
+import 'package:e7gz/src/core/di/injection_container.dart';
 import 'package:e7gz/src/features/profile/presentation/screens/settings_screen.dart';
 import 'package:e7gz/src/features/profile/presentation/screens/edit_profile_screen.dart';
 import 'package:e7gz/src/features/profile/presentation/screens/privacy_policy_screen.dart';

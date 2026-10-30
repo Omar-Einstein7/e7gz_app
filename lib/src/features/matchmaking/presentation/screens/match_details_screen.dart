@@ -1,4 +1,4 @@
-import 'package:e7gz/src/di/injection_container.dart';
+import 'package:e7gz/src/core/di/injection_container.dart';
 import 'package:e7gz/src/features/auth/presentation/cubit/session_cubit.dart';
 import 'package:e7gz/src/features/matchmaking/domain/entities/match.dart';
 import 'package:e7gz/src/features/matchmaking/presentation/cubit/matchmaking_cubit.dart';

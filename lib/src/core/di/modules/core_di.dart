@@ -1,5 +1,6 @@
+import 'package:e7gz/src/core/di/sl.dart';
 import 'package:e7gz/src/core/services/notification_service.dart';
-import 'package:e7gz/src/di/injection_container.dart';
+
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
 import 'package:e7gz/src/theme/cubit/theme_cubit.dart';

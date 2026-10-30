@@ -3,7 +3,7 @@ import 'package:e7gz/src/features/matchmaking/presentation/cubit/matchmaking_sta
 import 'package:e7gz/src/features/matchmaking/data/models/match_model.dart';
 import 'package:e7gz/src/features/pitches/domain/entities/pitch.dart';
 import 'package:e7gz/src/features/search/data/datasources/search_remote_datasource.dart';
-import 'package:e7gz/src/di/injection_container.dart';
+import 'package:e7gz/src/core/di/injection_container.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
 import 'package:e7gz/src/features/matchmaking/presentation/widgets/widgets.dart';

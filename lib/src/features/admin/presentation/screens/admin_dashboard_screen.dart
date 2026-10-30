@@ -8,7 +8,7 @@ import 'package:e7gz/src/features/admin/presentation/screens/tabs/admin_bookings
 import 'package:e7gz/src/features/admin/presentation/screens/tabs/admin_matches_tab.dart';
 import 'package:e7gz/src/features/admin/presentation/screens/tabs/admin_notifications_tab.dart';
 import 'package:e7gz/src/features/admin/presentation/screens/tabs/admin_profile_tab.dart';
-import 'package:e7gz/src/di/injection_container.dart';
+import 'package:e7gz/src/core/di/injection_container.dart';
 
 class AdminDashboardScreen extends StatefulWidget {
   const AdminDashboardScreen({super.key});

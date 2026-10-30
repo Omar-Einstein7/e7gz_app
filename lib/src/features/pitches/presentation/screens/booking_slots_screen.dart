@@ -2,7 +2,7 @@ import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
 import 'package:e7gz/src/features/bookings/presentation/cubit/booking_cubit.dart';
 import 'package:e7gz/src/features/bookings/domain/usecases/booking_usecases.dart';
-import 'package:e7gz/src/di/injection_container.dart';
+import 'package:e7gz/src/core/di/injection_container.dart';
 
 import 'package:e7gz/src/features/pitches/presentation/widgets/pitch_mini_hero.dart';
 import 'package:e7gz/src/features/pitches/presentation/widgets/calendar_strip.dart';

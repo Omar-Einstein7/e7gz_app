@@ -10,8 +10,7 @@ import 'package:e7gz/src/core/di/modules/owner_di.dart';
 import 'package:e7gz/src/core/di/modules/pitches_di.dart';
 import 'package:e7gz/src/core/di/modules/profile_di.dart';
 import 'package:e7gz/src/core/di/modules/search_di.dart';
-
-export 'package:e7gz/src/core/di/injection_container.dart';
+export 'sl.dart';
 
 Future<void> initDependencies() async {
   // Core must come first — feature modules depend on its services.

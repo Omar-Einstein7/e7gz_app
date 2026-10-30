@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:e7gz/src/di/injection_container.dart';
+import 'package:e7gz/src/core/di/sl.dart';
+
 
 
 import 'package:e7gz/src/features/notifications/data/datasources/notification_remote_datasource.dart';
