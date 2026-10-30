@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 
+
 abstract class Failure extends Equatable {
   final String message;
   final dynamic error;
