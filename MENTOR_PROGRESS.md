@@ -2,8 +2,8 @@
 
 ## Status
 - **Current Phase:** Phase 0 (Cleanup & Baseline)
-- **Current Task:** Task 0.1 (Baseline: branch + analyze + test numbers) - complete, awaiting owner confirmation
-- **Branch:** `refactor/baseline` (from `main` @ 01d7b1f)
+- **Current Task:** Task 0.3 (Untrack .env, create .env.example)
+- **Branch:** `refactor/baseline`
 
 > Roadmap below follows the owner-approved plan (this chat); it supersedes the older numbering
 > where Phase 0 contained core-layer moves. Dio/HTTP standardization (old Task 0.2) is folded
@@ -14,19 +14,19 @@
 ## 1. Done
 - [x] Initial codebase audit (lib/src, pubspec.yaml, AGENTS.md, tests, analyzer).
 - [x] Task 0.1: Baseline recorded (see "Baseline numbers"). Branch `refactor/baseline` created.
+- [x] Task 0.2: Remove temporary files and patch scripts from repo root (committed: `dbed0a9`).
+- [x] Task 0.3: Untrack `.env` and create `.env.example` with gitignore exception (committed: `5d8caf1`, `73f1740`).
+- [x] Task 0.4: Tighten `analysis_options.yaml` (clean deprecated configs, remove phantom custom_lint, un-exclude tests, ensure 0 errors) (committed: `0101ad8`).
 
 ---
 
 ## 2. In Progress
-- [ ] Task 0.1 verification by owner. Next: Task 0.2 (Root cleanup: remove temporary files from repo root).
+- [ ] Task 0.5: Run verification checks; write `docs/ARCHITECTURE.md`.
 
 ---
 
 ## 3. Next Tasks
 ### Phase 0 (Cleanup)
-- [ ] Task 0.2: Remove temporary files from repo root (verify each is expendable first).
-- [ ] Task 0.3: Untrack `.env` (gitignore it, keep it as runtime asset for flutter_dotenv), create `.env.example`, owner rotates any exposed keys.
-- [ ] Task 0.4: Tighten `analysis_options.yaml` (no new errors vs baseline). Notes: analyzer excludes `**/test/**` (consider removing); `strong-mode: implicit-casts: true` conflicts with `strict-casts: false`; `custom_lint` plugin declared but package not in dev_dependencies.
 - [ ] Task 0.5: Run verification checks; write `docs/ARCHITECTURE.md`.
 - [ ] Task 0.6: Rename `auth/presentation/providers` -> `auth/presentation/cubit` (contains Cubits: auth_cubit, session_cubit).
 
