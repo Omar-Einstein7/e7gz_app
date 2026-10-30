@@ -2,8 +2,8 @@ import 'package:e7gz/src/imports/imports.dart';
 import 'package:e7gz/src/di/injection_container.dart';
 
 // Auth
-import 'package:e7gz/src/features/auth/presentation/providers/session_cubit.dart';
-import 'package:e7gz/src/features/auth/presentation/providers/auth_cubit.dart';
+import 'package:e7gz/src/features/auth/presentation/cubit/session_cubit.dart';
+import 'package:e7gz/src/features/auth/presentation/cubit/auth_cubit.dart';
 
 // Pitches
 import 'package:e7gz/src/features/pitches/presentation/cubit/pitches_cubit.dart';

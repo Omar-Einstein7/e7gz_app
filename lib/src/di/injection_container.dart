@@ -22,8 +22,8 @@ import 'package:e7gz/src/services/notification_service.dart';
 // ── Auth ─────────────────────────────────────────────────────────────────────
 import 'package:e7gz/src/features/auth/domain/repositories/auth_repository.dart';
 import 'package:e7gz/src/features/auth/data/repositories/auth_repository_impl.dart';
-import 'package:e7gz/src/features/auth/presentation/providers/session_cubit.dart';
-import 'package:e7gz/src/features/auth/presentation/providers/auth_cubit.dart';
+import 'package:e7gz/src/features/auth/presentation/cubit/session_cubit.dart';
+import 'package:e7gz/src/features/auth/presentation/cubit/auth_cubit.dart';
 
 // ── Pitches ──────────────────────────────────────────────────────────────────
 import 'package:e7gz/src/features/pitches/data/datasources/pitch_remote_datasource.dart';

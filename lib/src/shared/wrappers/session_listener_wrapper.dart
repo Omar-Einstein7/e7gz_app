@@ -1,6 +1,7 @@
+import 'package:e7gz/src/features/auth/presentation/cubit/session_state.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:e7gz/src/features/auth/presentation/providers/session_cubit.dart';
+import 'package:e7gz/src/features/auth/presentation/cubit/session_cubit.dart';
 
 // Import Cubits for data triggering
 import 'package:e7gz/src/features/home/presentation/cubit/home_cubit.dart';

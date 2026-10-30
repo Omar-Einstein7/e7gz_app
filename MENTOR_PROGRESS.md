@@ -2,7 +2,7 @@
 
 ## Status
 - **Current Phase:** Phase 0 (Cleanup & Baseline)
-- **Current Task:** Task 0.3 (Untrack .env, create .env.example)
+- **Current Task:** Task 0.6 (Rename auth/presentation/providers -> auth/presentation/cubit)
 - **Branch:** `refactor/baseline`
 
 > Roadmap below follows the owner-approved plan (this chat); it supersedes the older numbering
@@ -17,17 +17,17 @@
 - [x] Task 0.2: Remove temporary files and patch scripts from repo root (committed: `dbed0a9`).
 - [x] Task 0.3: Untrack `.env` and create `.env.example` with gitignore exception (committed: `5d8caf1`, `73f1740`).
 - [x] Task 0.4: Tighten `analysis_options.yaml` (clean deprecated configs, remove phantom custom_lint, un-exclude tests, ensure 0 errors) (committed: `0101ad8`).
+- [x] Task 0.5: Run verification checks; write `docs/ARCHITECTURE.md` (committed: `8668477`).
 
 ---
 
 ## 2. In Progress
-- [ ] Task 0.5: Run verification checks; write `docs/ARCHITECTURE.md`.
+- [ ] Task 0.6: Rename `auth/presentation/providers` -> `auth/presentation/cubit` (contains Cubits: auth_cubit, session_cubit) and update all references.
 
 ---
 
 ## 3. Next Tasks
 ### Phase 0 (Cleanup)
-- [ ] Task 0.5: Run verification checks; write `docs/ARCHITECTURE.md`.
 - [ ] Task 0.6: Rename `auth/presentation/providers` -> `auth/presentation/cubit` (contains Cubits: auth_cubit, session_cubit).
 
 ### Phase 1 (Core)

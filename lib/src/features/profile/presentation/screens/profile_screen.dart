@@ -1,4 +1,5 @@
-import 'package:e7gz/src/features/auth/presentation/providers/session_cubit.dart';
+import 'package:e7gz/src/features/auth/presentation/cubit/session_cubit.dart';
+import 'package:e7gz/src/features/auth/presentation/cubit/session_state.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
 import 'package:e7gz/src/features/profile/presentation/widgets/widgets.dart';

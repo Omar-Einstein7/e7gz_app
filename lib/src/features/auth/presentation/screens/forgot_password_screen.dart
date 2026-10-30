@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:ui';
-import 'package:e7gz/src/features/auth/presentation/providers/auth_cubit.dart';
+import 'package:e7gz/src/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:e7gz/src/features/auth/presentation/cubit/auth_state.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
 import 'package:e7gz/src/features/auth/presentation/widgets/widgets.dart';
