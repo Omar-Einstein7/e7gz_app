@@ -2,7 +2,7 @@
 
 ## Status
 - **Current Phase:** Phase 1 (Core Layer)
-- **Current Task:** Task 1.3 — Split `lib/src/di/injection_container.dart` into per-feature modules
+- **Current Task:** Task 1.4 — Review `global_navigator` (routing/) and `session_listener_wrapper` usage
 - **Branch:** `refactor/baseline`
 
 > Roadmap below follows the owner-approved plan (this chat); it supersedes the older numbering
@@ -21,18 +21,20 @@
 - [x] Task 0.6: Rename `auth/presentation/providers` -> `auth/presentation/cubit` (committed: `2885535`, `4fbeae0`).
 - [x] Task 1.1: Move Failure / error_handler / repository_helper / task_runner / typedefs to core (committed: `6bd33bd`, `0b72c59`, `f89cf5e`).
 - [x] Task 1.2: Unify all services under `core/services` (committed: `830df07`, `e5f17a1`).
+- [x] Task 1.3: Split injection container into modular feature modules under `core/di` and remove legacy `di/` (committed: `b9d27e5`, `0a85b96`).
 
 ---
 
 ## 2. In Progress
-- [ ] Task 1.3: Split `lib/src/di/injection_container.dart` into per-feature modules.
+- [ ] Task 1.4: Review `global_navigator` (routing/) and `session_listener_wrapper` usage.
 
 ---
 
 ## 3. Next Tasks
 ### Phase 1 (Core)
-- [ ] Task 1.3: Split `lib/src/di/injection_container.dart` into per-feature modules.
 - [ ] Task 1.4: Review `global_navigator` (routing/) and `session_listener_wrapper` usage.
+
+### Phase 2 (Features, in order)
 
 ### Phase 2 (Features, in order)
 auth -> pitches -> bookings -> home -> matchmaking -> owner -> admin -> notifications -> maps/search -> profile -> splash/onboarding -> theme.
