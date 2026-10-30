@@ -2,7 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:e7gz/src/features/bookings/domain/entities/booking.dart';
 import 'package:e7gz/src/features/bookings/domain/usecases/booking_usecases.dart';
 import 'package:e7gz/src/features/bookings/presentation/cubit/booking_state.dart';
-import 'package:e7gz/src/services/notification_service.dart';
+import 'package:e7gz/src/core/services/notification_service.dart';
 import 'package:e7gz/src/di/injection_container.dart';
 
 // ─── My Bookings Cubit ────────────────────────────────────────────────────────

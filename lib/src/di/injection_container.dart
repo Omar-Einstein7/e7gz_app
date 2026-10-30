@@ -5,19 +5,19 @@ import 'package:dio/dio.dart';
 import 'package:e7gz/src/config/app_config.dart';
 
 // Services
-import 'package:e7gz/src/services/auth_service.dart';
-import 'package:e7gz/src/services/copy_service.dart';
-import 'package:e7gz/src/services/device_info_service.dart';
-import 'package:e7gz/src/services/dio_service.dart';
-import 'package:e7gz/src/services/internet_connection_service.dart';
-import 'package:e7gz/src/services/location_service.dart';
-import 'package:e7gz/src/services/path_service.dart';
-import 'package:e7gz/src/services/permission_service.dart';
-import 'package:e7gz/src/services/secure_storage_service.dart';
-import 'package:e7gz/src/services/storage_service.dart';
-import 'package:e7gz/src/services/url_launcher_service.dart';
-import 'package:e7gz/src/services/version_update_service.dart';
-import 'package:e7gz/src/services/notification_service.dart';
+import 'package:e7gz/src/core/services/auth_service.dart';
+import 'package:e7gz/src/core/services/copy_service.dart';
+import 'package:e7gz/src/core/services/device_info_service.dart';
+import 'package:e7gz/src/core/services/dio_service.dart';
+import 'package:e7gz/src/core/services/internet_connection_service.dart';
+import 'package:e7gz/src/core/services/location_service.dart';
+import 'package:e7gz/src/core/services/path_service.dart';
+import 'package:e7gz/src/core/services/permission_service.dart';
+import 'package:e7gz/src/core/services/secure_storage_service.dart';
+import 'package:e7gz/src/core/services/storage_service.dart';
+import 'package:e7gz/src/core/services/url_launcher_service.dart';
+import 'package:e7gz/src/core/services/version_update_service.dart';
+import 'package:e7gz/src/core/services/notification_service.dart';
 
 // ── Auth ─────────────────────────────────────────────────────────────────────
 import 'package:e7gz/src/features/auth/domain/repositories/auth_repository.dart';

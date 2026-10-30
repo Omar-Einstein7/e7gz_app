@@ -14,7 +14,7 @@ export '../config/app_config.dart';
 export '../routing/app_router.dart';
 export '../routing/app_routes.dart';
 export '../routing/global_navigator.dart';
-export '../services/services.dart';
+export '../core/services/services.dart';
 export '../shared/shared.dart';
 export '../features/splash/presentation/screens/splash_screen.dart';
 

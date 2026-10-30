@@ -2,7 +2,7 @@ import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
 import 'package:e7gz/src/app.dart';
 import 'package:e7gz/src/di/injection_container.dart';
-import 'package:e7gz/src/services/notification_service.dart';
+import 'package:e7gz/src/core/services/notification_service.dart';
 
 Future<void> main() async {
   // debugRepaintRainbowEnabled = true;
