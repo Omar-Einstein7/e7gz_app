@@ -1,4 +1,3 @@
-import 'package:e7gz/src/core/services/errors/failure.dart';
 import 'package:e7gz/src/features/owner/domain/repositories/owner_repository.dart';
 import 'package:e7gz/src/imports/imports.dart';
 import 'package:e7gz/src/features/pitches/domain/entities/pitch.dart';
