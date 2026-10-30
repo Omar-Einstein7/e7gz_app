@@ -1,8 +1,8 @@
 # Refactoring Progress - e7gz App
 
 ## Status
-- **Current Phase:** Phase 0 (Cleanup & Baseline)
-- **Current Task:** Task 0.6 (Rename auth/presentation/providers -> auth/presentation/cubit)
+- **Current Phase:** Phase 1 (Core Layer)
+- **Current Task:** Task 1.1 — Move `Failure / error_handler / repository_helper / task_runner / typedefs` from `utils` to `core`
 - **Branch:** `refactor/baseline`
 
 > Roadmap below follows the owner-approved plan (this chat); it supersedes the older numbering
