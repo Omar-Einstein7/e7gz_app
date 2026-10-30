@@ -1,6 +1,6 @@
 import 'package:fpdart/fpdart.dart';
-import 'package:e7gz/src/core/services/errors/failure.dart';
-import 'package:e7gz/src/core/services/utils/typedefs.dart';
+import 'package:e7gz/src/core/errors/failure.dart';
+import 'package:e7gz/src/core/utils/typedefs.dart';
 import 'package:e7gz/src/features/profile/domain/entities/reward.dart';
 import 'package:e7gz/src/features/profile/domain/repositories/profile_repository.dart';
 import 'package:e7gz/src/features/profile/data/datasources/profile_remote_datasource.dart';

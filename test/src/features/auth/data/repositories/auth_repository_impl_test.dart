@@ -1,6 +1,6 @@
 import 'package:e7gz/src/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:e7gz/src/services/auth_service.dart';
-import 'package:e7gz/src/core/services/errors/failure.dart';
+import 'package:e7gz/src/core/errors/failure.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:fpdart/fpdart.dart';

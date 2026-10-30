@@ -1,4 +1,4 @@
-import 'package:e7gz/src/core/services/errors/failure.dart';
+import 'package:e7gz/src/core/errors/failure.dart';
 import 'package:fpdart/fpdart.dart';
 
 

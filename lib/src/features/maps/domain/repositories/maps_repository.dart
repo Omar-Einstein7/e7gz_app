@@ -1,4 +1,4 @@
-import 'package:e7gz/src/core/services/utils/typedefs.dart';
+import 'package:e7gz/src/core/utils/typedefs.dart';
 import 'package:e7gz/src/features/maps/domain/entities/route_info.dart';
 
 abstract class MapsRepository {
