@@ -3,7 +3,7 @@
 ## Status
 - **Current Phase:** Phase 2 (Features Refactoring)
 - **Current Feature:** Feature 1 — Auth
-- **Current Task:** Auth Task 1: Clean Domain & Data Imports (Untangle God Barrels)
+- **Current Task:** Auth Task 2: Presentation Layer Cleanup (Cubit & States Explicit Imports)
 - **Branch:** `refactor/baseline`
 
 > Roadmap below follows the owner-approved plan (this chat); it supersedes the older numbering
@@ -24,20 +24,20 @@
 - [x] Task 1.2: Unify all services under `core/services` (committed: `830df07`, `e5f17a1`).
 - [x] Task 1.3: Split injection container into modular feature modules under `core/di` and remove legacy `di/` (committed: `b9d27e5`, `0a85b96`).
 - [x] Task 1.4: Review `global_navigator` (routing/) and `session_listener_wrapper` usage.
+- [x] Feature 1 (Auth) — Task 1: Clean Domain & Data Imports (committed: `6230f77`).
 
 ---
 
 ## 2. In Progress
-- [ ] Feature 1 (Auth) — Task 1: Clean Domain & Data Imports (Untangle God Barrels).
+- [ ] Feature 1 (Auth) — Task 2: Presentation Layer Cleanup (Cubit & States Explicit Imports).
 
 ---
 
 ## 3. Next Tasks
 ### Phase 2 (Features, in order)
 - **Feature 1: Auth**
-  - [ ] Auth Task 1: Clean Domain & Data Imports (remove `core_imports.dart` & `packages_imports.dart`).
-  - [ ] Auth Task 2: Audit Presentation (Cubit + States) & Widgets.
-  - [ ] Auth Task 3: Expand Unit Tests for Auth (AuthCubit & SessionCubit).
+  - [ ] Auth Task 2: Presentation Layer Cleanup (Cubit & States Explicit Imports).
+  - [ ] Auth Task 3: Unit Testing for Auth (AuthCubit & SessionCubit suites).
 - **Remaining Features:**
   pitches -> bookings -> home -> matchmaking -> owner -> admin -> notifications -> maps/search -> profile -> splash/onboarding -> theme.
   Per-feature template: Audit -> Target structure -> Domain -> Data -> Presentation (Cubit + states) -> DI -> Routing -> Tests -> Gate -> Commit.
