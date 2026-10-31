@@ -3,7 +3,7 @@
 ## Status
 - **Current Phase:** Phase 2 (Features Refactoring)
 - **Current Feature:** Feature 1 — Auth
-- **Current Task:** Auth Task 2: Presentation Layer Cleanup (Cubit & States Explicit Imports)
+- **Current Task:** Auth Task 3: Unit Testing for Auth (AuthCubit & SessionCubit suites)
 - **Branch:** `refactor/baseline`
 
 > Roadmap below follows the owner-approved plan (this chat); it supersedes the older numbering
@@ -25,20 +25,22 @@
 - [x] Task 1.3: Split injection container into modular feature modules under `core/di` and remove legacy `di/` (committed: `b9d27e5`, `0a85b96`).
 - [x] Task 1.4: Review `global_navigator` (routing/) and `session_listener_wrapper` usage.
 - [x] Feature 1 (Auth) — Task 1: Clean Domain & Data Imports (committed: `6230f77`).
+- [x] Feature 1 (Auth) — Task 2: Presentation Layer Cleanup (Cubit & States Explicit Imports) (committed: `c5f07ef`).
 
 ---
 
 ## 2. In Progress
-- [ ] Feature 1 (Auth) — Task 2: Presentation Layer Cleanup (Cubit & States Explicit Imports).
+- [ ] Feature 1 (Auth) — Task 3: Unit Testing for Auth (AuthCubit & SessionCubit suites).
 
 ---
 
 ## 3. Next Tasks
 ### Phase 2 (Features, in order)
 - **Feature 1: Auth**
-  - [ ] Auth Task 2: Presentation Layer Cleanup (Cubit & States Explicit Imports).
   - [ ] Auth Task 3: Unit Testing for Auth (AuthCubit & SessionCubit suites).
+- **Feature 2: Pitches** (Audit -> Domain -> Data -> Presentation -> DI -> Tests)
 - **Remaining Features:**
+  bookings -> home -> matchmaking -> owner -> admin -> notifications -> maps/search -> profile -> splash/onboarding -> theme.
   pitches -> bookings -> home -> matchmaking -> owner -> admin -> notifications -> maps/search -> profile -> splash/onboarding -> theme.
   Per-feature template: Audit -> Target structure -> Domain -> Data -> Presentation (Cubit + states) -> DI -> Routing -> Tests -> Gate -> Commit.
 
