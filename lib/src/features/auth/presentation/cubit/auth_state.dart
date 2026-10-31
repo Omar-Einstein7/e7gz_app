@@ -1,4 +1,6 @@
-import 'package:e7gz/src/imports/packages_imports.dart';
+
+
+import 'package:equatable/equatable.dart';
 
 enum AuthStatus { initial, loading, success, failure }
 
