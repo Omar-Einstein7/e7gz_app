@@ -1,4 +1,4 @@
-import 'package:e7gz/src/utils/utils.dart';
+import 'package:e7gz/src/core/utils/typedefs.dart';
 import 'package:e7gz/src/features/auth/domain/entities/user.dart';
 
 abstract class AuthRepository {
