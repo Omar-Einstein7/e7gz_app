@@ -2,8 +2,8 @@
 
 ## Status
 - **Current Phase:** Phase 2 (Features Refactoring)
-- **Current Feature:** Feature 5 — Matchmaking
-- **Current Task:** Matchmaking Task 1: Audit
+- **Current Feature:** Feature 6 — Owner
+- **Current Task:** Owner Task 1: Audit
 - **Branch:** `refactor/baseline`
 
 > Roadmap below follows the owner-approved plan (this chat); it supersedes the older numbering
@@ -38,6 +38,9 @@
 - [x] Feature 3 (Bookings) — Task 2: Fix `CreateBookingCubit` DI violation — injected `NotificationService` via constructor and wired in `bookings_di.dart`.
 - [x] Feature 4 (Home) — Task 1: Standardized `home_repository_impl.dart` using `runTask` and cleaned imports.
 - [x] Feature 4 (Home) — Task 2: Cleaned `home_cubit.dart` imports (replaced God Barrel with explicit `flutter_bloc`).
+- [x] Feature 5 (Matchmaking) — Task 1: Created `CreateMatchRequest` in Domain and removed `MatchModel` dependency from `MatchRepository`.
+- [x] Feature 5 (Matchmaking) — Task 2: Standardized `MatchRepositoryImpl` with `runTask` and cleaned `MatchRemoteDataSource` imports.
+- [x] Feature 5 (Matchmaking) — Task 3: Cleaned `MatchmakingCubit` imports and updated `CreateMatchScreen` to use `CreateMatchRequest`.
 
 ---
 

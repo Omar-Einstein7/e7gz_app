@@ -1,6 +1,6 @@
 import 'package:e7gz/src/features/matchmaking/presentation/cubit/matchmaking_cubit.dart';
 import 'package:e7gz/src/features/matchmaking/presentation/cubit/matchmaking_state.dart';
-import 'package:e7gz/src/features/matchmaking/data/models/match_model.dart';
+import 'package:e7gz/src/features/matchmaking/domain/entities/match.dart';
 import 'package:e7gz/src/features/pitches/domain/entities/pitch.dart';
 import 'package:e7gz/src/features/search/data/datasources/search_remote_datasource.dart';
 import 'package:e7gz/src/core/di/injection_container.dart';
@@ -445,28 +445,21 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
       );
       final sportType = selectedPitch.sportType;
 
-      final match = MatchModel(
-        id: '',
+      final request = CreateMatchRequest(
         title: _titleController.text,
         pitchId: _selectedPitchId!,
-        creatorId: '',
         date: DateFormat('yyyy-MM-dd').format(_selectedDate!),
         startTime: startTimeStr,
         endTime: endTimeStr,
         maxPlayers: int.parse(_maxPlayersController.text),
-        participantIds: const [],
-        participants: const [],
-        teamA: const [],
-        teamB: const [],
         pricePerPlayer: _pricePerPlayer,
         skillLevel: _skillLevel,
-        status: 'open',
         sportType: sportType,
         team: _creationTeam,
       );
 
       final cubit = context.read<MatchmakingCubit>();
-      cubit.createMatch(match).then((_) {
+      cubit.createMatch(request).then((_) {
         if (mounted && cubit.state.status == MatchmakingStatus.success) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('matchmaking.create_success'.tr())),

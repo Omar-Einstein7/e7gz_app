@@ -1,8 +1,6 @@
 import 'package:e7gz/src/features/matchmaking/domain/entities/match.dart';
 
 class MatchModel extends MatchmakingMatch {
-  final String? team;
-
   const MatchModel({
     required super.id,
     required super.title,
@@ -24,7 +22,7 @@ class MatchModel extends MatchmakingMatch {
     super.pitchName,
     super.pitchImage,
     required super.sportType,
-    this.team,
+    super.team,
   });
 
   factory MatchModel.fromJson(Map<String, dynamic> json) {
@@ -99,6 +97,27 @@ class MatchModel extends MatchmakingMatch {
     if (user is String) return user;
     if (user is Map) return user['_id']?.toString() ?? '';
     return '';
+  }
+
+  factory MatchModel.fromEntity(MatchmakingMatch match) {
+    return MatchModel(
+      id: match.id,
+      title: match.title,
+      pitchId: match.pitchId,
+      creatorId: match.creatorId,
+      date: match.date,
+      startTime: match.startTime,
+      endTime: match.endTime,
+      maxPlayers: match.maxPlayers,
+      participantIds: match.participantIds,
+      participants: match.participants,
+      teamA: match.teamA,
+      teamB: match.teamB,
+      pricePerPlayer: match.pricePerPlayer,
+      skillLevel: match.skillLevel,
+      status: match.status,
+      sportType: match.sportType,
+    );
   }
 
   Map<String, dynamic> toJson() => {

@@ -1,23 +1,20 @@
-import 'package:e7gz/src/core/errors/failure.dart';
-import 'package:fpdart/fpdart.dart';
-
+import 'package:e7gz/src/core/utils/typedefs.dart';
 import 'package:e7gz/src/features/matchmaking/domain/entities/match.dart';
-import 'package:e7gz/src/features/matchmaking/data/models/match_model.dart';
 
 abstract class MatchRepository {
-  Future<Either<Failure, List<MatchmakingMatch>>> getMatches({
+  FutureEither<List<MatchmakingMatch>> getMatches({
     String? pitchId,
     String? date,
     String? status,
   });
-  Future<Either<Failure, MatchmakingMatch>> getMatchById(String id);
-  Future<Either<Failure, MatchmakingMatch>> createMatch(MatchModel match);
-  Future<Either<Failure, MatchmakingMatch>> joinMatch(String id, String team);
-  Future<Either<Failure, MatchmakingMatch>> resolveMatch(
+  FutureEither<MatchmakingMatch> getMatchById(String id);
+  FutureEither<MatchmakingMatch> createMatch(CreateMatchRequest request);
+  FutureEither<MatchmakingMatch> joinMatch(String id, String team);
+  FutureEither<MatchmakingMatch> resolveMatch(
     String id,
     String winner,
   );
-  Future<Either<Failure, List<LeaderboardEntry>>> getLeaderboard();
+  FutureEither<List<LeaderboardEntry>> getLeaderboard();
 }
 
 class LeaderboardEntry {

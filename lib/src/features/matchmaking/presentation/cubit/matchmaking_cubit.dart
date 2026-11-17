@@ -1,7 +1,6 @@
-import 'package:e7gz/src/imports/imports.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:e7gz/src/features/matchmaking/domain/entities/match.dart';
 import 'package:e7gz/src/features/matchmaking/domain/repositories/match_repository.dart';
-import 'package:e7gz/src/features/matchmaking/data/models/match_model.dart';
 import 'package:e7gz/src/features/matchmaking/presentation/cubit/matchmaking_state.dart';
 
 class MatchmakingCubit extends Cubit<MatchmakingState> {
@@ -145,9 +144,9 @@ class MatchmakingCubit extends Cubit<MatchmakingState> {
     );
   }
 
-  Future<void> createMatch(MatchModel match) async {
+  Future<void> createMatch(CreateMatchRequest request) async {
     emit(state.copyWith(status: MatchmakingStatus.loading));
-    final result = await repository.createMatch(match);
+    final result = await repository.createMatch(request);
 
     result.fold(
       (failure) => emit(

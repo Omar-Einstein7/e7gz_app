@@ -1,9 +1,8 @@
-import 'package:fpdart/fpdart.dart';
-import 'package:e7gz/src/core/errors/failure.dart';
+import 'package:e7gz/src/core/utils/task_runner.dart';
+import 'package:e7gz/src/core/utils/typedefs.dart';
 import 'package:e7gz/src/features/matchmaking/domain/entities/match.dart';
 import 'package:e7gz/src/features/matchmaking/domain/repositories/match_repository.dart';
 import 'package:e7gz/src/features/matchmaking/data/datasources/match_remote_datasource.dart';
-import 'package:e7gz/src/features/matchmaking/data/models/match_model.dart';
 
 class MatchRepositoryImpl implements MatchRepository {
   final MatchRemoteDataSource remoteDataSource;
@@ -11,76 +10,58 @@ class MatchRepositoryImpl implements MatchRepository {
   MatchRepositoryImpl(this.remoteDataSource);
 
   @override
-  Future<Either<Failure, List<MatchmakingMatch>>> getMatches({
+  FutureEither<List<MatchmakingMatch>> getMatches({
     String? pitchId,
     String? date,
     String? status,
-  }) async {
-    try {
-      final result = await remoteDataSource.getMatches(
+  }) {
+    return runTask(
+      () => remoteDataSource.getMatches(
         pitchId: pitchId,
         date: date,
         status: status,
-      );
-      return right(result);
-    } catch (e) {
-      return left(ServerFailure(e.toString()));
-    }
+      ),
+      requiresNetwork: true,
+    );
   }
 
   @override
-  Future<Either<Failure, MatchmakingMatch>> getMatchById(String id) async {
-    try {
-      final result = await remoteDataSource.getMatchById(id);
-      return right(result);
-    } catch (e) {
-      return left(ServerFailure(e.toString()));
-    }
+  FutureEither<MatchmakingMatch> getMatchById(String id) {
+    return runTask(
+      () => remoteDataSource.getMatchById(id),
+      requiresNetwork: true,
+    );
   }
 
   @override
-  Future<Either<Failure, MatchmakingMatch>> createMatch(
-    MatchModel match,
-  ) async {
-    try {
-      final result = await remoteDataSource.createMatch(match);
-      return right(result);
-    } catch (e) {
-      return left(ServerFailure(e.toString()));
-    }
+  FutureEither<MatchmakingMatch> createMatch(CreateMatchRequest request) {
+    return runTask(
+      () => remoteDataSource.createMatch(request),
+      requiresNetwork: true,
+    );
   }
 
   @override
-  Future<Either<Failure, MatchmakingMatch>> joinMatch(
-    String id,
-    String team,
-  ) async {
-    try {
-      final result = await remoteDataSource.joinMatch(id, team);
-      return right(result);
-    } catch (e) {
-      return left(ServerFailure(e.toString()));
-    }
+  FutureEither<MatchmakingMatch> joinMatch(String id, String team) {
+    return runTask(
+      () => remoteDataSource.joinMatch(id, team),
+      requiresNetwork: true,
+    );
   }
 
   @override
-  Future<Either<Failure, MatchmakingMatch>> resolveMatch(
-    String id,
-    String winner,
-  ) async {
-    try {
-      final result = await remoteDataSource.resolveMatch(id, winner);
-      return right(result);
-    } catch (e) {
-      return left(ServerFailure(e.toString()));
-    }
+  FutureEither<MatchmakingMatch> resolveMatch(String id, String winner) {
+    return runTask(
+      () => remoteDataSource.resolveMatch(id, winner),
+      requiresNetwork: true,
+    );
   }
 
   @override
-  Future<Either<Failure, List<LeaderboardEntry>>> getLeaderboard() async {
-    try {
+  FutureEither<List<LeaderboardEntry>> getLeaderboard() {
+    return runTask(() async {
       final result = await remoteDataSource.getLeaderboard();
-      final entries = result.map((e) {
+      return result.map((e) {
         return LeaderboardEntry(
           id: e['_id']?.toString() ?? '',
           name: e['name']?.toString() ?? 'Player',
@@ -90,9 +71,6 @@ class MatchRepositoryImpl implements MatchRepository {
           matchesPlayed: (e['matchesPlayed'] as num?)?.toInt() ?? 0,
         );
       }).toList();
-      return right(entries);
-    } catch (e) {
-      return left(ServerFailure(e.toString()));
-    }
+    }, requiresNetwork: true);
   }
 }

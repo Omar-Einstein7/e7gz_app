@@ -1,6 +1,7 @@
-import 'package:e7gz/src/imports/core_imports.dart';
+import 'package:e7gz/src/core/services/dio_service.dart';
 import 'package:e7gz/src/features/matchmaking/data/models/match_model.dart';
-
+import 'package:e7gz/src/features/matchmaking/domain/entities/match.dart';
+import 'package:e7gz/src/utils/logger.dart';
 class MatchRemoteDataSource {
   final DioService _dio;
 
@@ -39,13 +40,13 @@ class MatchRemoteDataSource {
     });
   }
 
-  Future<MatchModel> createMatch(MatchModel match) async {
-    final result = await _dio.post('matches', data: match.toJson());
+  Future<MatchModel> createMatch(CreateMatchRequest request) async {
+    final result = await _dio.post('matches', data: request.toJson());
     return result.fold(
       (failure) {
         // Log the detailed error from the backend if available
         if (failure.message.contains('500')) {
-          AppLogger.error('BACKEND ERROR: ${failure.message}');
+          logError('BACKEND ERROR: ${failure.message}');
         }
         throw failure.message;
       },
