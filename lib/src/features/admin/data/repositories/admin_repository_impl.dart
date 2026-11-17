@@ -1,6 +1,5 @@
-import 'package:e7gz/src/imports/core_imports.dart';
-import 'package:e7gz/src/imports/packages_imports.dart';
-
+import 'package:e7gz/src/core/utils/task_runner.dart';
+import 'package:e7gz/src/core/utils/typedefs.dart';
 import 'package:e7gz/src/features/admin/domain/entities/admin_stats.dart';
 import 'package:e7gz/src/features/admin/domain/repositories/admin_repository.dart';
 import 'package:e7gz/src/features/admin/data/datasources/admin_remote_datasource.dart';
@@ -21,107 +20,83 @@ class AdminRepositoryImpl implements AdminRepository {
     : _dataSource = dataSource;
 
   @override
-  FutureEither<AdminStats> getDashboardStats() async {
-    try {
+  FutureEither<AdminStats> getDashboardStats() {
+    return runTask(() async {
       final statsMap = await _dataSource.getDashboardStats();
       final data = statsMap['data'] ?? statsMap;
-      return right(
-        AdminStats(
-          totalRevenue: (data['totalRevenue'] ?? 0).toDouble(),
-          totalBookings: data['totalBookings'] ?? 0,
-          pitchCount: data['pitchCount'] ?? 0,
-          userCount: data['userCount'] ?? 0,
-        ),
+      return AdminStats(
+        totalRevenue: (data['totalRevenue'] ?? 0).toDouble(),
+        totalBookings: data['totalBookings'] ?? 0,
+        pitchCount: data['pitchCount'] ?? 0,
+        userCount: data['userCount'] ?? 0,
       );
-    } catch (e) {
-      return left(ServerFailure('Failed to fetch dashboard stats: $e'));
-    }
+    }, requiresNetwork: true);
   }
 
   @override
-  FutureEither<List<Pitch>> getAllPitches() async {
-    try {
+  FutureEither<List<Pitch>> getAllPitches() {
+    return runTask(() async {
       final rawList = await _dataSource.getAllPitches();
-      final pitches = rawList
+      return rawList
           .map((p) => PitchModel.fromJson(p as Map<String, dynamic>))
           .toList();
-      return right(pitches);
-    } catch (e) {
-      return left(ServerFailure('Failed to fetch all pitches: $e'));
-    }
+    }, requiresNetwork: true);
   }
 
   @override
-  FutureEither<List<Pitch>> getMyPitches() async {
-    try {
+  FutureEither<List<Pitch>> getMyPitches() {
+    return runTask(() async {
       final rawList = await _dataSource.getMyPitches();
-      final pitches = rawList
+      return rawList
           .map((p) => PitchModel.fromJson(p as Map<String, dynamic>))
           .toList();
-      return right(pitches);
-    } catch (e) {
-      return left(ServerFailure('Failed to fetch my pitches: $e'));
-    }
+    }, requiresNetwork: true);
   }
 
   @override
-  FutureEither<List<Booking>> getMyBookings() async {
-    try {
+  FutureEither<List<Booking>> getMyBookings() {
+    return runTask(() async {
       final rawList = await _dataSource.getMyBookings();
-      final bookings = rawList
+      return rawList
           .map((b) => BookingModel.fromJson(b as Map<String, dynamic>))
           .toList();
-      return right(bookings);
-    } catch (e) {
-      return left(ServerFailure('Failed to fetch bookings: $e'));
-    }
+    }, requiresNetwork: true);
   }
 
   @override
-  FutureEither<List<MatchmakingMatch>> getAllMatches() async {
-    try {
+  FutureEither<List<MatchmakingMatch>> getAllMatches() {
+    return runTask(() async {
       final rawList = await _dataSource.getAllMatches();
-      final matches = rawList
+      return rawList
           .map((m) => MatchModel.fromJson(m as Map<String, dynamic>))
           .toList();
-      return right(matches);
-    } catch (e) {
-      return left(ServerFailure('Failed to fetch matches: $e'));
-    }
+    }, requiresNetwork: true);
   }
 
   @override
-  FutureEither<List<AppNotification>> getNotifications() async {
-    try {
+  FutureEither<List<AppNotification>> getNotifications() {
+    return runTask(() async {
       final rawList = await _dataSource.getNotifications();
-      final notifications = rawList
+      return rawList
           .map((n) => AppNotification.fromJson(n as Map<String, dynamic>))
           .toList();
-      return right(notifications);
-    } catch (e) {
-      return left(ServerFailure('Failed to fetch notifications: $e'));
-    }
+    }, requiresNetwork: true);
   }
 
   @override
-  FutureEither<void> markNotificationsAsRead() async {
-    try {
-      await _dataSource.markNotificationsAsRead();
-      return right(null);
-    } catch (e) {
-      return left(ServerFailure('Failed to mark notifications as read: $e'));
-    }
+  FutureEither<void> markNotificationsAsRead() {
+    return runTask(
+      () => _dataSource.markNotificationsAsRead(),
+      requiresNetwork: true,
+    );
   }
 
   @override
-  FutureEither<AppUser> getProfile() async {
-    try {
+  FutureEither<AppUser> getProfile() {
+    return runTask(() async {
       final rawUser = await _dataSource.getProfile();
-      final user = UserModel.fromJson(rawUser);
-      return right(user);
-    } catch (e) {
-      return left(ServerFailure('Failed to fetch profile: $e'));
-    }
+      return UserModel.fromJson(rawUser);
+    }, requiresNetwork: true);
   }
 
   @override
@@ -129,29 +104,29 @@ class AdminRepositoryImpl implements AdminRepository {
     Map<String, dynamic> pitchData, {
     List<List<int>>? multipleImageBytes,
     List<String>? multipleFileNames,
-  }) async {
-    try {
+  }) {
+    return runTask(() async {
       final error = await _dataSource.createPitch(
         pitchData,
         multipleImageBytes: multipleImageBytes,
         multipleFileNames: multipleFileNames,
       );
-      if (error == null) return right(true);
-      return left(ServerFailure(error));
-    } catch (e) {
-      return left(ServerFailure('Failed to create pitch: $e'));
-    }
+      if (error != null) {
+        throw Exception(error);
+      }
+      return true;
+    }, requiresNetwork: true);
   }
 
   @override
-  FutureEither<bool> deletePitch(String id) async {
-    try {
+  FutureEither<bool> deletePitch(String id) {
+    return runTask(() async {
       final success = await _dataSource.deletePitch(id);
-      if (success) return right(true);
-      return left(const ServerFailure('Failed to delete pitch'));
-    } catch (e) {
-      return left(ServerFailure('Failed to delete pitch: $e'));
-    }
+      if (!success) {
+        throw Exception('Failed to delete pitch');
+      }
+      return true;
+    }, requiresNetwork: true);
   }
 
   @override
@@ -160,18 +135,18 @@ class AdminRepositoryImpl implements AdminRepository {
     Map<String, dynamic> pitchData, {
     List<List<int>>? multipleImageBytes,
     List<String>? multipleFileNames,
-  }) async {
-    try {
+  }) {
+    return runTask(() async {
       final error = await _dataSource.updatePitch(
         id,
         pitchData,
         multipleImageBytes: multipleImageBytes,
         multipleFileNames: multipleFileNames,
       );
-      if (error == null) return right(true);
-      return left(ServerFailure(error));
-    } catch (e) {
-      return left(ServerFailure('Failed to update pitch: $e'));
-    }
+      if (error != null) {
+        throw Exception(error);
+      }
+      return true;
+    }, requiresNetwork: true);
   }
 }

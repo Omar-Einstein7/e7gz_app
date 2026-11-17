@@ -2,8 +2,8 @@
 
 ## Status
 - **Current Phase:** Phase 2 (Features Refactoring)
-- **Current Feature:** Feature 7 — Admin
-- **Current Task:** Admin Task 1: Audit
+- **Current Feature:** Feature 8 — Notifications
+- **Current Task:** Notifications Task 1: Audit
 - **Branch:** `refactor/baseline`
 
 > Roadmap below follows the owner-approved plan (this chat); it supersedes the older numbering
@@ -43,6 +43,9 @@
 - [x] Feature 5 (Matchmaking) — Task 3: Cleaned `MatchmakingCubit` imports and updated `CreateMatchScreen` to use `CreateMatchRequest`.
 - [x] Feature 6 (Owner) — Task 1: Standardized `OwnerRepositoryImpl` using `runTask` and removed boilerplate `try/catch`.
 - [x] Feature 6 (Owner) — Task 2: Cleaned `OwnerCubit` imports (replaced God Barrel with explicit imports).
+- [x] Feature 7 (Admin) — Task 1: Cleaned `AdminRepository` imports (`typedefs.dart`).
+- [x] Feature 7 (Admin) — Task 2: Refactored `AdminRepositoryImpl` with `runTask` across all 11 methods, removed God Barrels.
+- [x] Feature 7 (Admin) — Task 3: Cleaned `AdminCubit` imports (replaced `core_imports.dart` with `logger.dart`).
 
 ---
 

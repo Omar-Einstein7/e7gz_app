@@ -1,4 +1,4 @@
-import 'package:e7gz/src/utils/utils.dart';
+import 'package:e7gz/src/core/utils/typedefs.dart';
 import 'package:e7gz/src/features/admin/domain/entities/admin_stats.dart';
 import 'package:e7gz/src/features/pitches/domain/entities/pitch.dart';
 import 'package:e7gz/src/features/bookings/domain/entities/booking.dart';
