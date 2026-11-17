@@ -2,8 +2,8 @@
 
 ## Status
 - **Current Phase:** Phase 2 (Features Refactoring)
-- **Current Feature:** Feature 1 — Auth
-- **Current Task:** Auth Task 3: Unit Testing for Auth (AuthCubit & SessionCubit suites)
+- **Current Feature:** Feature 2 — Pitches
+- **Current Task:** Pitches Task 1: Clean Domain & Data imports
 - **Branch:** `refactor/baseline`
 
 > Roadmap below follows the owner-approved plan (this chat); it supersedes the older numbering
@@ -26,11 +26,14 @@
 - [x] Task 1.4: Review `global_navigator` (routing/) and `session_listener_wrapper` usage.
 - [x] Feature 1 (Auth) — Task 1: Clean Domain & Data Imports (committed: `6230f77`).
 - [x] Feature 1 (Auth) — Task 2: Presentation Layer Cleanup (Cubit & States Explicit Imports) (committed: `c5f07ef`).
+- [~] Feature 1 (Auth) — Task 3: Unit Testing — **DEFERRED** (Omar: "سيبك من التيست دلوقتي"). Will revisit after all features refactored.
 
 ---
 
 ## 2. In Progress
-- [ ] Feature 1 (Auth) — Task 3: Unit Testing for Auth (AuthCubit & SessionCubit suites).
+- [ ] Feature 2 (Pitches) — Task 1: Clean Domain imports (`pitch_usecases.dart`).
+- [ ] Feature 2 (Pitches) — Task 2: Clean Data imports (`pitch_remote_datasource.dart`, `pitch_repository_impl.dart`).
+- [ ] Feature 2 (Pitches) — Task 3: Fix `PitchDetailCubit` violations (direct `sl<>` + `DataSource` calls from Cubit).
 
 ---
 

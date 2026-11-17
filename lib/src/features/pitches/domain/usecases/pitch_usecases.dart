@@ -1,6 +1,6 @@
 import 'package:e7gz/src/features/pitches/domain/entities/pitch.dart';
 import 'package:e7gz/src/features/pitches/domain/repositories/pitch_repository.dart';
-import 'package:e7gz/src/utils/utils.dart';
+import 'package:e7gz/src/core/utils/typedefs.dart'; 
 
 class GetPitchesUseCase {
   final PitchRepository _repository;

@@ -1,6 +1,7 @@
+import 'package:e7gz/src/core/utils/task_runner.dart';
 import 'package:e7gz/src/features/pitches/domain/entities/pitch.dart';
 import 'package:e7gz/src/features/pitches/domain/repositories/pitch_repository.dart';
-import 'package:e7gz/src/imports/core_imports.dart';
+import 'package:e7gz/src/core/utils/typedefs.dart';
 import 'package:e7gz/src/features/pitches/data/datasources/pitch_remote_datasource.dart';
 import 'package:e7gz/src/features/pitches/data/models/pitch_model.dart';
 
