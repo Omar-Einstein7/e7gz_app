@@ -140,7 +140,7 @@ class PitchHeaderDelegate extends SliverPersistentHeaderDelegate {
               borderRadius: BorderRadius.vertical(top: Radius.circular(32.r)),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.05),
+                  color: context.colors.shadow.withValues(alpha: 0.05),
                   blurRadius: 10,
                   offset: const Offset(0, -5),
                 ),
@@ -218,7 +218,7 @@ class _ImagePageViewState extends State<ImagePageView> {
                   BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
                     child: Container(
-                      color: Colors.black.withValues(alpha: 0.2),
+                      color: context.pitchTheme.overlay,
                     ),
                   ),
                   AppCachedImage(
@@ -248,7 +248,7 @@ class _ImagePageViewState extends State<ImagePageView> {
                     vertical: 8.h,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.black.withValues(alpha: 0.3),
+                    color: context.pitchTheme.overlay,
                     borderRadius: BorderRadius.circular(20.r),
                   ),
                   child: SmoothPageIndicator(
@@ -257,8 +257,8 @@ class _ImagePageViewState extends State<ImagePageView> {
                     effect: ExpandingDotsEffect(
                       dotHeight: 4.5.h,
                       dotWidth: 4.5.w,
-                      activeDotColor: Colors.white,
-                      dotColor: Colors.white.withValues(alpha: 0.5),
+                      activeDotColor: context.colors.primary,
+                      dotColor: context.colors.onSurfaceVariant.withValues(alpha: 0.4),
                       expansionFactor: 4,
                       spacing: 8.w,
                     ),
@@ -286,11 +286,11 @@ class CircleActionButton extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(left: 8.w),
       decoration: BoxDecoration(
-        color: Colors.black.withValues(alpha: 0.3),
+        color: context.pitchTheme.overlay,
         shape: BoxShape.circle,
       ),
       child: IconButton(
-        icon: Icon(icon, color: Colors.white, size: 20),
+        icon: Icon(icon, color: context.colors.onPrimary, size: 20),
         onPressed: () {
           HapticFeedback.lightImpact();
           onPressed();
@@ -325,7 +325,7 @@ class _PremiumBadge extends StatelessWidget {
       child: Text(
         'pitch_details.premium_arena'.tr().toUpperCase(),
         style: context.typography.labelSmall?.copyWith(
-          color: Colors.white,
+          color: context.colors.onPrimary,
           fontWeight: FontWeight.w800,
           letterSpacing: 1.2,
         ),
@@ -352,7 +352,7 @@ class _RatingBadge extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const Icon(Icons.star_rounded, color: Color(0xFFFFD700), size: 16),
+          Icon(Icons.star_rounded, color: context.semanticColors.warning, size: 16),
           SizedBox(width: AppSpacing.xs.w),
           Text(
             rating.toString(),

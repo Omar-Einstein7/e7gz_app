@@ -37,7 +37,7 @@ class EmptyPitches extends StatelessWidget {
           ),
           SizedBox(height: AppSpacing.xs.h),
           Text(
-            'Add your first pitch to get started',
+            'List your first pitch to begin accepting bookings',
             style: tt.bodyMedium?.copyWith(color: colors.onSurfaceVariant),
           ),
           SizedBox(height: AppSpacing.xl.h),

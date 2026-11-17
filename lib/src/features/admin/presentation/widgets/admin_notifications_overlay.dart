@@ -1,6 +1,6 @@
+import 'package:e7gz/src/theme/admin_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
-import 'package:e7gz/src/features/admin/presentation/layout/admin_layout.dart';
 
 class AdminNotificationsOverlay extends StatelessWidget {
   const AdminNotificationsOverlay({super.key});

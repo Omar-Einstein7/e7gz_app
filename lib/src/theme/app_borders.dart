@@ -11,24 +11,24 @@ abstract final class AppBorders {
 
   // ── Border Radii ──────────────────────────────────────────────────────────
 
-  /// 4 pt — subtle rounding, used for small chips, badges.
-  static const BorderRadius xs = BorderRadius.all(Radius.circular(4));
+  /// 8 pt — subtle rounding, used for small chips, badges.
+  static const BorderRadius xs = BorderRadius.all(Radius.circular(8));
 
   /// 8 pt — standard rounding for buttons, text fields.
   static const BorderRadius sm = BorderRadius.all(Radius.circular(8));
 
-  /// 24 pt — medium rounding (1.5rem) for internal components.
-  static const BorderRadius md = BorderRadius.all(Radius.circular(24));
+  /// 12 pt — medium rounding for cards, internal components.
+  static const BorderRadius md = BorderRadius.all(Radius.circular(12));
 
-  /// 32 pt — large rounding for modals, bottom sheets.
-  static const BorderRadius lg = BorderRadius.all(Radius.circular(32));
+  /// 16 pt — large rounding for modals, dialogs.
+  static const BorderRadius lg = BorderRadius.all(Radius.circular(16));
 
-  /// 48 pt — extra large rounding (3rem) for stadium cards.
-  static const BorderRadius xl = BorderRadius.all(Radius.circular(48));
+  /// 16 pt — extra large rounding for stadium cards.
+  static const BorderRadius xl = BorderRadius.all(Radius.circular(16));
 
-  /// 28 pt — Material 3 bottom sheet top radius.
+  /// 16 pt — bottom sheet top radius.
   static const BorderRadius bottomSheet = BorderRadius.vertical(
-    top: Radius.circular(28),
+    top: Radius.circular(16),
   );
 
   /// Fully circular (pill/stadium shape).

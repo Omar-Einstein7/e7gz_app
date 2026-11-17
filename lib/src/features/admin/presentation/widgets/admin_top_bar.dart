@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
-import 'package:e7gz/src/features/admin/presentation/layout/admin_layout.dart';
-import 'package:e7gz/src/features/admin/presentation/widgets/admin_notifications_overlay.dart';
 
+import 'package:e7gz/src/features/admin/presentation/widgets/admin_notifications_overlay.dart';
+import 'package:e7gz/src/theme/admin_theme.dart';
 const _titles = [
   'Dashboard',
   'Pitches',

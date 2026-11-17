@@ -24,7 +24,9 @@ class FeaturedPitchesList extends StatelessWidget {
             return Center(
               child: Text(
                 state.errorMessage ?? 'Failed to load pitches',
-                style: TextStyle(color: Colors.redAccent, fontSize: 14.sp),
+                style: context.typography.bodyMedium?.copyWith(
+                  color: context.colors.error,
+                ),
               ),
             );
           }
@@ -34,9 +36,8 @@ class FeaturedPitchesList extends StatelessWidget {
             return Center(
               child: Text(
                 'No pitches available',
-                style: TextStyle(
-                  color: const Color(0xFFBCC7DE),
-                  fontSize: 14.sp,
+                style: context.typography.bodyMedium?.copyWith(
+                  color: context.colors.onSurfaceVariant,
                 ),
               ),
             );
@@ -79,13 +80,13 @@ class FeaturedPitchesList extends StatelessWidget {
                       // Overlay
                       Container(
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(40.r),
+                          borderRadius: BorderRadius.circular(16.r),
                           gradient: LinearGradient(
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
                             colors: [
                               Colors.transparent,
-                              Colors.black.withValues(alpha: 0.8),
+                              colors.shadow.withValues(alpha: 0.85),
                             ],
                           ),
                         ),
@@ -103,16 +104,13 @@ class FeaturedPitchesList extends StatelessWidget {
                                 vertical: 6.h,
                               ),
                               decoration: BoxDecoration(
-                                color: const Color(
-                                  0xFF4BE277,
-                                ).withValues(alpha: 0.2),
+                                color: context.pitchTheme.accentGreen.withValues(alpha: 0.2),
                                 borderRadius: BorderRadius.circular(100.r),
                               ),
                               child: Text(
                                 'ELITE VENUE',
-                                style: TextStyle(
-                                  color: const Color(0xFF4BE277),
-                                  fontSize: 10.sp,
+                                style: typography.labelSmall?.copyWith(
+                                  color: context.pitchTheme.accentGreen,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -130,10 +128,9 @@ class FeaturedPitchesList extends StatelessWidget {
                                         pitch.name,
                                         style: typography.headlineSmall
                                             ?.copyWith(
-                                              color: Colors.white,
+                                              color: colors.onSurface,
                                               fontWeight: FontWeight.w900,
-                                              fontSize: 28.sp,
-                                              height: 1,
+                                              height: 1.1,
                                             ),
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
@@ -141,9 +138,9 @@ class FeaturedPitchesList extends StatelessWidget {
                                       SizedBox(height: 8.h),
                                       Row(
                                         children: [
-                                          const Icon(
+                                          Icon(
                                             Icons.location_on,
-                                            color: Color(0xFFBCC7DE),
+                                            color: colors.onSurfaceVariant,
                                             size: 14,
                                           ),
                                           SizedBox(width: 4.w),
@@ -151,10 +148,9 @@ class FeaturedPitchesList extends StatelessWidget {
                                             child: Text(
                                               pitch
                                                   .location
-                                                  .city, // Display city instead of full location string
-                                              style: TextStyle(
-                                                color: const Color(0xFFBCC7DE),
-                                                fontSize: 12.sp,
+                                                  .city,
+                                              style: typography.bodySmall?.copyWith(
+                                                color: colors.onSurfaceVariant,
                                               ),
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
@@ -177,17 +173,15 @@ class FeaturedPitchesList extends StatelessWidget {
                                     ),
                                     Text(
                                       'EGP',
-                                      style: TextStyle(
+                                      style: typography.labelSmall?.copyWith(
                                         color: colors.primary,
-                                        fontSize: 10.sp,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
                                     Text(
                                       'per hour',
-                                      style: TextStyle(
-                                        color: const Color(0xFFBCC7DE),
-                                        fontSize: 10.sp,
+                                      style: typography.labelSmall?.copyWith(
+                                        color: colors.onSurfaceVariant,
                                       ),
                                     ),
                                   ],

@@ -33,7 +33,13 @@ FutureEither<T> runTask<T>(
     final result = await action();
     return right(result);
   } catch (error, stackTrace) {
-    AppLogger.error('Task execution failed', [error, stackTrace]);
+    AppLogger.error(
+      '[runTask] Exception caught\n'
+      '  type        : ${error.runtimeType}\n'
+      '  error       : $error',
+      error,
+      stackTrace,
+    );
 
     if (error is DioException) {
       return left(ServerFailure.fromDio(error));

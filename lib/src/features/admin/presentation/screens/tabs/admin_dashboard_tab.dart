@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:e7gz/src/features/admin/presentation/cubit/admin_cubit.dart';
 import 'package:e7gz/src/features/admin/presentation/cubit/admin_state.dart';
-
+import 'package:e7gz/src/theme/admin_theme.dart';
 class AdminDashboardTab extends StatefulWidget {
   const AdminDashboardTab({super.key});
 
@@ -206,7 +206,7 @@ class _TopVenuesCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 6),
+                  const SizedBox(height: 8),
                   ClipRRect(
                     borderRadius: BorderRadius.circular(99),
                     child: TweenAnimationBuilder<double>(
@@ -282,7 +282,7 @@ class _RecentActivityCard extends StatelessWidget {
           const SizedBox(height: 16),
           ..._activities.map(
             (a) => Padding(
-              padding: const EdgeInsets.only(bottom: 14),
+              padding: const EdgeInsets.only(bottom: 16),
               child: Row(
                 children: [
                   Container(
@@ -294,7 +294,7 @@ class _RecentActivityCard extends StatelessWidget {
                     ),
                     child: Icon(a.$1, color: a.$2, size: 16),
                   ),
-                  const SizedBox(width: 14),
+                  const SizedBox(width: 12),
                   Expanded(
                     child: Text(
                       a.$3,

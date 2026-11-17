@@ -47,7 +47,7 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.3),
+                      color: colors.shadow.withValues(alpha: 0.15),
                       blurRadius: 24,
                       offset: const Offset(0, 8),
                     ),
@@ -105,11 +105,11 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
                             ),
                             elevation: 0,
                           ),
-                          child: const Text(
+                          child: Text(
                             'OK',
-                            style: TextStyle(
+                            style: typography.titleSmall?.copyWith(
                               fontWeight: FontWeight.bold,
-                              fontSize: 16,
+                              color: colors.onPrimary,
                             ),
                           ),
                         ),
@@ -125,9 +125,9 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
             SnackBar(
               content: Text(
                 state.errorMessage ?? 'matchmaking.error_joining'.tr(),
-                style: const TextStyle(color: Colors.white),
+                style: TextStyle(color: colors.onError),
               ),
-              backgroundColor: Colors.redAccent,
+              backgroundColor: colors.error,
               behavior: SnackBarBehavior.floating,
             ),
           );
@@ -162,7 +162,7 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
               return Center(
                 child: Text(
                   state.errorMessage ?? 'matchmaking.error_loading_match'.tr(),
-                  style: const TextStyle(color: Colors.redAccent),
+                  style: typography.bodyMedium?.copyWith(color: colors.error),
                 ),
               );
             }
@@ -233,9 +233,8 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
                         Expanded(
                           child: Text(
                             match.pitchName ?? 'Premium Pitch',
-                            style: TextStyle(
+                            style: typography.bodyMedium?.copyWith(
                               color: colors.onSurfaceVariant,
-                              fontSize: 14.sp,
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -387,9 +386,7 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
               return Container(
                 padding: EdgeInsets.all(24.w),
                 decoration: BoxDecoration(
-                  color: context.isDarkMode
-                      ? const Color(0xFF131B2E)
-                      : colors.surface,
+                  color: colors.surfaceContainer,
                 ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -424,14 +421,10 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
             return Container(
               padding: EdgeInsets.all(24.w),
               decoration: BoxDecoration(
-                color: context.isDarkMode
-                    ? const Color(0xFF131B2E)
-                    : colors.surface,
+                color: colors.surfaceContainer,
                 border: Border(
                   top: BorderSide(
-                    color: context.isDarkMode
-                        ? Colors.white.withValues(alpha: 0.1)
-                        : colors.outlineVariant,
+                    color: colors.outlineVariant,
                   ),
                 ),
               ),
@@ -462,10 +455,10 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
 
     showModalBottomSheet<void>(
       context: context,
-      backgroundColor: const Color(0xFF131B2E),
+      backgroundColor: context.colors.surfaceContainer,
       isScrollControlled: true,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(32.r)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
       ),
       builder: (modalContext) {
         return Padding(
@@ -482,7 +475,7 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
                 width: 48.w,
                 height: 4.h,
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.2),
+                  color: context.colors.outlineVariant,
                   borderRadius: BorderRadius.circular(4.r),
                 ),
               ),
@@ -490,16 +483,15 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
               Text(
                 'matchmaking.select_team'.tr(),
                 style: context.typography.headlineSmall?.copyWith(
-                  color: Colors.white,
+                  color: context.colors.onSurface,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               SizedBox(height: 8.h),
               Text(
                 'matchmaking.select_team_subtitle'.tr(),
-                style: TextStyle(
-                  color: Colors.white.withValues(alpha: 0.6),
-                  fontSize: 14.sp,
+                style: context.typography.bodyMedium?.copyWith(
+                  color: context.colors.onSurfaceVariant,
                 ),
               ),
               SizedBox(height: 32.h),
@@ -508,7 +500,7 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
                 title: 'Team A',
                 currentPlayers: match.teamA.length,
                 maxPlayers: (match.maxPlayers / 2).floor(),
-                color: const Color(0xFFE44C4C),
+                color: context.colors.error,
                 icon: Icons.shield,
                 onTap: () {
                   Navigator.of(modalContext).pop();
@@ -521,7 +513,7 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
                 title: 'Team B',
                 currentPlayers: match.teamB.length,
                 maxPlayers: (match.maxPlayers / 2).floor(),
-                color: const Color(0xFF4C8CE4),
+                color: context.colors.primary,
                 icon: Icons.security,
                 onTap: () {
                   Navigator.of(modalContext).pop();
@@ -549,17 +541,19 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
 
     return InkWell(
       onTap: isFull ? null : onTap,
-      borderRadius: BorderRadius.circular(24.r),
+      borderRadius: BorderRadius.circular(16.r),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
         padding: EdgeInsets.all(20.w),
         decoration: BoxDecoration(
           color: isFull
-              ? Colors.white.withValues(alpha: 0.05)
+              ? context.colors.surfaceContainerHighest.withValues(alpha: 0.5)
               : color.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(24.r),
+          borderRadius: BorderRadius.circular(16.r),
           border: Border.all(
-            color: isFull ? Colors.white10 : color.withValues(alpha: 0.5),
+            color: isFull
+                ? context.colors.outlineVariant
+                : color.withValues(alpha: 0.5),
             width: 1.5,
           ),
         ),
@@ -568,12 +562,14 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
             Container(
               padding: EdgeInsets.all(12.w),
               decoration: BoxDecoration(
-                color: isFull ? Colors.white10 : color.withValues(alpha: 0.2),
+                color: isFull
+                    ? context.colors.surfaceContainerHighest
+                    : color.withValues(alpha: 0.2),
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 icon,
-                color: isFull ? Colors.white38 : color,
+                color: isFull ? context.colors.onSurfaceVariant : color,
                 size: 24,
               ),
             ),
@@ -584,18 +580,18 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
                 children: [
                   Text(
                     title,
-                    style: TextStyle(
-                      color: isFull ? Colors.white54 : Colors.white,
+                    style: context.typography.titleMedium?.copyWith(
+                      color: isFull
+                          ? context.colors.onSurfaceVariant
+                          : context.colors.onSurface,
                       fontWeight: FontWeight.bold,
-                      fontSize: 18.sp,
                     ),
                   ),
                   SizedBox(height: 4.h),
                   Text(
                     isFull ? 'Team is Full' : 'Available',
-                    style: TextStyle(
-                      color: isFull ? Colors.redAccent : Colors.greenAccent,
-                      fontSize: 12.sp,
+                    style: context.typography.labelMedium?.copyWith(
+                      color: isFull ? context.colors.error : context.colors.primary,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -605,13 +601,17 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
             Container(
               padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
               decoration: BoxDecoration(
-                color: isFull ? Colors.white10 : color.withValues(alpha: 0.2),
+                color: isFull
+                    ? context.colors.surfaceContainerHighest
+                    : color.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(100.r),
               ),
               child: Text(
                 '$currentPlayers / $maxPlayers',
-                style: TextStyle(
-                  color: isFull ? Colors.white54 : Colors.white,
+                style: context.typography.labelMedium?.copyWith(
+                  color: isFull
+                      ? context.colors.onSurfaceVariant
+                      : context.colors.onSurface,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -625,22 +625,27 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
   void _showResolveDialog(BuildContext context, MatchmakingMatch match) {
     showDialog<void>(
       context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF131B2E),
+      builder: (dialogContext) => AlertDialog(
+        backgroundColor: context.colors.surfaceContainer,
         title: Text(
           'matchmaking.who_won'.tr(),
-          style: const TextStyle(color: Colors.white),
+          style: context.typography.titleMedium?.copyWith(
+            color: context.colors.onSurface,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
-              title: const Text(
+              title: Text(
                 'Team A',
-                style: TextStyle(color: Colors.white),
+                style: context.typography.bodyLarge?.copyWith(
+                  color: context.colors.onSurface,
+                ),
               ),
               onTap: () {
-                context.pop();
+                dialogContext.pop();
                 context.read<MatchmakingCubit>().resolveMatch(
                   match.id,
                   'teamA',
@@ -648,12 +653,14 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
               },
             ),
             ListTile(
-              title: const Text(
+              title: Text(
                 'Team B',
-                style: TextStyle(color: Colors.white),
+                style: context.typography.bodyLarge?.copyWith(
+                  color: context.colors.onSurface,
+                ),
               ),
               onTap: () {
-                context.pop();
+                dialogContext.pop();
                 context.read<MatchmakingCubit>().resolveMatch(
                   match.id,
                   'teamB',
@@ -661,9 +668,14 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
               },
             ),
             ListTile(
-              title: const Text('Draw', style: TextStyle(color: Colors.white)),
+              title: Text(
+                'Draw',
+                style: context.typography.bodyLarge?.copyWith(
+                  color: context.colors.onSurface,
+                ),
+              ),
               onTap: () {
-                context.pop();
+                dialogContext.pop();
                 context.read<MatchmakingCubit>().resolveMatch(match.id, 'draw');
               },
             ),
@@ -680,6 +692,7 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
     bool isWinner,
   ) {
     final colors = context.colors;
+    final typography = context.typography;
     final match = context.read<MatchmakingCubit>().state.selectedMatch;
     final int teamMax = (match?.maxPlayers ?? 10) ~/ 2;
     final user = sl<SessionCubit>().state.user;
@@ -701,7 +714,7 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
             ),
             if (isWinner) ...[
               SizedBox(width: 4.w),
-              const Icon(Icons.emoji_events, color: Colors.amber, size: 16),
+              Icon(Icons.emoji_events, color: colors.primary, size: 16),
             ],
           ],
         ),
@@ -730,11 +743,10 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
                 Expanded(
                   child: Text(
                     p.id == user?.id ? 'matchmaking.you'.tr() : p.name,
-                    style: TextStyle(
+                    style: typography.bodyMedium?.copyWith(
                       color: p.id == user?.id
                           ? colors.primary
                           : colors.onSurface,
-                      fontSize: 13.sp,
                       fontWeight: p.id == user?.id
                           ? FontWeight.bold
                           : FontWeight.normal,
@@ -792,11 +804,10 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
                     SizedBox(width: 8.w),
                     Text(
                       'matchmaking.empty_slot'.tr(),
-                      style: TextStyle(
+                      style: typography.bodySmall?.copyWith(
                         color: hasTeam
                             ? colors.onSurfaceVariant.withValues(alpha: 0.3)
                             : colors.onSurfaceVariant,
-                        fontSize: 12.sp,
                       ),
                     ),
                   ],
@@ -816,6 +827,7 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
     IconData icon,
   ) {
     final colors = context.colors;
+    final typography = context.typography;
     final isDark = context.isDarkMode;
 
     return Container(
@@ -823,7 +835,7 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
       padding: EdgeInsets.all(12.w),
       decoration: BoxDecoration(
         color: colors.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(20.r),
+        borderRadius: BorderRadius.circular(16.r),
         border: isDark ? null : Border.all(color: colors.outlineVariant),
       ),
       child: Column(
@@ -832,14 +844,15 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
           SizedBox(height: 8.h),
           Text(
             label,
-            style: TextStyle(color: colors.onSurfaceVariant, fontSize: 10.sp),
+            style: typography.labelSmall?.copyWith(
+              color: colors.onSurfaceVariant,
+            ),
           ),
           Text(
             value,
-            style: TextStyle(
+            style: typography.labelMedium?.copyWith(
               color: colors.onSurface,
               fontWeight: FontWeight.bold,
-              fontSize: 12.sp,
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
@@ -856,6 +869,7 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
     String? photoUrl,
   ) {
     final colors = context.colors;
+    final typography = context.typography;
     final isDark = context.isDarkMode;
 
     return Container(
@@ -870,14 +884,12 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
         children: [
           CircleAvatar(
             radius: 20.r,
-            backgroundColor: isDark
-                ? const Color(0xFF2D3449)
-                : colors.surfaceContainerHighest,
+            backgroundColor: colors.surfaceContainerHighest,
             backgroundImage: photoUrl != null ? NetworkImage(photoUrl) : null,
             child: photoUrl == null
                 ? Icon(
                     Icons.person,
-                    color: isDark ? Colors.white : colors.onSurfaceVariant,
+                    color: colors.onSurfaceVariant,
                     size: 20,
                   )
                 : null,
@@ -885,7 +897,7 @@ class _MatchDetailsScreenState extends State<MatchDetailsScreen> {
           SizedBox(width: 16.w),
           Text(
             name,
-            style: TextStyle(
+            style: typography.bodyMedium?.copyWith(
               color: colors.onSurface,
               fontWeight: FontWeight.bold,
             ),

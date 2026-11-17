@@ -26,7 +26,7 @@ class LoyaltyRewardsScreen extends StatelessWidget {
         title: Text(
           'profile.loyalty_program'.tr(),
           style: tt.headlineSmall?.copyWith(
-            color: Colors.white,
+            color: colors.onSurface,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -50,9 +50,9 @@ class LoyaltyRewardsScreen extends StatelessWidget {
                   padding: EdgeInsets.all(32.w),
                   decoration: BoxDecoration(
                     color: colors.surfaceContainerLow,
-                    borderRadius: BorderRadius.circular(40.r),
+                    borderRadius: BorderRadius.circular(16.r),
                     border: Border.all(
-                      color: Colors.white.withValues(alpha: 0.05),
+                      color: colors.outlineVariant,
                     ),
                   ),
                   child: Stack(
@@ -71,9 +71,8 @@ class LoyaltyRewardsScreen extends StatelessWidget {
                         children: [
                           Text(
                             'profile.e7gzz_points'.tr().toUpperCase(),
-                            style: TextStyle(
+                            style: tt.labelSmall?.copyWith(
                               color: colors.onSurfaceVariant,
-                              fontSize: 10.sp,
                               fontWeight: FontWeight.w900,
                               letterSpacing: 2,
                             ),
@@ -105,10 +104,9 @@ class LoyaltyRewardsScreen extends StatelessWidget {
                                 ),
                                 child: Text(
                                   'profile.pts'.tr(),
-                                  style: TextStyle(
+                                  style: tt.titleMedium?.copyWith(
                                     color: colors.primary,
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 16.sp,
                                   ),
                                 ),
                               ),
@@ -133,7 +131,7 @@ class LoyaltyRewardsScreen extends StatelessWidget {
                   padding: EdgeInsets.all(24.w),
                   decoration: BoxDecoration(
                     color: colors.surfaceContainerLow,
-                    borderRadius: BorderRadius.circular(32.r),
+                    borderRadius: BorderRadius.circular(16.r),
                   ),
                   child: Row(
                     children: [
@@ -141,12 +139,12 @@ class LoyaltyRewardsScreen extends StatelessWidget {
                         width: 56.w,
                         height: 56.w,
                         decoration: BoxDecoration(
-                          color: const Color(0xFFFFD700).withValues(alpha: 0.1),
+                          color: context.semanticColors.warning.withValues(alpha: 0.1),
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(
+                        child: Icon(
                           Icons.star,
-                          color: Color(0xFFFFD700),
+                          color: context.semanticColors.warning,
                           size: 28,
                         ),
                       ),
@@ -165,9 +163,8 @@ class LoyaltyRewardsScreen extends StatelessWidget {
                             Text(
                               tier['nextTierInfo'] ??
                                   'profile.next_tier_desc'.tr(),
-                              style: TextStyle(
+                              style: tt.bodySmall?.copyWith(
                                 color: colors.onSurfaceVariant,
-                                fontSize: 12.sp,
                               ),
                             ),
                           ],
@@ -185,18 +182,16 @@ class LoyaltyRewardsScreen extends StatelessWidget {
                   children: [
                     Text(
                       'profile.available_rewards'.tr().toUpperCase(),
-                      style: TextStyle(
-                        color: const Color(0xFFBCC7DE),
-                        fontSize: 10.sp,
+                      style: tt.labelSmall?.copyWith(
+                        color: colors.onSurfaceVariant,
                         fontWeight: FontWeight.w900,
                         letterSpacing: 1.5,
                       ),
                     ),
                     Text(
                       'profile.view_all'.tr(),
-                      style: TextStyle(
-                        color: const Color(0xFF4BE277),
-                        fontSize: 12.sp,
+                      style: tt.labelMedium?.copyWith(
+                        color: colors.primary,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -208,7 +203,7 @@ class LoyaltyRewardsScreen extends StatelessWidget {
                   Center(
                     child: Text(
                       'profile.no_rewards'.tr(),
-                      style: const TextStyle(color: Color(0xFFBCC7DE)),
+                      style: tt.bodyMedium?.copyWith(color: colors.onSurfaceVariant),
                     ),
                   ),
 
@@ -220,15 +215,16 @@ class LoyaltyRewardsScreen extends StatelessWidget {
                       reward.description,
                       '${reward.pointsCost} PTS',
                       Icons.confirmation_number,
+                      context,
                       onTap: () {
                         showDialog<void>(
                           context: context,
                           builder: (ctx) => AlertDialog(
-                            backgroundColor: const Color(0xFF131B2E),
+                            backgroundColor: colors.surfaceContainer,
                             title: Text(
                               'profile.redeem_dialog_title'.tr(),
                               style: tt.titleLarge?.copyWith(
-                                color: Colors.white,
+                                color: colors.onSurface,
                               ),
                             ),
                             content: Text(
@@ -238,14 +234,14 @@ class LoyaltyRewardsScreen extends StatelessWidget {
                                   'cost': reward.pointsCost.toString(),
                                 },
                               ),
-                              style: const TextStyle(color: Color(0xFFBCC7DE)),
+                              style: tt.bodyMedium?.copyWith(color: colors.onSurfaceVariant),
                             ),
                             actions: [
                               TextButton(
                                 onPressed: () => Navigator.pop(ctx),
                                 child: Text(
                                   'profile.cancel'.tr(),
-                                  style: const TextStyle(color: Colors.white54),
+                                  style: tt.labelMedium?.copyWith(color: colors.onSurfaceVariant),
                                 ),
                               ),
                               AppButton(
@@ -288,17 +284,21 @@ class LoyaltyRewardsScreen extends StatelessWidget {
     String title,
     String subtitle,
     String cost,
-    IconData icon, {
+    IconData icon,
+    BuildContext context, {
     VoidCallback? onTap,
   }) {
+    final colors = context.theme.colorScheme;
+    final tt = context.theme.textTheme;
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.all(20.w),
         decoration: BoxDecoration(
-          color: const Color(0xFF131B2E),
-          borderRadius: BorderRadius.circular(24.r),
-          border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
+          color: colors.surfaceContainer,
+          borderRadius: BorderRadius.circular(16.r),
+          border: Border.all(color: colors.outlineVariant),
         ),
         child: Row(
           children: [
@@ -306,10 +306,10 @@ class LoyaltyRewardsScreen extends StatelessWidget {
               width: 52.w,
               height: 52.w,
               decoration: BoxDecoration(
-                color: const Color(0xFF4BE277).withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(16.r),
+                color: colors.primary.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(12.r),
               ),
-              child: Icon(icon, color: const Color(0xFF4BE277), size: 24),
+              child: Icon(icon, color: colors.primary, size: 24),
             ),
             SizedBox(width: 16.w),
             Expanded(
@@ -318,16 +318,15 @@ class LoyaltyRewardsScreen extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(
-                      color: Colors.white,
+                    style: tt.bodyMedium?.copyWith(
+                      color: colors.onSurface,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   Text(
                     subtitle,
-                    style: const TextStyle(
-                      color: Color(0xFFBCC7DE),
-                      fontSize: 10,
+                    style: tt.labelSmall?.copyWith(
+                      color: colors.onSurfaceVariant,
                     ),
                   ),
                 ],
@@ -335,10 +334,9 @@ class LoyaltyRewardsScreen extends StatelessWidget {
             ),
             Text(
               cost,
-              style: const TextStyle(
-                color: Color(0xFF4BE277),
+              style: tt.labelMedium?.copyWith(
+                color: colors.primary,
                 fontWeight: FontWeight.w900,
-                fontSize: 12,
               ),
             ),
           ],

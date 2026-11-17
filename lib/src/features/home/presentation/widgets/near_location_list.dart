@@ -60,7 +60,9 @@ class _NearLocationListState extends State<NearLocationList> {
             return Center(
               child: Text(
                 state.errorMessage ?? 'Failed to load pitches',
-                style: TextStyle(color: context.colors.error, fontSize: 14.sp),
+                style: context.typography.bodyMedium?.copyWith(
+                  color: context.colors.error,
+                ),
               ),
             );
           }
@@ -70,10 +72,8 @@ class _NearLocationListState extends State<NearLocationList> {
             return Center(
               child: Text(
                 'No pitches nearby',
-                style: TextStyle(
-                  fontFamily: 'Chewy',
-                  color: const Color(0xFFBCC7DE),
-                  fontSize: 14.sp,
+                style: context.typography.bodyMedium?.copyWith(
+                  color: context.colors.onSurfaceVariant,
                 ),
               ),
             );
@@ -127,12 +127,12 @@ class _NearPitchCard extends StatelessWidget {
         margin: EdgeInsets.only(right: 20.w, top: 5.h, bottom: 5.h),
         decoration: BoxDecoration(
           color: cs.surfaceContainerLow,
-          borderRadius: BorderRadius.circular(32.r),
+          borderRadius: BorderRadius.circular(16.r),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.2),
-              blurRadius: 5,
-              offset: const Offset(0, 1),
+              color: cs.shadow.withValues(alpha: 0.08),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
             ),
           ],
         ),
@@ -146,7 +146,7 @@ class _NearPitchCard extends StatelessWidget {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.vertical(
-                      top: Radius.circular(32.r),
+                      top: Radius.circular(16.r),
                     ),
                     child: Hero(
                       tag: 'near_${pitch.id}',
@@ -163,14 +163,14 @@ class _NearPitchCard extends StatelessWidget {
                     child: DecoratedBox(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(32.r),
+                          top: Radius.circular(16.r),
                         ),
                         gradient: LinearGradient(
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
                           colors: [
                             Colors.transparent,
-                            Colors.black.withValues(alpha: 0.4),
+                            cs.shadow.withValues(alpha: 0.35),
                           ],
                         ),
                       ),
@@ -190,10 +190,10 @@ class _NearPitchCard extends StatelessWidget {
                             vertical: 6.h,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.1),
+                            color: pitchTheme.glassSurface,
                             borderRadius: BorderRadius.circular(100.r),
                             border: Border.all(
-                              color: Colors.white.withValues(alpha: 0.15),
+                              color: pitchTheme.glassBorder,
                               width: 1,
                             ),
                           ),
@@ -210,18 +210,16 @@ class _NearPitchCard extends StatelessWidget {
                                 SizedBox(
                                   width: 12.w,
                                   height: 12.h,
-                                  child: const CircularProgressIndicator(
+                                  child: CircularProgressIndicator(
                                     strokeWidth: 2,
-                                    color: Colors.white,
+                                    color: cs.onSurface,
                                   ),
                                 )
                               else
                                 Text(
                                   _getDistanceText(),
-                                  style: TextStyle(
-                                    fontFamily: 'Chewy',
+                                  style: context.typography.labelSmall?.copyWith(
                                     color: cs.onSurface,
-                                    fontSize: 10.sp,
                                     fontWeight: FontWeight.w800,
                                   ),
                                 ),
@@ -247,11 +245,9 @@ class _NearPitchCard extends StatelessWidget {
                       children: [
                         Text(
                           pitch.name,
-                          style: TextStyle(
-                            fontFamily: 'Chewy',
+                          style: context.typography.titleMedium?.copyWith(
                             color: cs.onSurface,
                             fontWeight: FontWeight.w800,
-                            fontSize: 18.sp,
                             height: 1.1,
                           ),
                           maxLines: 1,
@@ -260,19 +256,17 @@ class _NearPitchCard extends StatelessWidget {
                         SizedBox(height: 6.h),
                         Row(
                           children: [
-                            const Icon(
+                            Icon(
                               IconsaxPlusLinear.map_1,
-                              color: Color(0xFFBCC7DE),
+                              color: cs.onSurfaceVariant,
                               size: 14,
                             ),
                             SizedBox(width: 4.w),
                             Expanded(
                               child: Text(
                                 pitch.location.city,
-                                style: TextStyle(
-                                  fontFamily: 'Chewy',
+                                style: context.typography.bodySmall?.copyWith(
                                   color: cs.onSurface,
-                                  fontSize: 13.sp,
                                   fontWeight: FontWeight.w500,
                                 ),
                                 maxLines: 1,
@@ -290,19 +284,15 @@ class _NearPitchCard extends StatelessWidget {
                         RichText(
                           text: TextSpan(
                             text: '${pitch.pricePerHour.toInt()}',
-                            style: TextStyle(
-                              fontFamily: 'Chewy',
+                            style: context.typography.titleMedium?.copyWith(
                               color: cs.onSurface,
                               fontWeight: FontWeight.w800,
-                              fontSize: 18.sp,
                             ),
                             children: [
                               TextSpan(
                                 text: ' EGP',
-                                style: TextStyle(
-                                  fontFamily: 'Chewy',
+                                style: context.typography.labelSmall?.copyWith(
                                   color: pitchTheme.accentGreen,
-                                  fontSize: 10.sp,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -359,10 +349,8 @@ class _AvailabilityBadge extends StatelessWidget {
       ),
       child: Text(
         isAvailable ? 'AVAILABLE' : 'BOOKED',
-        style: TextStyle(
-          fontFamily: 'Chewy',
+        style: context.typography.labelSmall?.copyWith(
           color: color,
-          fontSize: 9.sp,
           fontWeight: FontWeight.w800,
           letterSpacing: 0.5,
         ),

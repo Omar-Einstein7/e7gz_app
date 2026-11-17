@@ -6,7 +6,8 @@ class BookingSuccessScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final tt = context.theme.textTheme;
+    final colors = context.colorScheme;
+    final tt = context.textTheme;
 
     return Scaffold(
       body: SafeArea(
@@ -20,10 +21,10 @@ class BookingSuccessScreen extends StatelessWidget {
                 width: 120.w,
                 height: 120.w,
                 decoration: BoxDecoration(
-                  color: const Color(0xFF4BE277).withValues(alpha: 0.1),
+                  color: colors.primary.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: const Color(0xFF4BE277).withValues(alpha: 0.3),
+                    color: colors.primary.withValues(alpha: 0.3),
                     width: 2,
                   ),
                 ),
@@ -31,13 +32,13 @@ class BookingSuccessScreen extends StatelessWidget {
                   child: Container(
                     width: 80.w,
                     height: 80.w,
-                    decoration: const BoxDecoration(
-                      color: Color(0xFF4BE277),
+                    decoration: BoxDecoration(
+                      color: colors.primary,
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.check,
-                      color: Color(0xFF003915),
+                      color: colors.onPrimary,
                       size: 48,
                     ),
                   ),
@@ -49,52 +50,52 @@ class BookingSuccessScreen extends StatelessWidget {
               Text(
                 'Pitch Ready!',
                 style: tt.displaySmall?.copyWith(
-                  color: Colors.white,
+                  color: colors.onSurface,
                   fontWeight: FontWeight.w900,
                   fontSize: 36.sp,
                 ),
               ).animate().fadeIn(delay: 400.ms).slideY(begin: 0.2),
 
-              SizedBox(height: 14.h),
+              SizedBox(height: 16.h),
 
               Text(
                 'Your booking has been confirmed.\nThe stadium is waiting for you.',
                 textAlign: TextAlign.center,
                 style: tt.bodyMedium?.copyWith(
-                  color: const Color(0xFFBCC7DE),
+                  color: colors.onSurfaceVariant,
                   height: 1.5,
                 ),
               ).animate().fadeIn(delay: 600.ms),
 
-              SizedBox(height: 50.h),
+              SizedBox(height: 48.h),
 
               // Booking Details Card (Glass)
               Container(
                 padding: EdgeInsets.all(32.w),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF131B2E),
-                  borderRadius: BorderRadius.circular(40.r),
+                  color: colors.surfaceContainer,
+                  borderRadius: BorderRadius.circular(16.r),
                   border: Border.all(
-                    color: Colors.white.withValues(alpha: 0.05),
+                    color: colors.outlineVariant,
                   ),
                 ),
                 child: Column(
                   children: [
-                    detailRow('STADIUM', 'Anfield Arena Cairo', tt),
+                    detailRow('STADIUM', 'Anfield Arena Cairo', tt, colors),
                     SizedBox(height: 24.h),
                     Row(
                       children: [
-                        Expanded(child: detailRow('DATE', 'Oct 23, 2023', tt)),
-                        Expanded(child: detailRow('TIME', '21:00 - 22:00', tt)),
+                        Expanded(child: detailRow('DATE', 'Oct 23, 2023', tt, colors)),
+                        Expanded(child: detailRow('TIME', '21:00 - 22:00', tt, colors)),
                       ],
                     ),
                     SizedBox(height: 24.h),
-                    detailRow('TOTAL PAID', '500 EGP', tt, isPrimary: true),
+                    detailRow('TOTAL PAID', '500 EGP', tt, colors, isPrimary: true),
                   ],
                 ),
               ).animate().fadeIn(delay: 800.ms).slideY(begin: 0.1),
 
-              SizedBox(height: 50.h),
+              SizedBox(height: 48.h),
 
               AppButton(
                 label: 'DOWNLOAD TICKET',
@@ -104,16 +105,15 @@ class BookingSuccessScreen extends StatelessWidget {
                 suffixIcon: const Icon(Icons.download),
               ),
 
-              SizedBox(height: 10.h),
+              SizedBox(height: 8.h),
 
               TextButton(
                 onPressed: () => context.go(AppRoutes.home),
                 child: Text(
                   'Back to Home',
-                  style: TextStyle(
-                    color: const Color(0xFFBCC7DE),
+                  style: tt.bodyMedium?.copyWith(
+                    color: colors.onSurfaceVariant,
                     fontWeight: FontWeight.bold,
-                    fontSize: 14.sp,
                   ),
                 ),
               ),
@@ -127,7 +127,8 @@ class BookingSuccessScreen extends StatelessWidget {
   Widget detailRow(
     String label,
     String value,
-    TextTheme tt, {
+    TextTheme tt,
+    ColorScheme colors, {
     bool isPrimary = false,
   }) {
     return Column(
@@ -135,9 +136,8 @@ class BookingSuccessScreen extends StatelessWidget {
       children: [
         Text(
           label,
-          style: TextStyle(
-            color: const Color(0xFFBCC7DE).withValues(alpha: 0.5),
-            fontSize: 10.sp,
+          style: tt.labelSmall?.copyWith(
+            color: colors.onSurfaceVariant,
             fontWeight: FontWeight.w900,
             letterSpacing: 1.5,
           ),
@@ -146,7 +146,7 @@ class BookingSuccessScreen extends StatelessWidget {
         Text(
           value,
           style: tt.titleMedium?.copyWith(
-            color: isPrimary ? const Color(0xFF4BE277) : Colors.white,
+            color: isPrimary ? colors.primary : colors.onSurface,
             fontWeight: FontWeight.bold,
           ),
         ),

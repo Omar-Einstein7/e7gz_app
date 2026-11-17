@@ -1,4 +1,3 @@
-import 'package:e7gz/src/features/admin/presentation/layout/admin_layout.dart';
 import 'package:e7gz/src/features/admin/presentation/widgets/admin_data_table.dart';
 import 'package:e7gz/src/features/bookings/domain/entities/booking.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +7,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:e7gz/src/features/admin/presentation/cubit/admin_cubit.dart';
 import 'package:e7gz/src/features/admin/presentation/cubit/admin_state.dart';
-
+import 'package:e7gz/src/theme/admin_theme.dart';
 class AdminBookingsTab extends StatefulWidget {
   const AdminBookingsTab({super.key});
 

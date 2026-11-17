@@ -4,11 +4,12 @@ import 'package:e7gz/src/features/admin/presentation/cubit/admin_cubit.dart';
 import 'package:e7gz/src/features/admin/presentation/cubit/admin_state.dart';
 import 'package:e7gz/src/imports/core_imports.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
+import 'package:e7gz/src/theme/admin_theme.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart' as loc;
-import 'package:e7gz/src/features/admin/presentation/layout/admin_layout.dart';
+
 
 import 'package:e7gz/src/features/pitches/domain/entities/pitch.dart';
 
@@ -266,7 +267,7 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.mutationError!),
-                backgroundColor: Colors.redAccent,
+                backgroundColor: Theme.of(context).colorScheme.error,
               ),
             );
           }
@@ -334,12 +335,7 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
                                 const SizedBox(height: 8),
                                 Text(
                                   'Add Pix',
-                                  style: TextStyle(
-                                    color: AdminColors.getTextSecondary(
-                                      context,
-                                    ),
-                                    fontSize: 12,
-                                  ),
+                                  style: AdminTextStyles.getLabel(context),
                                 ),
                               ],
                             ),
@@ -368,12 +364,16 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
                                     onTap: () => _removeExistingImage(idx),
                                     child: CircleAvatar(
                                       radius: 12,
-                                      backgroundColor: Colors.redAccent
+                                      backgroundColor: Theme.of(context)
+                                          .colorScheme
+                                          .error
                                           .withValues(alpha: 0.8),
-                                      child: const Icon(
+                                      child: Icon(
                                         Icons.close,
                                         size: 14,
-                                        color: Colors.white,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onError,
                                       ),
                                     ),
                                   ),
@@ -405,13 +405,18 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
                                   top: 4,
                                   child: GestureDetector(
                                     onTap: () => _removeImage(idx),
-                                    child: const CircleAvatar(
+                                    child: CircleAvatar(
                                       radius: 12,
-                                      backgroundColor: Colors.black54,
+                                      backgroundColor: Theme.of(context)
+                                          .colorScheme
+                                          .shadow
+                                          .withValues(alpha: 0.5),
                                       child: Icon(
                                         Icons.close,
                                         size: 14,
-                                        color: Colors.white,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface,
                                       ),
                                     ),
                                   ),
@@ -531,11 +536,10 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
                           alpha: 0.2,
                         ),
                         checkmarkColor: AdminColors.accent,
-                        labelStyle: TextStyle(
+                        labelStyle: AdminTextStyles.getLabel(context).copyWith(
                           color: isSelected
                               ? AdminColors.accent
                               : AdminColors.getTextSecondary(context),
-                          fontSize: 12,
                           fontWeight: isSelected
                               ? FontWeight.bold
                               : FontWeight.normal,
@@ -569,11 +573,10 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
                           size: 14,
                           color: AdminColors.accent,
                         ),
-                        label: const Text(
+                        label: Text(
                           'Current Location',
-                          style: TextStyle(
+                          style: AdminTextStyles.getLabel(context).copyWith(
                             color: AdminColors.accent,
-                            fontSize: 12,
                           ),
                         ),
                       ),
@@ -634,20 +637,22 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
                         ),
                       ),
                       child: isLoading
-                          ? const SizedBox(
+                          ? SizedBox(
                               width: 24,
                               height: 24,
                               child: CircularProgressIndicator(
-                                color: Colors.white,
+                                color: Theme.of(context).colorScheme.onPrimary,
                                 strokeWidth: 2,
                               ),
                             )
                           : Text(
                               _isEdit ? 'UPDATE PITCH' : 'CREATE PITCH',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 15,
-                              ),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleSmall
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
                             ),
                     ),
                   ),
@@ -684,9 +689,8 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
               icon.onPressed?.call();
             }
           },
-          style: TextStyle(
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
             color: AdminColors.getTextPrimary(context),
-            fontSize: 14,
           ),
           decoration: InputDecoration(
             hintText: hint,
@@ -718,9 +722,8 @@ class _AdminAddPitchScreenState extends State<AdminAddPitchScreen> {
         DropdownButtonFormField<String>(
           initialValue: _sportType,
           dropdownColor: AdminColors.surfaceHigh,
-          style: TextStyle(
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
             color: AdminColors.getTextPrimary(context),
-            fontSize: 14,
           ),
           decoration: InputDecoration(
             filled: true,

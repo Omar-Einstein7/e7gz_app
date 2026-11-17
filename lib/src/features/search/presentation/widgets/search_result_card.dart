@@ -71,9 +71,8 @@ class SearchResultCard extends StatelessWidget {
                     ),
                     child: Text(
                       'AVAILABLE TODAY',
-                      style: TextStyle(
+                      style: typography.labelSmall?.copyWith(
                         color: cs.onPrimary,
-                        fontSize: 10.sp,
                         fontWeight: FontWeight.w900,
                       ),
                     ),
@@ -112,9 +111,8 @@ class SearchResultCard extends StatelessWidget {
                                 Expanded(
                                   child: Text(
                                     '${pitch.location.city} • 1.2 km',
-                                    style: TextStyle(
+                                    style: typography.bodySmall?.copyWith(
                                       color: cs.onSurfaceVariant,
-                                      fontSize: 12.sp,
                                     ),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
@@ -140,10 +138,9 @@ class SearchResultCard extends StatelessWidget {
                             SizedBox(width: AppSpacing.xs.w),
                             Text(
                               pitch.rating.toString(),
-                              style: TextStyle(
+                              style: typography.labelMedium?.copyWith(
                                 color: cs.onSurface,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 12.sp,
                               ),
                             ),
                           ],
@@ -161,9 +158,8 @@ class SearchResultCard extends StatelessWidget {
                         children: [
                           Text(
                             'STARTING FROM',
-                            style: TextStyle(
+                            style: typography.labelSmall?.copyWith(
                               color: cs.onSurfaceVariant,
-                              fontSize: 10.sp,
                               fontWeight: FontWeight.w900,
                               letterSpacing: 1,
                             ),
@@ -178,9 +174,8 @@ class SearchResultCard extends StatelessWidget {
                               children: [
                                 TextSpan(
                                   text: ' EGP/HR',
-                                  style: TextStyle(
+                                  style: typography.labelMedium?.copyWith(
                                     color: cs.primary,
-                                    fontSize: 12.sp,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),

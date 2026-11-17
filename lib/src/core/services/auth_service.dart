@@ -31,7 +31,7 @@ class AuthService {
   // ─── Internal token helpers ────────────────────────────────────────────────
 
   Future<void> _saveTokens(String accessToken, String? refreshToken) async {
-    AppLogger.info('💾 Saving new tokens to secure storage');
+    AppLogger.info('Saving new tokens to secure storage');
     await _secureStorage.write(_kAccessTokenKey, accessToken);
     if (refreshToken != null) {
       await _secureStorage.write(_kRefreshTokenKey, refreshToken);
@@ -50,10 +50,15 @@ class AuthService {
     required String password,
   }) async {
     return runTask(() async {
+      AppLogger.info('[AuthService.login] Sending POST auth/login for $email');
       // Use authDio — NO Authorization header sent
       final response = await _authDio.post<dynamic>(
         'auth/login',
         data: {'email': email, 'password': password},
+      );
+      AppLogger.info(
+        '[AuthService.login] Response status: ${response.statusCode}\n'
+        '  raw data: ${response.data}',
       );
       final data = response.data as Map<String, dynamic>;
 
@@ -69,7 +74,7 @@ class AuthService {
         await _saveTokens(accessToken, refreshToken);
       } else {
         AppLogger.warning(
-          '⚠️ Login successful but no token/accessToken found in response',
+          'Login successful but no token/accessToken found in response',
         );
       }
 
@@ -111,7 +116,7 @@ class AuthService {
         await _saveTokens(accessToken, refreshToken);
       } else {
         AppLogger.warning(
-          '⚠️ Signup successful but no token/accessToken found in response',
+          'Signup successful but no token/accessToken found in response',
         );
       }
 
@@ -238,7 +243,7 @@ class AuthService {
       final data = <String, dynamic>{};
 
       if (photoPath != null) {
-        AppLogger.info('🚀 Starting direct profile photo upload...');
+        AppLogger.info('Starting direct profile photo upload...');
         final signatureData = await _getUploadSignature();
         if (signatureData.isNotEmpty) {
           final xfile = XFile(photoPath);
@@ -250,7 +255,7 @@ class AuthService {
           );
           if (url != null) {
             data['photoUrl'] = url;
-            AppLogger.info('✅ Profile photo uploaded: $url');
+            AppLogger.info('Profile photo uploaded: $url');
           }
         }
       }
@@ -259,7 +264,7 @@ class AuthService {
       if (phone != null) data['phone'] = phone;
       if (password != null && password.isNotEmpty) data['password'] = password;
 
-      AppLogger.info('🚀 Sending profile update JSON to backend...');
+      AppLogger.info('Sending profile update JSON to backend...');
       final response = await _dio.put<dynamic>('auth/me', data: data);
       final Map<String, dynamic> responseBody =
           response.data as Map<String, dynamic>;
@@ -274,14 +279,14 @@ class AuthService {
   /// Refreshes the access token using the stored refresh token.
   /// Uses authDio — MUST NOT send Authorization header.
   Future<bool> refreshAccessToken() async {
-    AppLogger.info('🔄 Attempting to refresh access token...');
+    AppLogger.info('Attempting to refresh access token...');
     try {
       final refreshTokenResult = await _secureStorage.read(_kRefreshTokenKey);
       String? storedRefreshToken;
       refreshTokenResult.fold((_) => null, (v) => storedRefreshToken = v);
 
       if (storedRefreshToken == null || storedRefreshToken!.isEmpty) {
-        AppLogger.warning('❌ Refresh token not found in storage');
+        AppLogger.warning('Refresh token not found in storage');
         return false;
       }
 
@@ -296,14 +301,14 @@ class AuthService {
       final newAccessToken = responseData['accessToken']?.toString();
 
       if (newAccessToken != null) {
-        AppLogger.info('✅ Token refreshed successfully');
+        AppLogger.info('Token refreshed successfully');
         await _secureStorage.write(_kAccessTokenKey, newAccessToken);
         return true;
       }
-      AppLogger.warning('❌ Refresh response did not contain a new accessToken');
+      AppLogger.warning('Refresh response did not contain a new accessToken');
       return false;
     } catch (e) {
-      AppLogger.error('❌ Token refresh failed: $e');
+      AppLogger.error('Token refresh failed: $e');
       return false;
     }
   }

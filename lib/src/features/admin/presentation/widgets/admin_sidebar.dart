@@ -1,8 +1,8 @@
 import 'package:e7gz/src/features/auth/presentation/cubit/session_cubit.dart';
 import 'package:e7gz/src/imports/packages_imports.dart';
 import 'package:flutter/material.dart';
-import 'package:e7gz/src/features/admin/presentation/layout/admin_layout.dart';
 
+import 'package:e7gz/src/theme/admin_theme.dart';
 class _NavItem {
   final IconData icon;
   final String label;

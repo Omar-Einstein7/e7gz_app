@@ -22,6 +22,7 @@ class ShiftCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = context.colorScheme;
     final typography = context.typography;
 
     return GestureDetector(
@@ -29,12 +30,14 @@ class ShiftCard extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(24.w),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFF1D2942) : const Color(0xFF131B2E),
-          borderRadius: BorderRadius.circular(32.r),
+          color: isSelected
+              ? cs.surfaceContainerHighest
+              : cs.surfaceContainer,
+          borderRadius: BorderRadius.circular(16.r),
           border: Border.all(
             color: isSelected
-                ? const Color(0xFF4BE277).withValues(alpha: 0.5)
-                : Colors.white.withValues(alpha: 0.05),
+                ? cs.primary.withValues(alpha: 0.5)
+                : cs.outlineVariant,
             width: 1.5,
           ),
           gradient: isSelected
@@ -42,7 +45,7 @@ class ShiftCard extends StatelessWidget {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    const Color(0xFF4BE277).withValues(alpha: 0.1),
+                    cs.primary.withValues(alpha: 0.1),
                     Colors.transparent,
                   ],
                 )
@@ -50,9 +53,9 @@ class ShiftCard extends StatelessWidget {
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: const Color(0xFF4BE277).withValues(alpha: 0.1),
-                    blurRadius: 20,
-                    offset: const Offset(0, 10),
+                    color: cs.primary.withValues(alpha: 0.15),
+                    blurRadius: 16,
+                    offset: const Offset(0, 6),
                   ),
                 ]
               : null,
@@ -63,16 +66,14 @@ class ShiftCard extends StatelessWidget {
               padding: EdgeInsets.all(12.w),
               decoration: BoxDecoration(
                 color: isSelected
-                    ? const Color(0xFF4BE277).withValues(alpha: 0.1)
-                    : const Color(0xFF171F33),
-                borderRadius: BorderRadius.circular(16.r),
+                    ? cs.primary.withValues(alpha: 0.15)
+                    : cs.surfaceContainerHigh,
+                borderRadius: BorderRadius.circular(12.r),
               ),
               child: Icon(
                 icon,
-                color: isSelected
-                    ? const Color(0xFF4BE277)
-                    : const Color(0xFFBCC7DE),
-                size: 24.sp,
+                color: isSelected ? cs.primary : cs.onSurfaceVariant,
+                size: 24,
               ),
             ),
             SizedBox(width: 20.w),
@@ -83,21 +84,17 @@ class ShiftCard extends StatelessWidget {
                   Text(
                     subtitle.toUpperCase(),
                     style: typography.labelSmall?.copyWith(
-                      color: isSelected
-                          ? const Color(0xFF4BE277)
-                          : const Color(0xFFBCC7DE),
+                      color: isSelected ? cs.primary : cs.onSurfaceVariant,
                       fontWeight: FontWeight.w900,
                       letterSpacing: 1.5,
-                      fontSize: 10.sp,
                     ),
                   ),
                   SizedBox(height: 4.h),
                   Text(
                     title,
                     style: typography.titleMedium?.copyWith(
-                      color: Colors.white,
+                      color: cs.onSurface,
                       fontWeight: FontWeight.w900,
-                      fontSize: 18.sp,
                     ),
                   ),
                   SizedBox(height: 8.h),
@@ -105,15 +102,14 @@ class ShiftCard extends StatelessWidget {
                     children: [
                       Icon(
                         Icons.access_time,
-                        color: const Color(0xFFBCC7DE).withValues(alpha: 0.4),
-                        size: 14.sp,
+                        color: cs.onSurfaceVariant,
+                        size: 14,
                       ),
                       SizedBox(width: 6.w),
                       Text(
                         timeRange,
-                        style: TextStyle(
-                          color: const Color(0xFFBCC7DE).withValues(alpha: 0.6),
-                          fontSize: 12.sp,
+                        style: typography.bodySmall?.copyWith(
+                          color: cs.onSurfaceVariant,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -127,17 +123,15 @@ class ShiftCard extends StatelessWidget {
               children: [
                 Text(
                   price,
-                  style: typography.headlineSmall?.copyWith(
-                    color: isSelected ? const Color(0xFF4BE277) : Colors.white,
+                  style: typography.titleLarge?.copyWith(
+                    color: isSelected ? cs.primary : cs.onSurface,
                     fontWeight: FontWeight.w900,
-                    fontSize: 22.sp,
                   ),
                 ),
                 Text(
                   'EGP / HR',
-                  style: TextStyle(
-                    color: const Color(0xFFBCC7DE).withValues(alpha: 0.5),
-                    fontSize: 9.sp,
+                  style: typography.labelSmall?.copyWith(
+                    color: cs.onSurfaceVariant,
                     fontWeight: FontWeight.w800,
                     letterSpacing: 0.5,
                   ),

@@ -16,13 +16,13 @@ class NotificationsScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(IconsaxPlusLinear.arrow_left, color: Colors.white),
+          icon: Icon(IconsaxPlusLinear.arrow_left, color: colors.onSurface),
           onPressed: () => context.pop(),
         ),
         title: Text(
           'nav.notifications'.tr(),
           style: tt.titleLarge?.copyWith(
-            color: Colors.white,
+            color: colors.onSurface,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -32,9 +32,8 @@ class NotificationsScreen extends StatelessWidget {
             onPressed: () => context.read<NotificationsCubit>().markAllRead(),
             child: Text(
               'Mark as read',
-              style: TextStyle(
+              style: tt.labelMedium?.copyWith(
                 color: colors.primary,
-                fontSize: 12.sp,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -54,17 +53,16 @@ class NotificationsScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(
+                  Icon(
                     IconsaxPlusLinear.notification,
-                    color: Color(0xFFBCC7DE),
+                    color: colors.onSurfaceVariant,
                     size: 64,
                   ),
                   SizedBox(height: 16.h),
                   Text(
                     'No notifications yet',
-                    style: TextStyle(
-                      color: const Color(0xFFBCC7DE),
-                      fontSize: 14.sp,
+                    style: tt.bodyMedium?.copyWith(
+                      color: colors.onSurfaceVariant,
                     ),
                   ),
                 ],
@@ -89,6 +87,7 @@ class NotificationsScreen extends StatelessWidget {
                     icon: _getIconForType(n.type),
                     isUnread: !n.isRead,
                     colors: colors,
+                    tt: tt,
                   ),
                 );
               },
@@ -119,12 +118,13 @@ class NotificationsScreen extends StatelessWidget {
     }
   }
 
-  Widget sectionHeader(String title) {
+  Widget sectionHeader(String title, BuildContext context) {
+    final tt = context.theme.textTheme;
+    final colors = context.theme.colorScheme;
     return Text(
       title,
-      style: TextStyle(
-        color: const Color(0xFFBCC7DE).withValues(alpha: 0.5),
-        fontSize: 10.sp,
+      style: tt.labelSmall?.copyWith(
+        color: colors.onSurfaceVariant,
         fontWeight: FontWeight.w900,
         letterSpacing: 2,
       ),
@@ -138,16 +138,17 @@ class NotificationsScreen extends StatelessWidget {
     required IconData icon,
     required bool isUnread,
     required ColorScheme colors,
+    required TextTheme tt,
   }) {
     return Container(
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
-        color: isUnread ? const Color(0xFF131B2E) : Colors.transparent,
-        borderRadius: BorderRadius.circular(24.r),
+        color: isUnread ? colors.surfaceContainer : Colors.transparent,
+        borderRadius: BorderRadius.circular(16.r),
         border: Border.all(
           color: isUnread
-              ? colors.primary.withValues(alpha: 0.1)
-              : Colors.white.withValues(alpha: 0.05),
+              ? colors.primary.withValues(alpha: 0.15)
+              : colors.outlineVariant,
         ),
       ),
       child: Row(
@@ -157,12 +158,12 @@ class NotificationsScreen extends StatelessWidget {
             width: 48.w,
             height: 48.w,
             decoration: BoxDecoration(
-              color: const Color(0xFF171F33),
-              borderRadius: BorderRadius.circular(16.r),
+              color: colors.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(12.r),
             ),
             child: Icon(
               icon,
-              color: isUnread ? colors.primary : const Color(0xFFBCC7DE),
+              color: isUnread ? colors.primary : colors.onSurfaceVariant,
               size: 24,
             ),
           ),
@@ -176,19 +177,17 @@ class NotificationsScreen extends StatelessWidget {
                   children: [
                     Text(
                       title,
-                      style: TextStyle(
-                        color: Colors.white,
+                      style: tt.bodyMedium?.copyWith(
+                        color: colors.onSurface,
                         fontWeight: isUnread
                             ? FontWeight.bold
                             : FontWeight.w600,
-                        fontSize: 14.sp,
                       ),
                     ),
                     Text(
                       time,
-                      style: const TextStyle(
-                        color: Color(0xFFBCC7DE),
-                        fontSize: 10,
+                      style: tt.labelSmall?.copyWith(
+                        color: colors.onSurfaceVariant,
                       ),
                     ),
                   ],
@@ -196,9 +195,8 @@ class NotificationsScreen extends StatelessWidget {
                 SizedBox(height: 6.h),
                 Text(
                   body,
-                  style: TextStyle(
-                    color: const Color(0xFFBCC7DE).withValues(alpha: 0.8),
-                    fontSize: 12.sp,
+                  style: tt.bodySmall?.copyWith(
+                    color: colors.onSurfaceVariant,
                     height: 1.4,
                   ),
                 ),

@@ -51,11 +51,11 @@ class AuthCubit extends Cubit<AuthState> {
   }) async {
     final role = state.selectedRole;
     if (role == null) {
-      AppLogger.warning('🚩 signUp called but selectedRole is null');
+      AppLogger.warning('signUp called but selectedRole is null');
       return;
     }
 
-    AppLogger.info('🚀 signing up as $role');
+    AppLogger.info('signing up as $role');
     emit(state.copyWith(status: AuthStatus.loading));
 
     final result = await _repository.signUp(

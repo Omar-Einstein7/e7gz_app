@@ -179,7 +179,7 @@ class AdminRemoteDataSource {
 
       // Handle direct uploads if bytes are provided
       if (multipleImageBytes != null && multipleImageBytes.isNotEmpty) {
-        AppLogger.info('🚀 Starting direct uploads to Cloudinary...');
+        AppLogger.info('Starting direct uploads to Cloudinary...');
         final signatureData = await getUploadSignature();
         if (signatureData.isEmpty) return 'Failed to get upload signature';
 
@@ -207,7 +207,7 @@ class AdminRemoteDataSource {
         finalPayload['images'] = [...currentImages, ...uploadedUrls];
       }
 
-      AppLogger.info('🚀 Sending final JSON payload to backend...');
+      AppLogger.info('Sending final JSON payload to backend...');
       final response = await _dio.post<dynamic>('pitches', data: finalPayload);
 
       if (response.statusCode == 201 || response.statusCode == 200) {
@@ -262,7 +262,7 @@ class AdminRemoteDataSource {
 
       // Handle direct uploads if bytes are provided
       if (multipleImageBytes != null && multipleImageBytes.isNotEmpty) {
-        AppLogger.info('🚀 Starting direct uploads to Cloudinary...');
+        AppLogger.info('Starting direct uploads to Cloudinary...');
         final signatureData = await getUploadSignature();
         if (signatureData.isEmpty) return 'Failed to get upload signature';
 
@@ -287,12 +287,12 @@ class AdminRemoteDataSource {
         finalPayload['newImages'] = uploadedUrls;
       }
 
-      AppLogger.info('🚀 Sending final JSON payload to pitches/$id');
+      AppLogger.info('Sending final JSON payload to pitches/$id');
       final response = await _dio.put<dynamic>(
         'pitches/$id',
         data: finalPayload,
       );
-      AppLogger.info('✅ PUT response received: ${response.statusCode}');
+      AppLogger.info('PUT response received: ${response.statusCode}');
 
       if (response.statusCode == 200 ||
           response.statusCode == 201 ||

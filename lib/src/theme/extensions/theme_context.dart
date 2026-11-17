@@ -20,13 +20,19 @@ extension ThemeContextExtension on BuildContext {
   TextTheme get typography => textTheme;
 
   /// Access to [AppColorsExtension].
-  AppColorsExtension get appColors => theme.extension<AppColorsExtension>()!;
+  AppColorsExtension get appColors =>
+      theme.extension<AppColorsExtension>() ??
+      (isDarkMode ? AppPalettes.dark : AppPalettes.light);
 
   /// Access to [SemanticColors] extension.
-  SemanticColors get semanticColors => theme.extension<SemanticColors>()!;
+  SemanticColors get semanticColors =>
+      theme.extension<SemanticColors>() ??
+      (isDarkMode ? SemanticColors.dark : SemanticColors.light);
 
   /// Access to [PitchColors] extension.
-  PitchColors get pitchColors => theme.extension<PitchColors>()!;
+  PitchColors get pitchColors =>
+      theme.extension<PitchColors>() ??
+      (isDarkMode ? PitchColors.dark : PitchColors.light);
 
   /// Alias for [pitchColors].
   PitchColors get pitchTheme => pitchColors;

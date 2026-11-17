@@ -42,10 +42,10 @@ class _BookingSummaryView extends StatelessWidget {
         elevation: 0,
         title: Text(
           'bookings.review_title'.tr(),
-          style: typography.titleLarge?.copyWith(color: Colors.white),
+          style: typography.titleLarge?.copyWith(color: colors.onSurface),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back, color: colors.onSurface),
           onPressed: () => context.pop(),
         ),
       ),
@@ -58,7 +58,7 @@ class _BookingSummaryView extends StatelessWidget {
             return Center(
               child: Text(
                 state.errorMessage ?? 'bookings.failed_load'.tr(),
-                style: const TextStyle(color: Colors.redAccent),
+                style: typography.bodyMedium?.copyWith(color: colors.error),
               ),
             );
           }
@@ -68,7 +68,7 @@ class _BookingSummaryView extends StatelessWidget {
             return Center(
               child: Text(
                 'bookings.pitch_not_found'.tr(),
-                style: const TextStyle(color: Colors.white),
+                style: typography.bodyMedium?.copyWith(color: colors.onSurface),
               ),
             );
           }
@@ -78,46 +78,52 @@ class _BookingSummaryView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildPitchCard(pitch, typography),
+                _buildPitchCard(pitch, typography, colors),
                 SizedBox(height: 32.h),
-                _buildSectionTitle('bookings.details_title'.tr(), typography),
+                _buildSectionTitle('bookings.details_title'.tr(), typography, colors),
                 SizedBox(height: 16.h),
                 _buildDetailTile(
                   'bookings.date'.tr(),
                   date,
                   Icons.calendar_today,
                   colors,
+                  typography,
                 ),
                 _buildDetailTile(
                   'bookings.time'.tr(),
                   time,
                   Icons.access_time,
                   colors,
+                  typography,
                 ),
                 _buildDetailTile(
                   'bookings.duration'.tr(),
                   'bookings.duration_value'.tr(),
                   Icons.timer,
                   colors,
+                  typography,
                 ),
                 SizedBox(height: 32.h),
-                _buildSectionTitle('bookings.payment_summary'.tr(), typography),
+                _buildSectionTitle('bookings.payment_summary'.tr(), typography, colors),
                 SizedBox(height: 16.h),
                 _buildPriceRow(
                   'bookings.court_price'.tr(),
                   '${pitch.pricePerHour} ${'pitch_details.egp'.tr()}',
                   typography,
+                  colors,
                 ),
                 _buildPriceRow(
                   'bookings.service_fee'.tr(),
                   '20 ${'pitch_details.egp'.tr()}',
                   typography,
+                  colors,
                 ),
-                const Divider(color: Colors.white10),
+                Divider(color: colors.outlineVariant),
                 _buildPriceRow(
                   'bookings.total_amount'.tr(),
                   '${pitch.pricePerHour + 20} ${'pitch_details.egp'.tr()}',
                   typography,
+                  colors,
                   isTotal: true,
                 ),
                 SizedBox(height: 100.h),
@@ -132,9 +138,9 @@ class _BookingSummaryView extends StatelessWidget {
           return Container(
             padding: EdgeInsets.all(24.w),
             decoration: BoxDecoration(
-              color: const Color(0xFF131B2E),
+              color: colors.surfaceContainer,
               border: Border(
-                top: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
+                top: BorderSide(color: colors.outlineVariant),
               ),
             ),
             child: AppButton(
@@ -156,12 +162,12 @@ class _BookingSummaryView extends StatelessWidget {
     );
   }
 
-  Widget _buildPitchCard(Pitch pitch, typography) {
+  Widget _buildPitchCard(Pitch pitch, TextTheme typography, ColorScheme colors) {
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: const Color(0xFF131B2E),
-        borderRadius: BorderRadius.circular(24.r),
+        color: colors.surfaceContainer,
+        borderRadius: BorderRadius.circular(16.r),
       ),
       child: Row(
         children: [
@@ -172,7 +178,7 @@ class _BookingSummaryView extends StatelessWidget {
             width: 80.w,
             height: 80.w,
             fit: BoxFit.cover,
-            borderRadius: BorderRadius.circular(16.r),
+            borderRadius: BorderRadius.circular(12.r),
           ),
           SizedBox(width: 16.w),
           Expanded(
@@ -182,13 +188,15 @@ class _BookingSummaryView extends StatelessWidget {
                 Text(
                   pitch.name,
                   style: typography.titleMedium?.copyWith(
-                    color: Colors.white,
+                    color: colors.onSurface,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
                   pitch.location.city,
-                  style: const TextStyle(color: Color(0xFFBCC7DE)),
+                  style: typography.bodySmall?.copyWith(
+                    color: colors.onSurfaceVariant,
+                  ),
                 ),
               ],
             ),
@@ -198,11 +206,11 @@ class _BookingSummaryView extends StatelessWidget {
     );
   }
 
-  Widget _buildSectionTitle(String title, typography) {
+  Widget _buildSectionTitle(String title, TextTheme typography, ColorScheme colors) {
     return Text(
       title,
       style: typography.titleLarge?.copyWith(
-        color: Colors.white,
+        color: colors.onSurface,
         fontWeight: FontWeight.bold,
       ),
     );
@@ -213,24 +221,30 @@ class _BookingSummaryView extends StatelessWidget {
     String value,
     IconData icon,
     ColorScheme colors,
+    TextTheme typography,
   ) {
     return Container(
       margin: EdgeInsets.only(bottom: 12.h),
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: const Color(0xFF131B2E),
+        color: colors.surfaceContainer,
         borderRadius: BorderRadius.circular(16.r),
       ),
       child: Row(
         children: [
           Icon(icon, color: colors.primary, size: 20),
           SizedBox(width: 16.w),
-          Text(label, style: const TextStyle(color: Color(0xFFBCC7DE))),
+          Text(
+            label,
+            style: typography.bodyMedium?.copyWith(
+              color: colors.onSurfaceVariant,
+            ),
+          ),
           const Spacer(),
           Text(
             value,
-            style: const TextStyle(
-              color: Colors.white,
+            style: typography.bodyMedium?.copyWith(
+              color: colors.onSurface,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -242,7 +256,8 @@ class _BookingSummaryView extends StatelessWidget {
   Widget _buildPriceRow(
     String label,
     String price,
-    typography, {
+    TextTheme typography,
+    ColorScheme colors, {
     bool isTotal = false,
   }) {
     return Padding(
@@ -252,15 +267,15 @@ class _BookingSummaryView extends StatelessWidget {
         children: [
           Text(
             label,
-            style: TextStyle(
-              color: isTotal ? Colors.white : const Color(0xFFBCC7DE),
+            style: typography.bodyMedium?.copyWith(
+              color: isTotal ? colors.onSurface : colors.onSurfaceVariant,
               fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
             ),
           ),
           Text(
             price,
             style: typography.titleLarge?.copyWith(
-              color: isTotal ? const Color(0xFF4BE277) : Colors.white,
+              color: isTotal ? colors.primary : colors.onSurface,
               fontWeight: FontWeight.bold,
             ),
           ),

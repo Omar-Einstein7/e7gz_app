@@ -65,23 +65,24 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final tt = context.theme.textTheme;
+    final cs = context.colorScheme;
+    final tt = context.textTheme;
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(
+          icon: Icon(
             Icons.arrow_back_ios_new_outlined,
-            color: Colors.white,
+            color: cs.onSurface,
           ),
           onPressed: () => context.pop(),
         ),
         title: Text(
           'matchmaking.host_title'.tr(),
           style: tt.titleLarge?.copyWith(
-            color: Colors.white,
+            color: cs.onSurface,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -98,9 +99,10 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
               ),
               TextFormField(
                 controller: _titleController,
-                style: const TextStyle(color: Colors.white),
+                style: TextStyle(color: cs.onSurface),
                 decoration: _inputDecoration(
                   'matchmaking.match_title_hint'.tr(),
+                  cs,
                 ),
                 validator: (v) => v!.isEmpty ? 'auth.required'.tr() : null,
               ),
@@ -112,10 +114,11 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
               else
                 DropdownButtonFormField<String>(
                   initialValue: _selectedPitchId,
-                  dropdownColor: const Color(0xFF131B2E),
-                  style: const TextStyle(color: Colors.white),
+                  dropdownColor: cs.surfaceContainer,
+                  style: TextStyle(color: cs.onSurface),
                   decoration: _inputDecoration(
                     'matchmaking.choose_location'.tr(),
+                    cs,
                   ),
                   items: _availablePitches
                       .map(
@@ -140,21 +143,21 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                           label: 'bookings.date'.tr().toUpperCase(),
                         ),
                         InkWell(
-                          onTap: _pickDate,
+                          onTap: () => _pickDate(cs),
                           child: Container(
                             padding: EdgeInsets.symmetric(
                               horizontal: 20.w,
                               vertical: 16.h,
                             ),
                             decoration: BoxDecoration(
-                              color: const Color(0xFF131B2E),
-                              borderRadius: BorderRadius.circular(20.r),
+                              color: cs.surfaceContainer,
+                              borderRadius: BorderRadius.circular(16.r),
                             ),
                             child: Row(
                               children: [
-                                const Icon(
+                                Icon(
                                   IconsaxPlusLinear.calendar_1,
-                                  color: Colors.white24,
+                                  color: cs.onSurfaceVariant,
                                   size: 20,
                                 ),
                                 SizedBox(width: 12.w),
@@ -166,8 +169,8 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                                         ).format(_selectedDate!),
                                   style: TextStyle(
                                     color: _selectedDate == null
-                                        ? Colors.white24
-                                        : Colors.white,
+                                        ? cs.onSurfaceVariant
+                                        : cs.onSurface,
                                   ),
                                 ),
                               ],
@@ -191,7 +194,7 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                           label: 'matchmaking.start_time'.tr(),
                         ),
                         InkWell(
-                          onTap: () => _pickTime(true),
+                          onTap: () => _pickTime(true, cs),
                           child: MatchmakingTimeBox(
                             text: _startTime?.format(context) ?? '00:00',
                             isSelected: _startTime != null,
@@ -209,7 +212,7 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                           label: 'matchmaking.end_time'.tr(),
                         ),
                         InkWell(
-                          onTap: () => _pickTime(false),
+                          onTap: () => _pickTime(false, cs),
                           child: MatchmakingTimeBox(
                             text: _endTime?.format(context) ?? '00:00',
                             isSelected: _endTime != null,
@@ -234,8 +237,8 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                         TextFormField(
                           controller: _maxPlayersController,
                           keyboardType: TextInputType.number,
-                          style: const TextStyle(color: Colors.white),
-                          decoration: _inputDecoration('10'),
+                          style: TextStyle(color: cs.onSurface),
+                          decoration: _inputDecoration('10', cs),
                           validator: (v) =>
                               v!.isEmpty ? 'auth.required'.tr() : null,
                         ),
@@ -253,8 +256,8 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                         TextFormField(
                           initialValue: '150',
                           keyboardType: TextInputType.number,
-                          style: const TextStyle(color: Colors.white),
-                          decoration: _inputDecoration('150'),
+                          style: TextStyle(color: cs.onSurface),
+                          decoration: _inputDecoration('150', cs),
                           onChanged: (v) => setState(
                             () => _pricePerPlayer = double.tryParse(v) ?? 0,
                           ),
@@ -274,9 +277,9 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                   MatchmakingFieldLabel(label: 'matchmaking.skill_level'.tr()),
                   DropdownButtonFormField<String>(
                     initialValue: _skillLevel,
-                    dropdownColor: const Color(0xFF131B2E),
-                    style: const TextStyle(color: Colors.white),
-                    decoration: _inputDecoration(''),
+                    dropdownColor: cs.surfaceContainer,
+                    style: TextStyle(color: cs.onSurface),
+                    decoration: _inputDecoration('', cs),
                     items: ['all', 'beginner', 'intermediate', 'advanced']
                         .map(
                           (s) => DropdownMenuItem(
@@ -304,13 +307,13 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                         padding: EdgeInsets.symmetric(vertical: 16.h),
                         decoration: BoxDecoration(
                           color: _creationTeam == 'teamA'
-                              ? const Color(0xFFE44C4C).withValues(alpha: 0.2)
-                              : const Color(0xFF131B2E),
-                          borderRadius: BorderRadius.circular(20.r),
+                              ? cs.error.withValues(alpha: 0.15)
+                              : cs.surfaceContainer,
+                          borderRadius: BorderRadius.circular(16.r),
                           border: Border.all(
                             color: _creationTeam == 'teamA'
-                                ? const Color(0xFFE44C4C)
-                                : Colors.transparent,
+                                ? cs.error
+                                : cs.outlineVariant,
                           ),
                         ),
                         child: Center(
@@ -318,8 +321,8 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                             'Team A',
                             style: TextStyle(
                               color: _creationTeam == 'teamA'
-                                  ? Colors.white
-                                  : Colors.white24,
+                                  ? cs.error
+                                  : cs.onSurfaceVariant,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -335,13 +338,13 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                         padding: EdgeInsets.symmetric(vertical: 16.h),
                         decoration: BoxDecoration(
                           color: _creationTeam == 'teamB'
-                              ? const Color(0xFF4C8CE4).withValues(alpha: 0.2)
-                              : const Color(0xFF131B2E),
-                          borderRadius: BorderRadius.circular(20.r),
+                              ? cs.primary.withValues(alpha: 0.15)
+                              : cs.surfaceContainer,
+                          borderRadius: BorderRadius.circular(16.r),
                           border: Border.all(
                             color: _creationTeam == 'teamB'
-                                ? const Color(0xFF4C8CE4)
-                                : Colors.transparent,
+                                ? cs.primary
+                                : cs.outlineVariant,
                           ),
                         ),
                         child: Center(
@@ -349,8 +352,8 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                             'Team B',
                             style: TextStyle(
                               color: _creationTeam == 'teamB'
-                                  ? Colors.white
-                                  : Colors.white24,
+                                  ? cs.primary
+                                  : cs.onSurfaceVariant,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -381,58 +384,36 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
     );
   }
 
-  InputDecoration _inputDecoration(String hint) {
+  InputDecoration _inputDecoration(String hint, ColorScheme cs) {
     return InputDecoration(
       hintText: hint,
-      hintStyle: const TextStyle(color: Colors.white24),
+      hintStyle: TextStyle(color: cs.onSurfaceVariant),
       filled: true,
-      fillColor: const Color(0xFF131B2E),
+      fillColor: cs.surfaceContainer,
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(20.r),
+        borderRadius: BorderRadius.circular(16.r),
         borderSide: BorderSide.none,
       ),
       contentPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
     );
   }
 
-  Future<void> _pickDate() async {
+  Future<void> _pickDate(ColorScheme cs) async {
     final picked = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime.now(),
       lastDate: DateTime.now().add(const Duration(days: 30)),
-      builder: (context, child) => Theme(
-        data: Theme.of(context).copyWith(
-          colorScheme: const ColorScheme.dark(
-            primary: Color(0xFF4BE277),
-            onPrimary: Colors.black,
-            surface: Color(0xFF131B2E),
-            onSurface: Colors.white,
-          ),
-        ),
-        child: child!,
-      ),
     );
     if (picked != null) setState(() => _selectedDate = picked);
   }
 
-  Future<void> _pickTime(bool isStart) async {
+  Future<void> _pickTime(bool isStart, ColorScheme cs) async {
     final picked = await showTimePicker(
       context: context,
       initialTime: isStart
           ? const TimeOfDay(hour: 20, minute: 0)
           : const TimeOfDay(hour: 21, minute: 0),
-      builder: (context, child) => Theme(
-        data: Theme.of(context).copyWith(
-          colorScheme: const ColorScheme.dark(
-            primary: Color(0xFF4BE277),
-            onPrimary: Colors.black,
-            surface: Color(0xFF131B2E),
-            onSurface: Colors.white,
-          ),
-        ),
-        child: child!,
-      ),
     );
     if (picked != null) {
       setState(() {

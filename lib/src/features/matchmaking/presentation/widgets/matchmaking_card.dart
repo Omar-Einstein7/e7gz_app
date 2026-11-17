@@ -16,26 +16,20 @@ class MatchmakingCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final typography = context.typography;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final theme = Theme.of(context);
-    final cardBg = isDark
-        ? const Color(0xFF131B2E)
-        : theme.colorScheme.surfaceContainerLow;
-    final textColor = isDark ? Colors.white : theme.colorScheme.onSurface;
-    final subtitleColor = isDark
-        ? const Color(0xFFBCC7DE)
-        : theme.colorScheme.onSurfaceVariant;
-    final shadowColor = isDark
-        ? Colors.black.withValues(alpha: 0.2)
-        : theme.colorScheme.shadow.withValues(alpha: 0.05);
+    final cs = theme.colorScheme;
+    final cardBg = cs.surfaceContainer;
+    final textColor = cs.onSurface;
+    final subtitleColor = cs.onSurfaceVariant;
+    final shadowColor = cs.shadow.withValues(alpha: 0.08);
 
     return GestureDetector(
       onTap: onTap,
       child: DecoratedBox(
         decoration: BoxDecoration(
           color: cardBg,
-          borderRadius: BorderRadius.circular(40.r),
-          boxShadow: [BoxShadow(color: shadowColor, blurRadius: 20)],
+          borderRadius: BorderRadius.circular(16.r),
+          boxShadow: [BoxShadow(color: shadowColor, blurRadius: 16)],
         ),
         child: Column(
           children: [
@@ -44,7 +38,7 @@ class MatchmakingCard extends StatelessWidget {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(40.r),
+                    top: Radius.circular(16.r),
                   ),
                   child: AppCachedImage(
                     imageUrl:
@@ -64,18 +58,13 @@ class MatchmakingCard extends StatelessWidget {
                       vertical: 6.h,
                     ),
                     decoration: BoxDecoration(
-                      color: match.isFull
-                          ? Colors.red
-                          : (isDark
-                                ? const Color(0xFF4BE277)
-                                : theme.colorScheme.primary),
+                      color: match.isFull ? cs.error : cs.primary,
                       borderRadius: BorderRadius.circular(100.r),
                     ),
                     child: Text(
                       match.isFull ? 'FULL' : '${match.slotsLeft} SLOTS LEFT',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 10.sp,
+                      style: typography.labelSmall?.copyWith(
+                        color: cs.onPrimary,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -113,9 +102,8 @@ class MatchmakingCard extends StatelessWidget {
                                 SizedBox(width: 4.w),
                                 Text(
                                   match.pitchName ?? 'Premium Pitch',
-                                  style: TextStyle(
+                                  style: typography.bodySmall?.copyWith(
                                     color: subtitleColor,
-                                    fontSize: 12.sp,
                                   ),
                                 ),
                               ],
@@ -129,17 +117,14 @@ class MatchmakingCard extends StatelessWidget {
                           Text(
                             '${match.pricePerPlayer.toInt()}',
                             style: typography.titleLarge?.copyWith(
-                              color: isDark
-                                  ? const Color(0xFF4BE277)
-                                  : theme.colorScheme.primary,
+                              color: cs.primary,
                               fontWeight: FontWeight.w900,
                             ),
                           ),
                           Text(
                             'EGP / PLAYER',
-                            style: TextStyle(
+                            style: typography.labelSmall?.copyWith(
                               color: subtitleColor,
-                              fontSize: 8.sp,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -150,21 +135,21 @@ class MatchmakingCard extends StatelessWidget {
                   SizedBox(height: 20.h),
                   Row(
                     children: [
-                      // Participants Avatars (Mock for now)
+                      // Participants Avatars
                       SizedBox(
                         width: 80.w,
                         child: Stack(
                           children: [
                             CircleAvatar(
                               radius: 14.r,
-                              backgroundColor: Colors.grey,
+                              backgroundColor: cs.surfaceContainerHighest,
                             ),
                             if (match.participantIds.length > 1)
                               Positioned(
                                 left: 20.w,
                                 child: CircleAvatar(
                                   radius: 14.r,
-                                  backgroundColor: Colors.blueGrey,
+                                  backgroundColor: cs.surfaceContainerHighest,
                                 ),
                               ),
                           ],
@@ -172,9 +157,8 @@ class MatchmakingCard extends StatelessWidget {
                       ),
                       Text(
                         '+${match.participantIds.length}',
-                        style: TextStyle(
+                        style: typography.labelMedium?.copyWith(
                           color: subtitleColor,
-                          fontSize: 12.sp,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -184,9 +168,8 @@ class MatchmakingCard extends StatelessWidget {
                         children: [
                           Text(
                             'KICKOFF',
-                            style: TextStyle(
+                            style: typography.labelSmall?.copyWith(
                               color: subtitleColor,
-                              fontSize: 8.sp,
                               fontWeight: FontWeight.w900,
                               letterSpacing: 1,
                             ),

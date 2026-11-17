@@ -106,7 +106,7 @@ class OwnerHomeScreen extends StatelessWidget {
 
                 // Greeting
                 Text(
-                  'Welcome back,',
+                  'Pitch Operations',
                   style: tt.bodySmall?.copyWith(color: colors.onSurfaceVariant),
                 ),
                 Text(

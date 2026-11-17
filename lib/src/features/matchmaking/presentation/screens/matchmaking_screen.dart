@@ -39,15 +39,10 @@ class _MatchmakingViewState extends State<_MatchmakingView> {
     final colors = context.colors;
     final typography = context.typography;
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
 
-    final textColor = isDark ? Colors.white : theme.colorScheme.onSurface;
-    final secondaryTextColor = isDark
-        ? const Color(0xFFBCC7DE)
-        : theme.colorScheme.onSurfaceVariant;
-    final cardBg = isDark
-        ? const Color(0xFF131B2E)
-        : theme.colorScheme.surfaceContainerLow;
+    final textColor = theme.colorScheme.onSurface;
+    final secondaryTextColor = theme.colorScheme.onSurfaceVariant;
+    final cardBg = theme.colorScheme.surfaceContainer;
 
     return Scaffold(
       appBar: AppBar(
@@ -74,8 +69,8 @@ class _MatchmakingViewState extends State<_MatchmakingView> {
               SnackBar(
                 content: Text(state.errorMessage!),
                 backgroundColor: state.status == MatchmakingStatus.failure
-                    ? Colors.red
-                    : Colors.green,
+                    ? colors.error
+                    : colors.primary,
                 behavior: SnackBarBehavior.floating,
               ),
             );
@@ -295,7 +290,7 @@ class _MatchmakingViewState extends State<_MatchmakingView> {
         backgroundColor: colors.primary,
         child: Icon(
           Icons.add,
-          color: isDark ? const Color(0xFF003915) : theme.colorScheme.onPrimary,
+          color: colors.onPrimary,
           size: 32,
         ),
       ),

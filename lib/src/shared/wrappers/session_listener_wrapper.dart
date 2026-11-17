@@ -20,7 +20,7 @@ class SessionListenerWrapper extends StatelessWidget {
       listenWhen: (prev, next) => prev.status != next.status,
       listener: (context, state) {
         AppLogger.info(
-          '🔄 SessionListenerWrapper: Status changed to ${state.status}',
+          'SessionListenerWrapper: Status changed to ${state.status}',
         );
 
         if (state.status != SessionStatus.unknown) {
@@ -29,7 +29,7 @@ class SessionListenerWrapper extends StatelessWidget {
           if (state.status == SessionStatus.authenticated) {
             final user = state.user;
             AppLogger.info(
-              '👤 User authenticated: ${user?.email} (Role: ${user?.role})',
+              'User authenticated: ${user?.email} (Role: ${user?.role})',
             );
 
             // Trigger common data loads for all roles
@@ -38,13 +38,13 @@ class SessionListenerWrapper extends StatelessWidget {
 
             if (user != null) {
               if (user.isAdmin) {
-                AppLogger.info('🛡️ Redirecting to Admin Dashboard');
+                AppLogger.info('Redirecting to Admin Dashboard');
                 appRouter.go(AppRoutes.admin);
               } else if (user.isOwner) {
-                AppLogger.info('🏠 Redirecting to Owner Dashboard');
+                AppLogger.info('Redirecting to Owner Dashboard');
                 appRouter.go(AppRoutes.ownerDashboard);
               } else {
-                AppLogger.info('⚽ Redirecting to Home (Regular User)');
+                AppLogger.info('Redirecting to Home (Regular User)');
                 // Regular User specific data loads
                 context.read<HomeCubit>().loadHomeData();
                 context.read<MatchmakingCubit>().loadMatches();
@@ -52,7 +52,7 @@ class SessionListenerWrapper extends StatelessWidget {
               }
             } else {
               AppLogger.warning(
-                '⚠️ User is null but status is authenticated. Fallback to home.',
+                'User is null but status is authenticated. Fallback to home.',
               );
               // Fallback for null user (should not happen if authenticated)
               context.read<HomeCubit>().loadHomeData();
@@ -60,7 +60,7 @@ class SessionListenerWrapper extends StatelessWidget {
             }
           } else if (state.status == SessionStatus.unauthenticated) {
             AppLogger.info(
-              '🚪 User unauthenticated. Staying/Redirecting to onboarding if necessary.',
+              'User unauthenticated. Staying/Redirecting to onboarding if necessary.',
             );
             appRouter.go(AppRoutes.onboarding);
           }

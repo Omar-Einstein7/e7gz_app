@@ -81,13 +81,13 @@ class _SplashScreenState extends State<SplashScreen> {
                       vertical: 60.h,
                     ),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF131B2E),
-                      borderRadius: BorderRadius.circular(48.r),
+                      color: colors.surfaceContainer,
+                      borderRadius: BorderRadius.circular(16.r),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.3),
-                          blurRadius: 40,
-                          offset: const Offset(0, 20),
+                          color: colors.shadow.withValues(alpha: 0.15),
+                          blurRadius: 32,
+                          offset: const Offset(0, 16),
                         ),
                       ],
                     ),
@@ -97,9 +97,8 @@ class _SplashScreenState extends State<SplashScreen> {
                         Text(
                           'e7gzz',
                           style: tt.displayLarge?.copyWith(
-                            color: const Color(0xFF4BE277),
+                            color: colors.primary,
                             fontWeight: FontWeight.w900,
-                            fontSize: 64.sp,
                             letterSpacing: -2,
                           ),
                         ),
@@ -107,7 +106,7 @@ class _SplashScreenState extends State<SplashScreen> {
                         Text(
                           'THE DIGITAL CURATOR',
                           style: tt.labelSmall?.copyWith(
-                            color: const Color(0xFFBCC7DE),
+                            color: colors.onSurfaceVariant,
                             fontWeight: FontWeight.bold,
                             letterSpacing: 4,
                           ),
@@ -135,7 +134,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       Text(
                         'PREPARING YOUR PITCH',
                         style: tt.labelSmall?.copyWith(
-                          color: const Color(0xFFBCC7DE).withValues(alpha: 0.7),
+                          color: colors.onSurfaceVariant,
                           fontWeight: FontWeight.bold,
                           letterSpacing: 2,
                         ),
@@ -144,7 +143,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       Container(
                         width: 200.w,
                         height: 1,
-                        color: const Color(0xFFBCC7DE).withValues(alpha: 0.2),
+                        color: colors.outlineVariant,
                       ),
                     ],
                   ),
@@ -163,14 +162,14 @@ class _SplashScreenState extends State<SplashScreen> {
                   Container(
                     height: 1,
                     width: 30.w,
-                    color: const Color(0xFFBCC7DE).withValues(alpha: 0.2),
+                    color: colors.outlineVariant,
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16.w),
                     child: Text(
                       'CAIRO • DUBAI • RIYADH',
                       style: tt.labelSmall?.copyWith(
-                        color: const Color(0xFFBCC7DE).withValues(alpha: 0.5),
+                        color: colors.onSurfaceVariant.withValues(alpha: 0.6),
                         fontWeight: FontWeight.w800,
                         letterSpacing: 2,
                       ),
@@ -179,7 +178,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   Container(
                     height: 1,
                     width: 30.w,
-                    color: const Color(0xFFBCC7DE).withValues(alpha: 0.2),
+                    color: colors.outlineVariant,
                   ),
                 ],
               ),

@@ -16,25 +16,30 @@ class LeaderboardTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = context.colorScheme;
+    final tt = context.textTheme;
+
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: const Color(0xFF131B2E),
-        borderRadius: BorderRadius.circular(32.r),
+        color: cs.surfaceContainer,
+        borderRadius: BorderRadius.circular(16.r),
       ),
       child: Row(
         children: [
           Text(
             rank,
-            style: TextStyle(
-              color: const Color(0xFFBCC7DE).withValues(alpha: 0.3),
+            style: tt.headlineSmall?.copyWith(
+              color: cs.onSurfaceVariant.withValues(alpha: 0.35),
               fontWeight: FontWeight.w900,
-              fontSize: 20.sp,
               fontStyle: FontStyle.italic,
             ),
           ),
           SizedBox(width: 16.w),
-          CircleAvatar(radius: 20.r, backgroundColor: Colors.blueGrey),
+          CircleAvatar(
+            radius: 20.r,
+            backgroundColor: cs.surfaceContainerHighest,
+          ),
           SizedBox(width: 12.w),
           Expanded(
             child: Column(
@@ -42,17 +47,15 @@ class LeaderboardTile extends StatelessWidget {
               children: [
                 Text(
                   name,
-                  style: TextStyle(
-                    color: Colors.white,
+                  style: tt.bodyMedium?.copyWith(
+                    color: cs.onSurface,
                     fontWeight: FontWeight.bold,
-                    fontSize: 14.sp,
                   ),
                 ),
                 Text(
                   progress,
-                  style: TextStyle(
-                    color: const Color(0xFFBCC7DE),
-                    fontSize: 12.sp,
+                  style: tt.bodySmall?.copyWith(
+                    color: cs.onSurfaceVariant,
                   ),
                 ),
               ],
@@ -62,14 +65,13 @@ class LeaderboardTile extends StatelessWidget {
             Container(
               padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
               decoration: BoxDecoration(
-                color: const Color(0xFF4BE277).withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(10.r),
+                color: cs.primary.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(8.r),
               ),
               child: Text(
                 'MVP',
-                style: TextStyle(
-                  color: const Color(0xFF4BE277),
-                  fontSize: 10.sp,
+                style: tt.labelSmall?.copyWith(
+                  color: cs.primary,
                   fontWeight: FontWeight.bold,
                 ),
               ),

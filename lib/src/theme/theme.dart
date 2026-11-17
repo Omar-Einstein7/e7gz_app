@@ -3,6 +3,7 @@ import 'package:e7gz/src/theme/app_colors.dart';
 import 'package:e7gz/src/theme/app_typography.dart';
 import 'package:e7gz/src/theme/app_dimensions.dart';
 import 'package:e7gz/src/theme/theme_extensions.dart';
+import 'package:e7gz/src/theme/color_schemes.dart';
 
 /// The central entry point for the application's theme system.
 abstract final class AppTheme {
@@ -11,13 +12,13 @@ abstract final class AppTheme {
   static ThemeData light = _buildTheme(
     brightness: Brightness.light,
     colorScheme: _lightColorScheme,
-    extensions: [SemanticColors.light, PitchColors.light],
+    extensions: [AppPalettes.light, SemanticColors.light, PitchColors.light],
   );
 
   static ThemeData dark = _buildTheme(
     brightness: Brightness.dark,
     colorScheme: _darkColorScheme,
-    extensions: [SemanticColors.dark, PitchColors.dark],
+    extensions: [AppPalettes.dark, SemanticColors.dark, PitchColors.dark],
   );
 
   static final ColorScheme _lightColorScheme = ColorScheme.fromSeed(

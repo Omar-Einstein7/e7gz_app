@@ -5,7 +5,7 @@ import 'package:e7gz/src/imports/imports.dart';
 /// Usage:
 /// ```dart
 /// AppErrorWidget(
-///   title: 'Something went wrong',
+///   title: 'Unable to load content',
 ///   message: error.toString(),
 ///   onRetry: () => ref.invalidate(myProvider),
 /// )
@@ -13,7 +13,7 @@ import 'package:e7gz/src/imports/imports.dart';
 class AppErrorWidget extends StatelessWidget {
   const AppErrorWidget({
     super.key,
-    this.title = 'Something went wrong',
+    this.title = 'Unable to load content',
     this.message,
     this.onRetry,
     this.icon = IconsaxPlusLinear.danger,

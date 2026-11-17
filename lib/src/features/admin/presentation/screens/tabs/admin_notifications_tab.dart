@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:e7gz/src/features/admin/presentation/cubit/admin_cubit.dart';
 import 'package:e7gz/src/features/admin/presentation/cubit/admin_state.dart';
-
+import 'package:e7gz/src/theme/admin_theme.dart';
 class AdminNotificationsTab extends StatefulWidget {
   const AdminNotificationsTab({super.key});
 

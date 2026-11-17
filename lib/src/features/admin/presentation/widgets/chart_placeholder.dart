@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:e7gz/src/features/admin/presentation/layout/admin_layout.dart';
-
+import 'package:e7gz/src/theme/admin_theme.dart';
 /// Placeholder bar chart (no external charting package required)
 class ChartPlaceholder extends StatelessWidget {
   final String title;

@@ -5,7 +5,7 @@ import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:go_router/go_router.dart';
 import 'package:e7gz/src/features/admin/presentation/cubit/admin_cubit.dart';
 import 'package:e7gz/src/features/admin/presentation/cubit/admin_state.dart';
-
+import 'package:e7gz/src/theme/admin_theme.dart';
 class AdminProfileTab extends StatefulWidget {
   const AdminProfileTab({super.key});
 
@@ -201,7 +201,7 @@ class _AdminProfileTabState extends State<AdminProfileTab>
                                   ),
                                   foregroundColor: AdminColors.accent,
                                   padding: const EdgeInsets.symmetric(
-                                    vertical: 14,
+                                    vertical: 12,
                                   ),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10),
@@ -225,7 +225,7 @@ class _AdminProfileTabState extends State<AdminProfileTab>
                                     context,
                                   ),
                                   padding: const EdgeInsets.symmetric(
-                                    vertical: 14,
+                                    vertical: 12,
                                   ),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10),
@@ -282,7 +282,7 @@ class _InfoRow extends StatelessWidget {
               size: 18,
             ),
           ),
-          const SizedBox(width: 14),
+          const SizedBox(width: 12),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

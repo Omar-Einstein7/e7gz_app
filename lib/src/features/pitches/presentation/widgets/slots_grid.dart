@@ -110,9 +110,8 @@ class _IndicatorChip extends StatelessWidget {
         SizedBox(width: AppSpacing.xs.w),
         Text(
           label,
-          style: TextStyle(
+          style: context.textTheme.labelSmall?.copyWith(
             color: context.colorScheme.onSurfaceVariant,
-            fontSize: 10.sp,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -181,9 +180,8 @@ class _SlotBox extends StatelessWidget {
               ],
               Text(
                 'SLOT',
-                style: TextStyle(
+                style: context.textTheme.labelSmall?.copyWith(
                   color: onColor,
-                  fontSize: 10.sp,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -191,20 +189,18 @@ class _SlotBox extends StatelessWidget {
           ),
           Text(
             slot.startTime,
-            style: TextStyle(
+            style: context.textTheme.titleMedium?.copyWith(
               color: timeColor,
-              fontSize: 20.sp,
               fontWeight: FontWeight.w900,
               decoration: isBooked ? TextDecoration.lineThrough : null,
             ),
           ),
           Text(
             isBooked ? 'BOOKED' : '${slot.price.toInt()} EGP',
-            style: TextStyle(
+            style: context.textTheme.labelSmall?.copyWith(
               color: isBooked
                   ? cs.error.withValues(alpha: 0.6)
                   : (isSelected ? cs.onPrimary : cs.primary),
-              fontSize: 10.sp,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -229,7 +225,9 @@ class _ErrorState extends StatelessWidget {
     return Center(
       child: Text(
         errorMessage ?? 'Error loading slots',
-        style: TextStyle(color: context.colorScheme.error, fontSize: 14.sp),
+        style: context.textTheme.bodyMedium?.copyWith(
+          color: context.colorScheme.error,
+        ),
       ),
     );
   }
@@ -243,9 +241,8 @@ class _EmptyState extends StatelessWidget {
     return Center(
       child: Text(
         'No slots available on this date',
-        style: TextStyle(
+        style: context.textTheme.bodyMedium?.copyWith(
           color: context.colorScheme.onSurfaceVariant,
-          fontSize: 14.sp,
         ),
       ),
     );
