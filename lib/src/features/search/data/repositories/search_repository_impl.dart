@@ -1,4 +1,6 @@
-import 'package:e7gz/src/imports/core_imports.dart';
+
+import 'package:e7gz/src/core/utils/task_runner.dart';
+import 'package:e7gz/src/core/utils/typedefs.dart';
 import 'package:e7gz/src/features/pitches/domain/entities/pitch.dart';
 import 'package:e7gz/src/features/search/domain/repositories/search_repository.dart';
 import 'package:e7gz/src/features/search/data/datasources/search_remote_datasource.dart';

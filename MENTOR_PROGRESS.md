@@ -2,8 +2,8 @@
 
 ## Status
 - **Current Phase:** Phase 2 (Features Refactoring)
-- **Current Feature:** Feature 9 — Maps & Search
-- **Current Task:** Maps & Search Task 1: Audit
+- **Current Feature:** Feature 10 — Profile
+- **Current Task:** Profile Task 1: Audit
 - **Branch:** `refactor/baseline`
 
 > Roadmap below follows the owner-approved plan (this chat); it supersedes the older numbering
@@ -49,6 +49,9 @@
 - [x] Feature 8 (Notifications) — Task 1: Cleaned `AppNotification` Entity (Pure Dart + Equatable, removed duplicate `fromJson`), cleaned repo & usecase imports.
 - [x] Feature 8 (Notifications) — Task 2: Standardized `NotificationRepositoryImpl` with `runTask` across all 4 methods.
 - [x] Feature 8 (Notifications) — Task 3: Cleaned `NotificationsCubit` imports (replaced `imports.dart` with `flutter_bloc`).
+- [x] Feature 9 (Maps & Search) — Task 1: Standardized `MapsRepositoryImpl` with `runTask`.
+- [x] Feature 9 (Maps & Search) — Task 2: Cleaned `SearchRepositoryImpl` imports (removed `core_imports.dart`).
+- [x] Feature 9 (Maps & Search) — Task 3: Cleaned `SearchCubit` imports (replaced `imports.dart` with `flutter_bloc`).
 
 ---
 

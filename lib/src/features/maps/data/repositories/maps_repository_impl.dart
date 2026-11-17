@@ -1,5 +1,4 @@
-import 'package:fpdart/fpdart.dart';
-import 'package:e7gz/src/core/errors/failure.dart';
+import 'package:e7gz/src/core/utils/task_runner.dart';
 import 'package:e7gz/src/core/utils/typedefs.dart';
 import 'package:e7gz/src/features/maps/domain/entities/route_info.dart';
 import 'package:e7gz/src/features/maps/domain/repositories/maps_repository.dart';
@@ -17,41 +16,32 @@ class MapsRepositoryImpl implements MapsRepository {
     required double toLat,
     required double toLng,
     String profile = 'driving-car',
-  }) async {
-    try {
-      final route = await _remote.getRoute(
+  }) {
+    return runTask(
+      () => _remote.getRoute(
         fromLat: fromLat,
         fromLng: fromLng,
         toLat: toLat,
         toLng: toLng,
         profile: profile,
-      );
-      return right(route);
-    } catch (e) {
-      return left(ServerFailure(e.toString()));
-    }
+      ),
+      requiresNetwork: true,
+    );
   }
 
   @override
-  FutureEither<List<GeocodedPlace>> geocode(String address) async {
-    try {
-      final places = await _remote.geocode(address);
-      return right(places);
-    } catch (e) {
-      return left(ServerFailure(e.toString()));
-    }
+  FutureEither<List<GeocodedPlace>> geocode(String address) {
+    return runTask(() => _remote.geocode(address), requiresNetwork: true);
   }
 
   @override
   FutureEither<GeocodedPlace?> reverseGeocode({
     required double lat,
     required double lng,
-  }) async {
-    try {
-      final place = await _remote.reverseGeocode(lat: lat, lng: lng);
-      return right(place);
-    } catch (e) {
-      return left(ServerFailure(e.toString()));
-    }
+  }) {
+    return runTask(
+      () => _remote.reverseGeocode(lat: lat, lng: lng),
+      requiresNetwork: true,
+    );
   }
 }
