@@ -2,8 +2,8 @@
 
 ## Status
 - **Current Phase:** Phase 2 (Features Refactoring)
-- **Current Feature:** Feature 3 — Bookings
-- **Current Task:** Bookings Task 1: Audit
+- **Current Feature:** Feature 5 — Matchmaking
+- **Current Task:** Matchmaking Task 1: Audit
 - **Branch:** `refactor/baseline`
 
 > Roadmap below follows the owner-approved plan (this chat); it supersedes the older numbering
@@ -36,6 +36,8 @@
 - [x] Feature 2 (Pitches) — Task 3: Add `Review` Entity, fix `PitchDetailCubit` violations — removed `sl<>` + `DataSource` calls, wired `GetPitchReviewsUseCase` + `CreateReviewUseCase` via constructor (committed: `965ae16`).
 - [x] Feature 3 (Bookings) — Task 1: Clean Data imports (`booking_repository_impl.dart` removed God Barrel).
 - [x] Feature 3 (Bookings) — Task 2: Fix `CreateBookingCubit` DI violation — injected `NotificationService` via constructor and wired in `bookings_di.dart`.
+- [x] Feature 4 (Home) — Task 1: Standardized `home_repository_impl.dart` using `runTask` and cleaned imports.
+- [x] Feature 4 (Home) — Task 2: Cleaned `home_cubit.dart` imports (replaced God Barrel with explicit `flutter_bloc`).
 
 ---
 

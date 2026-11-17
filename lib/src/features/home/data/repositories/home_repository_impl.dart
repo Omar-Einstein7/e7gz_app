@@ -1,5 +1,4 @@
-import 'package:fpdart/fpdart.dart';
-import 'package:e7gz/src/core/errors/failure.dart';
+import 'package:e7gz/src/core/utils/task_runner.dart';
 import 'package:e7gz/src/core/utils/typedefs.dart';
 import 'package:e7gz/src/features/home/domain/entities/home_data.dart';
 import 'package:e7gz/src/features/home/domain/repositories/home_repository.dart';
@@ -11,12 +10,7 @@ class HomeRepositoryImpl implements HomeRepository {
   HomeRepositoryImpl(this.remoteDataSource);
 
   @override
-  FutureEither<HomeData> getHomeData() async {
-    try {
-      final homeData = await remoteDataSource.getHomeData();
-      return right(homeData);
-    } catch (e) {
-      return left(ServerFailure(e.toString()));
-    }
+  FutureEither<HomeData> getHomeData() {
+    return runTask(() => remoteDataSource.getHomeData(), requiresNetwork: true);
   }
 }
