@@ -1,4 +1,4 @@
-import 'package:e7gz/src/imports/imports.dart';
+import 'package:equatable/equatable.dart';
 
 class AppNotification extends Equatable {
   final String id;
@@ -17,16 +17,6 @@ class AppNotification extends Equatable {
     required this.createdAt,
   });
 
-  factory AppNotification.fromJson(Map<String, dynamic> json) {
-    return AppNotification(
-      id: json['_id'] ?? '',
-      title: json['title'] ?? '',
-      body: json['body'] ?? '',
-      type: json['type'] ?? 'system',
-      isRead: json['isRead'] ?? false,
-      createdAt: DateTime.parse(json['createdAt']),
-    );
-  }
 
   @override
   List<Object?> get props => [id, title, body, type, isRead, createdAt];

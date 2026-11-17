@@ -1,4 +1,4 @@
-import 'package:e7gz/src/imports/core_imports.dart';
+import 'package:e7gz/src/core/utils/typedefs.dart';
 import 'package:e7gz/src/features/notifications/domain/entities/notification.dart';
 
 abstract class NotificationRepository {
