@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:e7gz/src/features/pitches/domain/entities/pitch.dart';
 import 'package:e7gz/src/features/pitches/domain/repositories/pitch_repository.dart';
-import 'package:e7gz/src/features/pitches/data/models/review_model.dart';
+import 'package:e7gz/src/features/pitches/domain/entities/reviews.dart';
 
 enum PitchesStatus { initial, loading, success, failure }
 

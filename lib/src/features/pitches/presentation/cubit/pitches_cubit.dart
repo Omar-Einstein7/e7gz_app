@@ -2,8 +2,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:e7gz/src/features/pitches/domain/entities/pitch.dart';
 import 'package:e7gz/src/features/pitches/domain/usecases/pitch_usecases.dart';
 import 'package:e7gz/src/features/pitches/presentation/cubit/pitches_state.dart';
-import 'package:e7gz/src/core/di/injection_container.dart';
-import 'package:e7gz/src/features/pitches/data/datasources/pitch_remote_datasource.dart';
 
 /// Manages the list of pitches with search, filter, and pagination.
 class PitchesCubit extends Cubit<PitchesState> {
@@ -99,11 +97,16 @@ class PitchesCubit extends Cubit<PitchesState> {
 
 class PitchDetailCubit extends Cubit<PitchDetailState> {
   final GetPitchDetailsUseCase _getPitchDetails;
+  final GetPitchReviewsUseCase _getPitchReviews;
+  final CreateReviewUseCase _createReview;
 
   PitchDetailCubit({
     required GetPitchDetailsUseCase getPitchDetails,
+    required GetPitchReviewsUseCase getPitchReviews,
     required CreateReviewUseCase createReview,
   }) : _getPitchDetails = getPitchDetails,
+       _getPitchReviews = getPitchReviews,
+       _createReview = createReview,
        super(const PitchDetailState());
 
   Future<void> loadPitch(
@@ -120,11 +123,7 @@ class PitchDetailCubit extends Cubit<PitchDetailState> {
     }
 
     final result = await _getPitchDetails(pitchId);
-
-    // Also fetch reviews
-    final reviewsResult = await sl<PitchRemoteDataSource>().getPitchReviews(
-      pitchId,
-    );
+    final reviewsResult = await _getPitchReviews(pitchId);
 
     result.fold(
       (failure) => emit(
@@ -137,7 +136,7 @@ class PitchDetailCubit extends Cubit<PitchDetailState> {
         state.copyWith(
           status: PitchDetailStatus.success,
           pitch: pitch,
-          reviews: reviewsResult,
+          reviews: reviewsResult.fold((_) => [], (reviews) => reviews),
         ),
       ),
     );
@@ -149,16 +148,17 @@ class PitchDetailCubit extends Cubit<PitchDetailState> {
     required String comment,
   }) async {
     emit(state.copyWith(isSubmitting: true));
-    try {
-      await sl<PitchRemoteDataSource>().createReview(
-        pitchId: pitchId,
-        rating: rating,
-        comment: comment,
-      );
-      emit(state.copyWith(isSubmitting: false));
-      loadPitch(pitchId, silent: true);
-    } catch (e) {
-      emit(state.copyWith(isSubmitting: false));
-    }
+    final result = await _createReview(
+      pitchId: pitchId,
+      rating: rating,
+      comment: comment,
+    );
+    result.fold(
+      (failure) => emit(state.copyWith(isSubmitting: false)),
+      (_) {
+        emit(state.copyWith(isSubmitting: false));
+        loadPitch(pitchId, silent: true);
+      },
+    );
   }
 }

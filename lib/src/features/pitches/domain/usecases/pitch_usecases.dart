@@ -1,4 +1,5 @@
 import 'package:e7gz/src/features/pitches/domain/entities/pitch.dart';
+import 'package:e7gz/src/features/pitches/domain/entities/reviews.dart';
 import 'package:e7gz/src/features/pitches/domain/repositories/pitch_repository.dart';
 import 'package:e7gz/src/core/utils/typedefs.dart'; 
 
@@ -66,4 +67,13 @@ class CreateReviewUseCase {
       comment: comment,
     );
   }
+}
+
+
+class GetPitchReviewsUseCase {
+  final PitchRepository _repository;
+  const GetPitchReviewsUseCase(this._repository);
+
+  FutureEither<List<Review>> call(String pitchId) =>
+      _repository.getPitchReviews(pitchId);
 }

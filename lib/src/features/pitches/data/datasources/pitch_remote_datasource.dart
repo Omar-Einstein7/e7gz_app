@@ -2,6 +2,7 @@
 import 'package:e7gz/src/core/services/dio_service.dart';
 import 'package:e7gz/src/features/pitches/data/models/pitch_model.dart';
 import 'package:e7gz/src/features/pitches/data/models/review_model.dart';
+import 'package:e7gz/src/features/pitches/domain/entities/reviews.dart';
 
 class PitchRemoteDataSource {
   final DioService _dio;
@@ -73,7 +74,7 @@ class PitchRemoteDataSource {
       final data = response.data as Map<String, dynamic>;
       final reviews = data['data']['reviews'] as List<dynamic>;
       return reviews
-          .map((r) => Review.fromJson(r as Map<String, dynamic>))
+          .map((r) => ReviewModel.fromJson(r as Map<String, dynamic>))
           .toList();
     });
   }
@@ -91,7 +92,7 @@ class PitchRemoteDataSource {
       response,
     ) {
       final data = response.data as Map<String, dynamic>;
-      return Review.fromJson(data['data']['review'] as Map<String, dynamic>);
+      return ReviewModel.fromJson(data['data']['review'] as Map<String, dynamic>);
     });
   }
 }

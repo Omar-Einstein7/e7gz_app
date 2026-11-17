@@ -1,5 +1,6 @@
 import 'package:e7gz/src/core/utils/task_runner.dart';
 import 'package:e7gz/src/features/pitches/domain/entities/pitch.dart';
+import 'package:e7gz/src/features/pitches/domain/entities/reviews.dart';
 import 'package:e7gz/src/features/pitches/domain/repositories/pitch_repository.dart';
 import 'package:e7gz/src/core/utils/typedefs.dart';
 import 'package:e7gz/src/features/pitches/data/datasources/pitch_remote_datasource.dart';
@@ -30,7 +31,6 @@ class PitchRepositoryImpl implements PitchRepository {
         page: page,
         limit: limit,
       );
-
       final innerData = json['data'] as Map<String, dynamic>;
       final pitchesList = innerData['pitches'] as List<dynamic>;
       final pagination = innerData['pagination'] as Map<String, dynamic>? ?? {};
@@ -86,4 +86,10 @@ class PitchRepositoryImpl implements PitchRepository {
       );
     }, requiresNetwork: true);
   }
+
+
+  @override
+FutureEither<List<Review>> getPitchReviews(String pitchId) async {
+  return runTask(() => _remote.getPitchReviews(pitchId), requiresNetwork: true);
+}
 }

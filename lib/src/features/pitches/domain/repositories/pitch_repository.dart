@@ -1,5 +1,6 @@
 import 'package:e7gz/src/core/utils/typedefs.dart';
 import 'package:e7gz/src/features/pitches/domain/entities/pitch.dart';
+import 'package:e7gz/src/features/pitches/domain/entities/reviews.dart';
 
 abstract class PitchRepository {
   /// Get a paginated list of pitches with optional filters.
@@ -29,6 +30,9 @@ abstract class PitchRepository {
     required double rating,
     required String comment,
   });
+
+
+  FutureEither<List<Review>> getPitchReviews(String pitchId);
 }
 
 class PitchListResult {

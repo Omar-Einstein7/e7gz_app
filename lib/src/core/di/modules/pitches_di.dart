@@ -37,6 +37,7 @@ void initPitchesDependencies() {
   sl.registerFactory(
     () => PitchDetailCubit(
       getPitchDetails: sl<GetPitchDetailsUseCase>(),
+      getPitchReviews: sl<GetPitchReviewsUseCase>(),
       createReview: sl<CreateReviewUseCase>(),
     ),
   );

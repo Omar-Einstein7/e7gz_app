@@ -1,25 +1,19 @@
-class Review {
-  final String id;
-  final String userId;
-  final String userName;
-  final String? userPhoto;
-  final double rating;
-  final String comment;
-  final DateTime createdAt;
+import 'package:e7gz/src/features/pitches/domain/entities/reviews.dart';
 
-  const Review({
-    required this.id,
-    required this.userId,
-    required this.userName,
-    this.userPhoto,
-    required this.rating,
-    required this.comment,
-    required this.createdAt,
+class ReviewModel extends Review {
+  const ReviewModel({
+    required super.id,
+    required super.userId,
+    required super.userName,
+    super.userPhoto,
+    required super.rating,
+    required super.comment,
+    required super.createdAt,
   });
 
-  factory Review.fromJson(Map<String, dynamic> json) {
+  factory ReviewModel.fromJson(Map<String, dynamic> json) {
     final user = json['userId'] as Map<String, dynamic>?;
-    return Review(
+    return ReviewModel(
       id: json['_id']?.toString() ?? json['id']?.toString() ?? '',
       userId: user != null
           ? (user['_id']?.toString() ?? user['id']?.toString() ?? '')
