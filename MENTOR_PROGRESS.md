@@ -2,8 +2,8 @@
 
 ## Status
 - **Current Phase:** Phase 2 (Features Refactoring)
-- **Current Feature:** Feature 2 — Pitches
-- **Current Task:** Pitches Task 1: Clean Domain & Data imports
+- **Current Feature:** Feature 3 — Bookings
+- **Current Task:** Bookings Task 1: Audit
 - **Branch:** `refactor/baseline`
 
 > Roadmap below follows the owner-approved plan (this chat); it supersedes the older numbering
@@ -31,9 +31,11 @@
 ---
 
 ## 2. In Progress
-- [ ] Feature 2 (Pitches) — Task 1: Clean Domain imports (`pitch_usecases.dart`).
-- [ ] Feature 2 (Pitches) — Task 2: Clean Data imports (`pitch_remote_datasource.dart`, `pitch_repository_impl.dart`).
-- [ ] Feature 2 (Pitches) — Task 3: Fix `PitchDetailCubit` violations (direct `sl<>` + `DataSource` calls from Cubit).
+- [x] Feature 2 (Pitches) — Task 1: Clean Domain imports (`pitch_usecases.dart`) (committed: `de47f7a`).
+- [x] Feature 2 (Pitches) — Task 2: Clean Data imports (`pitch_remote_datasource.dart`, `pitch_repository_impl.dart`) (committed: `de47f7a`).
+- [x] Feature 2 (Pitches) — Task 3: Add `Review` Entity, fix `PitchDetailCubit` violations — removed `sl<>` + `DataSource` calls, wired `GetPitchReviewsUseCase` + `CreateReviewUseCase` via constructor (committed: `965ae16`).
+- [x] Feature 3 (Bookings) — Task 1: Clean Data imports (`booking_repository_impl.dart` removed God Barrel).
+- [x] Feature 3 (Bookings) — Task 2: Fix `CreateBookingCubit` DI violation — injected `NotificationService` via constructor and wired in `bookings_di.dart`.
 
 ---
 

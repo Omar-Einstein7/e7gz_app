@@ -1,6 +1,8 @@
+import 'package:e7gz/src/core/utils/task_runner.dart';
+import 'package:e7gz/src/core/utils/typedefs.dart';
 import 'package:e7gz/src/features/bookings/domain/entities/booking.dart';
 import 'package:e7gz/src/features/bookings/domain/repositories/booking_repository.dart';
-import 'package:e7gz/src/imports/core_imports.dart';
+
 import 'package:e7gz/src/features/bookings/data/datasources/booking_remote_datasource.dart';
 
 class BookingRepositoryImpl implements BookingRepository {

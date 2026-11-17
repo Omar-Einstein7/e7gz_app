@@ -3,7 +3,6 @@ import 'package:e7gz/src/features/bookings/domain/entities/booking.dart';
 import 'package:e7gz/src/features/bookings/domain/usecases/booking_usecases.dart';
 import 'package:e7gz/src/features/bookings/presentation/cubit/booking_state.dart';
 import 'package:e7gz/src/core/services/notification_service.dart';
-import 'package:e7gz/src/core/di/injection_container.dart';
 
 // ─── My Bookings Cubit ────────────────────────────────────────────────────────
 
@@ -109,9 +108,13 @@ class SlotsCubit extends Cubit<SlotsState> {
 
 class CreateBookingCubit extends Cubit<CreateBookingState> {
   final CreateBookingUseCase _createBooking;
-
-  CreateBookingCubit({required CreateBookingUseCase createBooking})
-    : _createBooking = createBooking,
+  final NotificationService _notificationService;
+  CreateBookingCubit({
+  required CreateBookingUseCase createBooking,
+  required NotificationService notificationService
+  })
+    : _notificationService = notificationService,
+      _createBooking = createBooking,
       super(const CreateBookingState());
 
   Future<void> createBooking({
@@ -138,7 +141,7 @@ class CreateBookingCubit extends Cubit<CreateBookingState> {
       ),
       (booking) {
         // Trigger local notification
-        sl<NotificationService>().showNotification(
+        _notificationService.showNotification(
           title: 'Booking Confirmed! ⚽',
           body:
               'Your match at ${booking.pitchName} on ${booking.date} is confirmed.',

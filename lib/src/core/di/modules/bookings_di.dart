@@ -1,5 +1,6 @@
 import 'package:e7gz/src/core/di/sl.dart';
 import 'package:e7gz/src/core/services/dio_service.dart';
+import 'package:e7gz/src/core/services/notification_service.dart';
 
 
 import 'package:e7gz/src/features/bookings/data/datasources/booking_remote_datasource.dart';
@@ -38,6 +39,8 @@ void initBookingsDependencies() {
     ),
   );
   sl.registerFactory(
-    () => CreateBookingCubit(createBooking: sl<CreateBookingUseCase>()),
+    () => CreateBookingCubit(
+    createBooking: sl<CreateBookingUseCase>(),
+    notificationService: sl<NotificationService>()),
   );
 }
