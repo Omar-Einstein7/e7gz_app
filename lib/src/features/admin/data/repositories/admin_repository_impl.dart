@@ -3,6 +3,7 @@ import 'package:e7gz/src/core/utils/typedefs.dart';
 import 'package:e7gz/src/features/admin/domain/entities/admin_stats.dart';
 import 'package:e7gz/src/features/admin/domain/repositories/admin_repository.dart';
 import 'package:e7gz/src/features/admin/data/datasources/admin_remote_datasource.dart';
+import 'package:e7gz/src/features/notifications/data/models/notification_model.dart';
 import 'package:e7gz/src/features/pitches/domain/entities/pitch.dart';
 import 'package:e7gz/src/features/pitches/data/models/pitch_model.dart';
 import 'package:e7gz/src/features/bookings/domain/entities/booking.dart';
@@ -78,7 +79,7 @@ class AdminRepositoryImpl implements AdminRepository {
     return runTask(() async {
       final rawList = await _dataSource.getNotifications();
       return rawList
-          .map((n) => AppNotification.fromJson(n as Map<String, dynamic>))
+          .map((n) => NotificationModel.fromJson(n as Map<String, dynamic>))
           .toList();
     }, requiresNetwork: true);
   }
