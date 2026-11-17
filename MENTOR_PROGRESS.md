@@ -2,8 +2,8 @@
 
 ## Status
 - **Current Phase:** Phase 2 (Features Refactoring)
-- **Current Feature:** Feature 6 — Owner
-- **Current Task:** Owner Task 1: Audit
+- **Current Feature:** Feature 7 — Admin
+- **Current Task:** Admin Task 1: Audit
 - **Branch:** `refactor/baseline`
 
 > Roadmap below follows the owner-approved plan (this chat); it supersedes the older numbering
@@ -41,6 +41,8 @@
 - [x] Feature 5 (Matchmaking) — Task 1: Created `CreateMatchRequest` in Domain and removed `MatchModel` dependency from `MatchRepository`.
 - [x] Feature 5 (Matchmaking) — Task 2: Standardized `MatchRepositoryImpl` with `runTask` and cleaned `MatchRemoteDataSource` imports.
 - [x] Feature 5 (Matchmaking) — Task 3: Cleaned `MatchmakingCubit` imports and updated `CreateMatchScreen` to use `CreateMatchRequest`.
+- [x] Feature 6 (Owner) — Task 1: Standardized `OwnerRepositoryImpl` using `runTask` and removed boilerplate `try/catch`.
+- [x] Feature 6 (Owner) — Task 2: Cleaned `OwnerCubit` imports (replaced God Barrel with explicit imports).
 
 ---
 
