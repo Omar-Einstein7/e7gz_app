@@ -2,8 +2,8 @@
 
 ## Status
 - **Current Phase:** Phase 2 (Features Refactoring)
-- **Current Feature:** Feature 10 — Profile
-- **Current Task:** Profile Task 1: Audit
+- **Current Feature:** Feature 11 — Splash & Onboarding
+- **Current Task:** Splash & Onboarding Task 1: Audit
 - **Branch:** `refactor/baseline`
 
 > Roadmap below follows the owner-approved plan (this chat); it supersedes the older numbering
@@ -52,6 +52,8 @@
 - [x] Feature 9 (Maps & Search) — Task 1: Standardized `MapsRepositoryImpl` with `runTask`.
 - [x] Feature 9 (Maps & Search) — Task 2: Cleaned `SearchRepositoryImpl` imports (removed `core_imports.dart`).
 - [x] Feature 9 (Maps & Search) — Task 3: Cleaned `SearchCubit` imports (replaced `imports.dart` with `flutter_bloc`).
+- [x] Feature 10 (Profile) — Task 1: Standardized `ProfileRepositoryImpl` with `runTask` across all 3 methods.
+- [x] Feature 10 (Profile) — Task 2: Cleaned `ProfileCubit` imports (replaced `imports.dart` with `flutter_bloc`).
 
 ---
 
